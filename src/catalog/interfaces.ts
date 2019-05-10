@@ -12,22 +12,22 @@ export type KEY = string;
 // Catch-all type
 ///////////////////////////////////////////////////////////////////////////////
 export interface Entity {
-  name: string;
+    name: string;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 export interface GenericEntity extends Entity {
-  pid: PID;
-  cid: CID;          // While knowing a menu item's catagory may not help us,
-                     // it would be nice to have all entities have the same
-  aliases: string[];
-  matrix: MatrixID;
-  defaultKey: KEY;
+    pid: PID;
+    cid: CID; // While knowing a menu item's catagory may not help us,
+    // it would be nice to have all entities have the same
+    aliases: string[];
+    matrix: MatrixID;
+    defaultKey: KEY;
 }
 
 export interface SpecificEntity extends Entity {
-  sku: SKU;
-  key: KEY;
+    sku: SKU;
+    key: KEY;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ export type OPTION = typeof OPTION;
 //   parent to other items (such as options).
 ///////////////////////////////////////////////////////////////////////////////
 export interface MenuItem extends Entity {
-  kind: MENUITEM;
+    kind: MENUITEM;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -68,7 +68,7 @@ export interface MenuItem extends Entity {
 //   An example of an Option would be a sauce or a drizzle.
 ///////////////////////////////////////////////////////////////////////////////
 export interface Option extends Entity {
-  kind: OPTION;
+    kind: OPTION;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -78,7 +78,7 @@ export interface Option extends Entity {
 //   e.g., 2% Milk as a base for a Latte vs Whole Milk.
 ///////////////////////////////////////////////////////////////////////////////
 export interface Modifier extends Entity {
-  kind: MODIFIER;
+    kind: MODIFIER;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,32 +90,32 @@ export interface Modifier extends Entity {
 ///////////////////////////////////////////////////////////////////////////////
 
 export const genericEntityFactory = (entity: GenericEntity, kind: symbol) => {
-  return entityTyper(entity, kind) as TypedEntity & GenericEntity;
+    return entityTyper(entity, kind) as TypedEntity & GenericEntity;
 };
 
 export const specificEntityFactory = (entity: SpecificEntity, kind: symbol) => {
-  return entityTyper(entity, kind) as TypedEntity & SpecificEntity;
+    return entityTyper(entity, kind) as TypedEntity & SpecificEntity;
 };
 
 // TODO: is there a AJV factory for types?
 export const entityTyper = (entity: Entity, kind: symbol): TypedEntity => {
-  switch (kind) {
-    case MENUITEM:
-      return {
-        ...entity,
-        kind: MENUITEM,
-      } as MenuItem;
-    case MODIFIER:
-      return {
-        ...entity,
-        kind: MODIFIER,
-      } as Modifier;
-    case OPTION:
-      return {
-        ...entity,
-        kind: OPTION,
-      } as Option;
-    default:
-     throw TypeError('Unknown Type sent to `entityTyper`');
-  }
+    switch (kind) {
+        case MENUITEM:
+            return {
+                ...entity,
+                kind: MENUITEM,
+            } as MenuItem;
+        case MODIFIER:
+            return {
+                ...entity,
+                kind: MODIFIER,
+            } as Modifier;
+        case OPTION:
+            return {
+                ...entity,
+                kind: OPTION,
+            } as Option;
+        default:
+            throw TypeError('Unknown Type sent to `entityTyper`');
+    }
 };
