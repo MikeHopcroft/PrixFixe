@@ -5,6 +5,12 @@ import {
     KEY,
 } from '../catalog';
 
+import {
+    ValidChildTensor,
+    ValidChildPredicate,
+    childTensorFactory,
+} from './child_tensor';
+
 // TODO: make this into a class.
 export interface RuleChecker {
     // Check is an item is a valid child for another item
