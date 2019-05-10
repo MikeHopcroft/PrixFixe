@@ -1,3 +1,6 @@
+export * from './item';
+export * from './catalog';
+
 export function doSomething(text: string) {
     console.log(text);
 }
