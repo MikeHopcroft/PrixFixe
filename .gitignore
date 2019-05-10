@@ -1,0 +1,9 @@
+build/
+node_modules/
+junk*
+.env
+*.tgz
+.DS_Store
+.node_repl_history
+.repl_history
+

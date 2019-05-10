@@ -1,16 +1,20 @@
 {
-  "name": "",
-  "version": "0.0.0",
-  "description": "",
+  "name": "prix-fixe",
+  "version": "0.0.1",
+  "description": "A rules checking system for validating restaurant orders.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
   "files": [
     "build/src"
   ],
-  "license": "Apache-2.0",
-  "keywords": [],
+  "author": "Michael Hopcroft",
+  "license": "MIT",
+  "keywords": [
+    "restaurant menu rules"
+  ],
+  "repository": "https://github.com/MikeHopcroft/PrixFixe",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
@@ -20,7 +24,17 @@
     "posttest": "npm run check"
   },
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^12.0.0",
+    "chai": "^4.2.0",
     "gts": "^1.0.0",
+    "mocha": "^6.1.4",
     "typescript": "~3.4.0"
+  },
+  "dependencies": {},
+  "prettier": {
+      "tabWidth": 4,
+      "singleQuote": true
   }
 }
