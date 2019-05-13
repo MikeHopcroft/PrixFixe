@@ -1,5 +1,6 @@
 import {
     PID,
+    KEY,
 } from '../catalog';
 
 import {
@@ -8,8 +9,7 @@ import {
 
 // Given a child PID, is this child valid at the tensor coordinate?
 export interface ValidChildPredicate {
-    // Issue: should this accept a KEY instead?
-    (child: PID): boolean;
+    (child: KEY): boolean;
 }
 
 export interface ValidChildTensor {

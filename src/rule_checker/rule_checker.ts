@@ -12,10 +12,16 @@ import {
 } from './child_tensor';
 
 import {
-    ExclusionSetMap,
+    ExclusionTensor,
     MutualExclusionPredicate,
-    mutualExclusionSetMapFactory,
+    mutualExclusionTensorFactory,
 } from './exclusion_map';
+
+import {
+    QuantityInformation,
+    QuantityTensor,
+    quantityTensorFactory,
+} from './quantity';
 
 // TODO: make this into a class.
 // TODO: constructor will utilize various tensor factories
@@ -25,11 +31,7 @@ export interface RuleChecker {
     //   evaluate to true over their intersection.
     //
     // Use case: Can an ingredient be added to a standalone item?
-    // Issue: should the child's PID be a KEY? For instance, a packet of
-    //   ketchup may go with a to-go item when a cup of ketchup may not.
-    //   However, a packet of ketchup and a cup of ketchup may have the same
-    //   PID and different keys.
-    isValidChild(parent: KEY, child: PID): boolean;
+    isValidChild(parent: KEY, child: KEY): boolean;
 
     // Check if two modifiers are in a mutually exclusive set
     //
@@ -37,5 +39,18 @@ export interface RuleChecker {
     //   if it can also have white sauce as a child item.
     //
     // Issue: should items be mutally exclusive with themselves?
-    isMutuallyExclusive(modOne: PID, modTwo: PID): boolean;
+    isMutuallyExclusive(parent:KEY, modOne: KEY, modTwo: KEY): boolean;
+
+    // Gets the default quantity of a child attached to a parent
+    //
+    // Use case: When I add ketchup packets to a burger, I want to know whether
+    //   I should add one or two.
+    getDefaultQuantity(parent: KEY, child: KEY): number;
+
+    // Predicate to validate that a quantity is within a threshold
+    //
+    // Use case: If a drink comes with lemons, then I may want to limit the
+    //   number of lemons allowed in the drink to 5. If I pass this function
+    //   6 - with drink as parent and lemons as child, then return false.
+    isValidQuantity(parent: KEY, child: KEY, qty: number): number;
 }

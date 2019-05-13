@@ -11,18 +11,16 @@ export interface MutualExclusionPredicate {
     (modOne: PID, modTwo: PID): boolean;
 }
 
-// Since exclusion is symmetric, map will lexigraphically sort PIDs into a
-//   `PID:PID` key to fetch a predicate.
-export interface ExclusionSetMap {
+export interface ExclusionTensor {
     // NOTE: Weird how I can't use KEY type alias here:
     //   https://github.com/microsoft/TypeScript/issues/1778
     [key: string]: MutualExclusionPredicate;
 }
 
 // TODO: implement exclusion set map factory
-export const mutualExclusionSetMapFactory = (
+export const mutualExclusionTensorFactory = (
     ruleSet: RuleConfig
-): ExclusionSetMap => {
+): ExclusionTensor => {
     return {};
 };
 
