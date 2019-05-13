@@ -1,4 +1,5 @@
 import {
+    CID,
     PID,
     KEY,
 } from '../catalog';
@@ -21,7 +22,7 @@ export interface ExclusionSet {
 export interface PartialRule {
     partialKey: KEY;
     validCatagoryMap: CatagoryMap;
-    exclusionZones: ExclusionSet[];
+    exclusionZones: ExclusionSet;
 }
 
 // The shape of the `rule.yaml` file

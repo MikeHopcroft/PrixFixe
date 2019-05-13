@@ -1,4 +1,5 @@
 import * as AJV from 'ajv';
+import * as YAML from 'js-yaml';
 
 import {
     RuleConfig,
@@ -10,19 +11,16 @@ const ruleConfigSchema = {
         "PartialRule": {
             "properties": {
                 "exclusionZones": {
-                    "items": {
-                        "additionalProperties": false,
-                        "patternProperties": {
-                            "^[0-9]+$": {
-                                "items": {
-                                    "type": "number",
-                                },
-                                "type": "array",
+                    "additionalProperties": false,
+                    "patternProperties": {
+                        "^[0-9]+$": {
+                            "items": {
+                                "type": "number",
                             },
+                            "type": "array",
                         },
-                        "type": "object",
                     },
-                    "type": "array",
+                    "type": "object",
                 },
                 "partialKey": {
                     "type": "string",
@@ -73,4 +71,15 @@ export const validateRuleConfig = (ruleConfig: RuleConfig) => {
         console.error(ruleConfigValidator.errors);
         throw TypeError(message);
     }
+};
+
+////////////////////////////////
+// Temp function, this will likely land elsewhere
+////////////////////////////////
+export const loadRuleConfig = (yamlText: string) => {
+    const yamlRoot = YAML.safeLoad(yamlText) as RuleConfig;
+
+    validateRuleConfig(yamlRoot);
+
+    return yamlRoot;
 };
