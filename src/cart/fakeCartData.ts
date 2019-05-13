@@ -46,7 +46,7 @@ const lettuce2: ItemInstance = {
     children: []
 }
 
-const hamburger1: ItemInstance = {
+export const hamburger1: ItemInstance = {
     pid: 2,
     name: 'Hamburger',
     aliases: [

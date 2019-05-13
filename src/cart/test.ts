@@ -2,13 +2,12 @@ import { KEY, PID, Option } from '../catalog';
 import { AID, Cart, ItemInstance, UID, } from './interfaces';
 import { Item } from '../item';
 import { AttributeUtils, CartUtils } from './cart'
-import { testCart, testOption } from './fakeCartData'
+import { hamburger1, testCart, testOption } from './fakeCartData'
 
 const cartOps = new CartUtils();
 
 let myCart: Cart = testCart;
 
-// Test for findItemByKey.
 const findItemByKeyTest = (myCart: Cart, myKey: KEY): void => {
     const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(myCart, myKey);
     printResults(gen);
@@ -19,7 +18,6 @@ const findItemByKeyTest = (myCart: Cart, myKey: KEY): void => {
 
 
 
-// Test for findItemByPID.
 const findItemByPIDTest = (myCart: Cart, myPid: PID): void => {
     const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(myCart, myPid);
     printResults(gen);
@@ -30,7 +28,6 @@ const findItemByPIDTest = (myCart: Cart, myPid: PID): void => {
 
 
 
-// Test for findItemByChildKey.
 const findItemByChildKeyTest = (myCart: Cart, myKey: KEY): void => {
     const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(myCart, myKey);
     printResults(gen);
@@ -52,14 +49,34 @@ const findItemByChildPIDTest = (myCart: Cart, myPid: PID): void => {
 
 
 
-// Test for findCompatibleItems. WAITING ON RULE CHECKER.
-const findCompatibleItemsTest = (myCart: Cart, myOption: ItemInstance): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findCompatibleItems(myCart, myOption);
+// const findCompatibleItemsTest = (myCart: Cart, myOption: ItemInstance): void => {
+//     const gen: IterableIterator<ItemInstance> = cartOps.findCompatibleItems(myCart, myOption);
+//     printResults(gen);
+// }
+// // TODO: Implement.
+// console.log(`\n##### FIND COMPATIBLE ITEMS BY OPTION TEST #####`);
+// findCompatibleItemsTest(myCart, testOption);
+
+
+
+const findChildByKeyTest = (myItem: ItemInstance, myKey: KEY): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(myItem, myKey);
     printResults(gen);
 }
-// TODO: Implement.
-console.log(`\n##### FIND COMPATIBLE ITEMS BY OPTION TEST #####`);
-findCompatibleItemsTest(myCart, testOption);
+// WORKING AS EXPECTED SINCE THERE SHOULDN'T EVER BE TWO CHILDREN WITH THE SAME
+// PID FOR A SINGLE ITEM
+// console.log(`\n##### FIND CHILD BY KEY TEST #####`);
+// findChildByKeyTest(hamburger1, 'c');
+
+
+
+const findChildByPIDTest = (myItem: ItemInstance, myPid: PID): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(myItem, myPid);
+    printResults(gen);
+}
+// WORKING AS EXPECTED
+// console.log(`\n##### FIND CHILD BY PID TEST #####`);
+// findChildByPIDTest(hamburger1, 0);
 
 
 

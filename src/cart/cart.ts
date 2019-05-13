@@ -1,57 +1,5 @@
 import { KEY, PID } from '../catalog';
 import { AID, AttributeUtilities, Cart, CartOps, ItemInstance, UID, } from "./interfaces";
-import { Item } from "../item";
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// Items
-//
-///////////////////////////////////////////////////////////////////////////////
-
-// A generic product is a top-level item that can be combined with a set of
-// attributes to form a specific product. For example, a "latte" is a generic
-// product that must be configured with a size and iced vs hot to produce a
-// specific product like a "small iced latte".
-
-// Unique product identifer or SKU for generic products.
-//export type PID = number;
-
-// Unique product identifier or SKU for specific products.
-// Shares that same value-space with GPID. Therefore, the user must ensure that
-// the intersection of { GPIDs } and { SPIDs } is the empty set.
-// export type SPID = number;
-
-// Unique attribute identifier. Attributes are SKU-specifying modifiers that
-// combine with a generic product to form a specific product.
-const aid: AID = 5;
-
-// Unique instance identfier. No two ItemInstances/OptionInstances can share a
-// UID. Used by React-like libraries that need to detect changes in data
-// structures.
-const uid: UID = 6;
-
-// An instance of an item in the shopping cart.
-// DESIGN NOTE: The uid should be added just before returning the Cart to the
-// Host, using the addIdsToCart() function in cart.ts. TODO: explain rationale.
-let myItem: ItemInstance;
-
-// // An instance of an item in the shopping cart.
-// // DESIGN NOTE: The uid should be added just before returning the Cart to the
-// // Host, using the addIdsToCart() function in cart.ts. TODO: explain rationale.
-// export interface OptionInstance {
-//     uid?: UID;
-//     spid: SPID;
-//     quantity?: number;
-// }
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// Cart
-//
-///////////////////////////////////////////////////////////////////////////////
-// A shopping cart consists of a sequence of ItemInstance. Items appear in the
-// sequence in the order they were added to the cart.
-let myCart: Cart;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -61,21 +9,20 @@ let myCart: Cart;
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class CartUtils implements CartOps {
-    // private readonly;
-
-    constructor() {
-    }
 
     //
     // Operations involving Cart.
     //
 
+    constructor() { }
+
     // Returns a list of ItemInstances in the cart with a particular SPID.
     // Items are returned in the order they were added to the cart.
     //
-    // Use case: find all instances of a specific drink like a 'large iced latte'.
+    // Use case: find all instances of a specific drink like a 'large iced
+    // latte'.
     //
-    // TODO: Code review.
+    // TODO: CODE REVIEW.
     *findItemByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             if (item.key === key) {
@@ -88,11 +35,11 @@ export class CartUtils implements CartOps {
     // particular GPID. Items are returned in the order they were added to the
     // cart.
     //
-    // Use case: want to find all lattes, regardless of attributes. Searching with
-    // the GPID for 'latte' might return ItemInstances for a 'medium iced latte'
-    // and a 'small hot latte'.
+    // Use case: want to find all lattes, regardless of attributes. Searching
+    // with the GPID for 'latte' might return ItemInstances for a 'medium iced
+    // latte' and a 'small hot latte'.
     //
-    // TODO: Code review.
+    // TODO: Only returns one item instance, not ALL matching instances.
     *findItemByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             if (item.pid === pid) {
@@ -107,7 +54,8 @@ export class CartUtils implements CartOps {
     //
     // ISSUE: do we want a corresponding version that finds options associated
     // with a certain generic option.
-    // TODO: Code review.
+    //
+    // TODO: CODE REVIEW.
     *findItemByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             for (const child of item.children) {
@@ -118,7 +66,7 @@ export class CartUtils implements CartOps {
         }
     }
 
-    // TODO: Only returns one instance, not ALL matching instances.
+    // TODO: Only returns one item instance, not ALL matching instances.
     *findItemByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             for (const child of item.children) {
@@ -140,9 +88,10 @@ export class CartUtils implements CartOps {
     // ISSUE: TODO: should we pass RuleChecker or get it from member variable.
     // Depends if we make a class or not.
     //
-    // TODO: IMPLEMENT
+    // TODO: IMPLEMENT. WAITING ON RULE CHECKER FUNCTIONALITY.
     *findCompatibleItems(cart: Cart, option: ItemInstance): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
+            // TODO: THIS IS HARDCODED TO COMPILE FOR NOW.
             if (item.pid === 5) {
                 yield item;
             }
@@ -153,20 +102,20 @@ export class CartUtils implements CartOps {
     // Operations involving ItemInstances
     //
 
-    // TODO: IMPLEMENT
+    // TODO: CODE REVIEW.
     *findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance> {
         for (const child of item.children) {
-            if (child.pid === 5) {
-                yield item;
+            if (child.key === key) {
+                yield child;
             }
         }
     }
 
-    // TODO: IMPLEMENT
+    // TODO: CODE REVIEW.
     *findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance> {
         for (const child of item.children) {
-            if (child.pid === 5) {
-                yield item;
+            if (child.pid === pid) {
+                yield child;
             }
         }
     }
