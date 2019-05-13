@@ -1,20 +1,17 @@
 dimensions:
   - did: 1
-    name: size
+    name: temperature
     items:
-      - pid: 1
-        name: small
-        aliases:
-          - small
-      - pid: 2
-        name: medium
+      - pid: 10
+        name: hot
+        hidden: true
         isDefault: true
         aliases:
-          - medium
-      - pid: 3
-        name: large
+          - hot
+      - pid: 11
+        name: iced
         aliases:
-          - large
+          - iced
   - did: 2
     name: flavor
     items:
@@ -55,18 +52,21 @@ dimensions:
           - decaf
           - decaffeinated
   - did: 4
-    name: temperature
+    name: size
     items:
-      - pid: 10
-        name: hot
-        hidden: true
+      - pid: 1
+        name: small
+        aliases:
+          - small
+      - pid: 2
+        name: medium
         isDefault: true
         aliases:
-          - hot
-      - pid: 11
-        name: iced
+          - medium
+      - pid: 3
+        name: large
         aliases:
-          - iced
+          - large
   - did: 5
     name: milk
     items:
@@ -103,11 +103,26 @@ dimensions:
         name: star
         aliases:
           - starry
+  - did: 7
+    name: relative
+    items:
+      - pid: 300
+        name: extra
+        aliases:
+          - more
+      - pid: 301
+        name: light
+        aliases:
+          - less
+      - pid: 302
+        name: no
+        aliases:
+          - nada
 
 matrices:
   - mid: 1
     name: coffees
-    dimensions: [1,3]
+    dimensions: [1,3,4]
   - mid: 2
     name: cones
     dimensions: [1,2]
@@ -117,3 +132,6 @@ matrices:
   - mid: 4
     name: sprinkles
     dimensions: [6]
+  - mid: 5
+    name: drizzles
+    dimensions: [7,2]
