@@ -88,6 +88,22 @@ dimensions:
         name: soy milk
         aliases:
           - soy [milk]
+  - did: 6
+    name: shape
+    items:
+      - pid: 200
+        name: round
+        aliases:
+          - circle
+      - pid: 201
+        name: square
+        aliases:
+          - box
+      - pid: 202
+        name: star
+        aliases:
+          - starry
+
 matrices:
   - mid: 1
     name: coffees
@@ -98,4 +114,6 @@ matrices:
   - mid: 3
     name: milk
     dimensions: [5]
-
+  - mid: 4
+    name: sprinkles
+    dimensions: [6]
