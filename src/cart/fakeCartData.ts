@@ -1,6 +1,7 @@
 import { Cart, ItemInstance } from './interfaces';
 
 const bread1: ItemInstance = {
+    uid: 0,
     pid: 0,
     name: 'Hamburger Bun',
     aliases: [
@@ -13,6 +14,7 @@ const bread1: ItemInstance = {
 }
 
 const bread2: ItemInstance = {
+    uid: 1,
     pid: 0,
     name: 'Hamburger Bun',
     aliases: [
@@ -25,6 +27,7 @@ const bread2: ItemInstance = {
 }
 
 const lettuce1: ItemInstance = {
+    uid: 2,
     pid: 1,
     name: 'Lettuce',
     aliases: [
@@ -36,6 +39,7 @@ const lettuce1: ItemInstance = {
 }
 
 const lettuce2: ItemInstance = {
+    uid: 3,
     pid: 1,
     name: 'Lettuce',
     aliases: [
@@ -47,6 +51,7 @@ const lettuce2: ItemInstance = {
 }
 
 export const hamburger1: ItemInstance = {
+    uid: 4,
     pid: 2,
     name: 'Hamburger',
     aliases: [
@@ -62,6 +67,7 @@ export const hamburger1: ItemInstance = {
 }
 
 const hamburger2: ItemInstance = {
+    uid: 5,
     pid: 2,
     name: 'Hamburger',
     aliases: [
@@ -75,7 +81,52 @@ const hamburger2: ItemInstance = {
     ]
 }
 
+export const unaddedItem: ItemInstance = {
+    uid: 6,
+    pid: 3,
+    name: 'Medium Coke',
+    aliases: [
+        'Coke',
+        'Coca Cola',
+        'Regular Coke'
+    ],
+    key: 'g',
+    quantity: 1,
+    children: []
+}
+
+export const duplicateUIDItem: ItemInstance = {
+    uid: 5,
+    pid: 3,
+    name: 'Medium Coke',
+    aliases: [
+        'Coke',
+        'Coca Cola',
+        'Regular Coke'
+    ],
+    key: 'g',
+    quantity: 1,
+    children: []
+}
+
+export const duplicateHamburger1: ItemInstance = {
+    uid: 7,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: [
+        'Burger',
+        'Sandwich'
+    ],
+    key: 'h',
+    quantity: 1,
+    children: [
+        bread1,
+        lettuce1
+    ]
+}
+
 export const testOption: ItemInstance = {
+    uid: 8,
     pid: 1,
     name: 'Lettuce',
     aliases: [

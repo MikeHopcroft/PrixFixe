@@ -126,7 +126,7 @@ export interface CartOps {
     // Returns a shallow copy of the cart, omitting the item with the specific
     // UID.
     // TODO: ISSUE: throw or silently return when item not in cart.
-    removeItem: (item: ItemInstance) => Cart;
+    removeItem: (cart: Cart, item: ItemInstance) => Cart;
 
     //
     // Operations involving OptionInstances

@@ -121,24 +121,47 @@ export class CartUtils implements CartOps {
     }
 
     // Returns a shallow copy of the Cart, with the ItemInstance appended.
-    // TODO: IMPLEMENT
+    // TODO: CODE REVIEW.
+    // ISSUE: If a hamburger is added when one is already in the cart, do we
+    // simply up the quantity? Or, since keys are unique between instances,
+    // do we still add a completely new instance of the duplicate item?
     addItem = (cart: Cart, item: ItemInstance): Cart => {
-        return {} as Cart;
+        // TODO: CODE REVIEW. Is this a proper shallow copy?
+        let resCart: Cart = Object.assign({}, cart);
+        resCart.items.push(item);
+        return resCart;
     }
 
     // Returns a shallow copy of the Cart, where the item that shares the new
     // item's UID is replaced with the new item.
-    // TODO: IMPLEMENT
-    replaceItem = (cart: Cart, item: ItemInstance): Cart => {
-        return {} as Cart;
+    // TODO: CODE REVIEW.
+    replaceItem = (cart: Cart, repItem: ItemInstance): Cart => {
+        for (let item of cart.items) {
+            if (item.uid === repItem.uid) {
+                // TODO: CODE REVIEW. Is this a proper shallow copy?
+                item = Object.assign(item, repItem);
+            }
+        }
+        return cart;
     }
 
     // Returns a shallow copy of the cart, omitting the item with the specific
     // UID.
     // TODO: ISSUE: throw or silently return when item not in cart.
-    // TODO: IMPLEMENT
-    removeItem = (item: ItemInstance): Cart => {
-        return {} as Cart;
+    // TODO: CODE REVIEW.
+    // ISSUE: NO CART PARAMTER IN THE INTERFACE, BUT ASSUMING FOR NOW THAT WE
+    // NEED ONE.
+    removeItem = (cart: Cart, remItem: ItemInstance): Cart => {
+        for (let item of cart.items) {
+            if (item.uid === remItem.uid) {
+                // Remove the item
+                const index = cart.items.indexOf(item);
+                if (index > -1) {
+                    cart.items.splice(index, 1);
+                }
+            }
+        }
+        return cart;
     }
 
     //
@@ -166,6 +189,7 @@ export class CartUtils implements CartOps {
         return parent;
     }
 
+    // QUESTION: WHAT DOES AN ATRRIBUTES SET LOOK LIKE
     // TODO: IMPLEMENT
     updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance {
         return parent;
