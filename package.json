@@ -32,7 +32,9 @@
     "mocha": "^6.1.4",
     "typescript": "~3.4.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "ajv": "^6.10.0"
+  },
   "prettier": {
     "tabWidth": 4,
     "singleQuote": true
