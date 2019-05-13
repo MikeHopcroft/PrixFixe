@@ -13,6 +13,11 @@ rules:
   - partialKey: '9000:1'
     validCatagoryMap:
       700:
-        - 6000
+        validOptions:
+          - 6000
+        qtyInfo:
+          defaultQty: 1
+          minQty: 0
+          maxQty: 20
     exclusionZones: {}
       
