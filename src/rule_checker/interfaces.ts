@@ -10,9 +10,13 @@ export interface QuantityInformation {
     minQty: number;
 }
 
-export interface CatagoryMap {
-    [cid: number]: PID[];
+export interface CatagoryInfo {
+    validOptions: PID[];
     qtyInfo: QuantityInformation;
+}
+
+export interface CatagoryMap {
+    [cid: number]: CatagoryInfo;
 }
 
 export interface ExclusionSet {
