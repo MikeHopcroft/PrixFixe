@@ -26,7 +26,7 @@ const bread2: ItemInstance = {
     children: []
 }
 
-const lettuce1: ItemInstance = {
+export const lettuce1: ItemInstance = {
     uid: 2,
     pid: 1,
     name: 'Lettuce',
@@ -95,7 +95,7 @@ export const unaddedItem: ItemInstance = {
     children: []
 }
 
-export const duplicateUIDItem: ItemInstance = {
+export const duplicateUIDCoke: ItemInstance = {
     uid: 5,
     pid: 3,
     name: 'Medium Coke',
@@ -132,8 +132,20 @@ export const testOption: ItemInstance = {
     aliases: [
         'Iceberg'
     ],
-    key: 'd',
-    quantity: 2,
+    key: 'i',
+    quantity: 1,
+    children: []
+}
+
+export const duplicateUIDTomato: ItemInstance = {
+    uid: 2,
+    pid: 4,
+    name: 'Tomato',
+    aliases: [
+        'Roma Tomato'
+    ],
+    key: 'j',
+    quantity: 1,
     children: []
 }
 

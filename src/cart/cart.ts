@@ -170,26 +170,46 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the ItemInstance with the OptionInstance
     // appended. Does not verify that the option is legal for the item.
-    // TODO: IMPLEMENT
+    //
+    // TODO: CODE REVIEW.
     addChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
+        parent.children.push(child);
         return parent;
     }
 
     // Returns a shallow copy of the ItemInstance, where the option that
     // shares the new option's UID is replaced with the new option.
-    // TODO: IMPLEMENT
-    updateChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
+    //
+    // TODO: CODE REVIEW.
+    updateChild(parent: ItemInstance, updChild: ItemInstance): ItemInstance {
+        for (let child of parent.children) {
+            if (child.uid === updChild.uid) {
+                // TODO: CODE REVIEW. Is this a proper shallow copy?
+                child = Object.assign(child, updChild);
+            }
+        }
         return parent;
     }
 
     // Returns a shallow copy of the ItemInstance, omitting the option with
     // the specific UID.
-    // TODO: IMPLEMENT
-    removeChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
+    //
+    // TODO: CODE REVIEW.
+    removeChild(parent: ItemInstance, remChild: ItemInstance): ItemInstance {
+        for (let child of parent.children) {
+            if (child.uid === remChild.uid) {
+                // Remove the item
+                const index = parent.children.indexOf(child);
+                if (index > -1) {
+                    parent.children.splice(index, 1);
+                }
+            }
+        }
         return parent;
     }
 
     // QUESTION: WHAT DOES AN ATRRIBUTES SET LOOK LIKE
+    //
     // TODO: IMPLEMENT
     updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance {
         return parent;

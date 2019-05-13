@@ -2,7 +2,7 @@ import { KEY, PID, Option } from '../catalog';
 import { AID, Cart, ItemInstance, UID, } from './interfaces';
 import { Item } from '../item';
 import { AttributeUtils, CartUtils } from './cart'
-import { duplicateHamburger1, duplicateUIDItem, hamburger1, testCart, testOption, unaddedItem } from './fakeCartData'
+import { duplicateHamburger1, duplicateUIDCoke, duplicateUIDTomato, hamburger1, lettuce1, testCart, testOption, unaddedItem } from './fakeCartData'
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -137,9 +137,9 @@ const addChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
     const resItem: ItemInstance = cartOps.addChild(myParent, myChild);
     console.log(resItem);
 }
-// TODO
+// WORKING AS EXPECTED
 // console.log(`\n##### ADD CHILD TEST #####`);
-// replaceItemTest(hamburger1, lettuce1);
+// addChildTest(hamburger1, tomato1);
 
 
 
@@ -147,9 +147,9 @@ const updateChildTest = (myParent: ItemInstance, myChild: ItemInstance): void =>
     const resItem: ItemInstance = cartOps.updateChild(myParent, myChild);
     console.log(resItem);
 }
-// TODO
+// WORKING AS EXPECTED
 // console.log(`\n##### UPDATE CHILD TEST #####`);
-// updateChildTest(hamburger1, lettuce1);
+// updateChildTest(hamburger1, duplicateUIDTomato);
 
 
 
@@ -158,8 +158,8 @@ const removeChildTest = (myParent: ItemInstance, myChild: ItemInstance): void =>
     console.log(resItem);
 }
 // TODO
-// console.log(`\n##### REMOVE CHILD TEST #####`);
-// removeChildTest(hamburger1, lettuce1);
+console.log(`\n##### REMOVE CHILD TEST #####`);
+removeChildTest(hamburger1, lettuce1);
 
 
 
