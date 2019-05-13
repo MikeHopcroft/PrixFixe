@@ -3,7 +3,9 @@ import {
     KEY,
 } from '../catalog';
 
-//import { } from './interfaces';
+import {
+    QuantityInformation,
+} from './interfaces';
 
 import {
     ValidChildTensor,
@@ -18,7 +20,6 @@ import {
 } from './exclusion_map';
 
 import {
-    QuantityInformation,
     QuantityTensor,
     quantityTensorFactory,
 } from './quantity';
@@ -39,7 +40,7 @@ export interface RuleChecker {
     //   if it can also have white sauce as a child item.
     //
     // Issue: should items be mutally exclusive with themselves?
-    isMutuallyExclusive(parent:KEY, modOne: KEY, modTwo: KEY): boolean;
+    isMutuallyExclusive(parent:KEY, modSet: IterableIterator<KEY>): boolean;
 
     // Gets the default quantity of a child attached to a parent
     //
@@ -52,5 +53,5 @@ export interface RuleChecker {
     // Use case: If a drink comes with lemons, then I may want to limit the
     //   number of lemons allowed in the drink to 5. If I pass this function
     //   6 - with drink as parent and lemons as child, then return false.
-    isValidQuantity(parent: KEY, child: KEY, qty: number): number;
+    isValidQuantity(parent: KEY, child: KEY, qty: number): boolean;
 }
