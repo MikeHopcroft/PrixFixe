@@ -5,13 +5,8 @@ import {
 
 import {
     RuleConfig,
+    QuantityInformation,
 } from './interfaces';
-
-export interface QuantityInformation {
-    defaultQty: number;
-    maxQty: number;
-    minQty: number;
-}
 
 export interface QuantityTensor {
     // NOTE: Weird how I can't use KEY type alias here:
