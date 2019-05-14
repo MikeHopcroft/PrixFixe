@@ -66,6 +66,10 @@ const SAMPLE_RULES: RuleConfig = {
 const latteIcedKey: KEY = '9000:1:0';
 const latteHotKey: KEY = '9000:0:2';
 
+const smallIced: KEY = '9000:1:0';
+const mediumIced: KEY = '9000:1:1';
+const largeIced: KEY = '9000:1:2';
+
 const drizzleKey: KEY = '6000:1:0';
 const anotherDrizzleKey: KEY = '6000:1:2';
 const sprinklesKey: KEY = '7000:2';
@@ -185,7 +189,7 @@ describe('RuleChecker', () => {
     });
 
     describe('Default quantity', () => {
-        it('Fetches the correct default quantity', () => {
+        it('Fetches the correct default quantity for top level rules', () => {
             // Milks should all be one
             assert.deepEqual(
                 ruleChecker.getDefaultQuantity(latteHotKey, wholeMilkKey),
@@ -199,25 +203,187 @@ describe('RuleChecker', () => {
                 ruleChecker.getDefaultQuantity(latteHotKey, soyMilkKey),
                 1
             );
-
-            // TODO: Write teests for drizzle qty
-            //assert.deepEqual(ruleChecker.getDefaultQuantity(),
         });
 
-        // TODO: if there is no defualt quantity, return -1
+        it('Fetches correct default quantity for mid level rules', () => {
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(smallIced, drizzleKey),
+                1
+            );
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(mediumIced, drizzleKey),
+                3
+            );
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(largeIced, drizzleKey),
+                5
+            );
+
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(smallIced, anotherDrizzleKey),
+                1
+            );
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(mediumIced, anotherDrizzleKey),
+                3
+            );
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(largeIced, anotherDrizzleKey),
+                5
+            );
+        });
+
+        it('Returns `-1` for invalid options', () => {
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(latteHotKey, drizzleKey),
+                -1
+            );
+            assert.deepEqual(
+                ruleChecker.getDefaultQuantity(latteHotKey, anotherDrizzleKey),
+                -1
+            );
+        });
     });
 
     describe('Within quantity threshold', () => {
         it('Valid within bounds', () => {
-            // TODO: write these tests
+            assert.isTrue(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 2)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 5)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 9)
+            );
+
+            assert.isTrue(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 2)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 7)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 14)
+            );
+
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 2)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 8)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 19)
+            );
         });
 
         it('Valid on edge of bounds', () => {
-            // TODO: write these tests
+            assert.isTrue(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 0)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 1)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 10)
+            );
+
+            assert.isTrue(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 0)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 1)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 15)
+            );
+
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 0)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 1)
+            );
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 20)
+            );
         });
 
         it('Invalid outside of bounds', () => {
-            // TODO: write these tests
+            assert.isFalse(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, -3)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, -1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 11)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(smallIced, drizzleKey, 47)
+            );
+
+            assert.isFalse(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, -7)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, -1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 16)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(mediumIced, drizzleKey, 56)
+            );
+
+            assert.isFalse(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, -5)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, -1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 21)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(largeIced, drizzleKey, 84)
+            );
+        });
+
+        it('Invalid items return false', () => {
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 2)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 5)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 9)
+            );
+
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 0)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 10)
+            );
+
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, -3)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, -1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 11)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 47)
+            );
         });
     });
 });
