@@ -21,8 +21,6 @@ export class CartUtils implements CartOps {
     //
     // Use case: find all instances of a specific drink like a 'large iced
     // latte'.
-    //
-    // TODO: CODE REVIEW.
     *findItemByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             if (item.key === key) {
@@ -54,8 +52,6 @@ export class CartUtils implements CartOps {
     //
     // ISSUE: do we want a corresponding version that finds options associated
     // with a certain generic option.
-    //
-    // TODO: CODE REVIEW.
     *findItemByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             for (const child of item.children) {
@@ -102,7 +98,6 @@ export class CartUtils implements CartOps {
     // Operations involving ItemInstances
     //
 
-    // TODO: CODE REVIEW.
     *findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.key === key) {
@@ -111,7 +106,6 @@ export class CartUtils implements CartOps {
         }
     }
 
-    // TODO: CODE REVIEW.
     *findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.pid === pid) {
@@ -121,7 +115,6 @@ export class CartUtils implements CartOps {
     }
 
     // Returns a shallow copy of the Cart, with the ItemInstance appended.
-    // TODO: CODE REVIEW.
     // ISSUE: If a hamburger is added when one is already in the cart, do we
     // simply up the quantity? Or, since keys are unique between instances,
     // do we still add a completely new instance of the duplicate item?
@@ -134,7 +127,6 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the Cart, where the item that shares the new
     // item's UID is replaced with the new item.
-    // TODO: CODE REVIEW.
     replaceItem = (cart: Cart, repItem: ItemInstance): Cart => {
         for (let item of cart.items) {
             if (item.uid === repItem.uid) {
@@ -148,7 +140,6 @@ export class CartUtils implements CartOps {
     // Returns a shallow copy of the cart, omitting the item with the specific
     // UID.
     // TODO: ISSUE: throw or silently return when item not in cart.
-    // TODO: CODE REVIEW.
     // ISSUE: NO CART PARAMTER IN THE INTERFACE, BUT ASSUMING FOR NOW THAT WE
     // NEED ONE.
     removeItem = (cart: Cart, remItem: ItemInstance): Cart => {
@@ -170,8 +161,6 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the ItemInstance with the OptionInstance
     // appended. Does not verify that the option is legal for the item.
-    //
-    // TODO: CODE REVIEW.
     addChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
         parent.children.push(child);
         return parent;
@@ -179,12 +168,9 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the ItemInstance, where the option that
     // shares the new option's UID is replaced with the new option.
-    //
-    // TODO: CODE REVIEW.
     updateChild(parent: ItemInstance, updChild: ItemInstance): ItemInstance {
         for (let child of parent.children) {
             if (child.uid === updChild.uid) {
-                // TODO: CODE REVIEW. Is this a proper shallow copy?
                 child = Object.assign(child, updChild);
             }
         }
@@ -193,12 +179,9 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the ItemInstance, omitting the option with
     // the specific UID.
-    //
-    // TODO: CODE REVIEW.
     removeChild(parent: ItemInstance, remChild: ItemInstance): ItemInstance {
         for (let child of parent.children) {
             if (child.uid === remChild.uid) {
-                // Remove the item
                 const index = parent.children.indexOf(child);
                 if (index > -1) {
                     parent.children.splice(index, 1);
@@ -209,6 +192,11 @@ export class CartUtils implements CartOps {
     }
 
     // QUESTION: WHAT DOES AN ATRRIBUTES SET LOOK LIKE
+    //   - Everything is an entity, except attributes.
+    //
+    // Possibly add some convenience methods in matrix
+    // Pull over directory into PrixFixe, make sure to grab unit tests
+    // Test branch for unit tests in attributes
     //
     // TODO: IMPLEMENT
     updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance {
@@ -225,7 +213,10 @@ export class CartUtils implements CartOps {
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class AttributeUtils implements AttributeUtilities {
-    // private readonly;
+
+    //
+    // Operations involving Attributes.
+    //
 
     constructor() {
     }
@@ -243,6 +234,7 @@ export class AttributeUtils implements AttributeUtilities {
     // specific product 'large iced latte'.
     // TODO: ISSUE: throw or return undefined?
     // TODO: IMPLEMENT
+    // pid === entityId, set<AID> is the map
     createItemInstance(pid: PID, attributes: Set<AID>): ItemInstance | undefined {
         return undefined;
     }
