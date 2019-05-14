@@ -4,6 +4,8 @@ import {
 } from '../catalog';
 
 import {
+    RuleCheckerOps,
+    RuleConfig,
     QuantityInformation,
 } from './interfaces';
 
@@ -24,34 +26,33 @@ import {
     quantityTensorFactory,
 } from './quantity';
 
-// TODO: make this into a class.
-// TODO: constructor will utilize various tensor factories
-export interface RuleChecker {
-    // Check is an item is a valid child for another item
-    // Uses a ValidChildTensor to build a set of predicates, which must
-    //   evaluate to true over their intersection.
-    //
-    // Use case: Can an ingredient be added to a standalone item?
-    isValidChild(parent: KEY, child: KEY): boolean;
+export class RuleChecker implements RuleCheckerOps {
+    // TODO: constructor will utilize various tensor factories
+    constructor (ruleSet: RuleConfig) {
 
-    // Check if two modifiers are in a mutually exclusive set
-    //
-    // Use case: If a pizza has red sauce as a child item, then I want to know
-    //   if it can also have white sauce as a child item.
-    //
-    // Issue: should items be mutally exclusive with themselves?
-    isMutuallyExclusive(parent:KEY, modSet: IterableIterator<KEY>): boolean;
+    }
 
-    // Gets the default quantity of a child attached to a parent
-    //
-    // Use case: When I add ketchup packets to a burger, I want to know whether
-    //   I should add one or two.
-    getDefaultQuantity(parent: KEY, child: KEY): number;
+    // See `RuleCheckerOps for docs
+    isValidChild = (parent: KEY, child: KEY): boolean => {
+        // TODO: implement me
+        return false;
+    }
 
-    // Predicate to validate that a quantity is within a threshold
-    //
-    // Use case: If a drink comes with lemons, then I may want to limit the
-    //   number of lemons allowed in the drink to 5. If I pass this function
-    //   6 - with drink as parent and lemons as child, then return false.
-    isValidQuantity(parent: KEY, child: KEY, qty: number): boolean;
+    // See `RuleCheckerOps for docs
+    isMutuallyExclusive = (parent:KEY, modSet: IterableIterator<KEY>): boolean => {
+        // TODO: implement me
+        return false;
+    }
+
+    // See `RuleCheckerOps for docs
+    getDefaultQuantity = (parent: KEY, child: KEY): number => {
+        // TODO: implement me
+        return -1;
+    }
+
+    // See `RuleCheckerOps for docs
+    isValidQuantity = (parent: KEY, child: KEY, qty: number): boolean => {
+        // TODO: implement me
+        return false;
+    }
 }
