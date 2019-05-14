@@ -1,7 +1,14 @@
 rules:
   # For all lattes, we can only add one type of milk
   - partialKey: '9000'
-    validCatagoryMap: {}
+    validCatagoryMap:
+      500:
+        validOptions:
+          - 5000
+        qtyInfo:
+          defaultQty: 1
+          minQty: 1
+          maxQty: 1
     exclusionZones:
       500:
         - 5000
