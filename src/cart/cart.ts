@@ -36,8 +36,6 @@ export class CartUtils implements CartOps {
     // Use case: want to find all lattes, regardless of attributes. Searching
     // with the GPID for 'latte' might return ItemInstances for a 'medium iced
     // latte' and a 'small hot latte'.
-    //
-    // TODO: Only returns one item instance, not ALL matching instances.
     *findItemByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             if (item.pid === pid) {
@@ -62,7 +60,6 @@ export class CartUtils implements CartOps {
         }
     }
 
-    // TODO: Only returns one item instance, not ALL matching instances.
     *findItemByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             for (const child of item.children) {
@@ -119,7 +116,6 @@ export class CartUtils implements CartOps {
     // simply up the quantity? Or, since keys are unique between instances,
     // do we still add a completely new instance of the duplicate item?
     addItem = (cart: Cart, item: ItemInstance): Cart => {
-        // TODO: CODE REVIEW. Is this a proper shallow copy?
         let resCart: Cart = Object.assign({}, cart);
         resCart.items.push(item);
         return resCart;
@@ -130,7 +126,6 @@ export class CartUtils implements CartOps {
     replaceItem = (cart: Cart, repItem: ItemInstance): Cart => {
         for (let item of cart.items) {
             if (item.uid === repItem.uid) {
-                // TODO: CODE REVIEW. Is this a proper shallow copy?
                 item = Object.assign(item, repItem);
             }
         }
@@ -193,6 +188,7 @@ export class CartUtils implements CartOps {
 
     // QUESTION: WHAT DOES AN ATRRIBUTES SET LOOK LIKE
     //   - Everything is an entity, except attributes.
+    //   - ([90:1:2, 54:4:10, 18:16:2])
     //
     // Possibly add some convenience methods in matrix
     // Pull over directory into PrixFixe, make sure to grab unit tests
