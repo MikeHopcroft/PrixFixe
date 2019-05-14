@@ -20,5 +20,14 @@ export interface ValidChildTensor {
 
 // TODO: implement child tensor factory
 export const childTensorFactory = (ruleSet: RuleConfig): ValidChildTensor => {
-    return {};
+    const childTensor: ValidChildTensor = {};
+
+    for (const rule of ruleSet.rules) {
+        // Assign a ValidChildPredicate function to the partial key
+        childTensor[rule.partialKey] = (child: KEY): boolean => {
+            return false;
+        };
+    }
+
+    return childTensor;
 };
