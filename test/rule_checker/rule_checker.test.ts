@@ -36,8 +36,21 @@ const SAMPLE_RULES: RuleConfig = {
                     // Drizzle catagory
                     validOptions: [6000], // Generic drizzle
                     qtyInfo: {
-                        '': {
+                        // Small iced lattes
+                        '0': {
                             defaultQty: 1,
+                            minQty: 0,
+                            maxQty: 10,
+                        },
+                        // Medium iced lattes
+                        '1': {
+                            defaultQty: 3,
+                            minQty: 0,
+                            maxQty: 15,
+                        },
+                        // Large iced lattes
+                        '2': {
+                            defaultQty: 5,
                             minQty: 0,
                             maxQty: 20,
                         },

@@ -6,6 +6,7 @@ rules:
         validOptions:
           - 5000
         qtyInfo:
+          # sizes for ALL lattes
           '': 
             defaultQty: 1
             minQty: 1
@@ -26,8 +27,19 @@ rules:
         validOptions:
           - 6000
         qtyInfo:
-          '':
+          # Sizes for small iced lattes
+          '0':
             defaultQty: 1
+            minQty: 0
+            maxQty: 10
+          # Sizes for medium iced lattes
+          '1':
+            defaultQty: 3
+            minQty: 0
+            maxQty: 15
+          # Sizes for large iced lattes
+          '2':
+            defaultQty: 5
             minQty: 0
             maxQty: 20
     exclusionZones: {}
