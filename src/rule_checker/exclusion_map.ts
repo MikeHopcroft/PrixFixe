@@ -1,6 +1,7 @@
 import {
     KEY,
     PID,
+    GenericTypedEntity,
 } from '../catalog';
 
 import {
@@ -20,7 +21,8 @@ export interface ExclusionTensor {
 
 // TODO: implement exclusion set map factory
 export const mutualExclusionTensorFactory = (
-    ruleSet: RuleConfig
+    ruleSet: RuleConfig,
+    genMap: Map<PID, GenericTypedEntity>
 ): ExclusionTensor => {
     return {};
 };

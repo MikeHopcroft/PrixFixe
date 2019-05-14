@@ -1,6 +1,7 @@
 import {
     PID,
     KEY,
+    GenericTypedEntity,
 } from '../catalog';
 
 import {
@@ -15,7 +16,8 @@ export interface QuantityTensor {
 }
 
 export const quantityTensorFactory = (
-    rulsSet: RuleConfig
+    rulesSet: RuleConfig,
+    genMap: Map<PID, GenericTypedEntity>
 ): QuantityTensor => {
     return {};
 };

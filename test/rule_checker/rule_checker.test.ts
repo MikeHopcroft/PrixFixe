@@ -2,7 +2,55 @@ import { assert } from 'chai';
 import 'mocha';
 
 import { RuleChecker, RuleConfig } from '../../src/rule_checker';
-import { KEY } from '../../src/catalog/interfaces';
+import {
+    KEY,
+    PID,
+    CID,
+    OPTION,
+    MENUITEM,
+    MatrixID,
+    GenericEntity,
+    GenericTypedEntity,
+    genericEntityFactory,
+} from '../../src/catalog/interfaces';
+
+const genericTypedEntityFactory = (
+    pid: PID,
+    cid: CID,
+    name: string,
+    defaultKey: KEY,
+    aliases: string[],
+    matrix: MatrixID,
+    kind: symbol
+): GenericTypedEntity => {
+    return genericEntityFactory({
+        pid,
+        cid,
+        name,
+        aliases,
+        defaultKey,
+        matrix,
+    } as GenericEntity, kind);
+};
+
+const genericEntityMapFactory = (gens: GenericTypedEntity[]) => {
+    const map = new Map<PID, GenericTypedEntity>();
+
+    gens.forEach(x => {
+        map.set(x.pid, x);
+    });
+
+    return map;
+};
+
+const generics = [
+    genericTypedEntityFactory(8000, 100, 'cone', '8000:0:0', ['cone', 'ice cream [cone]'], 2, MENUITEM),
+    genericTypedEntityFactory(9000, 200, 'latte', '9000:0:0:0', ['latte'], 1, MENUITEM),
+    genericTypedEntityFactory(7000, 600, 'spinkles', '7000:2', ['sprinkle'], 4, OPTION),
+    genericTypedEntityFactory(6000, 700, 'drizzle', '6000:0:1', ['drizz'], 5, OPTION),
+];
+
+const genericMap = genericEntityMapFactory(generics);
 
 const SAMPLE_RULES: RuleConfig = {
     rules: [
@@ -79,7 +127,7 @@ const soyMilkKey: KEY = '5000:3';
 const twoMilkKey: KEY = '5000:1';
 const wholeMilkKey: KEY = '5000:0';
 
-const ruleChecker = new RuleChecker(SAMPLE_RULES);
+const ruleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
 
 describe('RuleChecker', () => {
     describe('Is valid child', () => {
@@ -98,9 +146,9 @@ describe('RuleChecker', () => {
             );
 
             // Sprinkles cannot be in an iced latte
-            assert.isTrue(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
+            assert.isFalse(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
             // More sprinkles cannot be in an iced latte
-            assert.isTrue(
+            assert.isFalse(
                 ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey)
             );
         });

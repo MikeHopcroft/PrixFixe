@@ -1,11 +1,6 @@
-import {
-    PID,
-    KEY,
-} from '../catalog';
+import { PID, KEY, GenericTypedEntity } from '../catalog';
 
-import {
-    RuleConfig,
-} from './interfaces';
+import { RuleConfig } from './interfaces';
 
 // Given a child PID, is this child valid at the tensor coordinate?
 export interface ValidChildPredicate {
@@ -19,12 +14,33 @@ export interface ValidChildTensor {
 }
 
 // TODO: implement child tensor factory
-export const childTensorFactory = (ruleSet: RuleConfig): ValidChildTensor => {
+export const childTensorFactory = (
+    ruleSet: RuleConfig,
+    genMap: Map<PID, GenericTypedEntity>
+): ValidChildTensor => {
     const childTensor: ValidChildTensor = {};
 
     for (const rule of ruleSet.rules) {
         // Assign a ValidChildPredicate function to the partial key
         childTensor[rule.partialKey] = (child: KEY): boolean => {
+            // API specifies KEY, but we use PIDs in this implementation
+            const childPID = Number(child.split(':')[0]);
+            const option = genMap.get(childPID);
+
+            // If the option exists
+            if (option) {
+                const catagoryID = option.cid;
+                const catagory = rule.validCatagoryMap[catagoryID];
+
+                // If the catagory of the option is valid for the partial key
+                if (catagory) {
+                    // If the PID exists as a valid generic in the catagory
+                    if (catagory.validOptions.indexOf(childPID) > -1) {
+                        return true;
+                    }
+                }
+            }
+            
             return false;
         };
     }
