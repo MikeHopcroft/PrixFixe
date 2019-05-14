@@ -1,18 +1,18 @@
+// TODO: Update catalog for Prixfixe
+//       API needs to be refactored
 import {
-    CatalogItems,
-    ItemDescription,
-    ParentItemDescription,
-    ComponentDescription
+    GenericTypedEntity,
+    KEY,
+    PID,
+    MatrixID,
+    SpecificTypedEntity
 } from './interfaces';
-import { GenericTypedEntity, KEY, PID, SpecificTypedEntity } from './interfaces';
 
-// import { }
-
-export type OptionOfPredicate = (
-    catalog: Catalog,
-    child: PID,
-    parent: PID
-) => boolean;
+//export type OptionOfPredicate = (
+    //catalog: Catalog,
+    //child: PID,
+    //parent: PID
+//) => boolean;
 
 // TODO: No need to implement CatalogItems.
 export class Catalog {
@@ -21,7 +21,7 @@ export class Catalog {
     // items: ItemDescription[];
     readonly mapGeneric = new Map<PID, GenericTypedEntity>();
     readonly mapSpecific = new Map<KEY, SpecificTypedEntity>();
-    private optionOfPredicate: OptionOfPredicate | undefined;
+    //private optionOfPredicate: OptionOfPredicate | undefined;
 
     constructor(
         genericItems: IterableIterator<GenericTypedEntity>,
@@ -39,27 +39,27 @@ export class Catalog {
         }
 
         for (const item of specificItems) {
-            if (this.mapSpecific.has(item.sku)) {
+            if (this.mapSpecific.has(item.key)) {
                 throw TypeError(
-                    `Catalog: encountered duplicate sku ${item.sku}.`
+                    `Catalog: encountered duplicate key ${item.key}.`
                 );
             }
-            this.mapSpecific.set(item.sku, item);
+            this.mapSpecific.set(item.key, item);
         }
     }
 
     // DESGIN NOTE: can't just assign `this.map.has` to `has` because `this` won't
     // be bound correctly.
-    has(pid: PID) {
+    hasPID(pid: PID) {
         return this.mapGeneric.has(pid);
     }
 
-    hasSKU(sku: PID) {
-        return this.mapSpecific.has(sku);
+    hasKEY(key: KEY) {
+        return this.mapSpecific.has(key);
     }
 
     // TODO: modify get to throw if not available.
-    getParent(pid: PID): ParentItemDescription {
+    getGeneric(pid: PID): GenericTypedEntity {
         const item = this.mapGeneric.get(pid);
         if (!item) {
             throw TypeError(`Catalog.get(): cannot find pid=${pid}`);
@@ -68,32 +68,16 @@ export class Catalog {
     }
 
     // TODO: modify get to throw if not available.
-    get(sku: PID): ItemDescription {
-        const item = this.mapSpecific.get(sku);
+    getSpecific(key: KEY): SpecificTypedEntity {
+        const item = this.mapSpecific.get(key);
         if (!item) {
-            throw TypeError(`Catalog.get(): cannot find sku=${sku}`);
+            throw TypeError(`Catalog.get(): cannot find key=${key}`);
         }
         return item;
     }
 
-    isDefaultOf(child: PID, parent: PID): boolean {
-        const p = this.get(parent);
-        return (
-            p.composition.defaults.find(
-                component => component.pid === child
-            ) !== undefined
-        );
-    }
-
-    getDefaultInfo(child: PID, parent: PID): ComponentDescription | undefined {
-        const p = this.get(parent);
-        return p.composition.defaults.find(
-            component => component.pid === child
-        );
-    }
-
     // TODO: MatrixID Type?
-    getMatrixFromPID(pid: PID): number {
+    getMatrixFromPID(pid: PID): MatrixID {
         const result = this.mapGeneric.get(pid);
 
         if (result) {
@@ -103,66 +87,93 @@ export class Catalog {
         }
     }
 
-    isChoiceOf(child: PID, parent: PID): boolean {
-        const p = this.get(parent);
-        for (const choice of p.composition.choices) {
-            if (
-                choice.alternatives.find(alternative => child === alternative)
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
+    // TODO: Either rewrite or remove this function
+    //isDefaultOf(child: PID, parent: PID): boolean {
+        //const p = this.get(parent);
+        //return (
+            //p.composition.defaults.find(
+                //component => component.pid === child
+            //) !== undefined
+        //);
+    //}
 
-    setOptionOfPredicate(predicate: OptionOfPredicate) {
-        this.optionOfPredicate = predicate;
-    }
+    // TODO: Remove or decide this is a facade for RuleChecker
+    //getDefaultInfo(child: PID, parent: PID): ComponentDescription | undefined {
+        //const p = this.get(parent);
+        //return p.composition.defaults.find(
+            //component => component.pid === child
+        //);
+    //}
 
-    isOptionOf(child: PID, parent: PID): boolean {
-        if (this.optionOfPredicate) {
-            return this.optionOfPredicate(this, child, parent);
-        } else {
-            const p = this.get(parent);
-            return (
-                p.composition.options.find(option => option.pid === child) !==
-                undefined
-            );
-        }
-    }
+    // TODO: Remove or decide this is a facade for RuleChecker
+    //isChoiceOf(child: PID, parent: PID): boolean {
+        //const p = this.get(parent);
+        //for (const choice of p.composition.choices) {
+            //if (
+                //choice.alternatives.find(alternative => child === alternative)
+            //) {
+                //return true;
+            //}
+        //}
+        //return false;
+    //}
 
-    isSubstitutionOf(child: PID, parent: PID): boolean {
-        const p = this.get(parent);
-        return (
-            p.composition.substitutions.find(
-                substitution => substitution.replaceWith === child
-            ) !== undefined
-        );
-    }
+    // TODO: Remove or decide this is a facade for RuleChecker
+    // ISSUE: This may be made obsolete by PredicateTensors
+    //setOptionOfPredicate(predicate: OptionOfPredicate) {
+        //this.optionOfPredicate = predicate;
+    //}
 
-    isComponentOf(child: PID, parent: PID) {
-        return (
-            this.isDefaultOf(child, parent) ||
-            this.isChoiceOf(child, parent) ||
-            this.isOptionOf(child, parent) ||
-            this.isSubstitutionOf(child, parent)
-        );
-    }
+    // TODO: Remove or decide this is a facade for RuleChecker
+    //isOptionOf(child: PID, parent: PID): boolean {
+        //if (this.optionOfPredicate) {
+            //return this.optionOfPredicate(this, child, parent);
+        //} else {
+            //const p = this.get(parent);
+            //return (
+                //p.composition.options.find(option => option.pid === child) !==
+                //undefined
+            //);
+        //}
+    //}
 
-    isNote(pid: PID) {
-        const item = this.get(pid);
-        return item.note === true;
-    }
+    // TODO: Remove or decide this is a facade for RuleChecker
+    // ISSUE: Is this buisiness logic in the scope of PrixFixe?
+    //isSubstitutionOf(child: PID, parent: PID): boolean {
+        //const p = this.get(parent);
+        //return (
+            //p.composition.substitutions.find(
+                //substitution => substitution.replaceWith === child
+            //) !== undefined
+        //);
+    //}
 
-    defaultQuantity(child: PID, parent: PID) {
-        const p = this.get(parent);
-        const component = p.composition.defaults.find(
-            component => component.pid === child
-        );
-        if (component) {
-            return component.defaultQuantity;
-        } else {
-            return 0;
-        }
-    }
+    // TODO: Remove or decide this is a facade for RuleChecker
+    //isComponentOf(child: PID, parent: PID) {
+        //return (
+            //this.isDefaultOf(child, parent) ||
+            //this.isChoiceOf(child, parent) ||
+            //this.isOptionOf(child, parent) ||
+            //this.isSubstitutionOf(child, parent)
+        //);
+    //}
+
+    // TODO: Are notes a first class citizen in our universe?
+    //isNote(pid: PID) {
+        //const item = this.get(pid);
+        //return item.note === true;
+    //}
+
+    // TODO: Remove or decide this is a facade for RuleChecker
+    //defaultQuantity(child: PID, parent: PID) {
+        //const p = this.get(parent);
+        //const component = p.composition.defaults.find(
+            //component => component.pid === child
+        //);
+        //if (component) {
+            //return component.defaultQuantity;
+        //} else {
+            //return 0;
+        //}
+    //}
 }

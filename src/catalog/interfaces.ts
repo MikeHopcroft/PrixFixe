@@ -37,6 +37,8 @@ export interface SpecificEntity extends Entity {
 //   entities. The intention here is for it to be used similar to a mixin.
 ///////////////////////////////////////////////////////////////////////////////
 export type TypedEntity = MenuItem | Option | Modifier;
+export type GenericTypedEntity = TypedEntity & GenericEntity;
+export type SpecificTypedEntity = TypedEntity & SpecificEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Symbols to be used for type annotations, allowing for polymorphic behavior
@@ -90,11 +92,11 @@ export interface Modifier extends Entity {
 ///////////////////////////////////////////////////////////////////////////////
 
 export const genericEntityFactory = (entity: GenericEntity, kind: symbol) => {
-    return entityTyper(entity, kind) as TypedEntity & GenericEntity;
+    return entityTyper(entity, kind) as GenericTypedEntity;
 };
 
 export const specificEntityFactory = (entity: SpecificEntity, kind: symbol) => {
-    return entityTyper(entity, kind) as TypedEntity & SpecificEntity;
+    return entityTyper(entity, kind) as SpecificTypedEntity;
 };
 
 // TODO: is there a AJV factory for types?
