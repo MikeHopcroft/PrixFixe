@@ -27,9 +27,15 @@ import {
 } from './quantity';
 
 export class RuleChecker implements RuleCheckerOps {
+    private childTensor: ValidChildTensor;
+    private mutualTensor: ExclusionTensor;
+    private quantityTensor: QuantityTensor;
+
     // TODO: constructor will utilize various tensor factories
     constructor (ruleSet: RuleConfig) {
-
+        this.childTensor = childTensorFactory(ruleSet);
+        this.mutualTensor = mutualExclusionTensorFactory(ruleSet);
+        this.quantityTensor = quantityTensorFactory(ruleSet);
     }
 
     // See `RuleCheckerOps for docs
