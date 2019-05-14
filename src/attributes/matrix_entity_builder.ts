@@ -1,6 +1,6 @@
 import { PID } from '../catalog';
 
-import { AttributeToken, EntityToken, OptionToken } from '../../../ShortOrder/build/src/unified';
+import { AttributeToken, EntityToken, OptionToken } from '../../../ShortOrder/src/unified';
 
 import { AttributeInfo } from './attribute_info';
 import { Matrix } from './matrix';
@@ -19,7 +19,7 @@ export class MatrixEntityBuilder {
     private readonly info: AttributeInfo;
 
     private entityId: PID | undefined = undefined;
-    
+
     private readonly dimensionIdToAttribute = new Map<PID, PID>();
 
     constructor(info: AttributeInfo) {
@@ -92,7 +92,7 @@ export class MatrixEntityBuilder {
         if (!matrix) {
             matrix = new Matrix(0, []);
         }
-        
+
         for (const [did, aid] of this.dimensionIdToAttribute.entries()) {
             if (!matrix.hasDimension(did)) {
                 yield aid;

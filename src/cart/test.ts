@@ -2,7 +2,7 @@ import { KEY, PID, Option } from '../catalog';
 import { AID, Cart, ItemInstance, UID, } from './interfaces';
 import { Item } from '../item';
 import { AttributeUtils, CartUtils } from './cart'
-import { duplicateHamburger1, duplicateUIDCoke, duplicateUIDTomato, hamburger1, lettuce1, testCart, testOption, tomato1, unaddedItem } from './fakeCartData'
+import { duplicateHamburger1, duplicateUIDCoke, duplicateUIDTomato, hamburger1, lettuce1, testCart, testOption, tomato1, unaddedItem } from './fake_cart_data'
 
 ///////////////////////////////////////////////////////////////////////////////
 //

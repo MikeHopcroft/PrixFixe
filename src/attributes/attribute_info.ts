@@ -1,5 +1,5 @@
 import { PID } from '../catalog';
-import { Catalog } from '../../../ShortOrder/build/src/catalog/catalog';
+import { Catalog } from '../../../ShortOrder/src/catalog/catalog';
 
 import { Dimension } from './dimension';
 import { Attributes } from './interfaces';
@@ -73,14 +73,14 @@ export class AttributeInfo {
         for (const attribute of dimension.attributes) {
             if (this.attributeIdToCoordinate.has(attribute.pid)) {
                 const message = `found duplicate attribute pid ${attribute.pid}.`;
-                throw new TypeError(message);    
+                throw new TypeError(message);
             }
             this.attributeIdToCoordinate.set(attribute.pid, { dimension, position });
 
             if (attribute.sku !== undefined) {
                 if (this.attributeIdToSKU.has(attribute.sku)) {
                     const message = `found duplicate attribute pid ${attribute.pid}.`;
-                    throw new TypeError(message);       
+                    throw new TypeError(message);
                 }
                 this.attributeIdToSKU.set(attribute.pid, attribute.sku);
             }
