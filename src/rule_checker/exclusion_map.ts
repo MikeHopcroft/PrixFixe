@@ -1,4 +1,5 @@
 import {
+    KEY,
     PID,
 } from '../catalog';
 
@@ -8,7 +9,7 @@ import {
 
 // Given a two modifiers, are they mutually exlusive with each other?
 export interface MutualExclusionPredicate {
-    (modOne: PID, modTwo: PID): boolean;
+    (modOne: KEY, modTwo: KEY): boolean;
 }
 
 export interface ExclusionTensor {

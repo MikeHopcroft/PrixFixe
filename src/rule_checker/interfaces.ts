@@ -10,9 +10,16 @@ export interface QuantityInformation {
     minQty: number;
 }
 
+export interface DownstreamQuantity {
+    // Assumes that quantity information is relevant for the
+    //   rest of the hierarchy. Use the empty string to match all downstream
+    //   attributes.
+    [partialKey: string]: QuantityInformation;
+}
+
 export interface CatagoryInfo {
     validOptions: PID[];
-    qtyInfo: QuantityInformation;
+    qtyInfo: DownstreamQuantity;
 }
 
 export interface CatagoryMap {
@@ -27,6 +34,7 @@ export interface PartialRule {
     partialKey: KEY;
     validCatagoryMap: CatagoryMap;
     exclusionZones: ExclusionSet;
+    specificExceptions: KEY[];
 }
 
 // The shape of the `rule.yaml` file

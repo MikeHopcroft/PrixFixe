@@ -28,6 +28,8 @@ import {
 
 export class RuleChecker implements RuleCheckerOps {
     private childTensor: ValidChildTensor;
+    // TODO: implement ExceptionTensor
+    //private exceptionTensor: ExceptionTensor;
     private mutualTensor: ExclusionTensor;
     private quantityTensor: QuantityTensor;
 

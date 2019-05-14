@@ -3,13 +3,15 @@ import * as YAML from 'js-yaml';
 
 import { RuleConfig } from './interfaces';
 
+// generated with:
+// typescript-json-schema tsconfig.json RuleConfig --required
 const ruleConfigSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     definitions: {
         CatagoryInfo: {
             properties: {
                 qtyInfo: {
-                    $ref: '#/definitions/QuantityInformation',
+                    $ref: '#/definitions/DownstreamQuantity',
                 },
                 validOptions: {
                     items: {
@@ -19,6 +21,12 @@ const ruleConfigSchema = {
                 },
             },
             required: ['qtyInfo', 'validOptions'],
+            type: 'object',
+        },
+        DownstreamQuantity: {
+            additionalProperties: {
+                $ref: '#/definitions/QuantityInformation',
+            },
             type: 'object',
         },
         PartialRule: {
@@ -38,6 +46,12 @@ const ruleConfigSchema = {
                 partialKey: {
                     type: 'string',
                 },
+                specificExceptions: {
+                    items: {
+                        type: 'string',
+                    },
+                    type: 'array',
+                },
                 validCatagoryMap: {
                     additionalProperties: false,
                     patternProperties: {
@@ -48,7 +62,12 @@ const ruleConfigSchema = {
                     type: 'object',
                 },
             },
-            required: ['exclusionZones', 'partialKey', 'validCatagoryMap'],
+            required: [
+                'exclusionZones',
+                'partialKey',
+                'specificExceptions',
+                'validCatagoryMap',
+            ],
             type: 'object',
         },
         QuantityInformation: {
