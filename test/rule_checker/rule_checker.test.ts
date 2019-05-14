@@ -49,48 +49,116 @@ const ruleChecker = new RuleChecker(SAMPLE_RULES);
 
 describe('RuleChecker', () => {
     describe('Is valid child', () => {
-        it('A drizzle cannot be in a hot latte', () => {
-            assert(!ruleChecker.isValidChild(latteHotKey, drizzleKey));
+        it('Invalid children evaluate to false', () => {
+            // Drizzles cannot be in hot lattes
+            assert.isFalse(ruleChecker.isValidChild(latteHotKey, drizzleKey));
+            // Another drizzle cannot be in a hot latte
+            assert.isFalse(ruleChecker.isValidChild(latteHotKey, anotherDrizzleKey));
+            // Sprinkles cannot be in lattes
+            assert.isFalse(ruleChecker.isValidChild(latteHotKey, sprinklesKey));
+            // More sprinkles also don't belong in lattes
+            assert.isFalse(ruleChecker.isValidChild(latteHotKey, anotherSprinleKey));
+
+            // Sprinkles cannot be in an iced latte
+            assert.isTrue(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
+            // More sprinkles cannot be in an iced latte
+            assert.isTrue(ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey));
         });
 
-        it('Another drizzle cannot be in a hot latte', () => {
-            assert(!ruleChecker.isValidChild(latteHotKey, anotherDrizzleKey));
+
+        it('Valid children evaluate to true', () => {
+            // A drizzle can be in an iced latte
+            assert.isTrue(ruleChecker.isValidChild(latteIcedKey, drizzleKey));
+            // More drizzles can be in iced lattes
+            assert.isTrue(ruleChecker.isValidChild(latteIcedKey, anotherDrizzleKey));
         });
 
-        it('Sprinkles cannot be in a hot latte', () => {
-            assert(!ruleChecker.isValidChild(latteHotKey, sprinklesKey));
-        });
-
-        it('More sprinkles cannot be in a hot latte', () => {
-            assert(!ruleChecker.isValidChild(latteHotKey, anotherSprinleKey));
-        });
-
-        it('A drizzle can be in an iced latte', () => {
-            assert(ruleChecker.isValidChild(latteIcedKey, drizzleKey));
-        });
-
-        it('Another drizzle can be in an iced latte', () => {
-            assert(ruleChecker.isValidChild(latteIcedKey, anotherDrizzleKey));
-        });
-
-        it('Sprinkles can be in an iced latte', () => {
-            assert(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
-        });
-
-        it('More sprinkles can be in an iced latte', () => {
-            assert(ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey));
-        });
+        // TODO: Add test for specificException
     });
 
     describe('Are mutually exclusive', () => {
+        const failSet: IterableIterator<KEY> = [
+            soyMilkKey,
+            twoMilkKey,
+            wholeMilkKey,
+        ].values();
 
+        it('Cannot have three items from a mutually exclusive set.', () => {
+            assert.isFalse(ruleChecker.isMutuallyExclusive('latteHotKey', failSet));
+        });
+
+        const failSetTwo: IterableIterator<KEY> = [
+            soyMilkKey,
+            twoMilkKey,
+        ].values();
+
+        const failSetThree: IterableIterator<KEY> = [
+            soyMilkKey,
+            wholeMilkKey,
+        ].values();
+
+        const failSetFour: IterableIterator<KEY> = [
+            twoMilkKey,
+            wholeMilkKey,
+        ].values();
+
+        it('Cannot have two items from a mutually exclusive set.', () => {
+            assert.isFalse(ruleChecker.isMutuallyExclusive(latteHotKey, failSetTwo));
+            assert.isFalse(ruleChecker.isMutuallyExclusive(latteHotKey, failSetThree));
+            assert.isFalse(ruleChecker.isMutuallyExclusive(latteHotKey, failSetFour));
+
+            assert.isFalse(ruleChecker.isMutuallyExclusive(latteIcedKey, failSetTwo));
+            assert.isFalse(ruleChecker.isMutuallyExclusive(latteIcedKey, failSetThree));
+            assert.isFalse(ruleChecker.isMutuallyExclusive(latteIcedKey, failSetFour));
+        });
+
+        const successSet: IterableIterator<KEY> = [
+            soyMilkKey,
+        ].values();
+
+        const successSetTwo: IterableIterator<KEY> = [
+            twoMilkKey,
+        ].values();
+
+        const successSetThree: IterableIterator<KEY> = [
+            wholeMilkKey,
+        ].values();
+
+        it('Individual items can exist by themselves', () => {
+            assert.isTrue(ruleChecker.isMutuallyExclusive(latteHotKey, successSet));
+            assert.isTrue(ruleChecker.isMutuallyExclusive(latteHotKey, successSetTwo));
+            assert.isTrue(ruleChecker.isMutuallyExclusive(latteHotKey, successSetThree));
+        });
+
+        // TODO: Add test for items that belong to different exclusion zones
     });
 
     describe('Default quantity', () => {
+        it('Fetches the correct default quantity', () => {
+            // Milks should all be one
+            assert.deepEqual(ruleChecker.getDefaultQuantity(latteHotKey, wholeMilkKey), 1);
+            assert.deepEqual(ruleChecker.getDefaultQuantity(latteHotKey, twoMilkKey), 1);
+            assert.deepEqual(ruleChecker.getDefaultQuantity(latteHotKey, soyMilkKey), 1);
 
+            // TODO: Write teests for drizzle qty
+            //assert.deepEqual(ruleChecker.getDefaultQuantity(), 
+
+        });
+
+        // TODO: if there is no defualt quantity, return -1
     });
 
     describe('Within quantity threshold', () => {
+        it('Valid within bounds', () => {
+            // TODO: write these tests
+        });
 
+        it('Valid on edge of bounds', () => {
+            // TODO: write these tests
+        });
+
+        it('Invalid outside of bounds', () => {
+            // TODO: write these tests
+        });
     });
 });
