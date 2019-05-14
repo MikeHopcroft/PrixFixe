@@ -1,6 +1,6 @@
 import { PID } from '../catalog';
 
-import { IndexableItem } from '../../../ShortOrder/src/catalog/interfaces';
+import { IndexableItem } from 'short-order';
 
 export interface AttributeItem extends IndexableItem {
     pid: PID;

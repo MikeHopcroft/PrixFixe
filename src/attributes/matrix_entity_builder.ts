@@ -1,8 +1,7 @@
-import { PID } from '../catalog';
-
-import { AttributeToken, EntityToken, OptionToken } from '../../../ShortOrder/src/unified';
+import { AttributeToken, EntityToken, OptionToken } from 'short-order';
 
 import { AttributeInfo } from './attribute_info';
+import { PID } from '../catalog';
 import { Matrix } from './matrix';
 
 

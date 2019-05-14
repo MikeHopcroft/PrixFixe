@@ -1,5 +1,5 @@
 import { PID } from '../catalog';
-import { Catalog } from '../../../ShortOrder/src/catalog/catalog';
+import { Catalog } from 'short-order';
 
 import { Dimension } from './dimension';
 import { Attributes } from './interfaces';

@@ -1,237 +1,150 @@
-import { KEY, PID } from '../../src/catalog';
-import { AID, AttributeUtilities, Cart, CartOps, ItemInstance, UID, } from "../../src/cart/interfaces";
+import { KEY, PID, Option } from '../../src/catalog';
+import { AID,  AttributeUtils, Cart, CartUtils, ItemInstance, UID, } from '../../src/cart';
+import { Item } from '../../src/item';
+import { duplicateHamburger1, duplicateUIDCoke, duplicateUIDTomato, hamburger1, lettuce1, testCart, testOption, tomato1, unaddedItem } from './cart_info.test';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// CartOps
-//
-// Convenience methofs to perform operations on the Cart.
+// CartUtils Tests
 //
 ///////////////////////////////////////////////////////////////////////////////
-export class CartUtils implements CartOps {
+const cartOps = new CartUtils();
 
-    //
-    // Operations involving Cart.
-    //
+let myCart: Cart = testCart;
 
-    constructor() { }
+console.log(`\n\n##### TEST CART #####`);
+console.log(myCart);
 
-    // Returns a list of ItemInstances in the cart with a particular SPID.
-    // Items are returned in the order they were added to the cart.
-    //
-    // Use case: find all instances of a specific drink like a 'large iced
-    // latte'.
-    *findItemByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
-        for (const item of cart.items) {
-            if (item.key === key) {
-                yield item;
-            }
-        }
-    }
+const findItemByKeyTest = (myCart: Cart, myKey: KEY): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(myCart, myKey);
+    printIterableResults(gen);
+}
+// const itemByKey: KEY = 'e';
+// console.log(`\n##### FIND ITEM BY PARENT KEY TEST #####`);
+// console.log(`##### KEY === ${itemByKey}                    #####`);
+// findItemByKeyTest(myCart, itemByKey);
 
-    // Returns a list of ItemInstances in the cart that correspond to a
-    // particular GPID. Items are returned in the order they were added to the
-    // cart.
-    //
-    // Use case: want to find all lattes, regardless of attributes. Searching
-    // with the GPID for 'latte' might return ItemInstances for a 'medium iced
-    // latte' and a 'small hot latte'.
-    *findItemByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
-        for (const item of cart.items) {
-            if (item.pid === pid) {
-                yield item;
-            }
-        }
-    }
+const findItemByPIDTest = (myCart: Cart, myPid: PID): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(myCart, myPid);
+    printIterableResults(gen);
+}
+// const itemByPID: PID = 2;
+// console.log(`\n##### FIND ITEM BY PARENT PID TEST #####`);
+// console.log(`##### PID === ${itemByPID}                    #####`);
+// findItemByPIDTest(myCart, itemByPID);
 
-    // Returns a list of ItemInstances that contain an OptionInstance with a
-    // particular SPID. Items are returned in the order they were added to the
-    // cart.
-    //
-    // ISSUE: do we want a corresponding version that finds options associated
-    // with a certain generic option.
-    *findItemByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
-        for (const item of cart.items) {
-            for (const child of item.children) {
-                if (child.key === key) {
-                    yield item;
-                }
-            }
-        }
-    }
+const findItemByChildKeyTest = (myCart: Cart, myKey: KEY): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(myCart, myKey);
+    printIterableResults(gen);
+}
+// const itemByChildKey: KEY = 'c';
+// console.log(`\n##### FIND ITEM BY CHILD KEY TEST #####`);
+// console.log(`##### KEY === ${itemByChildKey}                   #####`);
+// findItemByChildKeyTest(myCart, itemByChildKey);
 
-    *findItemByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
-        for (const item of cart.items) {
-            for (const child of item.children) {
-                if (child.pid === pid) {
-                    yield item;
-                }
-            }
-        }
-    }
+const findItemByChildPIDTest = (myCart: Cart, myPid: PID): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildPID(myCart, myPid);
+    printIterableResults(gen);
+}
+// const itemByChildPID: PID = 1;
+// console.log(`\n##### FIND ITEM BY CHILD PID TEST #####`);
+// console.log(`##### PID === ${itemByChildPID}                   #####`);
+// findItemByChildPIDTest(myCart, itemByChildPID);
 
-    // Returns a list of ItemInstances that are allowed to contain an
-    // OptionInstance with a particular SPID. Items are returned in the order
-    // they were added to the cart.
-    //
-    // ISSUSE: does this return ItemInstances where the OptionInstance can be
-    // successfully added (e.g. not violating quantity, mutual exclusivity
-    // constraints) or return ItemInstances whose SPIDs allow this type of
-    // OptionInstance.
-    // ISSUE: TODO: should we pass RuleChecker or get it from member variable.
-    // Depends if we make a class or not.
-    //
-    // TODO: IMPLEMENT. WAITING ON RULE CHECKER FUNCTIONALITY.
-    *findCompatibleItems(cart: Cart, option: ItemInstance): IterableIterator<ItemInstance> {
-        for (const item of cart.items) {
-            // TODO: THIS IS HARDCODED TO COMPILE FOR NOW.
-            if (item.pid === 5) {
-                yield item;
-            }
-        }
-    }
+// const findCompatibleItemsTest = (myCart: Cart, myOption: ItemInstance): void => {
+//     const gen: IterableIterator<ItemInstance> = cartOps.findCompatibleItems(myCart, myOption);
+//     printIterableResults(gen);
+// }
+// // TODO: Implement.
+// console.log(`\n##### FIND COMPATIBLE ITEMS BY OPTION TEST #####`);
+// findCompatibleItemsTest(myCart, testOption);
 
-    //
-    // Operations involving ItemInstances
-    //
+const findChildByKeyTest = (myItem: ItemInstance, myKey: KEY): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(myItem, myKey);
+    printIterableResults(gen);
+}
+// const childByKey: KEY = 'c';
+// console.log(`\n##### FIND CHILD BY KEY TEST #####`);
+// console.log(`##### KEY === ${childByKey}              #####`);
+// findChildByKeyTest(hamburger1, childByKey);
 
-    *findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance> {
-        for (const child of item.children) {
-            if (child.key === key) {
-                yield child;
-            }
-        }
-    }
+const findChildByPIDTest = (myItem: ItemInstance, myPid: PID): void => {
+    const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(myItem, myPid);
+    printIterableResults(gen);
+}
+// const childByPID: PID = 0;
+// console.log(`\n##### FIND CHILD BY PID TEST #####`);
+// console.log(`##### PID === ${childByPID}              #####`);
+// findChildByPIDTest(hamburger1, childByPID);
 
-    *findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance> {
-        for (const child of item.children) {
-            if (child.pid === pid) {
-                yield child;
-            }
-        }
-    }
-
-    // Returns a shallow copy of the Cart, with the ItemInstance appended.
-    // ISSUE: If a hamburger is added when one is already in the cart, do we
-    // simply up the quantity? Or, since keys are unique between instances,
-    // do we still add a completely new instance of the duplicate item?
-    addItem = (cart: Cart, item: ItemInstance): Cart => {
-        let resCart: Cart = Object.assign({}, cart);
-        resCart.items.push(item);
-        return resCart;
-    }
-
-    // Returns a shallow copy of the Cart, where the item that shares the new
-    // item's UID is replaced with the new item.
-    replaceItem = (cart: Cart, repItem: ItemInstance): Cart => {
-        for (let item of cart.items) {
-            if (item.uid === repItem.uid) {
-                item = Object.assign(item, repItem);
-            }
-        }
-        return cart;
-    }
-
-    // Returns a shallow copy of the cart, omitting the item with the specific
-    // UID.
-    // TODO: ISSUE: throw or silently return when item not in cart.
-    // ISSUE: NO CART PARAMTER IN THE INTERFACE, BUT ASSUMING FOR NOW THAT WE
-    // NEED ONE.
-    removeItem = (cart: Cart, remItem: ItemInstance): Cart => {
-        for (let item of cart.items) {
-            if (item.uid === remItem.uid) {
-                // Remove the item
-                const index = cart.items.indexOf(item);
-                if (index > -1) {
-                    cart.items.splice(index, 1);
-                }
-            }
-        }
-        return cart;
-    }
-
-    //
-    // Operations involving OptionInstances
-    //
-
-    // Returns a shallow copy of the ItemInstance with the OptionInstance
-    // appended. Does not verify that the option is legal for the item.
-    addChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
-        parent.children.push(child);
-        return parent;
-    }
-
-    // Returns a shallow copy of the ItemInstance, where the option that
-    // shares the new option's UID is replaced with the new option.
-    updateChild(parent: ItemInstance, updChild: ItemInstance): ItemInstance {
-        for (let child of parent.children) {
-            if (child.uid === updChild.uid) {
-                child = Object.assign(child, updChild);
-            }
-        }
-        return parent;
-    }
-
-    // Returns a shallow copy of the ItemInstance, omitting the option with
-    // the specific UID.
-    removeChild(parent: ItemInstance, remChild: ItemInstance): ItemInstance {
-        for (let child of parent.children) {
-            if (child.uid === remChild.uid) {
-                const index = parent.children.indexOf(child);
-                if (index > -1) {
-                    parent.children.splice(index, 1);
-                }
-            }
-        }
-        return parent;
-    }
-
-    // QUESTION: WHAT DOES AN ATRRIBUTES SET LOOK LIKE
-    //   - Everything is an entity, except attributes.
-    //   - ([90:1:2, 54:4:10, 18:16:2])
-    //
-    // Possibly add some convenience methods in matrix
-    // Pull over directory into PrixFixe, make sure to grab unit tests
-    // Test branch for unit tests in attributes
-    //
-    // TODO: IMPLEMENT
-    updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance {
-        return parent;
+// Helper that prints results from an iterator.
+function printIterableResults(gen: IterableIterator<ItemInstance>) {
+    for (let res of gen) {
+        console.log(res);
     }
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// AttributeUtils
-//
-// Convenience methods relating to the menu and legal ItemInstance
-// configurations.
-//
-///////////////////////////////////////////////////////////////////////////////
-export class AttributeUtils implements AttributeUtilities {
-
-    //
-    // Operations involving Attributes.
-    //
-
-    constructor() {
-    }
-
-    // Returns the specific product id for a generic product, configured by a
-    // set of attributes. Each generic product specifies a matrix with
-    // configuration dimensions. Each coordinate in this matrix corresponds to
-    // a specific product. Coordinates are specified by attribute ids. When
-    // there is no attribute specified for a particular dimension, the menu's
-    // default attribute id is used. Attributes associated with dimensions not
-    // related to the generic product will be ignored.
-    //
-    // Use case: pass in the GPID for the generic 'latte' product along with
-    // attributes like 'large' and 'iced' in order to get the SPID for the
-    // specific product 'large iced latte'.
-    // TODO: ISSUE: throw or return undefined?
-    // TODO: IMPLEMENT
-    // pid === entityId, set<AID> is the map
-    createItemInstance(pid: PID, attributes: Set<AID>): ItemInstance | undefined {
-        return undefined;
-    }
+const addItemTest = (myCart: Cart, myItem: ItemInstance): void => {
+    const resCart: Cart = cartOps.addItem(myCart, myItem);
+    console.log(resCart);
 }
+// console.log(`\n##### ADD ITEM TO CART TEST #####`);
+// addItemTest(testCart, unaddedItem);
+
+const replaceItemTest = (myCart: Cart, myItem: ItemInstance): void => {
+    const resCart: Cart = cartOps.replaceItem(myCart, myItem);
+    console.log(resCart);
+}
+// console.log(`\n##### REPLACE ITEM IN CART TEST #####`);
+// replaceItemTest(testCart, duplicateUIDCoke);
+
+const removeItemTest = (myCart: Cart, myItem: ItemInstance): void => {
+    const resCart: Cart = cartOps.removeItem(myCart, myItem);
+    console.log(resCart);
+}
+// console.log(`\n##### REMOVE ITEM IN CART TEST #####`);
+// removeItemTest(testCart, hamburger1);
+
+const addChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
+    const resItem: ItemInstance = cartOps.addChild(myParent, myChild);
+    console.log(resItem);
+}
+// console.log(`\n##### ADD CHILD TEST #####`);
+// addChildTest(hamburger1, tomato1);
+
+const updateChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
+    const resItem: ItemInstance = cartOps.updateChild(myParent, myChild);
+    console.log(resItem);
+}
+// console.log(`\n##### UPDATE CHILD TEST #####`);
+// updateChildTest(hamburger1, duplicateUIDTomato);
+
+const removeChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
+    const resItem: ItemInstance = cartOps.removeChild(myParent, myChild);
+    console.log(resItem);
+}
+// console.log(`\n##### REMOVE CHILD TEST #####`);
+// removeChildTest(hamburger1, lettuce1);
+
+const updateAttributesTest = (myParent: ItemInstance, myAttributes: Set<AID>): void => {
+    const resItem: ItemInstance = cartOps.updateAttributes(myParent, myAttributes);
+    console.log(resItem);
+}
+// TODO
+// console.log(`\n##### UPDATE ATTRIBUTES TEST #####`);
+// updateAttributesTest(hamburger1, lettuce1);
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// AttributeUtils Tests
+//
+///////////////////////////////////////////////////////////////////////////////
+const atrOps = new AttributeUtils();
+
+const createItemInstanceTest = (myPID: PID, myAttributes: Set<AID>): void => {
+    const resItem: ItemInstance | undefined = atrOps.createItemInstance(myPID, myAttributes);
+    console.log(resItem);
+}
+// TODO
+// console.log(`\n##### UPDATE ATTRIBUTES TEST #####`);
+// createItemInstanceTest(hamburger1, lettuce1);

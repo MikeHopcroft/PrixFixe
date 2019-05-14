@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 import 'mocha';
+import { ENTITY, EntityToken, ATTRIBUTE, AttributeToken } from 'short-order';
 
 import { PID } from '../../src/catalog';
 
-import { ENTITY, EntityToken, ATTRIBUTE, AttributeToken } from '../../../ShortOrder/src';
 import { AttributeInfo } from '../../src/attributes/attribute_info';
 import { Dimension } from '../../src/attributes/dimension';
 import { AttributeItem } from '../../src/attributes/interfaces';
