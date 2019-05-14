@@ -1,4 +1,4 @@
-import { Cart, ItemInstance, AID } from './interfaces';
+import { Cart, ItemInstance, AID } from '../../src/cart/interfaces';
 
 const bread1: ItemInstance = {
     uid: 0,
