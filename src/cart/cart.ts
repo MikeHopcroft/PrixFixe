@@ -106,10 +106,7 @@ export class CartUtils implements CartOps {
     // Operations involving ItemInstances
     //
 
-    *findChildByKey(
-        item: ItemInstance,
-        key: KEY
-    ): IterableIterator<ItemInstance> {
+    *findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.key === key) {
                 yield child;
@@ -117,10 +114,7 @@ export class CartUtils implements CartOps {
         }
     }
 
-    *findChildByPID(
-        item: ItemInstance,
-        pid: PID
-    ): IterableIterator<ItemInstance> {
+    *findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.pid === pid) {
                 yield child;
@@ -187,7 +181,8 @@ export class CartUtils implements CartOps {
         const newParent: ItemInstance = { ...parent };
         for (let child of newParent.children) {
             if (child.uid === updChild.uid) {
-                child = Object.assign(child, updChild);
+                // child = Object.assign(child, updChild);
+                Object.assign(child, updChild);
             }
         }
         return newParent;
