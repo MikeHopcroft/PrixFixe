@@ -13,7 +13,8 @@ export interface ValidChildTensor {
     [key: string]: ValidChildPredicate;
 }
 
-// TODO: implement child tensor factory
+// The child tensor encodes a hierarchy of predicates which determine whether
+//   a child may be attached to a specific parent
 export const childTensorFactory = (
     ruleSet: RuleConfig,
     genMap: Map<PID, GenericTypedEntity>

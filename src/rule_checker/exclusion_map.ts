@@ -9,21 +9,42 @@ import {
 } from './interfaces';
 
 // Given a two modifiers, are they mutually exlusive with each other?
-export interface MutualExclusionPredicate {
-    (modOne: KEY, modTwo: KEY): boolean;
+export interface MutualExclusionZone {
+    (modOne: KEY): number;
 }
 
 export interface ExclusionTensor {
     // NOTE: Weird how I can't use KEY type alias here:
     //   https://github.com/microsoft/TypeScript/issues/1778
-    [key: string]: MutualExclusionPredicate;
+    [key: string]: MutualExclusionZone;
 }
 
-// TODO: implement exclusion set map factory
 export const mutualExclusionTensorFactory = (
     ruleSet: RuleConfig,
     genMap: Map<PID, GenericTypedEntity>
 ): ExclusionTensor => {
-    return {};
+    const exclusionTensor: ExclusionTensor = {};
+
+    for (const rule of ruleSet.rules) {
+        exclusionTensor[rule.partialKey] = (modOne: KEY): number => {
+            const modPID = Number(modOne.split(':')[0]);
+            const option = genMap.get(modPID);
+
+            if (option) {
+                const catagoryID = option.cid;
+                const exclusionZone = rule.exclusionZones[catagoryID];
+
+                if (exclusionZone) {
+                    if (exclusionZone.indexOf(modPID) > -1) {
+                        return catagoryID;
+                    }
+                }
+            }
+
+            return -1;
+        };
+    }
+
+    return exclusionTensor;
 };
 

@@ -8,6 +8,7 @@ import {
     CID,
     OPTION,
     MENUITEM,
+    MODIFIER,
     MatrixID,
     GenericEntity,
     GenericTypedEntity,
@@ -47,6 +48,7 @@ const generics = [
     genericTypedEntityFactory(8000, 100, 'cone', '8000:0:0', ['cone', 'ice cream [cone]'], 2, MENUITEM),
     genericTypedEntityFactory(9000, 200, 'latte', '9000:0:0:0', ['latte'], 1, MENUITEM),
     genericTypedEntityFactory(7000, 600, 'spinkles', '7000:2', ['sprinkle'], 4, OPTION),
+    genericTypedEntityFactory(5000, 500, 'milk', '5000:1', ['malk'], 3, MODIFIER),
     genericTypedEntityFactory(6000, 700, 'drizzle', '6000:0:1', ['drizz'], 5, OPTION),
 ];
 
@@ -66,7 +68,7 @@ const SAMPLE_RULES: RuleConfig = {
                     },
                 },
             },
-            exclusionZones: { '500': [5000] }, // Milk is exclusive
+            exclusionZones: { 500: [5000] }, // Milk is exclusive
             specificExceptions: [],
         },
         // For hot lattes, we have no valid catagories of options
@@ -173,63 +175,68 @@ describe('RuleChecker', () => {
         ].values();
 
         it('Cannot have three items from a mutually exclusive set.', () => {
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive('latteHotKey', failSet)
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteHotKey, failSet)
             );
         });
 
-        const failSetTwo: IterableIterator<KEY> = [
-            soyMilkKey,
-            twoMilkKey,
-        ].values();
+        const failSetTwo = [ soyMilkKey, twoMilkKey];
 
-        const failSetThree: IterableIterator<KEY> = [
-            soyMilkKey,
-            wholeMilkKey,
-        ].values();
+        const failSetThree = [soyMilkKey, wholeMilkKey];
 
-        const failSetFour: IterableIterator<KEY> = [
-            twoMilkKey,
-            wholeMilkKey,
-        ].values();
+        const failSetFour = [twoMilkKey, wholeMilkKey];
 
         it('Cannot have two items from a mutually exclusive set.', () => {
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteHotKey, failSetTwo)
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteHotKey, failSetTwo.values())
             );
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteHotKey, failSetThree)
+        });
+        it('Cannot have two items from a mutually exclusive set.', () => {
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteHotKey, failSetThree.values())
             );
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteHotKey, failSetFour)
-            );
-
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetTwo)
-            );
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetThree)
-            );
-            assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetFour)
+        });
+        it('Cannot have two items from a mutually exclusive set.', () => {
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteHotKey, failSetFour.values())
             );
         });
 
-        const successSet: IterableIterator<KEY> = [soyMilkKey].values();
+        it('Cannot have two items from a mutually exclusive set.', () => {
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetTwo.values())
+            );
+        });
+        it('Cannot have two items from a mutually exclusive set.', () => {
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetThree.values())
+            );
+        });
+        it('Cannot have two items from a mutually exclusive set.', () => {
+            assert.isTrue(
+                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetFour.values())
+            );
+        });
 
-        const successSetTwo: IterableIterator<KEY> = [twoMilkKey].values();
+        const successSet = [soyMilkKey];
 
-        const successSetThree: IterableIterator<KEY> = [wholeMilkKey].values();
+        const successSetTwo = [twoMilkKey];
+
+        const successSetThree = [wholeMilkKey];
 
         it('Individual items can exist by themselves', () => {
-            assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteHotKey, successSet)
+            assert.isFalse(
+                ruleChecker.isMutuallyExclusive(latteHotKey, successSet.values())
             );
-            assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteHotKey, successSetTwo)
+        });
+        it('Individual items can exist by themselves', () => {
+            assert.isFalse(
+                ruleChecker.isMutuallyExclusive(latteHotKey, successSetTwo.values())
             );
-            assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteHotKey, successSetThree)
+        });
+        it('Individual items can exist by themselves', () => {
+            assert.isFalse(
+                ruleChecker.isMutuallyExclusive(latteHotKey, successSetThree.values())
             );
         });
 
