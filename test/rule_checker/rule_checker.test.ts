@@ -136,20 +136,33 @@ describe('RuleChecker', () => {
         it('Invalid children evaluate to false', () => {
             // Drizzles cannot be in hot lattes
             assert.isFalse(ruleChecker.isValidChild(latteHotKey, drizzleKey));
+        });
+
+        it('Invalid children evaluate to false', () => {
             // Another drizzle cannot be in a hot latte
             assert.isFalse(
                 ruleChecker.isValidChild(latteHotKey, anotherDrizzleKey)
             );
+        });
+        it('Invalid children evaluate to false', () => {
             // Sprinkles cannot be in lattes
             assert.isFalse(ruleChecker.isValidChild(latteHotKey, sprinklesKey));
+        });
+
+        it('Invalid children evaluate to false', () => {
             // More sprinkles also don't belong in lattes
             assert.isFalse(
                 ruleChecker.isValidChild(latteHotKey, anotherSprinleKey)
             );
+        });
 
+        it('Invalid children evaluate to false', () => {
             // Sprinkles cannot be in an iced latte
             assert.isFalse(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
             // More sprinkles cannot be in an iced latte
+        });
+
+        it('Invalid children evaluate to false', () => {
             assert.isFalse(
                 ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey)
             );
@@ -158,6 +171,9 @@ describe('RuleChecker', () => {
         it('Valid children evaluate to true', () => {
             // A drizzle can be in an iced latte
             assert.isTrue(ruleChecker.isValidChild(latteIcedKey, drizzleKey));
+        });
+
+        it('Valid children evaluate to true', () => {
             // More drizzles can be in iced lattes
             assert.isTrue(
                 ruleChecker.isValidChild(latteIcedKey, anotherDrizzleKey)
