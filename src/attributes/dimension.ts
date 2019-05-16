@@ -22,7 +22,9 @@ export class Dimension {
         for (const attribute of this.attributes) {
             if (attribute.isDefault === true) {
                 if (defaultAttribute !== undefined) {
-                    const message = `found second default attribute ${attribute.pid}`;
+                    const message = `found second default attribute ${
+                        attribute.pid
+                    }`;
                     throw TypeError(message);
                 }
                 defaultAttribute = attribute.pid;

@@ -1,4 +1,4 @@
-import { Item } from "../item";
+import { Item } from '../item';
 import { KEY, PID } from '../catalog';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -107,14 +107,23 @@ export interface CartOps {
     // OptionInstance.
     // ISSUE: TODO: should we pass RuleChecker or get it from member variable.
     // Depends if we make a class or not.
-    findCompatibleItems(cart: Cart, option: ItemInstance): IterableIterator<ItemInstance>;
+    findCompatibleItems(
+        cart: Cart,
+        option: ItemInstance
+    ): IterableIterator<ItemInstance>;
 
     //
     // Operations involving ItemInstances
     //
 
-    findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance>;
-    findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance>;
+    findChildByKey(
+        item: ItemInstance,
+        key: KEY
+    ): IterableIterator<ItemInstance>;
+    findChildByPID(
+        item: ItemInstance,
+        pid: PID
+    ): IterableIterator<ItemInstance>;
 
     // Returns a shallow copy of the Cart, with the ItemInstance appended.
     addItem: (cart: Cart, item: ItemInstance) => Cart;
@@ -168,5 +177,8 @@ export interface AttributeUtilities {
     // attributes like 'large' and 'iced' in order to get the SPID for the
     // specific product 'large iced latte'.
     // TODO: ISSUE: throw or return undefined?
-    createItemInstance: (pid: PID, attributes: Set<AID>) => ItemInstance | undefined;
+    createItemInstance: (
+        pid: PID,
+        attributes: Set<AID>
+    ) => ItemInstance | undefined;
 }

@@ -4,171 +4,127 @@ export const bread0: ItemInstance = {
     uid: 0,
     pid: 0,
     name: 'Hamburger Bun',
-    aliases: [
-        'Bun',
-        'Bread'
-    ],
+    aliases: ['Bun', 'Bread'],
     key: 'a',
     quantity: 1,
-    children: []
-}
+    children: [],
+};
 
 export const bread1: ItemInstance = {
     uid: 1,
     pid: 0,
     name: 'Hamburger Bun',
-    aliases: [
-        'Bun',
-        'Bread'
-    ],
-    key: 'b',
+    aliases: ['Bun', 'Bread'],
+    key: 'a',
     quantity: 1,
-    children: []
-}
+    children: [],
+};
 
 export const lettuce2: ItemInstance = {
     uid: 2,
     pid: 1,
     name: 'Lettuce',
-    aliases: [
-        'Iceberg'
-    ],
+    aliases: ['Iceberg'],
     key: 'c',
     quantity: 1,
-    children: []
-}
+    children: [],
+};
 
 export const lettuce3: ItemInstance = {
     uid: 3,
     pid: 1,
     name: 'Lettuce',
-    aliases: [
-        'Iceberg'
-    ],
-    key: 'd',
+    aliases: ['Iceberg'],
+    key: 'c',
     quantity: 2,
-    children: []
-}
-
-export const hamburger4Bread0Lettuce3: ItemInstance = {
-    uid: 4,
-    pid: 2,
-    name: 'Hamburger',
-    aliases: [
-        'Burger',
-        'Sandwich'
-    ],
-    key: 'e',
-    quantity: 1,
-    children: [
-        bread0,
-        lettuce3
-    ]
-}
-
-export const dupHamburger1Bread0Lettuce3: ItemInstance = {
-    uid: 7,
-    pid: 2,
-    name: 'Hamburger',
-    aliases: [
-        'Burger',
-        'Sandwich'
-    ],
-    key: 'h',
-    quantity: 1,
-    children: [
-        bread0,
-        lettuce3
-    ]
-}
-
-export const hamburger5Bread1: ItemInstance = {
-    uid: 5,
-    pid: 2,
-    name: 'Hamburger',
-    aliases: [
-        'Burger',
-        'Sandwich'
-    ],
-    key: 'f',
-    quantity: 1,
-    children: [
-        bread1
-    ]
-}
-
-export const coke6: ItemInstance = {
-    uid: 6,
-    pid: 3,
-    name: 'Medium Coke',
-    aliases: [
-        'Coke',
-        'Coca Cola',
-        'Regular Coke'
-    ],
-    key: 'g',
-    quantity: 1,
-    children: []
-}
+    children: [],
+};
 
 export const coke5: ItemInstance = {
     uid: 5,
     pid: 3,
     name: 'Medium Coke',
-    aliases: [
-        'Coke',
-        'Coca Cola',
-        'Regular Coke'
-    ],
+    aliases: ['Coke', 'Coca Cola', 'Regular Coke'],
+    key: 'e',
+    quantity: 1,
+    children: [],
+};
+
+export const coke6: ItemInstance = {
+    uid: 6,
+    pid: 3,
+    name: 'Medium Coke',
+    aliases: ['Coke', 'Coca Cola', 'Regular Coke'],
+    key: 'e',
+    quantity: 1,
+    children: [],
+};
+
+export const tomato3: ItemInstance = {
+    uid: 3,
+    pid: 4,
+    name: 'Tomato',
+    aliases: ['Roma Tomato'],
     key: 'g',
     quantity: 1,
-    children: []
-}
+    children: [],
+};
 
-export const lettuce8: ItemInstance = {
-    uid: 8,
-    pid: 1,
-    name: 'Lettuce',
-    aliases: [
-        'Iceberg'
-    ],
-    key: 'i',
+export const hamburger4Bread0Lettuce3: ItemInstance = {
+    uid: 4,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: ['Burger', 'Sandwich'],
+    key: 'h',
     quantity: 1,
-    children: []
-}
+    children: [bread0, lettuce3],
+};
 
-export const tomato2: ItemInstance = {
-    uid: 2,
-    pid: 4,
-    name: 'Tomato',
-    aliases: [
-        'Roma Tomato'
-    ],
-    key: 'j',
+export const hamburger4Bread0: ItemInstance = {
+    uid: 4,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: ['Burger', 'Sandwich'],
+    key: 'h',
     quantity: 1,
-    children: []
-}
+    children: [bread0],
+};
 
-export const tomato9: ItemInstance = {
-    uid: 9,
-    pid: 4,
-    name: 'Tomato',
-    aliases: [
-        'Roma Tomato'
-    ],
+export const hamburger4Bread0Tomato3: ItemInstance = {
+    uid: 4,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: ['Burger', 'Sandwich'],
+    key: 'h',
+    quantity: 1,
+    children: [bread0, tomato3],
+};
+
+export const hamburger5Bread1: ItemInstance = {
+    uid: 5,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: ['Burger', 'Sandwich'],
     key: 'k',
     quantity: 1,
-    children: []
-}
+    children: [bread1],
+};
 
-export const testCart: Cart = {
-    items: [
-        hamburger4Bread0Lettuce3,
-        hamburger5Bread1
-    ]
-}
+export const hamburger5Bread1Tomato3: ItemInstance = {
+    uid: 5,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: ['Burger', 'Sandwich'],
+    key: 'k',
+    quantity: 1,
+    children: [bread1, tomato3],
+};
 
-export const attributeSet: Set<AID> = new Set<AID>([1,2,3,4,5]);
+// export const testCart: Cart = {
+//     items: [hamburger4Bread0Lettuce3, hamburger5Bread1],
+// };
+
+// export const attributeSet: Set<AID> = new Set<AID>([1,2,3,4,5]);
 // Tensor would look like: "1:2:3"
 // gpid:2:3 => spid
 /**
@@ -182,3 +138,59 @@ export const attributeSet: Set<AID> = new Set<AID>([1,2,3,4,5]);
  *
  * Worry about invalid coord later on, whenever it's obvious you need to..
  */
+
+// const sizeSmall = 0;
+// const sizeMedium = 1;
+// const sizeLarge = 2;
+// const sizes: AttributeItem[] = [
+//     {
+//         pid: sizeSmall,
+//         name: 'small',
+//         aliases: ['small']
+//     },
+//     {
+//         pid: sizeMedium,
+//         name: 'medium',
+//         aliases: ['medium'],
+//         isDefault: true
+//     },
+//     {
+//         pid: sizeLarge,
+//         name: 'large',
+//         aliases: ['large']
+//     },
+// ];
+
+// const cheeseSauce = 3;
+// const noCheese = 4;
+// const cheeses: AttributeItem[] = [
+//     {
+//         pid: cheeseSauce,
+//         name: 'cheese sauce',
+//         aliases: ['cheese sauce'],
+//         isDefault: true
+//     },
+//     {
+//         pid: noCheese,
+//         name: 'no cheese',
+//         aliases: ['no cheese']
+//     }
+// ];
+
+// const size: PID = 0;
+// const cheese: PID = 1;
+// const sizeDimension = new Dimension(size, sizes.values());
+// const cheeseDimension = new Dimension(cheese, cheeses.values());
+// const cheeseFriesDimensions = [
+//     sizeDimension,
+//     cheeseDimension
+// ];
+
+// const smallFriesCheeseSauceAttr: Set<AID> = new Set([
+//     sizeDimension.attributes[0].pid,
+//     cheeseDimension.defaultAttribute
+// ])
+
+// const anyMatrixId: PID = 123;
+// const smallFriesCheeseSauceMatrix: Matrix = new Matrix(anyMatrixId,
+//     cheeseFriesDimensions);

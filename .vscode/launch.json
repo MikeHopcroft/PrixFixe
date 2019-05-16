@@ -18,8 +18,14 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Cart Test",
-            "program": "${workspaceFolder}\\build\\src\\cart\\test.js",
+            "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "preLaunchTask": "tsc: build - tsconfig.json",
+            "args": [
+                "--timeout",
+                "999999",
+                "--colors",
+                "${workspaceFolder}\\build\\test\\cart\\cart.test.js"
+            ],
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"
             ]

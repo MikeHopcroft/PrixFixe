@@ -34,7 +34,7 @@ const attributes: AttributeItem[] = [
         pid: 2,
         name: 'two',
         aliases: ['two', 'second']
-    },
+    }
 ];
 
 const sizeSmall = 0;
@@ -56,7 +56,7 @@ const sizes: AttributeItem[] = [
         pid: sizeLarge,
         name: 'large',
         aliases: ['large']
-    },
+    }
 ];
 
 const flavorVanilla = 3;
@@ -78,7 +78,7 @@ const flavors: AttributeItem[] = [
         pid: flavorStrawberry,
         name: 'strawberry',
         aliases: ['strawberry']
-    },
+    }
 ];
 
 const styleRegular = 6;
@@ -96,7 +96,7 @@ const styles: AttributeItem[] = [
         name: 'original',
         aliases: ['original'],
         sku: 54321
-    },
+    }
 ];
 
 const temperatureHot = 8;
@@ -112,7 +112,7 @@ const temperatures: AttributeItem[] = [
         pid: temperatureCold,
         name: 'cold',
         aliases: ['colr', ' iced']
-    },
+    }
 ];
 
 const caffeineRegular = 10;
@@ -134,10 +134,8 @@ const caffeines: AttributeItem[] = [
         pid: caffeineHalfCaf,
         name: 'half caf',
         aliases: ['half caf', 'split shot']
-    },
+    }
 ];
-
-
 
 const size: PID = 0;
 const flavor: PID = 1;
@@ -145,11 +143,7 @@ const style: PID = 2;
 const sizeDimension = new Dimension(size, sizes.values());
 const flavorDimension = new Dimension(flavor, flavors.values());
 const styleDimension = new Dimension(style, styles.values());
-const softServeDimensions = [
-    sizeDimension,
-    flavorDimension,
-    styleDimension
-];
+const softServeDimensions = [sizeDimension, flavorDimension, styleDimension];
 
 const temperature: PID = 3;
 const caffeine: PID = 4;
@@ -161,7 +155,6 @@ const coffeeDimensions = [
     caffeineDimension
 ];
 
-
 function makeAttributeToken(id: PID): AttributeToken {
     return {
         type: ATTRIBUTE,
@@ -169,7 +162,6 @@ function makeAttributeToken(id: PID): AttributeToken {
         name: `attribute(${id})`
     };
 }
-
 
 function makeEntityToken(pid: PID): EntityToken {
     return {
@@ -179,9 +171,7 @@ function makeEntityToken(pid: PID): EntityToken {
     };
 }
 
-
 describe('Matrix', () => {
-
     ///////////////////////////////////////////////////////////////////////////////
     //
     //  Dimension
@@ -191,7 +181,10 @@ describe('Matrix', () => {
         it('Constructor', () => {
             const idOfDefault = 1;
             const anyDimensionId = 123;
-            const dimension = new Dimension(anyDimensionId, attributes.values());
+            const dimension = new Dimension(
+                anyDimensionId,
+                attributes.values()
+            );
 
             assert.equal(dimension.id, anyDimensionId);
             assert.deepEqual(dimension.attributes, attributes);
@@ -207,7 +200,11 @@ describe('Matrix', () => {
 
         it('Second default', () => {
             const anyDimensionId = 123;
-            const f = () => new Dimension(anyDimensionId, [...attributes, ...attributes].values());
+            const f = () =>
+                new Dimension(
+                    anyDimensionId,
+                    [...attributes, ...attributes].values()
+                );
 
             assert.throws(f, `found second default attribute 1`);
         });
@@ -220,7 +217,6 @@ describe('Matrix', () => {
             assert.throws(f, `expected at least one default attribute`);
         });
     });
-
 
     ///////////////////////////////////////////////////////////////////////////////
     //
@@ -257,7 +253,10 @@ describe('Matrix', () => {
             //  strawberry:   2
             //     regular:   0
             //         key: 456:1:2:0
-            assert.equal(matrix.getKey(anyEntityId, dimensionIdToAttribute, info), "456:1:2:0");
+            assert.equal(
+                matrix.getKey(anyEntityId, dimensionIdToAttribute, info),
+                '456:1:2:0'
+            );
         });
     });
 
@@ -276,18 +275,50 @@ describe('Matrix', () => {
 
             const cases = [
                 // Sizes
-                { pid: sizeSmall, coordinate: { dimension: sizeDimension, position: 0 }, sku: undefined },
-                { pid: sizeMedium, coordinate: { dimension: sizeDimension, position: 1 }, sku: undefined },
-                { pid: sizeLarge, coordinate: { dimension: sizeDimension, position: 2 }, sku: undefined },
+                {
+                    pid: sizeSmall,
+                    coordinate: { dimension: sizeDimension, position: 0 },
+                    sku: undefined
+                },
+                {
+                    pid: sizeMedium,
+                    coordinate: { dimension: sizeDimension, position: 1 },
+                    sku: undefined
+                },
+                {
+                    pid: sizeLarge,
+                    coordinate: { dimension: sizeDimension, position: 2 },
+                    sku: undefined
+                },
 
                 // Flavors
-                { pid: flavorVanilla, coordinate: { dimension: flavorDimension, position: 0 }, sku: undefined },
-                { pid: flavorChocolate, coordinate: { dimension: flavorDimension, position: 1 }, sku: undefined },
-                { pid: flavorStrawberry, coordinate: { dimension: flavorDimension, position: 2 }, sku: undefined },
+                {
+                    pid: flavorVanilla,
+                    coordinate: { dimension: flavorDimension, position: 0 },
+                    sku: undefined
+                },
+                {
+                    pid: flavorChocolate,
+                    coordinate: { dimension: flavorDimension, position: 1 },
+                    sku: undefined
+                },
+                {
+                    pid: flavorStrawberry,
+                    coordinate: { dimension: flavorDimension, position: 2 },
+                    sku: undefined
+                },
 
                 // Styles
-                { pid: styleRegular, coordinate: { dimension: styleDimension, position: 0 }, sku: 12345 },
-                { pid: styleOriginal, coordinate: { dimension: styleDimension, position: 1 }, sku: 54321 },
+                {
+                    pid: styleRegular,
+                    coordinate: { dimension: styleDimension, position: 0 },
+                    sku: 12345
+                },
+                {
+                    pid: styleOriginal,
+                    coordinate: { dimension: styleDimension, position: 1 },
+                    sku: 54321
+                },
 
                 // Unknown attribute
                 { pid: unknownPID, coordinate: undefined }
@@ -335,7 +366,10 @@ describe('Matrix', () => {
             const info = new AttributeInfo();
 
             const softServeMatrixId = 123;
-            const softServeMatrix = new Matrix(softServeMatrixId, softServeDimensions);
+            const softServeMatrix = new Matrix(
+                softServeMatrixId,
+                softServeDimensions
+            );
             info.addMatrix(softServeMatrix);
 
             const coffeeMatrixId = 456;
@@ -385,8 +419,7 @@ describe('Matrix', () => {
     //
     ///////////////////////////////////////////////////////////////////////////////
     describe('MaxtrixEntityBuilder', () => {
-        it('Constructor', () => {
-        });
+        it('Constructor', () => {});
 
         it('hasEntity()/setEntity()', () => {
             const info = new AttributeInfo();
@@ -408,7 +441,6 @@ describe('Matrix', () => {
             assert.throws(f, 'attempting to overwrite entity 123 with 123');
         });
 
-
         it('addAttribute()', () => {
             const info = new AttributeInfo();
             info.addDimension(softServeDimensions[0]);
@@ -417,7 +449,8 @@ describe('Matrix', () => {
 
             const builder = new MatrixEntityBuilder(info);
 
-            const f = () => builder.addAttribute(makeAttributeToken(unknownPID));
+            const f = () =>
+                builder.addAttribute(makeAttributeToken(unknownPID));
             assert.throws(f, 'unknown attribute 9999.');
 
             // First time adding a size should succeed.
@@ -427,9 +460,10 @@ describe('Matrix', () => {
             assert.isFalse(builder.addAttribute(makeAttributeToken(sizeLarge)));
 
             // First time adding a flavor should succeed.
-            assert.isTrue(builder.addAttribute(makeAttributeToken(flavorChocolate)));
+            assert.isTrue(
+                builder.addAttribute(makeAttributeToken(flavorChocolate))
+            );
         });
-
 
         it('getPID()', () => {
             const info = new AttributeInfo();
@@ -438,7 +472,10 @@ describe('Matrix', () => {
             info.addDimension(softServeDimensions[2]);
 
             const softServeMatrixId = 123;
-            const softServeMatrix = new Matrix(softServeMatrixId, softServeDimensions);
+            const softServeMatrix = new Matrix(
+                softServeMatrixId,
+                softServeDimensions
+            );
             info.addMatrix(softServeMatrix);
 
             // Configure with a generic ice cream cone item.
@@ -489,5 +526,4 @@ describe('Matrix', () => {
             assert.equal(builder2.getPID(), unknownPID);
         });
     });
-
 });

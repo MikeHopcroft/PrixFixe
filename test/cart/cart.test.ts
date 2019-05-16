@@ -1,7 +1,30 @@
+import { assert, expect } from 'chai';
+import 'mocha';
+
 import { KEY, PID, Option } from '../../src/catalog';
-import { AID,  AttributeUtils, Cart, CartUtils, ItemInstance, UID, } from '../../src/cart';
+import {
+    AID,
+    AttributeUtils,
+    Cart,
+    CartUtils,
+    ItemInstance,
+    UID
+} from '../../src/cart';
 import { Item } from '../../src/item';
-import { testCart } from './cart_fake_data.test';
+import {
+    bread0,
+    bread1,
+    coke5,
+    coke6,
+    hamburger4Bread0Lettuce3,
+    hamburger5Bread1,
+    hamburger5Bread1Tomato3,
+    hamburger4Bread0,
+    hamburger4Bread0Tomato3,
+    lettuce2,
+    lettuce3,
+    tomato3,
+} from './cart_fake_data.test';
 import { AttributeItem, Dimension } from '../../src/attributes';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -9,202 +32,188 @@ import { AttributeItem, Dimension } from '../../src/attributes';
 // CartUtils Tests
 //
 ///////////////////////////////////////////////////////////////////////////////
-const cartOps = new CartUtils();
 
-let myCart: Cart = testCart;
+describe('Cart', () => {
+    const cartOps = new CartUtils();
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    //  CartUtils
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    it('findItemByKey()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const key: KEY = 'h';
+        const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(
+            cart,
+            key
+        );
 
-console.log(`\n\n##### TEST CART #####`);
-console.log(myCart);
+        expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
+    });
 
-const findItemByKeyTest = (myCart: Cart, myKey: KEY): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(myCart, myKey);
-    printIterableResults(gen);
-}
-// const itemByKey: KEY = 'e';
-// console.log(`\n##### FIND ITEM BY PARENT KEY TEST #####`);
-// console.log(`##### KEY === ${itemByKey}                    #####`);
-// findItemByKeyTest(myCart, itemByKey);
+    it('findItemByPID()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const pid: PID = 2;
+        const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(
+            cart,
+            pid
+        );
 
-const findItemByPIDTest = (myCart: Cart, myPid: PID): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(myCart, myPid);
-    printIterableResults(gen);
-}
-// const itemByPID: PID = 2;
-// console.log(`\n##### FIND ITEM BY PARENT PID TEST #####`);
-// console.log(`##### PID === ${itemByPID}                    #####`);
-// findItemByPIDTest(myCart, itemByPID);
+        expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
+        expect(gen.next().value).to.deep.equal(hamburger5Bread1);
+    });
 
-const findItemByChildKeyTest = (myCart: Cart, myKey: KEY): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(myCart, myKey);
-    printIterableResults(gen);
-}
-// const itemByChildKey: KEY = 'c';
-// console.log(`\n##### FIND ITEM BY CHILD KEY TEST #####`);
-// console.log(`##### KEY === ${itemByChildKey}                   #####`);
-// findItemByChildKeyTest(myCart, itemByChildKey);
+    it('findItemByChildKey()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const key: KEY = 'c';
+        const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(
+            cart,
+            key
+        );
 
-const findItemByChildPIDTest = (myCart: Cart, myPid: PID): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildPID(myCart, myPid);
-    printIterableResults(gen);
-}
-// const itemByChildPID: PID = 1;
-// console.log(`\n##### FIND ITEM BY CHILD PID TEST #####`);
-// console.log(`##### PID === ${itemByChildPID}                   #####`);
-// findItemByChildPIDTest(myCart, itemByChildPID);
+        for (const res of gen) {
+            expect(res).to.deep.equal(hamburger4Bread0Lettuce3);
+        }
+    });
 
-// const findCompatibleItemsTest = (myCart: Cart, myOption: ItemInstance): void => {
-//     const gen: IterableIterator<ItemInstance> = cartOps.findCompatibleItems(myCart, myOption);
-//     printIterableResults(gen);
-// }
-// // TODO: Implement.
-// console.log(`\n##### FIND COMPATIBLE ITEMS BY OPTION TEST #####`);
-// findCompatibleItemsTest(myCart, testOption);
+    it('findItemByChildPID()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const pid: PID = 1;
+        const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildPID(
+            cart,
+            pid
+        );
 
-const findChildByKeyTest = (myItem: ItemInstance, myKey: KEY): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(myItem, myKey);
-    printIterableResults(gen);
-}
-// const childByKey: KEY = 'c';
-// console.log(`\n##### FIND CHILD BY KEY TEST #####`);
-// console.log(`##### KEY === ${childByKey}              #####`);
-// findChildByKeyTest(hamburger1, childByKey);
+        for (const res of gen) {
+            expect(res).to.deep.equal(hamburger4Bread0Lettuce3);
+        }
+    });
 
-const findChildByPIDTest = (myItem: ItemInstance, myPid: PID): void => {
-    const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(myItem, myPid);
-    printIterableResults(gen);
-}
-// const childByPID: PID = 0;
-// console.log(`\n##### FIND CHILD BY PID TEST #####`);
-// console.log(`##### PID === ${childByPID}              #####`);
-// findChildByPIDTest(hamburger1, childByPID);
+    // it('findCompatibleItems()', () => {
+    //     const gen: IterableIterator<ItemInstance> = cartOps.findCompatibleItems(cart, myOption);
 
-// Helper that prints results from an iterator.
-function printIterableResults(gen: IterableIterator<ItemInstance>) {
-    for (let res of gen) {
-        console.log(res);
-    }
-}
+    //     for (let res of gen) {
+    //         expect(res).to.deep.equal(hamburger4Bread0Lettuce3);
+    //     }
+    // });
 
-const addItemTest = (myCart: Cart, myItem: ItemInstance): void => {
-    const resCart: Cart = cartOps.addItem(myCart, myItem);
-    console.log(resCart);
-}
-// console.log(`\n##### ADD ITEM TO CART TEST #####`);
-// addItemTest(testCart, unaddedItem);
+    it('findChildByKey', () => {
+        const key: KEY = 'c';
+        const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(
+            lettuce2,
+            key
+        );
 
-const replaceItemTest = (myCart: Cart, myItem: ItemInstance): void => {
-    const resCart: Cart = cartOps.replaceItem(myCart, myItem);
-    console.log(resCart);
-}
-// console.log(`\n##### REPLACE ITEM IN CART TEST #####`);
-// replaceItemTest(testCart, duplicateUIDCoke);
+        for (const res of gen) {
+            expect(res).to.deep.equal(lettuce2);
+        }
+    });
 
-const removeItemTest = (myCart: Cart, myItem: ItemInstance): void => {
-    const resCart: Cart = cartOps.removeItem(myCart, myItem);
-    console.log(resCart);
-}
-// console.log(`\n##### REMOVE ITEM IN CART TEST #####`);
-// removeItemTest(testCart, hamburger1);
+    it('findChildByPID()', () => {
+        const pid: PID = 0;
+        const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(
+            hamburger4Bread0Lettuce3,
+            pid
+        );
 
-const addChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
-    const resItem: ItemInstance = cartOps.addChild(myParent, myChild);
-    console.log(resItem);
-}
-// console.log(`\n##### ADD CHILD TEST #####`);
-// addChildTest(hamburger1, tomato1);
+        for (const res of gen) {
+            expect(res).to.deep.equal(bread0);
+        }
+    });
 
-const updateChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
-    const resItem: ItemInstance = cartOps.updateChild(myParent, myChild);
-    console.log(resItem);
-}
-// console.log(`\n##### UPDATE CHILD TEST #####`);
-// updateChildTest(hamburger1, duplicateUIDTomato);
+    it('addItem()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const expectedCart: Cart = {
+            items: [
+                { ...hamburger4Bread0Lettuce3 },
+                { ...hamburger5Bread1 },
+                { ...coke6 },
+            ],
+        };
+        const resCart: Cart = cartOps.addItem(cart, coke6);
 
-const removeChildTest = (myParent: ItemInstance, myChild: ItemInstance): void => {
-    const resItem: ItemInstance = cartOps.removeChild(myParent, myChild);
-    console.log(resItem);
-}
-// console.log(`\n##### REMOVE CHILD TEST #####`);
-// removeChildTest(hamburger1, lettuce1);
+        expect(resCart).to.deep.equal(expectedCart);
+    });
 
-const updateAttributesTest = (myParent: ItemInstance, myAttributes: Set<AID>): void => {
-    const resItem: ItemInstance = cartOps.updateAttributes(myParent, myAttributes);
-    console.log(resItem);
-}
-// TODO: Implement.
-// console.log(`\n##### UPDATE ATTRIBUTES TEST #####`);
-// updateAttributesTest(hamburger1, lettuce1);
+    it('replaceItem()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const expectedCart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...coke5 },],
+        };
+        const resCart: Cart = cartOps.replaceItem(cart, coke5);
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// AttributeUtils Tests
-//
-///////////////////////////////////////////////////////////////////////////////
-const atrOps = new AttributeUtils();
+        expect(resCart).to.deep.equal(expectedCart);
+    });
 
-const sizeSmall = 0;
-const sizeMedium = 1;
-const sizeLarge = 2;
-const sizes: AttributeItem[] = [
-    {
-        pid: sizeSmall,
-        name: 'small',
-        aliases: ['small']
-    },
-    {
-        pid: sizeMedium,
-        name: 'medium',
-        aliases: ['medium'],
-        isDefault: true
-    },
-    {
-        pid: sizeLarge,
-        name: 'large',
-        aliases: ['large']
-    },
-];
+    it('removeItem()', () => {
+        const cart: Cart = {
+            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
+        };
+        const expectedCart: Cart = {
+            items: [{ ...hamburger5Bread1 },],
+        };
+        const resCart: Cart = cartOps.removeItem(
+            cart,
+            hamburger4Bread0Lettuce3
+        );
 
-const cheeseSauce = 3;
-const noCheese = 4;
-const cheeses: AttributeItem[] = [
-    {
-        pid: cheeseSauce,
-        name: 'cheese sauce',
-        aliases: ['cheese sauce'],
-        isDefault: true
-    },
-    {
-        pid: noCheese,
-        name: 'no cheese',
-        aliases: ['no cheese']
-    }
-];
+        expect(resCart).to.deep.equal(expectedCart);
+    });
 
-const size: PID = 0;
-const cheese: PID = 1;
-const sizeDimension = new Dimension(size, sizes.values());
-const cheeseDimension = new Dimension(cheese, cheeses.values());
-// const cheeseFriesDimensions = [
-//     sizeDimension,
-//     cheeseDimension
-// ];
+    it('addChild()', () => {
+        const parent = hamburger5Bread1;
+        const child = tomato3;
+        const resItem: ItemInstance = cartOps.addChild(parent, child);
 
-const smallFriesCheeseSauceAttr: Set<AID> = new Set([
-    sizeDimension.attributes[0].pid,
-    cheeseDimension.defaultAttribute
-])
+        expect(resItem).to.deep.equal(hamburger5Bread1Tomato3);
+    });
 
-// const anyMatrixId: PID = 123;
-// const smallFriesCheeseSauceMatrix: Matrix = new Matrix(anyMatrixId,
-//     cheeseFriesDimensions);
+    it('updateChild()', () => {
+        // Maybe we don't care if the entire item is deeply equal. We might
+        // especially want to ignore keys.
+        const resItem: ItemInstance = cartOps.updateChild(
+            hamburger4Bread0Lettuce3,
+            tomato3
+        );
 
-const createItemInstanceTest = (myPID: PID, myAttributes: Set<AID>): void => {
-    const resItem: ItemInstance | undefined = atrOps.createItemInstance(myPID,
-        myAttributes);
-    console.log(resItem);
-}
-// TODO
-// const createItemInstancePID: PID = 0;
-// console.log(`\n##### UPDATE ATTRIBUTES TEST #####`);
-// console.log(`##### PID === ${createItemInstancePID}              #####`);
-// createItemInstanceTest(createItemInstancePID, smallFriesCheeseSauceAttr);
+        expect(resItem).to.deep.equal(hamburger4Bread0Tomato3);
+    });
+
+    it('removeChild()', () => {
+        const resItem: ItemInstance = cartOps.removeChild(
+            hamburger4Bread0Tomato3,
+            tomato3
+        );
+
+        // Issue here is that hamburger4Bread0 has tomato added from addChild
+        expect(resItem).to.deep.equal(hamburger4Bread0);
+    });
+
+    // it('updateAttributes()', () => {
+    //     const resItem: ItemInstance = cartOps.updateAttributes(myParent, myAttributes);
+    // });
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // AttributeUtils Tests
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    // const atrOps = new AttributeUtils();
+
+    // it('createItemInstance()', () => {
+    //     const resItem: ItemInstance | undefined = atrOps.createItemInstance(myPID,
+    //         myAttributes);
+    // });
+});

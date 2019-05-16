@@ -48,7 +48,7 @@ const attributes = {
                     pid: 6,
                     name: 'strawberry',
                     aliases: ['strawberry']
-                },
+                }
             ]
         }
     ],
@@ -61,9 +61,7 @@ const attributes = {
     ]
 };
 
-
 describe('Attributes', () => {
-
     ///////////////////////////////////////////////////////////////////////////////
     //
     //  itemsFromAttributes
@@ -75,4 +73,3 @@ describe('Attributes', () => {
         assert.deepEqual(observed, attributes);
     });
 });
-

@@ -4,9 +4,7 @@ import {
     GenericTypedEntity,
 } from '../catalog';
 
-import {
-    RuleConfig,
-} from './interfaces';
+import { RuleConfig } from './interfaces';
 
 // Given a two modifiers, are they mutually exlusive with each other?
 export interface MutualExclusionZone {
@@ -47,4 +45,3 @@ export const mutualExclusionTensorFactory = (
 
     return exclusionTensor;
 };
-

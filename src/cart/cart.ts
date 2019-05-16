@@ -1,5 +1,12 @@
 import { KEY, PID } from '../catalog';
-import { AID, AttributeUtilities, Cart, CartOps, ItemInstance, UID, } from "./interfaces";
+import {
+    AID,
+    AttributeUtilities,
+    Cart,
+    CartOps,
+    ItemInstance,
+    UID
+} from './interfaces';
 import { MatrixEntityBuilder, AttributeInfo } from '../attributes';
 import { AttributeToken, ATTRIBUTE } from 'short-order';
 
@@ -11,7 +18,6 @@ import { AttributeToken, ATTRIBUTE } from 'short-order';
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class CartUtils implements CartOps {
-
     //
     // Operations involving Cart.
     //
@@ -84,7 +90,10 @@ export class CartUtils implements CartOps {
     // Depends if we make a class or not.
     //
     // TODO: IMPLEMENT. WAITING ON RULE CHECKER FUNCTIONALITY.
-    *findCompatibleItems(cart: Cart, option: ItemInstance): IterableIterator<ItemInstance> {
+    *findCompatibleItems(
+        cart: Cart,
+        option: ItemInstance
+    ): IterableIterator<ItemInstance> {
         for (const item of cart.items) {
             // TODO: THIS IS HARDCODED TO COMPILE FOR NOW.
             if (item.pid === 5) {
@@ -97,7 +106,10 @@ export class CartUtils implements CartOps {
     // Operations involving ItemInstances
     //
 
-    *findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance> {
+    *findChildByKey(
+        item: ItemInstance,
+        key: KEY
+    ): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.key === key) {
                 yield child;
@@ -105,7 +117,10 @@ export class CartUtils implements CartOps {
         }
     }
 
-    *findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance> {
+    *findChildByPID(
+        item: ItemInstance,
+        pid: PID
+    ): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.pid === pid) {
                 yield child;
@@ -118,21 +133,22 @@ export class CartUtils implements CartOps {
     // simply up the quantity? Or, since keys are unique between instances,
     // do we still add a completely new instance of the duplicate item?
     addItem = (cart: Cart, item: ItemInstance): Cart => {
-        let resCart: Cart = Object.assign({}, cart);
-        resCart.items.push(item);
-        return resCart;
-    }
+        const newCart: Cart = { ...cart };
+        newCart.items.push(item);
+        return newCart;
+    };
 
     // Returns a shallow copy of the Cart, where the item that shares the new
     // item's UID is replaced with the new item.
     replaceItem = (cart: Cart, repItem: ItemInstance): Cart => {
-        for (let item of cart.items) {
+        const newCart: Cart = { ...cart };
+        for (let item of newCart.items) {
             if (item.uid === repItem.uid) {
                 item = Object.assign(item, repItem);
             }
         }
-        return cart;
-    }
+        return newCart;
+    };
 
     // Returns a shallow copy of the cart, omitting the item with the specific
     // UID.
@@ -140,17 +156,18 @@ export class CartUtils implements CartOps {
     // ISSUE: NO CART PARAMTER IN THE INTERFACE, BUT ASSUMING FOR NOW THAT WE
     // NEED ONE.
     removeItem = (cart: Cart, remItem: ItemInstance): Cart => {
-        for (let item of cart.items) {
+        const newCart: Cart = { ...cart };
+        for (const item of cart.items) {
             if (item.uid === remItem.uid) {
                 // Remove the item
-                const index = cart.items.indexOf(item);
+                const index = newCart.items.indexOf(item);
                 if (index > -1) {
-                    cart.items.splice(index, 1);
+                    newCart.items.splice(index, 1);
                 }
             }
         }
-        return cart;
-    }
+        return newCart;
+    };
 
     //
     // Operations involving OptionInstances
@@ -159,33 +176,36 @@ export class CartUtils implements CartOps {
     // Returns a shallow copy of the ItemInstance with the OptionInstance
     // appended. Does not verify that the option is legal for the item.
     addChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
-        parent.children.push(child);
-        return parent;
+        const newParent: ItemInstance = { ...parent };
+        newParent.children.push(child);
+        return newParent;
     }
 
     // Returns a shallow copy of the ItemInstance, where the option that
     // shares the new option's UID is replaced with the new option.
     updateChild(parent: ItemInstance, updChild: ItemInstance): ItemInstance {
-        for (let child of parent.children) {
+        const newParent: ItemInstance = { ...parent };
+        for (let child of newParent.children) {
             if (child.uid === updChild.uid) {
                 child = Object.assign(child, updChild);
             }
         }
-        return parent;
+        return newParent;
     }
 
     // Returns a shallow copy of the ItemInstance, omitting the option with
     // the specific UID.
     removeChild(parent: ItemInstance, remChild: ItemInstance): ItemInstance {
-        for (let child of parent.children) {
+        const newParent: ItemInstance = { ...parent };
+        for (const child of newParent.children) {
             if (child.uid === remChild.uid) {
-                const index = parent.children.indexOf(child);
+                const index = newParent.children.indexOf(child);
                 if (index > -1) {
-                    parent.children.splice(index, 1);
+                    newParent.children.splice(index, 1);
                 }
             }
         }
-        return parent;
+        return newParent;
     }
 
     // QUESTION: WHAT DOES AN ATRRIBUTES SET LOOK LIKE
@@ -211,13 +231,11 @@ export class CartUtils implements CartOps {
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class AttributeUtils implements AttributeUtilities {
-
     //
     // Operations involving Attributes.
     //
 
-    constructor() {
-    }
+    constructor() { }
 
     // Returns the specific product id for a generic product, configured by a
     // set of attributes. Each generic product specifies a matrix with
@@ -233,7 +251,10 @@ export class AttributeUtils implements AttributeUtilities {
     // TODO: ISSUE: throw or return undefined?
     // TODO: IMPLEMENT
     // pid === entityId, set<AID> is the map
-    createItemInstance(pid: PID, attributeIDs: Set<AID>): ItemInstance | undefined {
+    createItemInstance(
+        pid: PID,
+        attributeIDs: Set<AID>
+    ): ItemInstance | undefined {
         // let newItem: ItemInstance = {
         //     // pid === gpid === entityId
         //     pid: pid,
@@ -260,13 +281,12 @@ export class AttributeUtils implements AttributeUtilities {
             builder.addAttribute(this.makeAttributeToken(attributeID));
         }
 
-
         // For each attribute/coordinate in the set/matrix, add the specific
         // product.
         // for (const attributeID of attributeIDs) {
-            // Just a number so find how to get actual product from AID
-            // newItem.children.push(attribute)
-            // console.log(attributeID);
+        // Just a number so find how to get actual product from AID
+        // newItem.children.push(attribute)
+        // console.log(attributeID);
 
         // }
 
@@ -284,7 +304,7 @@ export class AttributeUtils implements AttributeUtilities {
         return {
             type: ATTRIBUTE,
             id,
-            name: `attribute(${id})`
+            name: `attribute(${id})`,
         };
-    }
+    };
 }

@@ -4,7 +4,6 @@ import { AttributeInfo } from './attribute_info';
 import { PID } from '../catalog';
 import { Matrix } from './matrix';
 
-
 // MatrixEntityBuilder collects Attribute and Entity values that will later be
 // used to generate an Entity key which can be used to lookup the specific
 // PID.
@@ -33,9 +32,10 @@ export class MatrixEntityBuilder {
         if (this.entityId === undefined) {
             this.entityId = entity.pid;
             return true;
-        }
-        else {
-            const message = `attempting to overwrite entity ${this.entityId} with ${entity.pid}`;
+        } else {
+            const message = `attempting to overwrite entity ${
+                this.entityId
+            } with ${entity.pid}`;
             throw TypeError(message);
         }
     }
@@ -45,12 +45,13 @@ export class MatrixEntityBuilder {
         if (!coordinate) {
             const message = `unknown attribute ${attribute.id}.`;
             throw TypeError(message);
-        }
-        else if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
+        } else if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
             return false;
-        }
-        else {
-            this.dimensionIdToAttribute.set(coordinate.dimension.id, attribute.id);
+        } else {
+            this.dimensionIdToAttribute.set(
+                coordinate.dimension.id,
+                attribute.id
+            );
             return true;
         }
     }
@@ -68,7 +69,11 @@ export class MatrixEntityBuilder {
             return this.entityId;
         }
 
-        const key = matrix.getKey(this.entityId, this.dimensionIdToAttribute, this.info);
+        const key = matrix.getKey(
+            this.entityId,
+            this.dimensionIdToAttribute,
+            this.info
+        );
         const pid = this.info.getPID(key);
 
         return pid;

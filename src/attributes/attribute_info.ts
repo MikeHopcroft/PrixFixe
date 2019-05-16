@@ -18,7 +18,10 @@ export interface AttributeCoordinate {
 // Dimensions, and Matrices.
 export class AttributeInfo {
     private readonly dimensionIdToDimension = new Map<PID, Dimension>();
-    private readonly attributeIdToCoordinate = new Map<PID, AttributeCoordinate>();
+    private readonly attributeIdToCoordinate = new Map<
+        PID,
+        AttributeCoordinate
+    >();
     private readonly attributeIdToSKU = new Map<PID, PID>();
     private readonly matrixIdToMatrix = new Map<PID, Matrix>();
     private readonly entityIdToMatrix = new Map<PID, Matrix>();
@@ -28,7 +31,9 @@ export class AttributeInfo {
         const info = new AttributeInfo();
 
         for (const dimension of attributes.dimensions) {
-            info.addDimension(new Dimension(dimension.did, dimension.items.values()));
+            info.addDimension(
+                new Dimension(dimension.did, dimension.items.values())
+            );
         }
 
         for (const matrix of attributes.matrices) {
@@ -48,8 +53,7 @@ export class AttributeInfo {
         for (const item of catalog.map.values()) {
             if (item.matrix) {
                 info.addGenericEntity(item.pid, item.matrix);
-            }
-            else if (item.key) {
+            } else if (item.key) {
                 info.addSpecificEntity(item.pid, item.key);
             }
         }
@@ -72,14 +76,21 @@ export class AttributeInfo {
         let position = 0;
         for (const attribute of dimension.attributes) {
             if (this.attributeIdToCoordinate.has(attribute.pid)) {
-                const message = `found duplicate attribute pid ${attribute.pid}.`;
+                const message = `found duplicate attribute pid ${
+                    attribute.pid
+                }.`;
                 throw new TypeError(message);
             }
-            this.attributeIdToCoordinate.set(attribute.pid, { dimension, position });
+            this.attributeIdToCoordinate.set(attribute.pid, {
+                dimension,
+                position
+            });
 
             if (attribute.sku !== undefined) {
                 if (this.attributeIdToSKU.has(attribute.sku)) {
-                    const message = `found duplicate attribute pid ${attribute.pid}.`;
+                    const message = `found duplicate attribute pid ${
+                        attribute.pid
+                    }.`;
                     throw new TypeError(message);
                 }
                 this.attributeIdToSKU.set(attribute.pid, attribute.sku);
@@ -106,8 +117,7 @@ export class AttributeInfo {
         const matrix = this.matrixIdToMatrix.get(matrixId);
         if (matrix) {
             this.entityIdToMatrix.set(entityId, matrix);
-        }
-        else {
+        } else {
             const message = `unknown matrix id ${matrixId}.`;
             throw new TypeError(message);
         }
