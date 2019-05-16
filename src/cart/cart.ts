@@ -1,5 +1,7 @@
 import { KEY, PID } from '../catalog';
 import { AID, AttributeUtilities, Cart, CartOps, ItemInstance, UID, } from "./interfaces";
+import { MatrixEntityBuilder, AttributeInfo } from '../attributes';
+import { AttributeToken, ATTRIBUTE } from 'short-order';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -231,7 +233,58 @@ export class AttributeUtils implements AttributeUtilities {
     // TODO: ISSUE: throw or return undefined?
     // TODO: IMPLEMENT
     // pid === entityId, set<AID> is the map
-    createItemInstance(pid: PID, attributes: Set<AID>): ItemInstance | undefined {
+    createItemInstance(pid: PID, attributeIDs: Set<AID>): ItemInstance | undefined {
+        // let newItem: ItemInstance = {
+        //     // pid === gpid === entityId
+        //     pid: pid,
+        //     name: 'foo',
+        //     aliases: [],
+        //     uid: 5,
+        //     key: 'a',
+        //     quantity: 1,
+        //     children: [] // ItemInstance[]
+        // }
+
+        // attributeIdToCoordinate lies here. May realistically be declared
+        // elsewhere
+        const info = new AttributeInfo();
+        // Possibly create then add the dimensions to info before passing to
+        // builder.
+        // info.addDimension(someDimensionWeDontHave);
+        const builder = new MatrixEntityBuilder(info);
+
+        // Add a coordinate before here
+        for (const attributeID of attributeIDs) {
+            // Add size=small, allow cheese to default.
+            // Requires unified/.
+            builder.addAttribute(this.makeAttributeToken(attributeID));
+        }
+
+
+        // For each attribute/coordinate in the set/matrix, add the specific
+        // product.
+        // for (const attributeID of attributeIDs) {
+            // Just a number so find how to get actual product from AID
+            // newItem.children.push(attribute)
+            // console.log(attributeID);
+
+        // }
+
+        // If an attribute is not assosciated with the gpid, ignore it.
+
+        // When there is no attribute for a particular dimension, the menu's
+        // default attribute id is used.
+
+        // Returns the specific product id for a generic product, configured by
+        // a set of attributes.
         return undefined;
+    }
+
+    makeAttributeToken = (id: PID): AttributeToken => {
+        return {
+            type: ATTRIBUTE,
+            id,
+            name: `attribute(${id})`
+        };
     }
 }

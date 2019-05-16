@@ -2,6 +2,7 @@ import { KEY, PID, Option } from '../../src/catalog';
 import { AID,  AttributeUtils, Cart, CartUtils, ItemInstance, UID, } from '../../src/cart';
 import { Item } from '../../src/item';
 import { duplicateHamburger1, duplicateUIDCoke, duplicateUIDTomato, hamburger1, lettuce1, testCart, testOption, tomato1, unaddedItem } from './cart_info.test';
+import { AttributeItem, Dimension } from '../../src/attributes';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -130,7 +131,7 @@ const updateAttributesTest = (myParent: ItemInstance, myAttributes: Set<AID>): v
     const resItem: ItemInstance = cartOps.updateAttributes(myParent, myAttributes);
     console.log(resItem);
 }
-// TODO
+// TODO: Implement.
 // console.log(`\n##### UPDATE ATTRIBUTES TEST #####`);
 // updateAttributesTest(hamburger1, lettuce1);
 
@@ -141,10 +142,69 @@ const updateAttributesTest = (myParent: ItemInstance, myAttributes: Set<AID>): v
 ///////////////////////////////////////////////////////////////////////////////
 const atrOps = new AttributeUtils();
 
+const sizeSmall = 0;
+const sizeMedium = 1;
+const sizeLarge = 2;
+const sizes: AttributeItem[] = [
+    {
+        pid: sizeSmall,
+        name: 'small',
+        aliases: ['small']
+    },
+    {
+        pid: sizeMedium,
+        name: 'medium',
+        aliases: ['medium'],
+        isDefault: true
+    },
+    {
+        pid: sizeLarge,
+        name: 'large',
+        aliases: ['large']
+    },
+];
+
+const cheeseSauce = 3;
+const noCheese = 4;
+const cheeses: AttributeItem[] = [
+    {
+        pid: cheeseSauce,
+        name: 'cheese sauce',
+        aliases: ['cheese sauce'],
+        isDefault: true
+    },
+    {
+        pid: noCheese,
+        name: 'no cheese',
+        aliases: ['no cheese']
+    }
+];
+
+const size: PID = 0;
+const cheese: PID = 1;
+const sizeDimension = new Dimension(size, sizes.values());
+const cheeseDimension = new Dimension(cheese, cheeses.values());
+// const cheeseFriesDimensions = [
+//     sizeDimension,
+//     cheeseDimension
+// ];
+
+const smallFriesCheeseSauceAttr: Set<AID> = new Set([
+    sizeDimension.attributes[0].pid,
+    cheeseDimension.defaultAttribute
+])
+
+// const anyMatrixId: PID = 123;
+// const smallFriesCheeseSauceMatrix: Matrix = new Matrix(anyMatrixId,
+//     cheeseFriesDimensions);
+
 const createItemInstanceTest = (myPID: PID, myAttributes: Set<AID>): void => {
-    const resItem: ItemInstance | undefined = atrOps.createItemInstance(myPID, myAttributes);
+    const resItem: ItemInstance | undefined = atrOps.createItemInstance(myPID,
+        myAttributes);
     console.log(resItem);
 }
 // TODO
+// const createItemInstancePID: PID = 0;
 // console.log(`\n##### UPDATE ATTRIBUTES TEST #####`);
-// createItemInstanceTest(hamburger1, lettuce1);
+// console.log(`##### PID === ${createItemInstancePID}              #####`);
+// createItemInstanceTest(createItemInstancePID, smallFriesCheeseSauceAttr);
