@@ -106,8 +106,10 @@ export class RuleChecker implements RuleCheckerOps {
         return false;
     };
 
-    // See `RuleCheckerOps for docs
-    getDefaultQuantity = (par: KEY, child: KEY): number => {
+    private getQuanitityInfo = (
+        par: KEY,
+        child: KEY
+    ): (QuantityInformation | undefined) => {
         const upstreamAtts = par.split(':');
         const downstreamAtts = par.split(':').reverse();
 
@@ -119,12 +121,23 @@ export class RuleChecker implements RuleCheckerOps {
 
             if (map) {
                 if (map(child, downstream!)) {
-                    return map(child, downstream!)!.defaultQty;
+                    return map(child, downstream!);
 
                 } else if (map(child, '')) {
-                    return map(child, '')!.defaultQty;
+                    return map(child, '');
                 }
             }
+        }
+
+        return undefined;
+    }
+
+    // See `RuleCheckerOps for docs
+    getDefaultQuantity = (par: KEY, child: KEY): number => {
+        const quantityInfo = this.getQuanitityInfo(par, child);
+
+        if (quantityInfo) {
+            return quantityInfo.defaultQty;
         }
 
         return -1;
@@ -132,7 +145,15 @@ export class RuleChecker implements RuleCheckerOps {
 
     // See `RuleCheckerOps for docs
     isValidQuantity = (par: KEY, child: KEY, qty: number): boolean => {
-        // TODO: implement me
+        const quantityInfo = this.getQuanitityInfo(par, child);
+
+        if (quantityInfo) {
+            const result = qty >= quantityInfo.minQty
+                        && qty <= quantityInfo.maxQty;
+
+            return result;
+        }
+
         return false;
     };
 }
