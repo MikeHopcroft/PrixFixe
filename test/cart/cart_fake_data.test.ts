@@ -1,6 +1,6 @@
 import { Cart, ItemInstance, AID } from '../../src/cart/interfaces';
 
-const bread1: ItemInstance = {
+export const bread0: ItemInstance = {
     uid: 0,
     pid: 0,
     name: 'Hamburger Bun',
@@ -13,7 +13,7 @@ const bread1: ItemInstance = {
     children: []
 }
 
-const bread2: ItemInstance = {
+export const bread1: ItemInstance = {
     uid: 1,
     pid: 0,
     name: 'Hamburger Bun',
@@ -26,7 +26,7 @@ const bread2: ItemInstance = {
     children: []
 }
 
-export const lettuce1: ItemInstance = {
+export const lettuce2: ItemInstance = {
     uid: 2,
     pid: 1,
     name: 'Lettuce',
@@ -38,7 +38,7 @@ export const lettuce1: ItemInstance = {
     children: []
 }
 
-const lettuce2: ItemInstance = {
+export const lettuce3: ItemInstance = {
     uid: 3,
     pid: 1,
     name: 'Lettuce',
@@ -50,7 +50,7 @@ const lettuce2: ItemInstance = {
     children: []
 }
 
-export const hamburger1: ItemInstance = {
+export const hamburger4Bread0Lettuce3: ItemInstance = {
     uid: 4,
     pid: 2,
     name: 'Hamburger',
@@ -61,12 +61,28 @@ export const hamburger1: ItemInstance = {
     key: 'e',
     quantity: 1,
     children: [
-        bread1,
-        lettuce1
+        bread0,
+        lettuce3
     ]
 }
 
-const hamburger2: ItemInstance = {
+export const dupHamburger1Bread0Lettuce3: ItemInstance = {
+    uid: 7,
+    pid: 2,
+    name: 'Hamburger',
+    aliases: [
+        'Burger',
+        'Sandwich'
+    ],
+    key: 'h',
+    quantity: 1,
+    children: [
+        bread0,
+        lettuce3
+    ]
+}
+
+export const hamburger5Bread1: ItemInstance = {
     uid: 5,
     pid: 2,
     name: 'Hamburger',
@@ -77,11 +93,11 @@ const hamburger2: ItemInstance = {
     key: 'f',
     quantity: 1,
     children: [
-        bread2
+        bread1
     ]
 }
 
-export const unaddedItem: ItemInstance = {
+export const coke6: ItemInstance = {
     uid: 6,
     pid: 3,
     name: 'Medium Coke',
@@ -95,7 +111,7 @@ export const unaddedItem: ItemInstance = {
     children: []
 }
 
-export const duplicateUIDCoke: ItemInstance = {
+export const coke5: ItemInstance = {
     uid: 5,
     pid: 3,
     name: 'Medium Coke',
@@ -109,23 +125,7 @@ export const duplicateUIDCoke: ItemInstance = {
     children: []
 }
 
-export const duplicateHamburger1: ItemInstance = {
-    uid: 7,
-    pid: 2,
-    name: 'Hamburger',
-    aliases: [
-        'Burger',
-        'Sandwich'
-    ],
-    key: 'h',
-    quantity: 1,
-    children: [
-        bread1,
-        lettuce1
-    ]
-}
-
-export const testOption: ItemInstance = {
+export const lettuce8: ItemInstance = {
     uid: 8,
     pid: 1,
     name: 'Lettuce',
@@ -137,7 +137,7 @@ export const testOption: ItemInstance = {
     children: []
 }
 
-export const duplicateUIDTomato: ItemInstance = {
+export const tomato2: ItemInstance = {
     uid: 2,
     pid: 4,
     name: 'Tomato',
@@ -149,7 +149,7 @@ export const duplicateUIDTomato: ItemInstance = {
     children: []
 }
 
-export const tomato1: ItemInstance = {
+export const tomato9: ItemInstance = {
     uid: 9,
     pid: 4,
     name: 'Tomato',
@@ -163,8 +163,8 @@ export const tomato1: ItemInstance = {
 
 export const testCart: Cart = {
     items: [
-        hamburger1,
-        hamburger2
+        hamburger4Bread0Lettuce3,
+        hamburger5Bread1
     ]
 }
 

@@ -2,6 +2,7 @@ export * from './attributes';
 export * from './cart';
 export * from './catalog';
 export * from './item';
+export * from './rule_checker';
 
 export function doSomething(text: string) {
     console.log(text);

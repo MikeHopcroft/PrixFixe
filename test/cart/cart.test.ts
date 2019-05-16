@@ -1,7 +1,7 @@
 import { KEY, PID, Option } from '../../src/catalog';
 import { AID,  AttributeUtils, Cart, CartUtils, ItemInstance, UID, } from '../../src/cart';
 import { Item } from '../../src/item';
-import { duplicateHamburger1, duplicateUIDCoke, duplicateUIDTomato, hamburger1, lettuce1, testCart, testOption, tomato1, unaddedItem } from './cart_info.test';
+import { testCart } from './cart_fake_data.test';
 import { AttributeItem, Dimension } from '../../src/attributes';
 
 ///////////////////////////////////////////////////////////////////////////////
