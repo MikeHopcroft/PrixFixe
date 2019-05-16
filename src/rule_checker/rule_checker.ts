@@ -14,10 +14,10 @@ import {
     mutualExclusionTensorFactory
 } from './exclusion_map';
 
-import { QuantityTensor, quantityTensorFactory } from './quantity';
+import { QuantityMap, QuantityTensor, quantityTensorFactory } from './quantity';
 
-type Predicate = MutualExclusionZone | ValidChildPredicate;
-type Tensor = ExclusionTensor | ValidChildTensor;
+type Predicate = ValidChildPredicate | MutualExclusionZone | QuantityMap;
+type Tensor = ValidChildTensor | ExclusionTensor | QuantityTensor;
 
 export class RuleChecker implements RuleCheckerOps {
     private childTensor: ValidChildTensor;
@@ -107,13 +107,31 @@ export class RuleChecker implements RuleCheckerOps {
     };
 
     // See `RuleCheckerOps for docs
-    getDefaultQuantity = (parent: KEY, child: KEY): number => {
-        // TODO: implement me
+    getDefaultQuantity = (par: KEY, child: KEY): number => {
+        const upstreamAtts = par.split(':');
+        const downstreamAtts = par.split(':').reverse();
+
+        for (let i = downstreamAtts.length - 1; i > 0; i--) {
+            const partialKey = upstreamAtts.slice(0, i).join(':');
+            const downstream = downstreamAtts.shift();
+
+            const map = this.quantityTensor[partialKey];
+
+            if (map) {
+                if (map(child, downstream!)) {
+                    return map(child, downstream!)!.defaultQty;
+
+                } else if (map(child, '')) {
+                    return map(child, '')!.defaultQty;
+                }
+            }
+        }
+
         return -1;
     };
 
     // See `RuleCheckerOps for docs
-    isValidQuantity = (parent: KEY, child: KEY, qty: number): boolean => {
+    isValidQuantity = (par: KEY, child: KEY, qty: number): boolean => {
         // TODO: implement me
         return false;
     };

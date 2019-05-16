@@ -9,15 +9,39 @@ import {
     QuantityInformation,
 } from './interfaces';
 
+export interface QuantityMap {
+    (child: KEY, downstream: KEY): QuantityInformation | undefined;
+}
+
 export interface QuantityTensor {
     // NOTE: Weird how I can't use KEY type alias here:
     //   https://github.com/microsoft/TypeScript/issues/1778
-    [key: string]: QuantityInformation;
+    [key: string]: QuantityMap;
 }
 
 export const quantityTensorFactory = (
-    rulesSet: RuleConfig,
+    ruleSet: RuleConfig,
     genMap: Map<PID, GenericTypedEntity>
 ): QuantityTensor => {
-    return {};
+    const quantityTensor: QuantityTensor = {};
+
+    for (const rule of ruleSet.rules) {
+        quantityTensor[rule.partialKey] = (child: KEY, downstream: KEY) => {
+            const childPID = Number(child.split(':')[0]);
+            const option = genMap.get(childPID);
+
+            if (option) {
+                const categoryID = option.cid;
+                const category = rule.validCatagoryMap[categoryID];
+
+                if (category) {
+                    return category.qtyInfo[downstream];
+                }
+            }
+
+            return undefined;
+        };
+    }
+
+    return quantityTensor;
 };

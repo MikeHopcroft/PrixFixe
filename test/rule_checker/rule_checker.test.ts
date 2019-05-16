@@ -60,7 +60,6 @@ const SAMPLE_RULES: RuleConfig = {
         {
             partialKey: '9000', // All lattes
             validCatagoryMap: {
-                // No option rules to apply
                 '500': {
                     validOptions: [5000],
                     qtyInfo: {
@@ -144,6 +143,7 @@ describe('RuleChecker', () => {
                 ruleChecker.isValidChild(latteHotKey, anotherDrizzleKey)
             );
         });
+
         it('Invalid children evaluate to false', () => {
             // Sprinkles cannot be in lattes
             assert.isFalse(ruleChecker.isValidChild(latteHotKey, sprinklesKey));
@@ -159,10 +159,10 @@ describe('RuleChecker', () => {
         it('Invalid children evaluate to false', () => {
             // Sprinkles cannot be in an iced latte
             assert.isFalse(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
-            // More sprinkles cannot be in an iced latte
         });
 
         it('Invalid children evaluate to false', () => {
+            // More sprinkles cannot be in an iced latte
             assert.isFalse(
                 ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey)
             );
