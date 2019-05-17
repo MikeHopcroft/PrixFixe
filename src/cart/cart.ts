@@ -181,7 +181,6 @@ export class CartUtils implements CartOps {
         const newParent: ItemInstance = { ...parent };
         for (let child of newParent.children) {
             if (child.uid === updChild.uid) {
-                // child = Object.assign(child, updChild);
                 Object.assign(child, updChild);
             }
         }

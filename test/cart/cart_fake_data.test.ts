@@ -120,9 +120,9 @@ export const hamburger5Bread1Tomato3: ItemInstance = {
     children: [bread1, tomato3],
 };
 
-// export const testCart: Cart = {
-//     items: [hamburger4Bread0Lettuce3, hamburger5Bread1],
-// };
+export const testCart: Cart = {
+    items: [hamburger4Bread0Lettuce3, hamburger5Bread1],
+};
 
 // export const attributeSet: Set<AID> = new Set<AID>([1,2,3,4,5]);
 // Tensor would look like: "1:2:3"

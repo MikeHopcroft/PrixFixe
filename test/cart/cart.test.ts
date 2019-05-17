@@ -1,15 +1,6 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import 'mocha';
 
-import { KEY, Item, PID, Option } from '../../src/';
-import {
-    AID,
-    AttributeUtils,
-    Cart,
-    CartUtils,
-    ItemInstance,
-    UID
-} from '../../src/cart';
 import {
     bread0,
     coke5,
@@ -20,16 +11,16 @@ import {
     hamburger4Bread0,
     hamburger4Bread0Tomato3,
     lettuce3,
+    testCart,
     tomato3,
 } from './cart_fake_data.test';
-import { AttributeItem, Dimension } from '../../src/attributes';
+import { Cart, CartUtils, ItemInstance, KEY, PID } from '../../src/';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // CartUtils Tests
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 describe('Cart', () => {
     const cartOps = new CartUtils();
     ///////////////////////////////////////////////////////////////////////////
@@ -38,59 +29,43 @@ describe('Cart', () => {
     //
     ///////////////////////////////////////////////////////////////////////////
     it('findItemByKey()', () => {
-        const cart: Cart = {
-            items: [hamburger4Bread0Lettuce3, hamburger5Bread1,],
-        };
         const key: KEY = 'h';
-        // Process with the cart API.
+
         const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(
-            cart,
+            testCart,
             key
         );
-        // Assert the expected object equals the resulting.
         expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
     });
 
     it('findItemByPID()', () => {
-        const cart: Cart = {
-            items: [hamburger4Bread0Lettuce3, hamburger5Bread1,],
-        };
         const pid: PID = 2;
-        // Process with the cart API.
+
         const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(
-            cart,
+            testCart,
             pid
         );
-        // Assert the expected objects equal the resulting.
         expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
         expect(gen.next().value).to.deep.equal(hamburger5Bread1);
     });
 
     it('findItemByChildKey()', () => {
-        const cart: Cart = {
-            items: [hamburger4Bread0Lettuce3, hamburger5Bread1,],
-        };
         const key: KEY = 'c';
-        // Process with the cart API.
+
         const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(
-            cart,
+            testCart,
             key
         );
-        // Assert the expected object equals the resulting.
         expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
     });
 
     it('findItemByChildPID()', () => {
-        const cart: Cart = {
-            items: [hamburger4Bread0Lettuce3, hamburger5Bread1,],
-        };
         const pid: PID = 1;
-        // Process with the cart API.
+
         const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildPID(
-            cart,
+            testCart,
             pid
         );
-        // Assert the expected object equals the resulting.
         expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
     });
 
@@ -102,106 +77,84 @@ describe('Cart', () => {
 
     it('findChildByKey', () => {
         const key: KEY = 'c';
-        // Process with the cart API.
+
         const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(
             hamburger4Bread0Lettuce3,
             key
         );
-        // Assert the expected object equals the resulting.
         expect(gen.next().value).to.deep.equal(lettuce3);
     });
 
     it('findChildByPID()', () => {
         const pid: PID = 0;
-        // Process with the cart API.
+
         const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(
             hamburger4Bread0Lettuce3,
             pid
         );
-        // Assert the expected object equals the resulting.
         expect(gen.next().value).to.deep.equal(bread0);
     });
 
     it('addItem()', () => {
-        const cart: Cart = {
-            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
-        };
+        const cart: Cart = clone(testCart);
         const expectedCart: Cart = {
-            items: [
-                { ...hamburger4Bread0Lettuce3 },
-                { ...hamburger5Bread1 },
-                { ...coke6 },
-            ],
+            items: [hamburger4Bread0Lettuce3, hamburger5Bread1, coke6,],
         };
-        // Process with the cart API.
+
         const resCart: Cart = cartOps.addItem(cart, coke6);
-        // Assert the expected object equals the resulting.
         expect(resCart).to.deep.equal(expectedCart);
     });
 
     it('replaceItem()', () => {
-        const cart: Cart = {
-            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
-        };
+        const cart: Cart = clone(testCart);
         const expectedCart: Cart = {
             items: [hamburger4Bread0Lettuce3, coke5],
         };
-        // Process with the cart API.
+
         const resCart: Cart = cartOps.replaceItem(cart, coke5);
-        // Assert the expected object equals the resulting.
         expect(resCart).to.deep.equal(expectedCart);
     });
 
     it('removeItem()', () => {
-        const cart: Cart = {
-            items: [{ ...hamburger4Bread0Lettuce3 }, { ...hamburger5Bread1 },],
-        };
+        const cart: Cart = clone(testCart);
         const expectedCart: Cart = {
             items: [hamburger5Bread1,],
         };
-        // Process with the cart API.
+
         const resCart: Cart = cartOps.removeItem(
             cart,
             hamburger4Bread0Lettuce3
         );
-        // Assert the expected object equals the resulting.
         expect(resCart).to.deep.equal(expectedCart);
     });
 
     it('addChild()', () => {
-        // Shallow copy any objects that will be modified by the cart API.
-        const parent: ItemInstance = { ...hamburger5Bread1 }
+        const parent: ItemInstance = clone(hamburger5Bread1);
 
-        // Process with the cart API.
         const resItem: ItemInstance = cartOps.addChild(
             parent,
             tomato3
         );
-        // Assert the expected object equals the resulting.
         expect(resItem).to.deep.equal(hamburger5Bread1Tomato3);
     });
 
     it('updateChild()', () => {
-        // Shallow copy any objects that will be modified by the cart API.
-        const parent: ItemInstance = { ...hamburger4Bread0Lettuce3 }
-        // Process with the cart API.
+        const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
+
         const resItem: ItemInstance = cartOps.updateChild(
             parent,
             tomato3
         );
-        // Assert the expected object equals the resulting.
         expect(resItem).to.deep.equal(hamburger4Bread0Tomato3);
     });
 
     it('removeChild()', () => {
-        // Shallow copy any objects that will be modified by the cart API.
-        const parent: ItemInstance = { ...hamburger4Bread0Lettuce3 }
-        // Process with the cart API.
+        const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
+
         const resItem: ItemInstance = cartOps.removeChild(
             parent,
             lettuce3
         );
-        // Assert the expected object equals the resulting.
         expect(resItem).to.deep.equal(hamburger4Bread0);
     });
 
@@ -221,3 +174,12 @@ describe('Cart', () => {
     //         myAttributes);
     // });
 });
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Test Utils
+//
+///////////////////////////////////////////////////////////////////////////////
+const clone = (obj: Object) => {
+    return JSON.parse(JSON.stringify(obj));
+}
