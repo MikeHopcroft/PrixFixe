@@ -186,6 +186,6 @@ describe('Cart', () => {
 // Test Utils
 //
 ///////////////////////////////////////////////////////////////////////////////
-const clone = (obj: {}) => {
+const clone = (obj: Object) => {
     return JSON.parse(JSON.stringify(obj));
-};
+}
