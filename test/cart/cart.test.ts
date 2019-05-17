@@ -14,7 +14,7 @@ import {
     testCart,
     tomato3,
 } from './cart_fake_data.test';
-import { Cart, CartUtils, ItemInstance, KEY, PID } from '../../src/';
+import { AttributeUtils, Cart, CartUtils, ItemInstance, KEY, PID, AID } from '../../src/';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -167,12 +167,18 @@ describe('Cart', () => {
     // AttributeUtils Tests
     //
     ///////////////////////////////////////////////////////////////////////////
-    // const atrOps = new AttributeUtils();
+    const atrOps = new AttributeUtils();
 
-    // it('createItemInstance()', () => {
-    //     const resItem: ItemInstance | undefined = atrOps.createItemInstance(myPID,
-    //         myAttributes);
-    // });
+    it('createItemInstance()', () => {
+        const pid: PID = 3;
+        const attributes = new Set<AID>([1,2,3,]);
+
+        const resItem: ItemInstance | undefined = atrOps.createItemInstance(pid,
+            attributes);
+
+        console.log('### resItem ###');
+        console.log(resItem);
+    });
 });
 
 ///////////////////////////////////////////////////////////////////////////////

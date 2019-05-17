@@ -216,6 +216,7 @@ export class CartUtils implements CartOps {
     }
 }
 
+import { Entity, GenericEntity, genericEntityFactory, MenuItem, MENUITEM, Modifier, MODIFIER, Option, OPTION, specificEntityFactory } from '../';
 ///////////////////////////////////////////////////////////////////////////////
 //
 // AttributeUtils
@@ -245,10 +246,7 @@ export class AttributeUtils implements AttributeUtilities {
     // TODO: ISSUE: throw or return undefined?
     // TODO: IMPLEMENT
     // pid === entityId, set<AID> is the map
-    createItemInstance(
-        pid: PID,
-        attributeIDs: Set<AID>
-    ): ItemInstance | undefined {
+    createItemInstance(pid: PID, attributeIDs: Set<AID>): ItemInstance | undefined {
         // let newItem: ItemInstance = {
         //     // pid === gpid === entityId
         //     pid: pid,
@@ -259,21 +257,32 @@ export class AttributeUtils implements AttributeUtilities {
         //     quantity: 1,
         //     children: [] // ItemInstance[]
         // }
+        const sampleGenEntity: GenericEntity = {
+            name:`attribute(${pid})`,
+            pid: pid,
+            cid: 5,
+            aliases: [],
+            matrix: 6,
+            defaultKey: 'a',
+        }
+
+        // How to infer the kind?
+        console.log(genericEntityFactory(sampleGenEntity, MENUITEM));
 
         // attributeIdToCoordinate lies here. May realistically be declared
         // elsewhere
-        const info = new AttributeInfo();
+        // const info = new AttributeInfo();
         // Possibly create then add the dimensions to info before passing to
         // builder.
         // info.addDimension(someDimensionWeDontHave);
-        const builder = new MatrixEntityBuilder(info);
+        // const builder = new MatrixEntityBuilder(info);
 
         // Add a coordinate before here
-        for (const attributeID of attributeIDs) {
-            // Add size=small, allow cheese to default.
-            // Requires unified/.
-            builder.addAttribute(this.makeAttributeToken(attributeID));
-        }
+        // for (const attributeID of attributeIDs) {
+        //     // Add size=small, allow cheese to default.
+        //     // Requires unified/.
+        //     builder.addAttribute(this.makeAttributeToken(attributeID));
+        // }
 
         // For each attribute/coordinate in the set/matrix, add the specific
         // product.
