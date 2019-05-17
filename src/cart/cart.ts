@@ -255,19 +255,19 @@ export class AttributeUtils implements AttributeUtilities {
         //     uid: 5,
         //     key: 'a',
         //     quantity: 1,
-        //     children: [] // ItemInstance[]
+        // //     children: [] // ItemInstance[]
+        // // }
+        // const sampleGenEntity: GenericEntity = {
+        //     name:`attribute(${pid})`,
+        //     pid: pid,
+        //     cid: 5,
+        //     aliases: [],
+        //     matrix: 6,
+        //     defaultKey: 'a',
         // }
-        const sampleGenEntity: GenericEntity = {
-            name:`attribute(${pid})`,
-            pid: pid,
-            cid: 5,
-            aliases: [],
-            matrix: 6,
-            defaultKey: 'a',
-        }
 
-        // How to infer the kind?
-        console.log(genericEntityFactory(sampleGenEntity, MENUITEM));
+        // // How to infer the kind?
+        // console.log(genericEntityFactory(sampleGenEntity, MENUITEM));
 
         // attributeIdToCoordinate lies here. May realistically be declared
         // elsewhere

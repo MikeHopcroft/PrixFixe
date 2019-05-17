@@ -175,9 +175,6 @@ describe('Cart', () => {
 
         const resItem: ItemInstance | undefined = atrOps.createItemInstance(pid,
             attributes);
-
-        console.log('### resItem ###');
-        console.log(resItem);
     });
 });
 
