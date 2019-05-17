@@ -22,19 +22,19 @@ const attributes: AttributeItem[] = [
     {
         pid: 0,
         name: 'zero',
-        aliases: ['zero', 'z']
+        aliases: ['zero', 'z'],
     },
     {
         pid: 1,
         name: 'one',
         aliases: ['one', 'first'],
-        isDefault: true
+        isDefault: true,
     },
     {
         pid: 2,
         name: 'two',
-        aliases: ['two', 'second']
-    }
+        aliases: ['two', 'second'],
+    },
 ];
 
 const sizeSmall = 0;
@@ -44,19 +44,19 @@ const sizes: AttributeItem[] = [
     {
         pid: sizeSmall,
         name: 'small',
-        aliases: ['small']
+        aliases: ['small'],
     },
     {
         pid: sizeMedium,
         name: 'medium',
         aliases: ['medium'],
-        isDefault: true
+        isDefault: true,
     },
     {
         pid: sizeLarge,
         name: 'large',
-        aliases: ['large']
-    }
+        aliases: ['large'],
+    },
 ];
 
 const flavorVanilla = 3;
@@ -67,18 +67,18 @@ const flavors: AttributeItem[] = [
         pid: flavorVanilla,
         name: 'vanilla',
         aliases: ['vanilla'],
-        isDefault: true
+        isDefault: true,
     },
     {
         pid: flavorChocolate,
         name: 'chocolate',
-        aliases: ['chocolate']
+        aliases: ['chocolate'],
     },
     {
         pid: flavorStrawberry,
         name: 'strawberry',
-        aliases: ['strawberry']
-    }
+        aliases: ['strawberry'],
+    },
 ];
 
 const styleRegular = 6;
@@ -89,14 +89,14 @@ const styles: AttributeItem[] = [
         name: 'regular',
         aliases: ['regular'],
         isDefault: true,
-        sku: 12345
+        sku: 12345,
     },
     {
         pid: styleOriginal,
         name: 'original',
         aliases: ['original'],
-        sku: 54321
-    }
+        sku: 54321,
+    },
 ];
 
 const temperatureHot = 8;
@@ -106,13 +106,13 @@ const temperatures: AttributeItem[] = [
         pid: temperatureHot,
         name: 'hot',
         aliases: ['hot'],
-        isDefault: true
+        isDefault: true,
     },
     {
         pid: temperatureCold,
         name: 'cold',
-        aliases: ['colr', ' iced']
-    }
+        aliases: ['colr', ' iced'],
+    },
 ];
 
 const caffeineRegular = 10;
@@ -123,18 +123,18 @@ const caffeines: AttributeItem[] = [
         pid: caffeineRegular,
         name: 'regular',
         aliases: ['regular'],
-        isDefault: true
+        isDefault: true,
     },
     {
         pid: caffeineDecaf,
         name: 'decaf',
-        aliases: ['decaf', 'unleaded']
+        aliases: ['decaf', 'unleaded'],
     },
     {
         pid: caffeineHalfCaf,
         name: 'half caf',
-        aliases: ['half caf', 'split shot']
-    }
+        aliases: ['half caf', 'split shot'],
+    },
 ];
 
 const size: PID = 0;
@@ -152,14 +152,14 @@ const caffeineDimension = new Dimension(caffeine, caffeines.values());
 const coffeeDimensions = [
     sizeDimension,
     temperatureDimension,
-    caffeineDimension
+    caffeineDimension,
 ];
 
 function makeAttributeToken(id: PID): AttributeToken {
     return {
         type: ATTRIBUTE,
         id,
-        name: `attribute(${id})`
+        name: `attribute(${id})`,
     };
 }
 
@@ -167,7 +167,7 @@ function makeEntityToken(pid: PID): EntityToken {
     return {
         type: ENTITY,
         pid,
-        name: `entity(${pid})`
+        name: `entity(${pid})`,
     };
 }
 
@@ -278,50 +278,50 @@ describe('Matrix', () => {
                 {
                     pid: sizeSmall,
                     coordinate: { dimension: sizeDimension, position: 0 },
-                    sku: undefined
+                    sku: undefined,
                 },
                 {
                     pid: sizeMedium,
                     coordinate: { dimension: sizeDimension, position: 1 },
-                    sku: undefined
+                    sku: undefined,
                 },
                 {
                     pid: sizeLarge,
                     coordinate: { dimension: sizeDimension, position: 2 },
-                    sku: undefined
+                    sku: undefined,
                 },
 
                 // Flavors
                 {
                     pid: flavorVanilla,
                     coordinate: { dimension: flavorDimension, position: 0 },
-                    sku: undefined
+                    sku: undefined,
                 },
                 {
                     pid: flavorChocolate,
                     coordinate: { dimension: flavorDimension, position: 1 },
-                    sku: undefined
+                    sku: undefined,
                 },
                 {
                     pid: flavorStrawberry,
                     coordinate: { dimension: flavorDimension, position: 2 },
-                    sku: undefined
+                    sku: undefined,
                 },
 
                 // Styles
                 {
                     pid: styleRegular,
                     coordinate: { dimension: styleDimension, position: 0 },
-                    sku: 12345
+                    sku: 12345,
                 },
                 {
                     pid: styleOriginal,
                     coordinate: { dimension: styleDimension, position: 1 },
-                    sku: 54321
+                    sku: 54321,
                 },
 
                 // Unknown attribute
-                { pid: unknownPID, coordinate: undefined }
+                { pid: unknownPID, coordinate: undefined },
             ];
 
             for (const test of cases) {
@@ -431,7 +431,7 @@ describe('Matrix', () => {
             const entity: EntityToken = {
                 type: ENTITY,
                 pid: 123,
-                name: 'something'
+                name: 'something',
             };
             builder.setEntity(entity);
 

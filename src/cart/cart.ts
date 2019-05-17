@@ -179,7 +179,7 @@ export class CartUtils implements CartOps {
     // shares the new option's UID is replaced with the new option.
     updateChild(parent: ItemInstance, updChild: ItemInstance): ItemInstance {
         const newParent: ItemInstance = { ...parent };
-        for (let child of newParent.children) {
+        for (const child of newParent.children) {
             if (child.uid === updChild.uid) {
                 Object.assign(child, updChild);
             }

@@ -15,82 +15,82 @@ const attributeSchema = {
             properties: {
                 aliases: {
                     items: {
-                        type: 'string'
+                        type: 'string',
                     },
-                    type: 'array'
+                    type: 'array',
                 },
                 hidden: {
-                    type: 'boolean'
+                    type: 'boolean',
                 },
                 isDefault: {
-                    type: 'boolean'
+                    type: 'boolean',
                 },
                 name: {
-                    type: 'string'
+                    type: 'string',
                 },
                 pid: {
-                    type: 'number'
+                    type: 'number',
                 },
                 sku: {
-                    type: 'number'
-                }
+                    type: 'number',
+                },
             },
             required: ['aliases', 'name', 'pid'],
-            type: 'object'
+            type: 'object',
         },
         DimensionDescription: {
             properties: {
                 did: {
-                    type: 'number'
+                    type: 'number',
                 },
                 items: {
                     items: {
-                        $ref: '#/definitions/AttributeItem'
+                        $ref: '#/definitions/AttributeItem',
                     },
-                    type: 'array'
+                    type: 'array',
                 },
                 name: {
-                    type: 'string'
-                }
+                    type: 'string',
+                },
             },
             required: ['did', 'items', 'name'],
-            type: 'object'
+            type: 'object',
         },
         MatrixDescription: {
             properties: {
                 dimensions: {
                     items: {
-                        type: 'number'
+                        type: 'number',
                     },
-                    type: 'array'
+                    type: 'array',
                 },
                 mid: {
-                    type: 'number'
+                    type: 'number',
                 },
                 name: {
-                    type: 'string'
-                }
+                    type: 'string',
+                },
             },
             required: ['dimensions', 'mid', 'name'],
-            type: 'object'
-        }
+            type: 'object',
+        },
     },
     properties: {
         dimensions: {
             items: {
-                $ref: '#/definitions/DimensionDescription'
+                $ref: '#/definitions/DimensionDescription',
             },
-            type: 'array'
+            type: 'array',
         },
         matrices: {
             items: {
-                $ref: '#/definitions/MatrixDescription'
+                $ref: '#/definitions/MatrixDescription',
             },
-            type: 'array'
-        }
+            type: 'array',
+        },
     },
     required: ['dimensions', 'matrices'],
-    type: 'object'
+    type: 'object',
 };
 
 const ajv = new AJV();

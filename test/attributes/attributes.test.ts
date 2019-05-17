@@ -14,20 +14,20 @@ const attributes = {
                 {
                     pid: 1,
                     name: 'small',
-                    aliases: ['small']
+                    aliases: ['small'],
                 },
                 {
                     pid: 2,
                     name: 'medium',
                     aliases: ['medium'],
-                    isDefault: true
+                    isDefault: true,
                 },
                 {
                     pid: 3,
                     name: 'large',
-                    aliases: ['large']
-                }
-            ]
+                    aliases: ['large'],
+                },
+            ],
         },
         {
             did: 2,
@@ -37,28 +37,28 @@ const attributes = {
                     pid: 4,
                     name: 'vanilla',
                     aliases: ['vanilla'],
-                    isDefault: true
+                    isDefault: true,
                 },
                 {
                     pid: 5,
                     name: 'chocolate',
-                    aliases: ['chocolate']
+                    aliases: ['chocolate'],
                 },
                 {
                     pid: 6,
                     name: 'strawberry',
-                    aliases: ['strawberry']
-                }
-            ]
-        }
+                    aliases: ['strawberry'],
+                },
+            ],
+        },
     ],
     matrices: [
         {
             mid: 1,
             name: 'cones',
-            dimensions: [1, 2]
-        }
-    ]
+            dimensions: [1, 2],
+        },
+    ],
 };
 
 describe('Attributes', () => {

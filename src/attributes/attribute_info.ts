@@ -83,7 +83,7 @@ export class AttributeInfo {
             }
             this.attributeIdToCoordinate.set(attribute.pid, {
                 dimension,
-                position
+                position,
             });
 
             if (attribute.sku !== undefined) {

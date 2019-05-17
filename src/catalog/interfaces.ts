@@ -106,17 +106,17 @@ export const entityTyper = (entity: Entity, kind: symbol): TypedEntity => {
         case MENUITEM:
             return {
                 ...entity,
-                kind: MENUITEM
+                kind: MENUITEM,
             } as MenuItem;
         case MODIFIER:
             return {
                 ...entity,
-                kind: MODIFIER
+                kind: MODIFIER,
             } as Modifier;
         case OPTION:
             return {
                 ...entity,
-                kind: OPTION
+                kind: OPTION,
             } as Option;
         default:  // TODO: never type gaurd
             throw TypeError('Unknown Type sent to `entityTyper`');
