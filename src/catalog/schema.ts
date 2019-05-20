@@ -3,9 +3,14 @@ import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
 import { Catalog } from './catalog';
-import { Entity, entityTyper, TypedEntity } from './interfaces';
-import { GenericEntity, GenericTypedEntity, SpecificEntity, SpecificTypedEntity } from './interfaces';
-import { entityTokenFactory } from 'short-order';
+import { 
+    GenericEntity,
+    genericEntityFactory,
+    GenericTypedEntity,
+    SpecificEntity,
+    specificEntityFactory,
+    SpecificTypedEntity
+} from './interfaces';
 
 const debug = Debug('pf:catalogFromYamlString');
 
@@ -112,13 +117,13 @@ export function catalogFromYamlString(yamlText: string, kind: symbol) {
         throw TypeError(message);
     }
 
-    const f1 = (entity: Entity): GenericTypedEntity => {
-        return entityTyper(entity, kind) as GenericTypedEntity;
+    const f1 = (entity: GenericEntity): GenericTypedEntity => {
+        return genericEntityFactory(entity, kind);
     };
     const genericItems = yamlRoot.genericItems.map(f1);
 
-    const f2 = (entity: Entity): SpecificTypedEntity => {
-        return entityTyper(entity, kind) as SpecificTypedEntity;
+    const f2 = (entity: SpecificEntity): SpecificTypedEntity => {
+        return specificEntityFactory(entity, kind);
     };
     const specificItems = yamlRoot.specificItems.map(f2);
 
