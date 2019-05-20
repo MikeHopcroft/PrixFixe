@@ -27,8 +27,18 @@ export class Catalog {
         genericItems: IterableIterator<GenericTypedEntity>,
         specificItems: IterableIterator<SpecificTypedEntity>
     ) {
-        // this.items = catalogItems.items;
+        this.mergeItems(genericItems, specificItems);
+    }
 
+    // Merge another Catalog into this Catalog.
+    merge(other: Catalog) {
+        this.mergeItems(other.mapGeneric.values(), other.mapSpecific.values());
+    }
+
+    private mergeItems(
+        genericItems: IterableIterator<GenericTypedEntity>,
+        specificItems: IterableIterator<SpecificTypedEntity>
+    ) {
         for (const item of genericItems) {
             if (this.mapGeneric.has(item.pid)) {
                 throw TypeError(
