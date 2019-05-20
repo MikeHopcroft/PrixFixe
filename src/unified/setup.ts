@@ -49,6 +49,7 @@ export function setup(
     const attributeInfo = AttributeInfo.factory(catalog, attributes);
 
     let uidCount: UID = 0;
+    uidCount += 1;              // TODO: remove this tslint fix
 
     const atrOps = new AttributeUtils(catalog, uidCount, attributeInfo);
     const cartOps = new CartUtils(catalog, uidCount);

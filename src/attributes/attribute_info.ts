@@ -1,6 +1,4 @@
-import { PID } from '../catalog';
-// import { Catalog } from 'short-order';
-import { Catalog } from '../';
+import { Catalog, PID } from '../catalog';
 
 import { Dimension } from './dimension';
 import { Attributes } from './interfaces';

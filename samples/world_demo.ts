@@ -23,7 +23,7 @@ function go(debugMode: boolean) {
     const { atrOps, attributes, attributeInfo, catalog, cartOps } = world;
 
     // Was originally of type State, but may not be necessary for now.
-    let state: State = { cart: { items: [] }, actions: [] };
+    const state: State = { cart: { items: [] }, actions: [] };
 
     const fakeFactory = new FakeItemFactory();
 

@@ -31,9 +31,6 @@ const attributeSchema = {
                 pid: {
                     type: 'number',
                 },
-                sku: {
-                    type: 'number',
-                },
             },
             required: ['aliases', 'name', 'pid'],
             type: 'object',
@@ -95,16 +92,6 @@ const attributeSchema = {
 
 const ajv = new AJV();
 const attributesValidator = ajv.compile(attributeSchema);
-
-export function validateAttributes(attributes: Attributes) {
-    if (!attributesValidator(attributes)) {
-        const message =
-            'attributesValidator: yaml data does not conform to schema.';
-        console.log(message);
-        console.log(attributesValidator.errors);
-        throw TypeError(message);
-    }
-}
 
 export function* itemsFromAttributes(
     attributes: Attributes
