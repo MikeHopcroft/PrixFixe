@@ -1,7 +1,4 @@
 import * as fs from 'fs';
-import * as yaml from 'js-yaml';
-
-import { idGenerator, IDGenerator } from './id_generator';
 
 import {
     Attributes,
@@ -11,11 +8,10 @@ import {
     CartUtils,
     Catalog,
     catalogFromYamlString,
-    GenericTypedEntity,
-    SpecificTypedEntity,
     MENUITEM,
-    UID,
 } from '..';
+
+import { IDGenerator } from './id_generator';
 
 export interface World {
     attributeOps: AttributeUtils;
@@ -23,7 +19,6 @@ export interface World {
     attributeInfo: AttributeInfo;
     cartOps: CartUtils;
     catalog: Catalog;
-    uidCount: UID;
 }
 
 export function setup(
@@ -40,8 +35,8 @@ export function setup(
 
     const uidGenerator = new IDGenerator();
 
-    const attributeOps = new AttributeUtils(catalog, uidCount, attributeInfo);
-    const cartOps = new CartUtils(catalog, uidCount);
+    const attributeOps = new AttributeUtils(catalog, uidGenerator, attributeInfo);
+    const cartOps = new CartUtils(catalog);
 
     return {
         attributeOps,
@@ -49,6 +44,5 @@ export function setup(
         attributeInfo,
         cartOps,
         catalog,
-        uidCount,
     };
 }

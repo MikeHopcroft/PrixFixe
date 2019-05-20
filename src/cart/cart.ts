@@ -4,6 +4,7 @@ import {
     Cart,
     CartOps,
     Catalog,
+    IDGenerator,
     ItemInstance,
     KEY,
     PID,
@@ -19,14 +20,13 @@ import {
 ///////////////////////////////////////////////////////////////////////////////
 export class CartUtils implements CartOps {
     private readonly catalog: Catalog;
-    private readonly uidCount: UID;
+    
     //
     // Operations involving Cart.
     //
 
-    constructor(catalog: Catalog, uidCount: UID) {
+    constructor(catalog: Catalog) {
         this.catalog = catalog;
-        this.uidCount = uidCount;
     }
 
     // Returns a list of ItemInstances in the cart with a particular SPID.
@@ -250,15 +250,15 @@ import { AttributeInfo, MatrixEntityBuilder, } from '../';
 export class AttributeUtils implements AttributeUtilities {
     private readonly atrInfo: AttributeInfo;
     private readonly catalog: Catalog;
-    private readonly uidCount: UID;
+    private readonly idGenerator: IDGenerator;
     //
     // Operations involving Attributes.
     //
 
-    constructor(catalog: Catalog, uidCount: UID, atrInfo: AttributeInfo) {
+    constructor(catalog: Catalog, idGenerator: IDGenerator, atrInfo: AttributeInfo) {
         this.atrInfo = atrInfo;
         this.catalog = catalog;
-        this.uidCount = uidCount;
+        this.idGenerator = idGenerator;
     }
 
     // Returns the specific product id for a generic product, configured by a
@@ -281,12 +281,12 @@ export class AttributeUtils implements AttributeUtilities {
             // Create the key by appending the PID, and one coordinate for each
             // dimension.
             // TODO: Generate key from MEB.
-            let key: KEY = String(pid);
+            const key: KEY = String(pid);
 
             const meb = new MatrixEntityBuilder(this.atrInfo);
 
             // TODO: Create the children from the set of AIDs.
-            let children: [] = [];
+            const children: [] = [];
             for (const attributeID of attributeIDs) {
                 // Add attribute should return the attribute | undefin rather
                 // than a boolean.
@@ -296,14 +296,14 @@ export class AttributeUtils implements AttributeUtilities {
             }
 
             const newItem: ItemInstance = {
-                pid: pid,
+                pid,
                 name: parent.name,
                 aliases: parent.aliases,
-                uid: this.uidCount, // Possibly run into Mike's problem w/ global.
-                key: key,
+                uid: this.idGenerator.nextId(),
+                key,
                 quantity: 1, // ISSUE: Default to 1 for now.
-                children: children,
-            }
+                children,
+            };
             return newItem;
         }
 
