@@ -1,6 +1,8 @@
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
+import { idGenerator, IDGenerator } from './id_generator';
+
 import {
     Attributes,
     AttributeInfo,
@@ -36,8 +38,7 @@ export function setup(
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
     const attributeInfo = AttributeInfo.factory(catalog, attributes);
 
-    let uidCount: UID = 0;
-    uidCount += 1;              // TODO: remove this tslint fix
+    const uidGenerator = new IDGenerator();
 
     const attributeOps = new AttributeUtils(catalog, uidCount, attributeInfo);
     const cartOps = new CartUtils(catalog, uidCount);
