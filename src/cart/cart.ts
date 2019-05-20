@@ -7,6 +7,7 @@ import {
     ItemInstance,
     KEY,
     PID,
+    UID,
 } from '../';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -18,22 +19,14 @@ import {
 ///////////////////////////////////////////////////////////////////////////////
 export class CartUtils implements CartOps {
     private readonly catalog: Catalog;
+    private readonly uidCount: UID;
     //
     // Operations involving Cart.
     //
 
-    constructor(catalog: Catalog) {
+    constructor(catalog: Catalog, uidCount: UID) {
         this.catalog = catalog;
-    }
-
-    // Prints the name of each parent and child item in a cart.
-    printCart(cart: Cart) {
-        for (const item of cart.items) {
-            console.log(`${item.name} ${item.uid}`);
-            for (const child of item.children) {
-                console.log(`\t${child.name} ${child.uid}`);
-            }
-        }
+        this.uidCount = uidCount;
     }
 
     // Returns a list of ItemInstances in the cart with a particular SPID.
@@ -245,7 +238,8 @@ export class CartUtils implements CartOps {
     }
 }
 
-import { Entity, GenericEntity, genericEntityFactory, MenuItem, MENUITEM, Modifier, MODIFIER, Option, OPTION, specificEntityFactory } from '../';
+import { AttributeInfo, Entity, GenericEntity, genericEntityFactory, MatrixEntityBuilder, MenuItem, MENUITEM, Modifier, MODIFIER, Option, OPTION, specificEntityFactory } from '../';
+import { AttributeToken, ATTRIBUTE } from 'short-order';
 ///////////////////////////////////////////////////////////////////////////////
 //
 // AttributeUtils
@@ -255,11 +249,18 @@ import { Entity, GenericEntity, genericEntityFactory, MenuItem, MENUITEM, Modifi
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class AttributeUtils implements AttributeUtilities {
+    private readonly atrInfo: AttributeInfo;
+    private readonly catalog: Catalog;
+    private readonly uidCount: UID;
     //
     // Operations involving Attributes.
     //
 
-    constructor() { }
+    constructor(catalog: Catalog, uidCount: UID, atrInfo: AttributeInfo) {
+        this.atrInfo = atrInfo;
+        this.catalog = catalog;
+        this.uidCount = uidCount;
+    }
 
     // Returns the specific product id for a generic product, configured by a
     // set of attributes. Each generic product specifies a matrix with
@@ -274,55 +275,38 @@ export class AttributeUtils implements AttributeUtilities {
     // specific product 'large iced latte'.
     // TODO: ISSUE: throw or return undefined?
     // TODO: IMPLEMENT
-    // pid === entityId, set<AID> is the map
     createItemInstance(pid: PID, attributeIDs: Set<AID>): ItemInstance | undefined {
-        let newItem: ItemInstance = {
-            // pid === gpid === entityId
-            pid: pid,
-            name: 'foo',
-            aliases: [],
-            uid: 5, // Some global function will give these, counter?
-            // Possibly run into Mike's problem
-            key: 'a', // MEB
-            quantity: 1, // Default to 1, probably want to pass as param
-            // along with children
-            children: [] // ItemInstance[]
+        if (this.catalog.hasPID(pid)) {
+            const parent = this.catalog.getGeneric(pid);
+
+            // Create the key by appending the PID, and one coordinate for each
+            // dimension.
+            // TODO: Generate key from MEB.
+            let key: KEY = String(pid);
+
+            const meb = new MatrixEntityBuilder(this.atrInfo);
+
+            // TODO: Create the children from the set of AIDs.
+            let children: [] = [];
+            for (const attributeID of attributeIDs) {
+                // Add attribute should return the attribute | undefin rather
+                // than a boolean.
+                const atr = meb.addAttribute(this.makeAttributeToken(attributeID));
+                // Can't push attribute since it returns a booelan.
+                // children.push(atr)
+            }
+
+            const newItem: ItemInstance = {
+                pid: pid,
+                name: parent.name,
+                aliases: parent.aliases,
+                uid: this.uidCount, // Possibly run into Mike's problem w/ global.
+                key: key,
+                quantity: 1, // ISSUE: Default to 1 for now.
+                children: children,
+            }
+            return newItem;
         }
-        // const sampleGenEntity: GenericEntity = {
-        //     name:`attribute(${pid})`,
-        //     pid: pid,
-        //     cid: 5,
-        //     aliases: [],
-        //     matrix: 6,
-        //     defaultKey: 'a',
-        // }
-
-        // // How to infer the kind?
-        // console.log(genericEntityFactory(sampleGenEntity, MENUITEM));
-
-        // attributeIdToCoordinate lies here. May realistically be declared
-        // elsewhere
-        // const info = new AttributeInfo();
-        // Possibly create then add the dimensions to info before passing to
-        // builder.
-        // info.addDimension(someDimensionWeDontHave);
-        // const builder = new MatrixEntityBuilder(info);
-
-        // Add a coordinate before here
-        // for (const attributeID of attributeIDs) {
-        //     // Add size=small, allow cheese to default.
-        //     // Requires unified/.
-        //     builder.addAttribute(this.makeAttributeToken(attributeID));
-        // }
-
-        // For each attribute/coordinate in the set/matrix, add the specific
-        // product.
-        // for (const attributeID of attributeIDs) {
-        // Just a number so find how to get actual product from AID
-        // newItem.children.push(attribute)
-        // console.log(attributeID);
-
-        // }
 
         // If an attribute is not assosciated with the gpid, ignore it.
 
@@ -333,4 +317,13 @@ export class AttributeUtils implements AttributeUtilities {
         // a set of attributes.
         return undefined;
     }
+
+    // TODO: Get rid of our dependency on this. We should not use tokens.
+    makeAttributeToken = (id: PID): AttributeToken => {
+        return {
+            type: ATTRIBUTE,
+            id,
+            name: `attribute(${id})`,
+        };
+    };
 }

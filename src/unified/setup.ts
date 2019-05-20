@@ -5,19 +5,23 @@ import {
     Attributes,
     AttributeInfo,
     attributesFromYamlString,
+    AttributeUtils,
     CartUtils,
     Catalog,
     // ConvertDollarsToPennies,
     GenericTypedEntity,
     SpecificTypedEntity,
-    // validateCatalogItems
+    // validateCatalogItems,
+    UID,
 } from '..';
 
 export interface World {
+    atrOps: AttributeUtils;
     attributes: Attributes;
     attributeInfo: AttributeInfo;
+    cartOps: CartUtils;
     catalog: Catalog;
-    ops: CartUtils;
+    uidCount: UID;
 }
 
 export function setup(
@@ -25,8 +29,7 @@ export function setup(
     attributesFile: string,
     debugMode: boolean
 ): World {
-    // Load items from menu data. Will generics and specifics eventually live
-    // in separate files?
+    // Load items from menu data.
     const menu = yaml.safeLoad(fs.readFileSync(menuFile, 'utf8'));
     const genericItems: IterableIterator<GenericTypedEntity> =
         menu.genericItems;
@@ -45,14 +48,17 @@ export function setup(
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
     const attributeInfo = AttributeInfo.factory(catalog, attributes);
 
-    // const intents = yaml.safeLoad(fs.readFileSync(intentsFile, 'utf8'));
+    let uidCount: UID = 0;
 
-    const ops = new CartUtils(catalog);
+    const atrOps = new AttributeUtils(catalog, uidCount, attributeInfo);
+    const cartOps = new CartUtils(catalog, uidCount);
 
     return {
+        atrOps,
         attributes,
         attributeInfo,
+        cartOps,
         catalog,
-        ops,
+        uidCount,
     };
 }

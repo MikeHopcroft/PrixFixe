@@ -179,6 +179,7 @@ export interface AttributeUtilities {
     // TODO: ISSUE: throw or return undefined?
     createItemInstance: (
         pid: PID,
-        attributes: Set<AID>
+        attributes: Set<AID>,
+        uid: UID,
     ) => ItemInstance | undefined;
 }
