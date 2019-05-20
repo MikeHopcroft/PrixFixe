@@ -89,13 +89,11 @@ const styles: AttributeItem[] = [
         name: 'regular',
         aliases: ['regular'],
         isDefault: true,
-        sku: 12345,
     },
     {
         pid: styleOriginal,
         name: 'original',
         aliases: ['original'],
-        sku: 54321,
     },
 ];
 
@@ -278,46 +276,38 @@ describe('Matrix', () => {
                 {
                     pid: sizeSmall,
                     coordinate: { dimension: sizeDimension, position: 0 },
-                    sku: undefined,
                 },
                 {
                     pid: sizeMedium,
                     coordinate: { dimension: sizeDimension, position: 1 },
-                    sku: undefined,
                 },
                 {
                     pid: sizeLarge,
                     coordinate: { dimension: sizeDimension, position: 2 },
-                    sku: undefined,
                 },
 
                 // Flavors
                 {
                     pid: flavorVanilla,
                     coordinate: { dimension: flavorDimension, position: 0 },
-                    sku: undefined,
                 },
                 {
                     pid: flavorChocolate,
                     coordinate: { dimension: flavorDimension, position: 1 },
-                    sku: undefined,
                 },
                 {
                     pid: flavorStrawberry,
                     coordinate: { dimension: flavorDimension, position: 2 },
-                    sku: undefined,
                 },
 
                 // Styles
                 {
                     pid: styleRegular,
                     coordinate: { dimension: styleDimension, position: 0 },
-                    sku: 12345,
                 },
                 {
                     pid: styleOriginal,
                     coordinate: { dimension: styleDimension, position: 1 },
-                    sku: 54321,
                 },
 
                 // Unknown attribute
@@ -328,10 +318,6 @@ describe('Matrix', () => {
                 const observed = info.getAttributeCoordinates(test.pid);
                 const expected = test.coordinate;
                 assert.deepEqual(observed, expected);
-
-                const observedSKU = info.getAttributeSKU(test.pid);
-                const expectSKU = test.sku;
-                assert.equal(observedSKU, expectSKU);
             }
         });
 

@@ -6,7 +6,6 @@ export interface AttributeItem {
     aliases: string[];
     hidden?: boolean;
     isDefault?: boolean;
-    sku?: PID;
 }
 
 export interface DimensionDescription {
