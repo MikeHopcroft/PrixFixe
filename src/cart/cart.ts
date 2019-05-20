@@ -238,8 +238,7 @@ export class CartUtils implements CartOps {
     }
 }
 
-import { AttributeInfo, Entity, GenericEntity, genericEntityFactory, MatrixEntityBuilder, MenuItem, MENUITEM, Modifier, MODIFIER, Option, OPTION, specificEntityFactory } from '../';
-import { AttributeToken, ATTRIBUTE } from 'short-order';
+import { AttributeInfo, MatrixEntityBuilder, } from '../';
 ///////////////////////////////////////////////////////////////////////////////
 //
 // AttributeUtils
@@ -291,9 +290,9 @@ export class AttributeUtils implements AttributeUtilities {
             for (const attributeID of attributeIDs) {
                 // Add attribute should return the attribute | undefin rather
                 // than a boolean.
-                const atr = meb.addAttribute(this.makeAttributeToken(attributeID));
+                const attribute = meb.addAttribute(attributeID);
                 // Can't push attribute since it returns a booelan.
-                // children.push(atr)
+                // children.push(attribute)
             }
 
             const newItem: ItemInstance = {
@@ -317,13 +316,4 @@ export class AttributeUtils implements AttributeUtilities {
         // a set of attributes.
         return undefined;
     }
-
-    // TODO: Get rid of our dependency on this. We should not use tokens.
-    makeAttributeToken = (id: PID): AttributeToken => {
-        return {
-            type: ATTRIBUTE,
-            id,
-            name: `attribute(${id})`,
-        };
-    };
 }

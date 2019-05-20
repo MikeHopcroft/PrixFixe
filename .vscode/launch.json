@@ -34,7 +34,7 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}\\build\\test\\cart\\cart.test.js"
+                "${workspaceFolder}/build/test/cart/cart.test.js"
             ],
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"

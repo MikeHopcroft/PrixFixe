@@ -1,6 +1,5 @@
 import { assert } from 'chai';
 import 'mocha';
-import { ENTITY, EntityToken, ATTRIBUTE, AttributeToken } from 'short-order';
 
 import { PID } from '../../src/catalog';
 
@@ -152,22 +151,6 @@ const coffeeDimensions = [
     temperatureDimension,
     caffeineDimension,
 ];
-
-function makeAttributeToken(id: PID): AttributeToken {
-    return {
-        type: ATTRIBUTE,
-        id,
-        name: `attribute(${id})`,
-    };
-}
-
-function makeEntityToken(pid: PID): EntityToken {
-    return {
-        type: ENTITY,
-        pid,
-        name: `entity(${pid})`,
-    };
-}
 
 describe('Matrix', () => {
     ///////////////////////////////////////////////////////////////////////////////
@@ -379,7 +362,8 @@ describe('Matrix', () => {
             assert.equal(coffeeMatrix, info.getMatrixForEntity(2));
 
             // Attempt to lookup non-existant entity.
-            assert.equal(undefined, info.getMatrixForEntity(unknownPID));
+            const f3 = () => info.getMatrixForEntity(unknownPID);
+            assert.throws(f3, 'Matrix cannot be undefined.');
         });
 
         it('addSpecificEntity()', () => {
@@ -407,23 +391,20 @@ describe('Matrix', () => {
     describe('MaxtrixEntityBuilder', () => {
         it('Constructor', () => {});
 
-        it('hasEntity()/setEntity()', () => {
+        it('hasPID()/setPID()', () => {
             const info = new AttributeInfo();
             const builder = new MatrixEntityBuilder(info);
 
             // Haven't added an entity yet.
-            assert.isFalse(builder.hasEntity());
+            assert.isFalse(builder.hasPID());
 
-            const entity: EntityToken = {
-                type: ENTITY,
-                pid: 123,
-                name: 'something',
-            };
-            builder.setEntity(entity);
+            const pid: PID = 123;
 
-            assert.isTrue(builder.hasEntity());
+            builder.setPID(pid);
 
-            const f = () => builder.setEntity(entity);
+            assert.isTrue(builder.hasPID());
+
+            const f = () => builder.setPID(pid);
             assert.throws(f, 'attempting to overwrite entity 123 with 123');
         });
 
@@ -436,22 +417,22 @@ describe('Matrix', () => {
             const builder = new MatrixEntityBuilder(info);
 
             const f = () =>
-                builder.addAttribute(makeAttributeToken(unknownPID));
+                builder.addAttribute(unknownPID);
             assert.throws(f, 'unknown attribute 9999.');
 
             // First time adding a size should succeed.
-            assert.isTrue(builder.addAttribute(makeAttributeToken(sizeSmall)));
+            assert.isTrue(builder.addAttribute(sizeSmall));
 
             // Second size addition should fail.
-            assert.isFalse(builder.addAttribute(makeAttributeToken(sizeLarge)));
+            assert.isFalse(builder.addAttribute(sizeLarge));
 
             // First time adding a flavor should succeed.
             assert.isTrue(
-                builder.addAttribute(makeAttributeToken(flavorChocolate))
+                builder.addAttribute(flavorChocolate)
             );
         });
 
-        it('getPID()', () => {
+        it('getKey()', () => {
             const info = new AttributeInfo();
             info.addDimension(softServeDimensions[0]);
             info.addDimension(softServeDimensions[1]);
@@ -486,30 +467,24 @@ describe('Matrix', () => {
             const builder = new MatrixEntityBuilder(info);
 
             // getPID() before adding entity should throw.
-            const f = () => builder.getPID();
-            assert.throws(f, 'no entity set');
+            const f = () => builder.getKey();
+            assert.throws(f, 'no pid set');
 
             // Add a cone entity.
-            builder.setEntity(makeEntityToken(cone));
+            builder.setPID(cone);
 
             // All attributes are default.
-            assert.equal(builder.getPID(), mediumVanillaRegularCone);
+            assert.equal(builder.getKey(), '456:1:0:0');
 
             // Add flavor=chocolate, style=regular, allow size to default.
-            builder.addAttribute(makeAttributeToken(flavorChocolate));
-            builder.addAttribute(makeAttributeToken(styleRegular));
+            builder.addAttribute(flavorChocolate);
+            builder.addAttribute(styleRegular);
 
-            assert.equal(builder.getPID(), mediumChocolateRegularCone);
+            assert.equal(builder.getKey(), '456:1:1:0');
 
             // Now specify large size, which is not a default.
-            builder.addAttribute(makeAttributeToken(sizeLarge));
-            assert.equal(builder.getPID(), largeChocolateRegularCone);
-
-            // Now create another builder and set the entity to something that
-            // is not generic.
-            const builder2 = new MatrixEntityBuilder(info);
-            builder2.setEntity(makeEntityToken(unknownPID));
-            assert.equal(builder2.getPID(), unknownPID);
+            builder.addAttribute(sizeLarge);
+            assert.equal(builder.getKey(), '456:2:1:0');
         });
     });
 });

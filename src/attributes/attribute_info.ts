@@ -137,8 +137,12 @@ export class AttributeInfo {
     }
 
     // Lookup the Matrix that should be used to configure an Entity.
-    getMatrixForEntity(entityId: PID): Matrix | undefined {
-        return this.entityIdToMatrix.get(entityId);
+    getMatrixForEntity(entityId: PID): Matrix {
+        const matrix = this.entityIdToMatrix.get(entityId);
+        if (matrix === undefined) {
+            throw TypeError('Matrix cannot be undefined.');
+        }
+        return matrix;
     }
 
     // Returns the PID of an entity with a specific key.

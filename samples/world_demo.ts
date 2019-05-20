@@ -20,7 +20,7 @@ function go(debugMode: boolean) {
         path.join(__dirname, '../../samples/data/restaurant-en/attributes.yaml'),
         debugMode
     );
-    const { atrOps, attributes, attributeInfo, catalog, cartOps } = world;
+    const { attributeOps, attributes, attributeInfo, catalog, cartOps } = world;
 
     // Was originally of type State, but may not be necessary for now.
     const state: State = { cart: { items: [] }, actions: [] };

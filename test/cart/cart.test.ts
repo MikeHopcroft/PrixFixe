@@ -38,7 +38,7 @@ describe('Cart', () => {
             '../../../samples/data/restaurant-en/attributes.yaml'),
         false,
     );
-    const {  atrOps, /*attributes, attributeInfo,*/ cartOps, catalog } = world;
+    const {  attributeOps, /*attributes, attributeInfo,*/ cartOps, catalog } = world;
     ///////////////////////////////////////////////////////////////////////////
     //
     //  CartUtils
@@ -175,7 +175,7 @@ describe('Cart', () => {
     });
 
     // it('updateAttributes()', () => {
-    //     const resItem: ItemInstance = atrOps.updateAttributes(myParent, myAttributes);
+    //     const resItem: ItemInstance = attributeOps.updateAttributes(myParent, myAttributes);
     // });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ describe('Cart', () => {
         const pid: PID = 3;
         const attributes = new Set<AID>([1, 2, 3,]);
 
-        const resItem: ItemInstance | undefined = atrOps.createItemInstance(pid,
+        const resItem: ItemInstance | undefined = attributeOps.createItemInstance(pid,
             attributes);
     });
 });

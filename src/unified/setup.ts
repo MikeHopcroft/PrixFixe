@@ -16,7 +16,7 @@ import {
 } from '..';
 
 export interface World {
-    atrOps: AttributeUtils;
+    attributeOps: AttributeUtils;
     attributes: Attributes;
     attributeInfo: AttributeInfo;
     cartOps: CartUtils;
@@ -39,11 +39,11 @@ export function setup(
     let uidCount: UID = 0;
     uidCount += 1;              // TODO: remove this tslint fix
 
-    const atrOps = new AttributeUtils(catalog, uidCount, attributeInfo);
+    const attributeOps = new AttributeUtils(catalog, uidCount, attributeInfo);
     const cartOps = new CartUtils(catalog, uidCount);
 
     return {
-        atrOps,
+        attributeOps,
         attributes,
         attributeInfo,
         cartOps,

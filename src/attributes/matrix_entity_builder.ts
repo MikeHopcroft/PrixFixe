@@ -1,8 +1,4 @@
-import { AttributeToken, EntityToken, OptionToken } from 'short-order';
-
-import { AttributeInfo } from './attribute_info';
-import { PID } from '../catalog';
-import { Matrix } from './matrix';
+import { AID, AttributeInfo, KEY, Matrix, PID, } from '../';
 
 // MatrixEntityBuilder collects Attribute and Entity values that will later be
 // used to generate an Entity key which can be used to lookup the specific
@@ -16,7 +12,7 @@ import { Matrix } from './matrix';
 export class MatrixEntityBuilder {
     private readonly info: AttributeInfo;
 
-    private entityId: PID | undefined = undefined;
+    private pid: PID | undefined = undefined;
 
     private readonly dimensionIdToAttribute = new Map<PID, PID>();
 
@@ -24,72 +20,63 @@ export class MatrixEntityBuilder {
         this.info = info;
     }
 
-    hasEntity(): boolean {
-        return this.entityId !== undefined;
+    hasPID(): boolean {
+        return this.pid !== undefined;
     }
 
-    setEntity(entity: EntityToken) {
-        if (this.entityId === undefined) {
-            this.entityId = entity.pid;
+    setPID(pid: PID) {
+        if (this.pid === undefined) {
+            this.pid = pid;
             return true;
         } else {
             const message = `attempting to overwrite entity ${
-                this.entityId
-            } with ${entity.pid}`;
+                this.pid
+                } with ${pid}`;
             throw TypeError(message);
         }
     }
 
-    addAttribute(attribute: AttributeToken): boolean {
-        const coordinate = this.info.getAttributeCoordinates(attribute.id);
+    addAttribute(attributeID: AID): boolean {
+        const coordinate = this.info.getAttributeCoordinates(attributeID);
         if (!coordinate) {
-            const message = `unknown attribute ${attribute.id}.`;
+            const message = `unknown attribute ${attributeID}.`;
             throw TypeError(message);
         } else if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
             return false;
         } else {
             this.dimensionIdToAttribute.set(
                 coordinate.dimension.id,
-                attribute.id
+                attributeID,
             );
             return true;
         }
     }
 
-    // TODO: This should be getKey
-    getPID(): PID | undefined {
-        if (this.entityId === undefined) {
-            const message = `no entity set`;
-            throw TypeError(message);
+    getKey(): KEY | undefined {
+        if (this.pid === undefined) {
+            throw TypeError(`no pid set`);
         }
+        let key: KEY | undefined = undefined;
+        const matrix: Matrix = this.info.getMatrixForEntity(this.pid);
 
-        const matrix = this.info.getMatrixForEntity(this.entityId);
-        if (matrix === undefined) {
-            // This entity does not need configuration.
-            // Just return its id.
-            return this.entityId;
-        }
-
-        const key = matrix.getKey(
-            this.entityId,
+        key = matrix.getKey(
+            this.pid,
             this.dimensionIdToAttribute,
             this.info
         );
-        const pid = this.info.getPID(key);
-
-        return pid;
+        return key;
     }
 
     // Iterator for PIDs of attributes that aren't associated with dimensions
     // of the entity's matrix. This includes all collected attributes in the
     // cases where the entity has not been set and where the entity is not
     // associated with a matrix.
-    *getUnusedAttributes(): IterableIterator<PID> {
+    *getUnusedAttributes(): IterableIterator<AID> {
         let matrix: Matrix | undefined = undefined;
 
         // If we've collected an entity, attempt to get its matrix.
-        if (this.entityId !== undefined) {
-            matrix = this.info.getMatrixForEntity(this.entityId);
+        if (this.pid !== undefined) {
+            matrix = this.info.getMatrixForEntity(this.pid);
         }
 
         // If we didn't get a matrix (either no entity or entity didn't specify
