@@ -80,7 +80,8 @@ export class MatrixEntityBuilder {
             // If we've collected an entity, attempt to get its matrix.
             const matrix = this.info.getMatrixForEntity(this.pid);
             for (const [did, aid] of this.dimensionIdToAttribute.entries()) {
-                // Only yield attributes that are not associtaed with dimension.
+                // Only yield attributes that are not associated with a
+                // dimension.
                 if (!matrix.hasDimension(did)) {
                     yield aid;
                 }
