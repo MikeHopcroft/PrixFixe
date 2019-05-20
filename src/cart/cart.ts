@@ -1,14 +1,13 @@
-import { KEY, PID } from '../catalog';
 import {
     AID,
     AttributeUtilities,
     Cart,
     CartOps,
+    Catalog,
     ItemInstance,
-    UID
-} from './interfaces';
-import { MatrixEntityBuilder, AttributeInfo } from '../attributes';
-import { AttributeToken, ATTRIBUTE } from 'short-order';
+    KEY,
+    PID,
+} from '../';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -18,11 +17,24 @@ import { AttributeToken, ATTRIBUTE } from 'short-order';
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class CartUtils implements CartOps {
+    private readonly catalog: Catalog;
     //
     // Operations involving Cart.
     //
 
-    constructor() { }
+    constructor(catalog: Catalog) {
+        this.catalog = catalog;
+    }
+
+    // Prints the name of each parent and child item in a cart.
+    printCart(cart: Cart) {
+        for (const item of cart.items) {
+            console.log(`${item.name} ${item.uid}`);
+            for (const child of item.children) {
+                console.log(`\t${child.name} ${child.uid}`);
+            }
+        }
+    }
 
     // Returns a list of ItemInstances in the cart with a particular SPID.
     // Items are returned in the order they were added to the cart.
@@ -89,6 +101,9 @@ export class CartUtils implements CartOps {
     // ISSUE: TODO: should we pass RuleChecker or get it from member variable.
     // Depends if we make a class or not.
     //
+    // 1. Which item can I add this exact thing as a child of
+    // 2. ? Which things can this generic thing be added to
+    //      cross this bridge when we come to it
     // TODO: IMPLEMENT. WAITING ON RULE CHECKER FUNCTIONALITY.
     *findCompatibleItems(
         cart: Cart,
@@ -210,8 +225,22 @@ export class CartUtils implements CartOps {
     // Pull over directory into PrixFixe, make sure to grab unit tests
     // Test branch for unit tests in attributes
     //
-    // TODO: IMPLEMENT
+    // TODO: IMPLEMENT IN ITS OWN BRANCH
     updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance {
+        /**
+         * Run MEB backwards
+         * From II get key
+         * From key get current attributes
+         * Take empty MEB, add in GPID from Key
+         *     GPID:dimIndex:dimIndex
+         *     Helper functions to do this in Matrix or MEB
+         *     If not, stick in Matrix DO THIS IN MATRIX ANYWAY
+         * Add in attr from Key
+         * Add in the new attr
+         *     Make sure new supercede old if MutuallyExclusive
+         * Get the new Key
+         * Make new II with the new keey (...II, newKey)
+         */
         return parent;
     }
 }
@@ -247,16 +276,18 @@ export class AttributeUtils implements AttributeUtilities {
     // TODO: IMPLEMENT
     // pid === entityId, set<AID> is the map
     createItemInstance(pid: PID, attributeIDs: Set<AID>): ItemInstance | undefined {
-        // let newItem: ItemInstance = {
-        //     // pid === gpid === entityId
-        //     pid: pid,
-        //     name: 'foo',
-        //     aliases: [],
-        //     uid: 5,
-        //     key: 'a',
-        //     quantity: 1,
-        // //     children: [] // ItemInstance[]
-        // // }
+        let newItem: ItemInstance = {
+            // pid === gpid === entityId
+            pid: pid,
+            name: 'foo',
+            aliases: [],
+            uid: 5, // Some global function will give these, counter?
+            // Possibly run into Mike's problem
+            key: 'a', // MEB
+            quantity: 1, // Default to 1, probably want to pass as param
+            // along with children
+            children: [] // ItemInstance[]
+        }
         // const sampleGenEntity: GenericEntity = {
         //     name:`attribute(${pid})`,
         //     pid: pid,
@@ -302,12 +333,4 @@ export class AttributeUtils implements AttributeUtilities {
         // a set of attributes.
         return undefined;
     }
-
-    makeAttributeToken = (id: PID): AttributeToken => {
-        return {
-            type: ATTRIBUTE,
-            id,
-            name: `attribute(${id})`,
-        };
-    };
 }

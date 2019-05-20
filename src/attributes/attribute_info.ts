@@ -1,5 +1,6 @@
 import { PID } from '../catalog';
-import { Catalog } from 'short-order';
+// import { Catalog } from 'short-order';
+import { Catalog } from '../';
 
 import { Dimension } from './dimension';
 import { Attributes } from './interfaces';
@@ -50,11 +51,16 @@ export class AttributeInfo {
             info.addMatrix(new Matrix(matrix.mid, dimensions));
         }
 
-        for (const item of catalog.map.values()) {
+        for (const item of catalog.mapGeneric.values()) {
             if (item.matrix) {
                 info.addGenericEntity(item.pid, item.matrix);
-            } else if (item.key) {
-                info.addSpecificEntity(item.pid, item.key);
+            }
+        }
+
+        for (const item of catalog.mapSpecific.values()) {
+            if (item.key) {
+                // TODO: Changed from PID to SKU - is this correct?
+                info.addSpecificEntity(item.sku, item.key);
             }
         }
 

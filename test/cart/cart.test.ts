@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import 'mocha';
+import * as path from 'path';
 
 import {
     bread0,
@@ -13,8 +14,17 @@ import {
     lettuce3,
     testCart,
     tomato3,
-} from './cart_fake_data.test';
-import { AttributeUtils, Cart, CartUtils, ItemInstance, KEY, PID, AID } from '../../src/';
+} from './cart_fake_data';
+import {
+    AID,
+    AttributeUtils,
+    Cart,
+    CartUtils,
+    ItemInstance,
+    KEY,
+    PID,
+    setup,
+} from '../../src/';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -22,7 +32,13 @@ import { AttributeUtils, Cart, CartUtils, ItemInstance, KEY, PID, AID } from '..
 //
 ///////////////////////////////////////////////////////////////////////////////
 describe('Cart', () => {
-    const cartOps = new CartUtils();
+    const world = setup(
+        path.join(__dirname, '../../../samples/data/restaurant-en/menu.yaml'),
+        path.join(__dirname,
+            '../../../samples/data/restaurant-en/attributes.yaml'),
+        false,
+    );
+    const { /*attributes, attributeInfo, catalog,*/ ops } = world;
     ///////////////////////////////////////////////////////////////////////////
     //
     //  CartUtils
@@ -31,7 +47,7 @@ describe('Cart', () => {
     it('findItemByKey()', () => {
         const key: KEY = 'h';
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(
+        const gen: IterableIterator<ItemInstance> = ops.findItemByKey(
             testCart,
             key
         );
@@ -41,7 +57,7 @@ describe('Cart', () => {
     it('findItemByPID()', () => {
         const pid: PID = 2;
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(
+        const gen: IterableIterator<ItemInstance> = ops.findItemByPID(
             testCart,
             pid
         );
@@ -52,7 +68,7 @@ describe('Cart', () => {
     it('findItemByChildKey()', () => {
         const key: KEY = 'c';
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(
+        const gen: IterableIterator<ItemInstance> = ops.findItemByChildKey(
             testCart,
             key
         );
@@ -62,7 +78,7 @@ describe('Cart', () => {
     it('findItemByChildPID()', () => {
         const pid: PID = 1;
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildPID(
+        const gen: IterableIterator<ItemInstance> = ops.findItemByChildPID(
             testCart,
             pid
         );
@@ -70,7 +86,7 @@ describe('Cart', () => {
     });
 
     // it('findCompatibleItems()', () => {
-    //     const gen: IterableIterator<ItemInstance> = cartOps.findCompatibleItems(cart, myOption);
+    //     const gen: IterableIterator<ItemInstance> = ops.findCompatibleItems(cart, myOption);
 
     // expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
     // });
@@ -78,7 +94,7 @@ describe('Cart', () => {
     it('findChildByKey', () => {
         const key: KEY = 'c';
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(
+        const gen: IterableIterator<ItemInstance> = ops.findChildByKey(
             hamburger4Bread0Lettuce3,
             key
         );
@@ -88,7 +104,7 @@ describe('Cart', () => {
     it('findChildByPID()', () => {
         const pid: PID = 0;
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(
+        const gen: IterableIterator<ItemInstance> = ops.findChildByPID(
             hamburger4Bread0Lettuce3,
             pid
         );
@@ -101,7 +117,7 @@ describe('Cart', () => {
             items: [hamburger4Bread0Lettuce3, hamburger5Bread1, coke6,],
         };
 
-        const resCart: Cart = cartOps.addItem(cart, coke6);
+        const resCart: Cart = ops.addItem(cart, coke6);
         expect(resCart).to.deep.equal(expectedCart);
     });
 
@@ -111,7 +127,7 @@ describe('Cart', () => {
             items: [hamburger4Bread0Lettuce3, coke5],
         };
 
-        const resCart: Cart = cartOps.replaceItem(cart, coke5);
+        const resCart: Cart = ops.replaceItem(cart, coke5);
         expect(resCart).to.deep.equal(expectedCart);
     });
 
@@ -121,7 +137,7 @@ describe('Cart', () => {
             items: [hamburger5Bread1,],
         };
 
-        const resCart: Cart = cartOps.removeItem(
+        const resCart: Cart = ops.removeItem(
             cart,
             hamburger4Bread0Lettuce3
         );
@@ -131,7 +147,7 @@ describe('Cart', () => {
     it('addChild()', () => {
         const parent: ItemInstance = clone(hamburger5Bread1);
 
-        const resItem: ItemInstance = cartOps.addChild(
+        const resItem: ItemInstance = ops.addChild(
             parent,
             tomato3
         );
@@ -141,7 +157,7 @@ describe('Cart', () => {
     it('updateChild()', () => {
         const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
 
-        const resItem: ItemInstance = cartOps.updateChild(
+        const resItem: ItemInstance = ops.updateChild(
             parent,
             tomato3
         );
@@ -151,7 +167,7 @@ describe('Cart', () => {
     it('removeChild()', () => {
         const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
 
-        const resItem: ItemInstance = cartOps.removeChild(
+        const resItem: ItemInstance = ops.removeChild(
             parent,
             lettuce3
         );
@@ -159,7 +175,7 @@ describe('Cart', () => {
     });
 
     // it('updateAttributes()', () => {
-    //     const resItem: ItemInstance = cartOps.updateAttributes(myParent, myAttributes);
+    //     const resItem: ItemInstance = ops.updateAttributes(myParent, myAttributes);
     // });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -171,7 +187,7 @@ describe('Cart', () => {
 
     it('createItemInstance()', () => {
         const pid: PID = 3;
-        const attributes = new Set<AID>([1,2,3,]);
+        const attributes = new Set<AID>([1, 2, 3,]);
 
         const resItem: ItemInstance | undefined = atrOps.createItemInstance(pid,
             attributes);

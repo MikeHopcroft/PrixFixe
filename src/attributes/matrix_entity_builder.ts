@@ -56,6 +56,7 @@ export class MatrixEntityBuilder {
         }
     }
 
+    // TODO: This should be getKey
     getPID(): PID | undefined {
         if (this.entityId === undefined) {
             const message = `no entity set`;

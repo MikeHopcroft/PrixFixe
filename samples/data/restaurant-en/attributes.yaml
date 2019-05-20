@@ -72,6 +72,7 @@ dimensions:
     items:
       - pid: 100
         name: whole milk
+        isDefault: true
         aliases:
           - whole [milk]
       - pid: 101
@@ -93,6 +94,7 @@ dimensions:
     items:
       - pid: 200
         name: round
+        isDefault: true
         aliases:
           - circle
       - pid: 201
@@ -116,6 +118,7 @@ dimensions:
           - less
       - pid: 302
         name: no
+        isDefault: true
         aliases:
           - nada
 
