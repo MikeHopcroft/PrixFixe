@@ -8,10 +8,10 @@ import {
     AttributeUtils,
     CartUtils,
     Catalog,
-    // ConvertDollarsToPennies,
+    catalogFromYamlString,
     GenericTypedEntity,
     SpecificTypedEntity,
-    // validateCatalogItems,
+    MENUITEM,
     UID,
 } from '..';
 
@@ -30,20 +30,8 @@ export function setup(
     debugMode: boolean
 ): World {
     // Load items from menu data.
-    const menu = yaml.safeLoad(fs.readFileSync(menuFile, 'utf8'));
-    const genericItems: IterableIterator<GenericTypedEntity> =
-        menu.genericItems;
-    const specificItems: IterableIterator<SpecificTypedEntity> =
-        menu.specificItems;
-
-    // TODO: Validate the catalog. Do any housekeeping. These functions should
-    // throw an error if they fail.
-    // validateCatalogItems(genericItems, specificItems);
-    // ConvertDollarsToPennies(catalogItems);
-
-    // Create the Catalog instance.
-    const catalog = new Catalog(genericItems, specificItems);
-
+    const catalog = catalogFromYamlString(fs.readFileSync(menuFile, 'utf8'), MENUITEM);
+ 
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
     const attributeInfo = AttributeInfo.factory(catalog, attributes);
