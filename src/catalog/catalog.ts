@@ -64,11 +64,6 @@ export class Catalog {
         return this.mapGeneric.has(pid);
     }
 
-    hasKEY(key: KEY) {
-        return this.mapSpecific.has(key);
-    }
-
-    // TODO: modify get to throw if not available.
     getGeneric(pid: PID): GenericTypedEntity {
         const item = this.mapGeneric.get(pid);
         if (!item) {
@@ -77,13 +72,24 @@ export class Catalog {
         return item;
     }
 
-    // TODO: modify get to throw if not available.
+    genericEntities(): IterableIterator<GenericTypedEntity> {
+        return this.mapGeneric.values();
+    }
+
+    hasKEY(key: KEY) {
+        return this.mapSpecific.has(key);
+    }
+
     getSpecific(key: KEY): SpecificTypedEntity {
         const item = this.mapSpecific.get(key);
         if (!item) {
             throw TypeError(`Catalog.get(): cannot find key=${key}`);
         }
         return item;
+    }
+
+    specificEntities(): IterableIterator<SpecificTypedEntity> {
+        return this.mapSpecific.values();
     }
 
     // TODO: MatrixID Type?

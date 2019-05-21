@@ -6,7 +6,7 @@
 
 ### Catalog
 
-`Catalogs` hold information about `generic` and `specific entities`. The entities may correspond to `Products` or `Options`. The `Catalog's` YAML representation looks like
+`Catalogs` hold information about `generic` and `specific entities`. The entities may correspond to `MENUITEMs` or `OPTIONs`. The `Catalog's` YAML representation looks like
 
 ~~~
 {
@@ -17,12 +17,12 @@
 
 The `Catalog` class provides methods for inspecting its contents:
 * hasPID(pid: PID) - returns true if the catalog contains a `generic entitiy` with the specified `PID`.
-* getGeneric(pid: PID) - returns the `generic product` with the specified `PID`.
+* getGeneric(pid: PID) - returns the `generic enntity` with the specified `PID`.
 * hasKey(key: KEY) - returns true if the catalog contains a `specific entity` with the specified `KEY`.
-* getSpecific(key: KEY) - returns the `specific product` with the specified `KEY`.
+* getSpecific(key: KEY) - returns the `specific entity` with the specified `KEY`.
 * getTensorFromPID(pid: PID) - returns the id of the tensor associated with the `generic product` with the specified `PID`.
-* genericProducts() - iterator of all `generic entities` in the catalog.
-* specificProducts() - iterator of all `specific entities` in the catalog.
+* genericEntities() - iterator of all `generic entities` in the catalog.
+* specificEntities() - iterator of all `specific entities` in the catalog.
 
 ## Products
 
