@@ -46,7 +46,7 @@ export class MatrixEntityBuilder {
         } else {
             this.dimensionIdToAttribute.set(
                 coordinate.dimension.id,
-                attributeID,
+                attributeID
             );
             return true;
         }
