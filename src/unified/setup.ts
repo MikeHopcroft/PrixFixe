@@ -8,7 +8,9 @@ import {
     CartUtils,
     Catalog,
     catalogFromYamlString,
+    loadRuleConfig,
     MENUITEM,
+    RuleChecker
 } from '..';
 
 import { IDGenerator } from './id_generator';
@@ -19,11 +21,13 @@ export interface World {
     attributeInfo: AttributeInfo;
     cartOps: CartUtils;
     catalog: Catalog;
+    ruleChecker: RuleChecker;
 }
 
 export function setup(
     menuFile: string,
     attributesFile: string,
+    rulesFile: string,
     debugMode: boolean
 ): World {
     // Load items from menu data.
@@ -32,6 +36,9 @@ export function setup(
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
     const attributeInfo = AttributeInfo.factory(catalog, attributes);
+
+    const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
+    const ruleChecker = new RuleChecker(ruleConfig, catalog.mapGeneric);
 
     const uidGenerator = new IDGenerator();
 
@@ -44,5 +51,6 @@ export function setup(
         attributeInfo,
         cartOps,
         catalog,
+        ruleChecker,
     };
 }

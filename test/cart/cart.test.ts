@@ -36,7 +36,8 @@ describe('Cart', () => {
         path.join(__dirname, '../../../samples/data/restaurant-en/menu.yaml'),
         path.join(__dirname,
             '../../../samples/data/restaurant-en/attributes.yaml'),
-        false,
+        path.join(__dirname, '../../../samples/data/restaurant-en/rules.yaml'),
+        false
     );
     const {  attributeOps, /*attributes, attributeInfo,*/ cartOps, catalog } = world;
     ///////////////////////////////////////////////////////////////////////////

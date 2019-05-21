@@ -113,10 +113,10 @@ export const validateRuleConfig = (ruleConfig: RuleConfig) => {
 ////////////////////////////////
 // Temp function, this will likely land elsewhere
 ////////////////////////////////
-export const loadRuleConfig = (yamlText: string) => {
+export function loadRuleConfig(yamlText: string): RuleConfig {
     const yamlRoot = YAML.safeLoad(yamlText) as RuleConfig;
 
     validateRuleConfig(yamlRoot);
 
     return yamlRoot;
-};
+}

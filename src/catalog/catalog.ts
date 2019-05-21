@@ -19,8 +19,8 @@ export class Catalog {
     // implements CatalogItems {
     // TODO: don't really need to store items - just the map.
     // items: ItemDescription[];
-    readonly mapGeneric = new Map<PID, GenericTypedEntity>();
-    readonly mapSpecific = new Map<KEY, SpecificTypedEntity>();
+    mapGeneric = new Map<PID, GenericTypedEntity>();
+    mapSpecific = new Map<KEY, SpecificTypedEntity>();
     //private optionOfPredicate: OptionOfPredicate | undefined;
 
     constructor(
