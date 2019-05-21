@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { generateAliases } from '../../src/unified/generate_aliases';
+import { aliasesFromPattern } from '../../src/unified/generate_aliases';
 
 describe('Alias Generation', () => {
     it('should enumerate optionals', () => {
@@ -13,7 +13,7 @@ describe('Alias Generation', () => {
             'a d',
         ];
 
-        const observed = [...generateAliases(pattern)];
+        const observed = [...aliasesFromPattern(pattern)];
         assert.deepEqual(observed, expected);
     });
 
@@ -25,14 +25,14 @@ describe('Alias Generation', () => {
             'a c d',
         ];
 
-        const observed = [...generateAliases(pattern)];
+        const observed = [...aliasesFromPattern(pattern)];
         assert.deepEqual(observed, expected);
     });
 
     it('should throw on trailing commas', () => {
         const f = () =>  {
             const pattern = 'a []d,e,] (b,c,) d';
-            const result = [...generateAliases(pattern)];
+            const result = [...aliasesFromPattern(pattern)];
         };
         assert.throws(f, TypeError);
     });
@@ -55,7 +55,7 @@ describe('Alias Generation', () => {
             "green marble",
         ];
 
-        const observed = [...generateAliases(pattern)];
+        const observed = [...aliasesFromPattern(pattern)];
         assert.deepEqual(observed, expected);
     });
 });

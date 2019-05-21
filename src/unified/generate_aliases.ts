@@ -10,10 +10,10 @@ function combine(left: string, right: string) {
     }
 }
 
-function* generateAliasesHelper(prefix:string, options:string[][]):IterableIterator<string> {
+function* aliasesFromPatternHelper(prefix:string, options:string[][]):IterableIterator<string> {
     if (options.length > 0) {
         for (const option of options[0]) {
-            yield* generateAliasesHelper(combine(prefix, option), options.slice(1));
+            yield* aliasesFromPatternHelper(combine(prefix, option), options.slice(1));
         }    
     }
     else {
@@ -48,7 +48,7 @@ export function* aliasesFromPattern(query: string) {
                 return [match.trim()];
             }
         }).filter(match => match[0].length > 0);
-        yield* generateAliasesHelper('', options);
+        yield* aliasesFromPatternHelper('', options);
     }
 }
 
