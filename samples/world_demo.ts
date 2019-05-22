@@ -2,12 +2,12 @@ import * as path from 'path';
 
 import {
     Cart,
+    Catalog,
     setup,
 } from '../src/';
 import {
     testCart
 } from '../test/index';
-import { FakeItemFactory } from '../test';
 
 interface State {
     cart: Cart;
@@ -23,14 +23,12 @@ function go(debugMode: boolean) {
         path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
         debugMode
     );
-    const { attributeOps, attributes, attributeInfo, catalog, cartOps } = world;
+    const { attributeOps, attributes, catalog, cartOps } = world;
 
-    // Was originally of type State, but may not be necessary for now.
     const state: State = { cart: { items: [] }, actions: [] };
 
-    const fakeFactory = new FakeItemFactory();
 
-    // fakeFactory.printEntries(catalog);
+    printEntries(catalog);
 
     console.log('-----------------------------------------');
     console.log();
@@ -38,11 +36,40 @@ function go(debugMode: boolean) {
     console.log();
 
     console.log('\n##### CURRENT CART #####');
-    fakeFactory.printCart(state.cart);
+    printCart(state.cart);
 
     state.cart = testCart;
     console.log('\n##### CURRENT CART #####');
-    fakeFactory.printCart(state.cart);
+    printCart(state.cart);
+
+    // TODO: Call a couple things that Drew might call, just to show things are
+    // working end-to-end.
+}
+
+// Prints the generic and specific maps stored in the catalog.
+function printEntries(catalog: Catalog): void {
+    console.log(`\n##### GENERIC ENTRIES #####`);
+    for (const [key, value] of catalog.mapGeneric.entries()) {
+        console.log(key, value);
+    }
+    console.log(`\n##### SPECIFIC ENTRIES #####`);
+    for (const [key, value] of catalog.mapSpecific.entries()) {
+        console.log(key, value);
+    }
+}
+
+// Prints the name of each parent and child item in a cart.
+function printCart(cart: Cart) {
+    if (cart.items === undefined || cart.items.length === 0) {
+        console.log(`The cart is empty.`);
+    } else {
+        for (const item of cart.items) {
+            console.log(`${item.name} ${item.uid}`);
+            for (const child of item.children) {
+                console.log(`\t${child.name} ${child.uid}`);
+            }
+        }
+    }
 }
 
 go(false);

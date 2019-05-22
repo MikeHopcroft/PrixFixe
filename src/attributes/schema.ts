@@ -25,9 +25,6 @@ const attributeSchema = {
                 hidden: {
                     type: 'boolean',
                 },
-                isDefault: {
-                    type: 'boolean',
-                },
                 name: {
                     type: 'string',
                 },

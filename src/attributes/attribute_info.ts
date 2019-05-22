@@ -45,7 +45,7 @@ export class AttributeInfo {
                 }
                 dimensions.push(dimension);
             }
-            info.addMatrix(new Matrix(matrix.mid, dimensions));
+            info.addMatrix(new Matrix(matrix.mid, dimensions, catalog));
         }
 
         for (const item of catalog.mapGeneric.values()) {

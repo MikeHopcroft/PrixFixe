@@ -1,4 +1,4 @@
-import { AID, AttributeInfo, KEY, Matrix, PID, } from '../';
+import { AID, AttributeInfo, Catalog, KEY, Matrix, PID, } from '../';
 
 // MatrixEntityBuilder collects Attribute and Entity values that will later be
 // used to generate an Entity key which can be used to lookup the specific
@@ -11,13 +11,13 @@ import { AID, AttributeInfo, KEY, Matrix, PID, } from '../';
 // allow us to generate a key which yields the PID for a `small chocolate cone`.
 export class MatrixEntityBuilder {
     private readonly info: AttributeInfo;
-
     private pid: PID | undefined = undefined;
-
     private readonly dimensionIdToAttribute = new Map<PID, PID>();
+    private readonly catalog: Catalog;
 
-    constructor(info: AttributeInfo) {
+    constructor(info: AttributeInfo, catalog: Catalog) {
         this.info = info;
+        this.catalog = catalog;
     }
 
     hasPID(): boolean {
@@ -61,7 +61,7 @@ export class MatrixEntityBuilder {
         return matrix.getKey(
             this.pid,
             this.dimensionIdToAttribute,
-            this.info
+            this.info,
         );
     }
 

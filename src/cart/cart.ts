@@ -20,7 +20,7 @@ import {
 ///////////////////////////////////////////////////////////////////////////////
 export class CartUtils implements CartOps {
     private readonly catalog: Catalog;
-    
+
     //
     // Operations involving Cart.
     //
@@ -283,14 +283,14 @@ export class AttributeUtils implements AttributeUtilities {
             // TODO: Generate key from MEB.
             const key: KEY = String(pid);
 
-            const meb = new MatrixEntityBuilder(this.atrInfo);
+            const builder = new MatrixEntityBuilder(this.atrInfo, this.catalog);
 
             // TODO: Create the children from the set of AIDs.
             const children: [] = [];
             for (const attributeID of attributeIDs) {
                 // Add attribute should return the attribute | undefin rather
                 // than a boolean.
-                const attribute = meb.addAttribute(attributeID);
+                const attribute = builder.addAttribute(attributeID);
                 // Can't push attribute since it returns a booelan.
                 // children.push(attribute)
             }

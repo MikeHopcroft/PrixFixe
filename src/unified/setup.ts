@@ -20,7 +20,6 @@ import { MODIFIER } from '../catalog';
 export interface World {
     attributeOps: AttributeUtils;
     attributes: Attributes;
-    attributeInfo: AttributeInfo;
     cartOps: CartUtils;
     catalog: Catalog;
     ruleChecker: RuleChecker;
@@ -41,7 +40,7 @@ export function setup(
     const catalog = Catalog.fromCatalog(products);
     catalog.merge(options);
     catalog.merge(modifiers);
- 
+
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
     const attributeInfo = AttributeInfo.factory(catalog, attributes);
@@ -57,7 +56,6 @@ export function setup(
     return {
         attributeOps,
         attributes,
-        attributeInfo,
         cartOps,
         catalog,
         ruleChecker,

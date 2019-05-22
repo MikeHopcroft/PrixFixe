@@ -1,8 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 // Type aliases to keep various concepts delineated.
 ///////////////////////////////////////////////////////////////////////////////
-export type PID = number;
 export type CID = number;
+export type DID = number;
+export type MID = number;
+export type PID = number;
 export type SKU = number;
 
 export type MatrixID = number;

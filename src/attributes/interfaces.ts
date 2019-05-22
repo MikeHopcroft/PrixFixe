@@ -9,7 +9,6 @@ export interface AttributeItem {
     name: string;
     aliases: string[];
     hidden?: boolean;
-    isDefault?: boolean;
 }
 
 export interface DimensionDescription {

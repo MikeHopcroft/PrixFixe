@@ -20,7 +20,7 @@ const attributes: Attributes = {
                     aid: 2,
                     name: 'medium',
                     aliases: ['medium'],
-                    isDefault: true,
+                    // isDefault: true,
                 },
                 {
                     aid: 3,
@@ -37,7 +37,7 @@ const attributes: Attributes = {
                     aid: 4,
                     name: 'vanilla',
                     aliases: ['vanilla'],
-                    isDefault: true,
+                    // isDefault: true,
                 },
                 {
                     aid: 5,

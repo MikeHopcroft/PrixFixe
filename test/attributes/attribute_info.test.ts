@@ -1,44 +1,89 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { PID } from '../../src/catalog';
+import {
+    AID,
+    AttributeItem,
+    Catalog,
+    CID,
+    DID,
+    Dimension,
+    GenericTypedEntity,
+    KEY,
+    Matrix,
+    MENUITEM,
+    MID,
+    PID,
+    SpecificTypedEntity,
+    AttributeInfo,
+    MatrixEntityBuilder,
+    UID,
+} from '../../src';
 
-import { AttributeInfo } from '../../src/attributes/attribute_info';
-import { Dimension } from '../../src/attributes/dimension';
-import { AttributeItem } from '../../src/attributes/interfaces';
-import { Matrix } from '../../src/attributes/matrix';
-import { MatrixEntityBuilder } from '../../src/attributes/matrix_entity_builder';
+// A PID that is not indexed in any data structure in this file. For testing
+// error cases.
+const unknownPID: PID = 9999;
 
-// A PID that is not indexed in any data structure in this file.
-// For testing error cases.
-const unknownPID = 9999;
+// A key that is not indexed in any data structure in this file. For testing
+// error cases.
+const unknownKey: KEY = '9999:9:9:9';
 
-// A key that is not indexed in any data structure in this file.
-// For testing error cases.
-const unknownKey = '9999';
+// Generators to help in creation of the catalog. They take arrays of the
+// genericItems and SpecificItems, and yield the results as iterables.
+function* genericGenerator(generics: GenericTypedEntity[]): IterableIterator<GenericTypedEntity> {
+    for (const item of generics) {
+        yield item;
+    }
+}
 
-const attributes: AttributeItem[] = [
-    {
-        aid: 0,
-        name: 'zero',
-        aliases: ['zero', 'z'],
-    },
-    {
-        aid: 1,
-        name: 'one',
-        aliases: ['one', 'first'],
-        isDefault: true,
-    },
-    {
-        aid: 2,
-        name: 'two',
-        aliases: ['two', 'second'],
-    },
-];
+function* specificGenerator(specifics: SpecificTypedEntity[]): IterableIterator<SpecificTypedEntity> {
+    for (const item of specifics) {
+        yield item;
+    }
+}
 
-const sizeSmall = 0;
-const sizeMedium = 1;
-const sizeLarge = 2;
+///////////////////////////////////////////////////////////////////////////////
+//  Create the Generic Cone and coffee
+///////////////////////////////////////////////////////////////////////////////
+const genericConePID: PID = 8000;
+const coneCID: CID = 100;
+const genericCone: GenericTypedEntity = {
+    pid: genericConePID,
+    cid: coneCID,
+    name: 'cone',
+    aliases: [
+        'cone',
+        'ice cream [cone]',
+    ],
+    defaultKey: '8000:0:0',
+    matrix: 1,
+    kind: MENUITEM,
+};
+
+const genericcoffeePID: PID = 9000;
+const coffeeCID: CID = 200;
+const genericcoffee: GenericTypedEntity = {
+    pid: genericcoffeePID,
+    cid: coffeeCID,
+    name: 'coffee',
+    aliases: [
+        'coffee',
+    ],
+    defaultKey: '9000:0:0:0',
+    matrix: 2,
+    kind: MENUITEM,
+};
+
+const genericItems: GenericTypedEntity[] = [genericCone, genericcoffee];
+const genericItemsIterator: IterableIterator<GenericTypedEntity> =
+    genericGenerator(genericItems);
+
+///////////////////////////////////////////////////////////////////////////////
+//  Create Size, Flavor, Temperature, and Caffeine Attributes
+///////////////////////////////////////////////////////////////////////////////
+const sizeSmall: AID = 0;
+const sizeMedium: AID = 1;
+
 const sizes: AttributeItem[] = [
     {
         aid: sizeSmall,
@@ -49,61 +94,33 @@ const sizes: AttributeItem[] = [
         aid: sizeMedium,
         name: 'medium',
         aliases: ['medium'],
-        isDefault: true,
-    },
-    {
-        aid: sizeLarge,
-        name: 'large',
-        aliases: ['large'],
     },
 ];
 
-const flavorVanilla = 3;
-const flavorChocolate = 4;
-const flavorStrawberry = 5;
+const flavorVanilla: AID = 2;
+const flavorChocolate: AID = 3;
+
 const flavors: AttributeItem[] = [
     {
         aid: flavorVanilla,
         name: 'vanilla',
         aliases: ['vanilla'],
-        isDefault: true,
     },
     {
         aid: flavorChocolate,
         name: 'chocolate',
         aliases: ['chocolate'],
-    },
-    {
-        aid: flavorStrawberry,
-        name: 'strawberry',
-        aliases: ['strawberry'],
-    },
+    }
 ];
 
-const styleRegular = 6;
-const styleOriginal = 7;
-const styles: AttributeItem[] = [
-    {
-        aid: styleRegular,
-        name: 'regular',
-        aliases: ['regular'],
-        isDefault: true,
-    },
-    {
-        aid: styleOriginal,
-        name: 'original',
-        aliases: ['original'],
-    },
-];
+const temperatureHot: AID = 4;
+const temperatureCold: AID = 5;
 
-const temperatureHot = 8;
-const temperatureCold = 9;
 const temperatures: AttributeItem[] = [
     {
         aid: temperatureHot,
         name: 'hot',
         aliases: ['hot'],
-        isDefault: true,
     },
     {
         aid: temperatureCold,
@@ -112,147 +129,228 @@ const temperatures: AttributeItem[] = [
     },
 ];
 
-const caffeineRegular = 10;
-const caffeineDecaf = 11;
-const caffeineHalfCaf = 12;
+const caffeineRegular: AID = 6;
+const caffeineDecaf: AID = 7;
+
 const caffeines: AttributeItem[] = [
     {
         aid: caffeineRegular,
         name: 'regular',
         aliases: ['regular'],
-        isDefault: true,
     },
     {
         aid: caffeineDecaf,
         name: 'decaf',
         aliases: ['decaf', 'unleaded'],
     },
-    {
-        aid: caffeineHalfCaf,
-        name: 'half caf',
-        aliases: ['half caf', 'split shot'],
-    },
 ];
 
-const size: PID = 0;
-const flavor: PID = 1;
-const style: PID = 2;
+///////////////////////////////////////////////////////////////////////////////
+//  Dimensions for Soft Serve Ice Cream and coffees
+///////////////////////////////////////////////////////////////////////////////
+const size: DID = 0;
+const flavor: DID = 1;
+const temperature: DID = 2;
+const caffeine: DID = 3;
+
 const sizeDimension = new Dimension(size, sizes.values());
 const flavorDimension = new Dimension(flavor, flavors.values());
-const styleDimension = new Dimension(style, styles.values());
-const softServeDimensions = [sizeDimension, flavorDimension, styleDimension];
-
-const temperature: PID = 3;
-const caffeine: PID = 4;
 const temperatureDimension = new Dimension(temperature, temperatures.values());
 const caffeineDimension = new Dimension(caffeine, caffeines.values());
+
+const softServeDimensions = [
+    sizeDimension,
+    flavorDimension,
+];
 const coffeeDimensions = [
     sizeDimension,
     temperatureDimension,
     caffeineDimension,
 ];
 
-describe('Matrix', () => {
-    ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+//  Specific Cones (size, flavor)
+///////////////////////////////////////////////////////////////////////////////
+const smallVanillaCone: SpecificTypedEntity = {
+    sku: 8001,
+    name: 'small vanilla cone',
+    key: '8000:0:0',
+    kind: MENUITEM,
+}
+const smallChocolateCone: SpecificTypedEntity = {
+    sku: 8002,
+    name: 'small chocolate cone',
+    key: '8000:0:1',
+    kind: MENUITEM,
+}
+const mediumVanillaCone: SpecificTypedEntity = {
+    sku: 8003,
+    name: 'medium vanilla cone',
+    key: '8000:1:0',
+    kind: MENUITEM,
+}
+const mediumChocolateCone: SpecificTypedEntity = {
+    sku: 8004,
+    name: 'medium chocolate cone',
+    key: '8000:1:1',
+    kind: MENUITEM,
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//  Specific coffees (size, temperature, caffeine)
+///////////////////////////////////////////////////////////////////////////////
+const smallcoffee: SpecificTypedEntity = {
+    sku: 9001,
+    name: 'small coffee',
+    key: '9000:0:0:0',
+    kind: MENUITEM,
+}
+const smallDecafcoffee: SpecificTypedEntity = {
+    sku: 9002,
+    name: 'small coffee',
+    key: '9000:0:0:1',
+    kind: MENUITEM,
+}
+const smallIcedcoffee: SpecificTypedEntity = {
+    sku: 9003,
+    name: 'small coffee',
+    key: '9000:0:1:0',
+    kind: MENUITEM,
+}
+const smallIcedDecafcoffee: SpecificTypedEntity = {
+    sku: 9004,
+    name: 'small coffee',
+    key: '9000:0:1:1',
+    kind: MENUITEM,
+}
+const mediumcoffee: SpecificTypedEntity = {
+    sku: 9005,
+    name: 'medium coffee',
+    key: '9000:1:0:0',
+    kind: MENUITEM,
+}
+const mediumDecafcoffee: SpecificTypedEntity = {
+    sku: 9006,
+    name: 'medium decaf coffee',
+    key: '9000:1:0:1',
+    kind: MENUITEM,
+}
+const mediumIcedcoffee: SpecificTypedEntity = {
+    sku: 9007,
+    name: 'medium iced coffee',
+    key: '9000:1:1:0',
+    kind: MENUITEM,
+}
+const mediumIcedDecafcoffee: SpecificTypedEntity = {
+    sku: 9008,
+    name: 'medium iced decaf coffee',
+    key: '9000:1:1:1',
+    kind: MENUITEM,
+}
+
+const specificItems: SpecificTypedEntity[] = [
+    smallVanillaCone,
+    smallChocolateCone,
+    mediumVanillaCone,
+    mediumChocolateCone,
+    smallcoffee,
+    smallDecafcoffee,
+    smallIcedcoffee,
+    smallIcedDecafcoffee,
+    mediumcoffee,
+    mediumDecafcoffee,
+    mediumIcedcoffee,
+    mediumIcedDecafcoffee,
+];
+const specificItemsIterator: IterableIterator<SpecificTypedEntity> =
+    specificGenerator(specificItems);
+
+///////////////////////////////////////////////////////////////////////////////
+//  Add the Maps to the Catalog
+///////////////////////////////////////////////////////////////////////////////
+const catalog = new Catalog(genericItemsIterator, specificItemsIterator);
+
+describe('Attribute Info', () => {
+    ///////////////////////////////////////////////////////////////////////////
     //
     //  Dimension
     //
-    ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     describe('Dimension', () => {
         it('Constructor', () => {
-            const idOfDefault = 1;
-            const anyDimensionId = 123;
+            // We used to test dimension.defaultAttribute here. This value came
+            // from attribute.isDefault - a property that no longer exists. We
+            // now find the default from genericItem.
+            // TODO: Add an equivalent default test for current project.
+            const anyDimensionId: DID = 123;
             const dimension = new Dimension(
                 anyDimensionId,
-                attributes.values()
+                caffeines.values()
             );
 
             assert.equal(dimension.id, anyDimensionId);
-            assert.deepEqual(dimension.attributes, attributes);
-            assert.equal(dimension.defaultAttribute, idOfDefault);
-        });
-
-        it('No attributes', () => {
-            const anyDimensionId = 123;
-            const f = () => new Dimension(anyDimensionId, [].values());
-
-            assert.throws(f, `expect at least one attribute`);
-        });
-
-        it('Second default', () => {
-            const anyDimensionId = 123;
-            const f = () =>
-                new Dimension(
-                    anyDimensionId,
-                    [...attributes, ...attributes].values()
-                );
-
-            assert.throws(f, `found second default attribute 1`);
-        });
-
-        it('No defaults', () => {
-            const anyDimensionId = 123;
-            const attributes2 = [attributes[0], attributes[2]];
-            const f = () => new Dimension(anyDimensionId, attributes2.values());
-
-            assert.throws(f, `expected at least one default attribute`);
+            assert.deepEqual(dimension.attributes, caffeines);
         });
     });
 
-    ///////////////////////////////////////////////////////////////////////////////
+    it('No attributes', () => {
+        const anyDimensionId = 123;
+        const f = () => new Dimension(anyDimensionId, [].values());
+
+        assert.throws(f, `expect at least one attribute`);
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
     //
     //  Matrix
     //
-    ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     describe('Matrix', () => {
         it('Constructor', () => {
-            const anyMatrixId = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions);
+            const anyMatrixId: MID = 123;
+            const matrix = new Matrix(anyMatrixId, softServeDimensions, catalog);
 
             assert.equal(matrix.id, anyMatrixId);
             assert.deepEqual(matrix.dimensions, softServeDimensions);
         });
-
-        it('getKey()', () => {
-            const anyMatrixId = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions);
-
-            const info = new AttributeInfo();
-            for (const dimension of softServeDimensions) {
-                info['addDimension'](dimension);
-            }
-
-            const dimensionIdToAttribute = new Map<PID, PID>();
-            dimensionIdToAttribute.set(size, sizeMedium);
-            dimensionIdToAttribute.set(flavor, flavorStrawberry);
-            dimensionIdToAttribute.set(style, styleRegular);
-
-            const anyEntityId = 456;
-
-            // anyEntityId: 456
-            //      medium:   1
-            //  strawberry:   2
-            //     regular:   0
-            //         key: 456:1:2:0
-            assert.equal(
-                matrix.getKey(anyEntityId, dimensionIdToAttribute, info),
-                '456:1:2:0'
-            );
-        });
     });
 
-    ///////////////////////////////////////////////////////////////////////////////
+    it('getKey()', () => {
+        const anyMatrixId: MID = 123;
+        const matrix = new Matrix(anyMatrixId, softServeDimensions, catalog);
+
+        const info = new AttributeInfo();
+        for (const dimension of softServeDimensions) {
+            info['addDimension'](dimension);
+        }
+
+        const dimensionIdToAttribute = new Map<DID, AID>();
+        dimensionIdToAttribute.set(size, sizeMedium);
+        dimensionIdToAttribute.set(flavor, flavorVanilla);
+
+        const anyEntityId = 8000;
+
+        // anyEntityId:   8000
+        //      medium:   1
+        //     vanilla:   0
+        //         key:   8000:1:0
+        assert.equal(
+            matrix.getKey(anyEntityId, dimensionIdToAttribute, info),
+            '8000:1:0'
+        );
+    });
+
+    ///////////////////////////////////////////////////////////////////////////
     //
     //  AttributeInfo
     //
-    ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     describe('AttributeInfo', () => {
         it('addDimension()', () => {
             const info = new AttributeInfo();
 
             info['addDimension'](softServeDimensions[0]);
             info['addDimension'](softServeDimensions[1]);
-            info['addDimension'](softServeDimensions[2]);
 
             const cases = [
                 // Sizes
@@ -264,10 +362,6 @@ describe('Matrix', () => {
                     aid: sizeMedium,
                     coordinate: { dimension: sizeDimension, position: 1 },
                 },
-                {
-                    aid: sizeLarge,
-                    coordinate: { dimension: sizeDimension, position: 2 },
-                },
 
                 // Flavors
                 {
@@ -277,20 +371,6 @@ describe('Matrix', () => {
                 {
                     aid: flavorChocolate,
                     coordinate: { dimension: flavorDimension, position: 1 },
-                },
-                {
-                    aid: flavorStrawberry,
-                    coordinate: { dimension: flavorDimension, position: 2 },
-                },
-
-                // Styles
-                {
-                    aid: styleRegular,
-                    coordinate: { dimension: styleDimension, position: 0 },
-                },
-                {
-                    aid: styleOriginal,
-                    coordinate: { dimension: styleDimension, position: 1 },
                 },
 
                 // Unknown attribute
@@ -313,7 +393,7 @@ describe('Matrix', () => {
             assert.throws(f1, `found duplicate dimension id 0.`);
 
             // Attempt adding an attribute with a duplicate pid.
-            const uniqueId = softServeDimensions[0].id + 1;
+            const uniqueId: UID = softServeDimensions[0].id + 1;
             const sizesDimension = new Dimension(uniqueId, sizes.values());
             const f2 = () => info['addDimension'](sizesDimension);
             assert.throws(f2, `found duplicate attribute pid 0.`);
@@ -322,8 +402,8 @@ describe('Matrix', () => {
         it('addMatrix()', () => {
             const info = new AttributeInfo();
 
-            const anyMatrixId = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions);
+            const anyMatrixId: MID = 123;
+            const matrix = new Matrix(anyMatrixId, softServeDimensions, catalog);
 
             info['addMatrix'](matrix);
 
@@ -334,15 +414,16 @@ describe('Matrix', () => {
         it('addGenericEntity()', () => {
             const info = new AttributeInfo();
 
-            const softServeMatrixId = 123;
+            const softServeMatrixId: MID = 123;
             const softServeMatrix = new Matrix(
                 softServeMatrixId,
-                softServeDimensions
+                softServeDimensions,
+                catalog
             );
             info['addMatrix'](softServeMatrix);
 
-            const coffeeMatrixId = 456;
-            const coffeeMatrix = new Matrix(coffeeMatrixId, coffeeDimensions);
+            const coffeeMatrixId: MID = 456;
+            const coffeeMatrix = new Matrix(coffeeMatrixId, coffeeDimensions, catalog);
             info['addMatrix'](coffeeMatrix);
 
             // Attempt to reference a non-existant maxtrix.
@@ -383,23 +464,22 @@ describe('Matrix', () => {
         // });
     });
 
-    ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     //
     //  MaxtrixEntityBuilder
     //
-    ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
     describe('MaxtrixEntityBuilder', () => {
-        it('Constructor', () => {});
+        it('Constructor', () => { });
 
         it('hasPID()/setPID()', () => {
             const info = new AttributeInfo();
-            const builder = new MatrixEntityBuilder(info);
+            const builder = new MatrixEntityBuilder(info, catalog);
 
             // Haven't added an entity yet.
             assert.isFalse(builder.hasPID());
 
             const pid: PID = 123;
-
             builder.setPID(pid);
 
             assert.isTrue(builder.hasPID());
@@ -412,9 +492,8 @@ describe('Matrix', () => {
             const info = new AttributeInfo();
             info['addDimension'](softServeDimensions[0]);
             info['addDimension'](softServeDimensions[1]);
-            info['addDimension'](softServeDimensions[2]);
 
-            const builder = new MatrixEntityBuilder(info);
+            const builder = new MatrixEntityBuilder(info, catalog);
 
             const f = () =>
                 builder.addAttribute(unknownPID);
@@ -424,34 +503,44 @@ describe('Matrix', () => {
             assert.isTrue(builder.addAttribute(sizeSmall));
 
             // Second size addition should fail.
-            assert.isFalse(builder.addAttribute(sizeLarge));
+            assert.isFalse(builder.addAttribute(sizeMedium));
 
             // First time adding a flavor should succeed.
-            assert.isTrue(
-                builder.addAttribute(flavorChocolate)
-            );
+            assert.isTrue(builder.addAttribute(flavorChocolate));
         });
 
         it('getKey()', () => {
             const info = new AttributeInfo();
             info['addDimension'](softServeDimensions[0]);
             info['addDimension'](softServeDimensions[1]);
-            info['addDimension'](softServeDimensions[2]);
 
-            const softServeMatrixId = 123;
+            const softServeMatrixId: MID = 123;
             const softServeMatrix = new Matrix(
                 softServeMatrixId,
-                softServeDimensions
+                softServeDimensions,
+                catalog
             );
             info['addMatrix'](softServeMatrix);
 
             // Configure with a generic ice cream cone item.
-            const cone = 456;
+            const cone: PID = 8000;
             info['addGenericEntity'](cone, softServeMatrixId);
 
-            const builder = new MatrixEntityBuilder(info);
+            // // Configure with a specific `medium vanilla cone`.
+            // const mediumVanillaCone = 500;
+            // info['addSpecificEntity'](mediumVanillaCone, '8000:1:0');
 
-            // getPID() before adding entity should throw.
+            // // Configure with a specific `medium chocolate cone`.
+            // const mediumChocolateCone = 501;
+            // info['addSpecificEntity'](mediumChocolateCone, '8000:1:1');
+
+            // // Configure with a specific `small chocolate cone`.
+            // const smallChocolateCone = 502;
+            // info['addSpecificEntity'](smallChocolateCone, '8000:0:1');
+
+            const builder = new MatrixEntityBuilder(info, catalog);
+
+            // getKey() before adding entity should throw.
             const f = () => builder.getKey();
             assert.throws(f, 'no pid set');
 
@@ -459,17 +548,15 @@ describe('Matrix', () => {
             builder.setPID(cone);
 
             // All attributes are default.
-            assert.equal(builder.getKey(), '456:1:0:0');
+            assert.equal(builder.getKey(), '8000:0:0');
 
-            // Add flavor=chocolate, style=regular, allow size to default.
+            // Allow size to default, add flavor=chocolate.
             builder.addAttribute(flavorChocolate);
-            builder.addAttribute(styleRegular);
+            assert.equal(builder.getKey(), '8000:0:1');
 
-            assert.equal(builder.getKey(), '456:1:1:0');
-
-            // Now specify large size, which is not a default.
-            builder.addAttribute(sizeLarge);
-            assert.equal(builder.getKey(), '456:2:1:0');
+            // Add size=medium, flavor is still chocolate.
+            builder.addAttribute(sizeMedium);
+            assert.equal(builder.getKey(), '8000:1:1');
         });
     });
 });
