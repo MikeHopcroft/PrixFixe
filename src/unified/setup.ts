@@ -15,6 +15,7 @@ import {
 } from '..';
 
 import { IDGenerator } from './id_generator';
+import { MODIFIER } from '../catalog';
 
 export interface World {
     attributeOps: AttributeUtils;
@@ -28,6 +29,7 @@ export interface World {
 export function setup(
     productsFile: string,
     optionsFile: string,
+    modifiersFile: string,
     attributesFile: string,
     rulesFile: string,
     debugMode: boolean
@@ -35,8 +37,10 @@ export function setup(
     // Load items from menu data.
     const products = catalogFromYamlString(fs.readFileSync(productsFile, 'utf8'), MENUITEM);
     const options = catalogFromYamlString(fs.readFileSync(optionsFile, 'utf8'), OPTION);
+    const modifiers = catalogFromYamlString(fs.readFileSync(modifiersFile, 'utf8'), MODIFIER);
     const catalog = Catalog.fromCatalog(products);
     catalog.merge(options);
+    catalog.merge(modifiers);
  
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));

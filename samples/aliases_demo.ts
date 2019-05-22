@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { AID, aliasesFromPattern, patternFromExpression, setup, World, MENUITEM, OPTION } from '../src';
+import { AID, aliasesFromPattern, patternFromExpression, setup, World, MENUITEM, MODIFIER, OPTION } from '../src';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -33,11 +33,15 @@ function printProducts(world: World) {
             case MENUITEM:
                 console.log(`Product(${item.pid}): ${item.name}`);
                 break;
+            case MODIFIER:
+                console.log(`Modifier(${item.pid}): ${item.name}`);
+                break;
             case OPTION:
                 console.log(`Option(${item.pid}): ${item.name}`);
                 break;
             default:
-                console.log(`Unknown(${item.pid}): ${item.name}`);
+                // Type system infers item as type `never`
+                console.log(`Unknown item`);
                 break;
         }
         for (const alias of item.aliases) {
@@ -54,6 +58,7 @@ function go() {
     const world = setup(
         path.join(__dirname, '../../samples/data/restaurant-en/menu.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/options.yaml'),
+        path.join(__dirname, '../../samples/data/restaurant-en/modifiers.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/attributes.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
         false
