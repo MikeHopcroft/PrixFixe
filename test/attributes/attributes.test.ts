@@ -3,27 +3,27 @@ import 'mocha';
 
 import * as yaml from 'js-yaml';
 
-import { attributesFromYamlString } from '../../src/attributes';
+import { Attributes, attributesFromYamlString } from '../../src/attributes';
 
-const attributes = {
+const attributes: Attributes = {
     dimensions: [
         {
             did: 1,
             name: 'size',
             items: [
                 {
-                    pid: 1,
+                    aid: 1,
                     name: 'small',
                     aliases: ['small'],
                 },
                 {
-                    pid: 2,
+                    aid: 2,
                     name: 'medium',
                     aliases: ['medium'],
                     isDefault: true,
                 },
                 {
-                    pid: 3,
+                    aid: 3,
                     name: 'large',
                     aliases: ['large'],
                 },
@@ -34,18 +34,18 @@ const attributes = {
             name: 'flavor',
             items: [
                 {
-                    pid: 4,
+                    aid: 4,
                     name: 'vanilla',
                     aliases: ['vanilla'],
                     isDefault: true,
                 },
                 {
-                    pid: 5,
+                    aid: 5,
                     name: 'chocolate',
                     aliases: ['chocolate'],
                 },
                 {
-                    pid: 6,
+                    aid: 6,
                     name: 'strawberry',
                     aliases: ['strawberry'],
                 },

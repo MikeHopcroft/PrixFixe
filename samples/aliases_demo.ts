@@ -14,7 +14,7 @@ function printAttributes(world: World) {
     for (const d of world.attributes.dimensions) {
         console.log(`Dimension(${d.did}): ${d.name}`);
         for (const attribute of d.items) {
-            console.log(`  Attribute(${attribute.pid})`);
+            console.log(`  Attribute(${attribute.aid})`);
             for (const alias of attribute.aliases) {
                 const pattern = patternFromExpression(alias);
                 for (const text of aliasesFromPattern(pattern)) {

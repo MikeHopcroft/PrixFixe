@@ -19,18 +19,18 @@ const unknownKey = '9999';
 
 const attributes: AttributeItem[] = [
     {
-        pid: 0,
+        aid: 0,
         name: 'zero',
         aliases: ['zero', 'z'],
     },
     {
-        pid: 1,
+        aid: 1,
         name: 'one',
         aliases: ['one', 'first'],
         isDefault: true,
     },
     {
-        pid: 2,
+        aid: 2,
         name: 'two',
         aliases: ['two', 'second'],
     },
@@ -41,18 +41,18 @@ const sizeMedium = 1;
 const sizeLarge = 2;
 const sizes: AttributeItem[] = [
     {
-        pid: sizeSmall,
+        aid: sizeSmall,
         name: 'small',
         aliases: ['small'],
     },
     {
-        pid: sizeMedium,
+        aid: sizeMedium,
         name: 'medium',
         aliases: ['medium'],
         isDefault: true,
     },
     {
-        pid: sizeLarge,
+        aid: sizeLarge,
         name: 'large',
         aliases: ['large'],
     },
@@ -63,18 +63,18 @@ const flavorChocolate = 4;
 const flavorStrawberry = 5;
 const flavors: AttributeItem[] = [
     {
-        pid: flavorVanilla,
+        aid: flavorVanilla,
         name: 'vanilla',
         aliases: ['vanilla'],
         isDefault: true,
     },
     {
-        pid: flavorChocolate,
+        aid: flavorChocolate,
         name: 'chocolate',
         aliases: ['chocolate'],
     },
     {
-        pid: flavorStrawberry,
+        aid: flavorStrawberry,
         name: 'strawberry',
         aliases: ['strawberry'],
     },
@@ -84,13 +84,13 @@ const styleRegular = 6;
 const styleOriginal = 7;
 const styles: AttributeItem[] = [
     {
-        pid: styleRegular,
+        aid: styleRegular,
         name: 'regular',
         aliases: ['regular'],
         isDefault: true,
     },
     {
-        pid: styleOriginal,
+        aid: styleOriginal,
         name: 'original',
         aliases: ['original'],
     },
@@ -100,13 +100,13 @@ const temperatureHot = 8;
 const temperatureCold = 9;
 const temperatures: AttributeItem[] = [
     {
-        pid: temperatureHot,
+        aid: temperatureHot,
         name: 'hot',
         aliases: ['hot'],
         isDefault: true,
     },
     {
-        pid: temperatureCold,
+        aid: temperatureCold,
         name: 'cold',
         aliases: ['colr', ' iced'],
     },
@@ -117,18 +117,18 @@ const caffeineDecaf = 11;
 const caffeineHalfCaf = 12;
 const caffeines: AttributeItem[] = [
     {
-        pid: caffeineRegular,
+        aid: caffeineRegular,
         name: 'regular',
         aliases: ['regular'],
         isDefault: true,
     },
     {
-        pid: caffeineDecaf,
+        aid: caffeineDecaf,
         name: 'decaf',
         aliases: ['decaf', 'unleaded'],
     },
     {
-        pid: caffeineHalfCaf,
+        aid: caffeineHalfCaf,
         name: 'half caf',
         aliases: ['half caf', 'split shot'],
     },
@@ -257,48 +257,48 @@ describe('Matrix', () => {
             const cases = [
                 // Sizes
                 {
-                    pid: sizeSmall,
+                    aid: sizeSmall,
                     coordinate: { dimension: sizeDimension, position: 0 },
                 },
                 {
-                    pid: sizeMedium,
+                    aid: sizeMedium,
                     coordinate: { dimension: sizeDimension, position: 1 },
                 },
                 {
-                    pid: sizeLarge,
+                    aid: sizeLarge,
                     coordinate: { dimension: sizeDimension, position: 2 },
                 },
 
                 // Flavors
                 {
-                    pid: flavorVanilla,
+                    aid: flavorVanilla,
                     coordinate: { dimension: flavorDimension, position: 0 },
                 },
                 {
-                    pid: flavorChocolate,
+                    aid: flavorChocolate,
                     coordinate: { dimension: flavorDimension, position: 1 },
                 },
                 {
-                    pid: flavorStrawberry,
+                    aid: flavorStrawberry,
                     coordinate: { dimension: flavorDimension, position: 2 },
                 },
 
                 // Styles
                 {
-                    pid: styleRegular,
+                    aid: styleRegular,
                     coordinate: { dimension: styleDimension, position: 0 },
                 },
                 {
-                    pid: styleOriginal,
+                    aid: styleOriginal,
                     coordinate: { dimension: styleDimension, position: 1 },
                 },
 
                 // Unknown attribute
-                { pid: unknownPID, coordinate: undefined },
+                { aid: unknownPID, coordinate: undefined },
             ];
 
             for (const test of cases) {
-                const observed = info.getAttributeCoordinates(test.pid);
+                const observed = info.getAttributeCoordinates(test.aid);
                 const expected = test.coordinate;
                 assert.deepEqual(observed, expected);
             }
@@ -363,7 +363,7 @@ describe('Matrix', () => {
 
             // Attempt to lookup non-existant entity.
             const f3 = () => info.getMatrixForEntity(unknownPID);
-            assert.throws(f3, 'Matrix cannot be undefined.');
+            assert.throws(f3, 'GenericEntity(pid=9999) has no matrix.');
         });
 
         // it('addSpecificEntity()', () => {

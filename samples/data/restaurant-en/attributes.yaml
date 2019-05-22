@@ -2,36 +2,36 @@ dimensions:
   - did: 1
     name: temperature
     items:
-      - pid: 10
+      - aid: 10
         name: hot
         hidden: true
         isDefault: true
         aliases:
           - hot
-      - pid: 11
+      - aid: 11
         name: iced
         aliases:
           - iced
   - did: 2
     name: flavor
     items:
-      - pid: 4
+      - aid: 4
         name: vanilla
         isDefault: true
         aliases:
           - vanilla
-      - pid: 5
+      - aid: 5
         name: chocolate
         aliases:
           - chocolate
-      - pid: 6
+      - aid: 6
         name: strawberry
         aliases:
           - strawberry
   - did: 3
     name: caffeine
     items:
-      - pid: 7
+      - aid: 7
         name: caffinated
         hidden: true
         isDefault: true
@@ -41,12 +41,12 @@ dimensions:
         - full caf
         - full caffeine
         - regular
-      - pid: 8
+      - aid: 8
         name: halfcaf
         aliases:
           - half caf
           - split shot
-      - pid: 9
+      - aid: 9
         name: decaf
         aliases:
           - decaf
@@ -54,69 +54,69 @@ dimensions:
   - did: 4
     name: size
     items:
-      - pid: 1
+      - aid: 1
         name: small
         aliases:
           - small
-      - pid: 2
+      - aid: 2
         name: medium
         isDefault: true
         aliases:
           - medium
-      - pid: 3
+      - aid: 3
         name: large
         aliases:
           - large
   - did: 5
     name: milk
     items:
-      - pid: 100
+      - aid: 100
         name: whole milk
         isDefault: true
         aliases:
           - whole [milk]
-      - pid: 101
+      - aid: 101
         name: two percent milk
         aliases:
           - (two percent,low fat) [milk]
-      - pid: 102
+      - aid: 102
         name: nonfat milk
         aliases:
           - fat free [milk]
           - skinny
           - nonfat [milk]
-      - pid: 103
+      - aid: 103
         name: soy milk
         aliases:
           - soy [milk]
   - did: 6
     name: shape
     items:
-      - pid: 200
+      - aid: 200
         name: round
         isDefault: true
         aliases:
           - circle
-      - pid: 201
+      - aid: 201
         name: square
         aliases:
           - box
-      - pid: 202
+      - aid: 202
         name: star
         aliases:
           - starry
   - did: 7
     name: relative
     items:
-      - pid: 300
+      - aid: 300
         name: extra
         aliases:
           - more
-      - pid: 301
+      - aid: 301
         name: light
         aliases:
           - less
-      - pid: 302
+      - aid: 302
         name: no
         isDefault: true
         aliases:

@@ -13,6 +13,9 @@ const attributeSchema = {
     definitions: {
         AttributeItem: {
             properties: {
+                aid: {
+                    type: 'number',
+                },
                 aliases: {
                     items: {
                         type: 'string',
@@ -28,11 +31,8 @@ const attributeSchema = {
                 name: {
                     type: 'string',
                 },
-                pid: {
-                    type: 'number',
-                },
             },
-            required: ['aliases', 'name', 'pid'],
+            required: ['aid', 'aliases', 'name'],
             type: 'object',
         },
         DimensionDescription: {

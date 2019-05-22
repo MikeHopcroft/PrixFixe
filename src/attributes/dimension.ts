@@ -1,3 +1,4 @@
+import { AID } from '../attributes';
 import { PID } from '../catalog';
 
 import { AttributeItem } from './interfaces';
@@ -8,7 +9,7 @@ import { AttributeItem } from './interfaces';
 export class Dimension {
     readonly id: PID;
     readonly attributes: AttributeItem[];
-    readonly defaultAttribute: PID;
+    readonly defaultAttribute: AID;
 
     constructor(id: PID, attributesIterator: IterableIterator<AttributeItem>) {
         this.id = id;
@@ -18,16 +19,16 @@ export class Dimension {
             throw new TypeError(message);
         }
 
-        let defaultAttribute: PID | undefined = undefined;
+        let defaultAttribute: AID | undefined = undefined;
         for (const attribute of this.attributes) {
             if (attribute.isDefault === true) {
                 if (defaultAttribute !== undefined) {
                     const message = `found second default attribute ${
-                        attribute.pid
+                        attribute.aid
                     }`;
                     throw TypeError(message);
                 }
-                defaultAttribute = attribute.pid;
+                defaultAttribute = attribute.aid;
             }
         }
 

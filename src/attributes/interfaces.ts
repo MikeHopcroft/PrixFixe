@@ -5,7 +5,7 @@ import { PID } from '../catalog';
 export type AID = number;
 
 export interface AttributeItem {
-    pid: AID;
+    aid: AID;
     name: string;
     aliases: string[];
     hidden?: boolean;

@@ -67,13 +67,13 @@ export class AttributeInfo {
 
         let position = 0;
         for (const attribute of dimension.attributes) {
-            if (this.attributeIdToCoordinate.has(attribute.pid)) {
+            if (this.attributeIdToCoordinate.has(attribute.aid)) {
                 const message = `found duplicate attribute pid ${
-                    attribute.pid
+                    attribute.aid
                 }.`;
                 throw new TypeError(message);
             }
-            this.attributeIdToCoordinate.set(attribute.pid, {
+            this.attributeIdToCoordinate.set(attribute.aid, {
                 dimension,
                 position,
             });
