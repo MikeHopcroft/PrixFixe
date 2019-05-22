@@ -10,6 +10,7 @@ import {
     catalogFromYamlString,
     loadRuleConfig,
     MENUITEM,
+    OPTION,
     RuleChecker
 } from '..';
 
@@ -25,13 +26,17 @@ export interface World {
 }
 
 export function setup(
-    menuFile: string,
+    productsFile: string,
+    optionsFile: string,
     attributesFile: string,
     rulesFile: string,
     debugMode: boolean
 ): World {
     // Load items from menu data.
-    const catalog = catalogFromYamlString(fs.readFileSync(menuFile, 'utf8'), MENUITEM);
+    const products = catalogFromYamlString(fs.readFileSync(productsFile, 'utf8'), MENUITEM);
+    const options = catalogFromYamlString(fs.readFileSync(optionsFile, 'utf8'), OPTION);
+    const catalog = Catalog.fromCatalog(products);
+    catalog.merge(options);
  
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));

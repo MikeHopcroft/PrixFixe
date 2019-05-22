@@ -34,6 +34,7 @@ import {
 describe('Cart', () => {
     const world = setup(
         path.join(__dirname, '../../../samples/data/restaurant-en/menu.yaml'),
+        path.join(__dirname, '../../../samples/data/restaurant-en/options .yaml'),
         path.join(__dirname,
             '../../../samples/data/restaurant-en/attributes.yaml'),
         path.join(__dirname, '../../../samples/data/restaurant-en/rules.yaml'),

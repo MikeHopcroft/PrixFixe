@@ -23,11 +23,22 @@ export class Catalog {
     mapSpecific = new Map<KEY, SpecificTypedEntity>();
     //private optionOfPredicate: OptionOfPredicate | undefined;
 
-    constructor(
+    static fromEntities(
         genericItems: IterableIterator<GenericTypedEntity>,
         specificItems: IterableIterator<SpecificTypedEntity>
-    ) {
-        this.mergeItems(genericItems, specificItems);
+    ): Catalog {
+        const catalog = new Catalog();
+        catalog.mergeItems(genericItems, specificItems);
+        return catalog;
+    }
+
+    static fromCatalog(other: Catalog): Catalog {
+        const catalog = new Catalog();
+        catalog.mergeItems(other.genericEntities(), other.specificEntities());
+        return catalog;
+    }
+
+    constructor() {
     }
 
     // Merge another Catalog into this Catalog.

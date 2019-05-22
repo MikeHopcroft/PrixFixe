@@ -127,5 +127,5 @@ export function catalogFromYamlString(yamlText: string, kind: symbol) {
     };
     const specificItems = yamlRoot.specificItems.map(f2);
 
-    return new Catalog(genericItems.values(), specificItems.values());
+    return Catalog.fromEntities(genericItems.values(), specificItems.values());
 }

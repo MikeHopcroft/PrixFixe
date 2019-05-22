@@ -7,6 +7,16 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Launch Aliases Demo",
+            "program": "${workspaceFolder}/build/samples/aliases_demo.js",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
             "name": "Launch World Demo",
             "program": "${workspaceFolder}/build/samples/world_demo.js",
             "preLaunchTask": "tsc: build - tsconfig.json",
