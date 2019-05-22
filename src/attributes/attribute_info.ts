@@ -1,9 +1,4 @@
-import { AID } from '../attributes';
-import { Catalog, PID } from '../catalog';
-
-import { Dimension } from './dimension';
-import { Attributes } from './interfaces';
-import { Matrix } from './matrix';
+import { AID, Attributes, Catalog, DID, Dimension, Matrix, PID, } from '../';
 
 // The (dimension, position) coordinates of an attribute within a Matrix.
 // Dimension corresponds to a characteristic like `size`.
@@ -55,6 +50,10 @@ export class AttributeInfo {
         }
 
         return info;
+    }
+
+    getDimension(did: DID): Dimension | undefined {
+        return this.dimensionIdToDimension.get(did);
     }
 
     // Indexes a Dimension and its Attributes.

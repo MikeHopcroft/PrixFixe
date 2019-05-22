@@ -1,14 +1,14 @@
-import { AttributeInfo, Catalog, Dimension, PID } from '../';
+import { AID, AttributeInfo, Catalog, DID, Dimension, MID, PID, GenericTypedEntity, KEY, } from '../';
 
 // Represents a configuration matrix consisting of a set of Dimensions
 // each of which corresponds to a set of Attributes.
 // Used to generate entity keys.
 export class Matrix {
-    readonly id: PID;
+    readonly id: MID;
     readonly dimensions: Dimension[];
     readonly catalog: Catalog;
 
-    constructor(id: PID, dimensions: Dimension[], catalog: Catalog) {
+    constructor(id: MID, dimensions: Dimension[], catalog: Catalog) {
         this.id = id;
         this.dimensions = dimensions;
         this.catalog = catalog;
@@ -19,23 +19,15 @@ export class Matrix {
     // this Matrix.
     getKey(
         pid: PID,
-        dimensionIdToAttribute: Map<PID, PID>,
+        dimensionIdToAttribute: Map<DID, AID>,
         info: AttributeInfo,
     ): string {
         const key = [pid];
+        let attributeIndex = 1;
         for (const [index, dimension] of this.dimensions.entries()) {
             let attributeId = dimensionIdToAttribute.get(dimension.id);
             if (attributeId === undefined) {
-                // Look for default in generic pid. Probably done using the
-                // index var. Dim index should line up w/ default key index.
-                // attributeId = dimension.defaultAttribute;
-                // attributeId = getDefaultAttributeFromGenericPID(index, entityId);
-                // Check entityID - matches generic product?
-                // TODO
-                // Get the generic item.
-                this.catalog.getGeneric(pid);
-                // Get the generic items' key.
-                attributeId = 0;
+                attributeId = this.getDefaultAttribute(pid, attributeIndex);
             }
             const coordinate = info.getAttributeCoordinates(attributeId);
             if (!coordinate) {
@@ -44,17 +36,26 @@ export class Matrix {
             }
 
             key.push(coordinate.position);
+            attributeIndex++;
         }
-
         return key.join(':');
     }
 
-    hasDimension(did: PID): boolean {
+    hasDimension(did: DID): boolean {
         for (const dimension of this.dimensions) {
             if (dimension.id === did) {
                 return true;
             }
         }
         return false;
+    }
+
+    getDefaultAttribute(id: PID, index: number): AID {
+        // Get the generic item.
+        const genericItem: GenericTypedEntity = this.catalog.getGeneric(id);
+        // Get the generic item's defaultKey.
+        const defaultKey: KEY = genericItem.defaultKey;
+
+        return Number(defaultKey.split(':')[index]) as AID;
     }
 }

@@ -9,13 +9,12 @@ import {
     Catalog,
     catalogFromYamlString,
     loadRuleConfig,
+    IDGenerator,
     MENUITEM,
+    MODIFIER,
     OPTION,
     RuleChecker
 } from '..';
-
-import { IDGenerator } from './id_generator';
-import { MODIFIER } from '../catalog';
 
 export interface World {
     attributeOps: AttributeUtils;
@@ -31,7 +30,7 @@ export function setup(
     modifiersFile: string,
     attributesFile: string,
     rulesFile: string,
-    debugMode: boolean
+    debugMode: boolean,
 ): World {
     // Load items from menu data.
     const products = catalogFromYamlString(fs.readFileSync(productsFile, 'utf8'), MENUITEM);

@@ -17,9 +17,7 @@ import {
 } from './cart_fake_data';
 import {
     AID,
-    AttributeUtils,
     Cart,
-    CartUtils,
     ItemInstance,
     KEY,
     PID,
@@ -41,7 +39,7 @@ describe('Cart', () => {
         path.join(__dirname, '../../../samples/data/restaurant-en/rules.yaml'),
         false
     );
-    const {  attributeOps, /*attributes, attributeInfo,*/ cartOps, catalog } = world;
+    const {  attributeOps, attributes, cartOps, catalog } = world;
     ///////////////////////////////////////////////////////////////////////////
     //
     //  CartUtils

@@ -28,13 +28,11 @@ export class Catalog {
         specificItems: IterableIterator<SpecificTypedEntity>
     ): Catalog {
         const catalog = new Catalog(genericItems, specificItems);
-        // catalog.mergeItems(genericItems, specificItems);
         return catalog;
     }
 
     static fromCatalog(other: Catalog): Catalog {
         const catalog = new Catalog(other.genericEntities(), other.specificEntities());
-        // catalog.mergeItems(other.genericEntities(), other.specificEntities());
         return catalog;
     }
 

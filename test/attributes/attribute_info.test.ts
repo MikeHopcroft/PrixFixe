@@ -18,7 +18,7 @@ import {
     AttributeInfo,
     MatrixEntityBuilder,
     UID,
-} from '../../src';
+} from '../../src/';
 
 // A PID that is not indexed in any data structure in this file. For testing
 // error cases.
