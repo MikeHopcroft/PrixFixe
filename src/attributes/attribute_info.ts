@@ -23,7 +23,6 @@ export class AttributeInfo {
     >();
     private readonly matrixIdToMatrix = new Map<PID, Matrix>();
     private readonly entityIdToMatrix = new Map<PID, Matrix>();
-    private readonly keyToEntityId = new Map<string, PID>();
 
     static factory(catalog: Catalog, attributes: Attributes): AttributeInfo {
         const info = new AttributeInfo();
@@ -54,22 +53,11 @@ export class AttributeInfo {
             }
         }
 
-        for (const item of catalog.mapSpecific.values()) {
-            if (item.key) {
-                // TODO: Changed from PID to SKU - is this correct?
-                info.addSpecificEntity(item.sku, item.key);
-            }
-        }
-
         return info;
     }
 
-    getDimension(did: PID): Dimension | undefined {
-        return this.dimensionIdToDimension.get(did);
-    }
-
     // Indexes a Dimension and its Attributes.
-    addDimension(dimension: Dimension) {
+    private addDimension(dimension: Dimension) {
         if (this.dimensionIdToDimension.has(dimension.id)) {
             const message = `found duplicate dimension id ${dimension.id}.`;
             throw new TypeError(message);
@@ -94,7 +82,7 @@ export class AttributeInfo {
     }
 
     // Indexes a Matrix.
-    addMatrix(matrix: Matrix) {
+    private addMatrix(matrix: Matrix) {
         if (this.matrixIdToMatrix.has(matrix.id)) {
             const message = `found duplicate matrix id ${matrix.id}.`;
             throw new TypeError(message);
@@ -103,7 +91,7 @@ export class AttributeInfo {
     }
 
     // Associates an Entity with a specific Matrix.
-    addGenericEntity(entityId: PID, matrixId: PID) {
+    private addGenericEntity(entityId: PID, matrixId: PID) {
         if (this.entityIdToMatrix.has(entityId)) {
             const message = `found duplicate entity id ${entityId}.`;
             throw new TypeError(message);
@@ -117,23 +105,11 @@ export class AttributeInfo {
         }
     }
 
-    addSpecificEntity(entityId: PID, key: string) {
-        if (this.keyToEntityId.has(key)) {
-            const message = `found duplicate entity key ${key}.`;
-            throw new TypeError(message);
-        }
-        this.keyToEntityId.set(key, entityId);
-    }
-
     // Lookup an AttributeCoordinate by PID. The Coordinate provides the
     // Attribute's Dimension (e.g. size) and its Position in the Dimension
     // (e.g. 0 ==> small).
     getAttributeCoordinates(attributeId: PID): AttributeCoordinate | undefined {
         return this.attributeIdToCoordinate.get(attributeId);
-    }
-
-    getMatrix(matrixId: PID): Matrix | undefined {
-        return this.matrixIdToMatrix.get(matrixId);
     }
 
     // Lookup the Matrix that should be used to configure an Entity.
@@ -143,10 +119,5 @@ export class AttributeInfo {
             throw TypeError('Matrix cannot be undefined.');
         }
         return matrix;
-    }
-
-    // Returns the PID of an entity with a specific key.
-    getPID(key: string): PID | undefined {
-        return this.keyToEntityId.get(key);
     }
 }

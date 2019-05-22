@@ -180,6 +180,6 @@ export interface AttributeUtilities {
     createItemInstance: (
         pid: PID,
         attributes: Set<AID>,
-        uid: UID,
+        uid: UID
     ) => ItemInstance | undefined;
 }

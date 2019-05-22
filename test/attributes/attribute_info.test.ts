@@ -219,7 +219,7 @@ describe('Matrix', () => {
 
             const info = new AttributeInfo();
             for (const dimension of softServeDimensions) {
-                info.addDimension(dimension);
+                info['addDimension'](dimension);
             }
 
             const dimensionIdToAttribute = new Map<PID, PID>();
@@ -250,9 +250,9 @@ describe('Matrix', () => {
         it('addDimension()', () => {
             const info = new AttributeInfo();
 
-            info.addDimension(softServeDimensions[0]);
-            info.addDimension(softServeDimensions[1]);
-            info.addDimension(softServeDimensions[2]);
+            info['addDimension'](softServeDimensions[0]);
+            info['addDimension'](softServeDimensions[1]);
+            info['addDimension'](softServeDimensions[2]);
 
             const cases = [
                 // Sizes
@@ -306,16 +306,16 @@ describe('Matrix', () => {
 
         it('addDimension() - exceptions', () => {
             const info = new AttributeInfo();
-            info.addDimension(softServeDimensions[0]);
+            info['addDimension'](softServeDimensions[0]);
 
             // Attempt adding a dimension with the same id.
-            const f1 = () => info.addDimension(softServeDimensions[0]);
+            const f1 = () => info['addDimension'](softServeDimensions[0]);
             assert.throws(f1, `found duplicate dimension id 0.`);
 
             // Attempt adding an attribute with a duplicate pid.
             const uniqueId = softServeDimensions[0].id + 1;
             const sizesDimension = new Dimension(uniqueId, sizes.values());
-            const f2 = () => info.addDimension(sizesDimension);
+            const f2 = () => info['addDimension'](sizesDimension);
             assert.throws(f2, `found duplicate attribute pid 0.`);
         });
 
@@ -325,9 +325,9 @@ describe('Matrix', () => {
             const anyMatrixId = 123;
             const matrix = new Matrix(anyMatrixId, softServeDimensions);
 
-            info.addMatrix(matrix);
+            info['addMatrix'](matrix);
 
-            const f = () => info.addMatrix(matrix);
+            const f = () => info['addMatrix'](matrix);
             assert.throws(f, 'found duplicate matrix id 123.');
         });
 
@@ -339,23 +339,23 @@ describe('Matrix', () => {
                 softServeMatrixId,
                 softServeDimensions
             );
-            info.addMatrix(softServeMatrix);
+            info['addMatrix'](softServeMatrix);
 
             const coffeeMatrixId = 456;
             const coffeeMatrix = new Matrix(coffeeMatrixId, coffeeDimensions);
-            info.addMatrix(coffeeMatrix);
+            info['addMatrix'](coffeeMatrix);
 
             // Attempt to reference a non-existant maxtrix.
-            const f1 = () => info.addGenericEntity(1, unknownPID);
+            const f1 = () => info['addGenericEntity'](1, unknownPID);
             assert.throws(f1, 'unknown matrix id 9999.');
 
-            info.addGenericEntity(1, softServeMatrixId);
+            info['addGenericEntity'](1, softServeMatrixId);
 
             // Attempt to add a duplicate entity.
-            const f2 = () => info.addGenericEntity(1, unknownPID);
+            const f2 = () => info['addGenericEntity'](1, unknownPID);
             assert.throws(f2, 'found duplicate entity id 1.');
 
-            info.addGenericEntity(2, coffeeMatrixId);
+            info['addGenericEntity'](2, coffeeMatrixId);
 
             // Lookup entities with ids 1 and 2.
             assert.equal(softServeMatrix, info.getMatrixForEntity(1));
@@ -366,21 +366,21 @@ describe('Matrix', () => {
             assert.throws(f3, 'Matrix cannot be undefined.');
         });
 
-        it('addSpecificEntity()', () => {
-            const info = new AttributeInfo();
+        // it('addSpecificEntity()', () => {
+        //     const info = new AttributeInfo();
 
-            info.addSpecificEntity(1, '123');
+        //     info['addSpecificEntity'](1, '123');
 
-            // Attempt to add entity with key="123" again.
-            const f = () => info.addSpecificEntity(1, '123');
-            assert.throws(f, 'found duplicate entity key 123.');
+        //     // Attempt to add entity with key="123" again.
+        //     const f = () => info['addSpecificEntity'](1, '123');
+        //     assert.throws(f, 'found duplicate entity key 123.');
 
-            info.addSpecificEntity(2, '456');
+        //     info['addSpecificEntity'](2, '456');
 
-            assert.equal(1, info.getPID('123'));
-            assert.equal(2, info.getPID('456'));
-            assert.equal(undefined, info.getPID(unknownKey));
-        });
+        //     assert.equal(1, info.getPID('123'));
+        //     assert.equal(2, info.getPID('456'));
+        //     assert.equal(undefined, info.getPID(unknownKey));
+        // });
     });
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -410,9 +410,9 @@ describe('Matrix', () => {
 
         it('addAttribute()', () => {
             const info = new AttributeInfo();
-            info.addDimension(softServeDimensions[0]);
-            info.addDimension(softServeDimensions[1]);
-            info.addDimension(softServeDimensions[2]);
+            info['addDimension'](softServeDimensions[0]);
+            info['addDimension'](softServeDimensions[1]);
+            info['addDimension'](softServeDimensions[2]);
 
             const builder = new MatrixEntityBuilder(info);
 
@@ -434,35 +434,20 @@ describe('Matrix', () => {
 
         it('getKey()', () => {
             const info = new AttributeInfo();
-            info.addDimension(softServeDimensions[0]);
-            info.addDimension(softServeDimensions[1]);
-            info.addDimension(softServeDimensions[2]);
+            info['addDimension'](softServeDimensions[0]);
+            info['addDimension'](softServeDimensions[1]);
+            info['addDimension'](softServeDimensions[2]);
 
             const softServeMatrixId = 123;
             const softServeMatrix = new Matrix(
                 softServeMatrixId,
                 softServeDimensions
             );
-            info.addMatrix(softServeMatrix);
+            info['addMatrix'](softServeMatrix);
 
             // Configure with a generic ice cream cone item.
             const cone = 456;
-            info.addGenericEntity(cone, softServeMatrixId);
-
-            // Configure with a specific `medium vanilla regular cone`.
-            // Key is (size:1)*1 + (flavor:0)*3 + (style:0)*9 = 1
-            const mediumVanillaRegularCone = 500;
-            info.addSpecificEntity(mediumVanillaRegularCone, '456:1:0:0');
-
-            // Configure with a specific `medium chocolate regular cone`.
-            // Key is (size:1)*1 + (flavor:1)*3 + (style:0)*9 = 4
-            const mediumChocolateRegularCone = 501;
-            info.addSpecificEntity(mediumChocolateRegularCone, '456:1:1:0');
-
-            // Configure with a specific `large chocolate regular cone`.
-            // Key is (size:2)*1 + (flavor:1)*3 + (style:0)*9 = 5
-            const largeChocolateRegularCone = 502;
-            info.addSpecificEntity(largeChocolateRegularCone, '456:2:1:0');
+            info['addGenericEntity'](cone, softServeMatrixId);
 
             const builder = new MatrixEntityBuilder(info);
 
