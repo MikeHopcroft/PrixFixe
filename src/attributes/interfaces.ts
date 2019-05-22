@@ -1,7 +1,11 @@
 import { PID } from '../catalog';
 
+// Unique attribute identifier. Attributes are SKU-specifying modifiers that
+// combine with a generic product to form a specific product.
+export type AID = number;
+
 export interface AttributeItem {
-    pid: PID;
+    pid: AID;
     name: string;
     aliases: string[];
     hidden?: boolean;

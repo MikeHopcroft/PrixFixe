@@ -1,3 +1,4 @@
+import { AID } from '../attributes';
 import { Item } from '../item';
 import { KEY, PID } from '../catalog';
 
@@ -19,10 +20,6 @@ import { KEY, PID } from '../catalog';
 // Shares that same value-space with GPID. Therefore, the user must ensure that
 // the intersection of { GPIDs } and { SPIDs } is the empty set.
 // export type SPID = number;
-
-// Unique attribute identifier. Attributes are SKU-specifying modifiers that
-// combine with a generic product to form a specific product.
-export type AID = number;
 
 // Unique instance identfier. No two ItemInstances/OptionInstances can share a
 // UID. Used by React-like libraries that need to detect changes in data

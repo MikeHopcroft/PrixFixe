@@ -19,11 +19,11 @@ export class Matrix {
     // represents those set of attribute values associated Dimensions of
     // this Matrix.
     getKey(
-        entityId: PID,
+        pid: PID,
         dimensionIdToAttribute: Map<PID, PID>,
         info: AttributeInfo
     ): string {
-        const key = [entityId];
+        const key = [pid];
         for (const [index, dimension] of this.dimensions.entries()) {
             let attributeId = dimensionIdToAttribute.get(dimension.id);
             if (attributeId === undefined) {

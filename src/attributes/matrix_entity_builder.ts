@@ -36,17 +36,17 @@ export class MatrixEntityBuilder {
         }
     }
 
-    addAttribute(attributeID: AID): boolean {
-        const coordinate = this.info.getAttributeCoordinates(attributeID);
+    addAttribute(aid: AID): boolean {
+        const coordinate = this.info.getAttributeCoordinates(aid);
         if (!coordinate) {
-            const message = `unknown attribute ${attributeID}.`;
+            const message = `unknown attribute ${aid}.`;
             throw TypeError(message);
         } else if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
             return false;
         } else {
             this.dimensionIdToAttribute.set(
                 coordinate.dimension.id,
-                attributeID
+                aid
             );
             return true;
         }

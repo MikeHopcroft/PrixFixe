@@ -1,3 +1,4 @@
+import { AID } from '../attributes';
 import { Catalog, PID } from '../catalog';
 
 import { Dimension } from './dimension';
@@ -90,33 +91,33 @@ export class AttributeInfo {
         this.matrixIdToMatrix.set(matrix.id, matrix);
     }
 
-    // Associates an Entity with a specific Matrix.
-    private addGenericEntity(entityId: PID, matrixId: PID) {
-        if (this.entityIdToMatrix.has(entityId)) {
-            const message = `found duplicate entity id ${entityId}.`;
+    // Associates a genericEntity's PID with a matrix.
+    private addGenericEntity(pid: PID, matrixId: PID) {
+        if (this.entityIdToMatrix.has(pid)) {
+            const message = `found duplicate entity id ${pid}.`;
             throw new TypeError(message);
         }
         const matrix = this.matrixIdToMatrix.get(matrixId);
         if (matrix) {
-            this.entityIdToMatrix.set(entityId, matrix);
+            this.entityIdToMatrix.set(pid, matrix);
         } else {
             const message = `unknown matrix id ${matrixId}.`;
             throw new TypeError(message);
         }
     }
 
-    // Lookup an AttributeCoordinate by PID. The Coordinate provides the
+    // Lookup an AttributeCoordinate by AID. The Coordinate provides the
     // Attribute's Dimension (e.g. size) and its Position in the Dimension
     // (e.g. 0 ==> small).
-    getAttributeCoordinates(attributeId: PID): AttributeCoordinate | undefined {
-        return this.attributeIdToCoordinate.get(attributeId);
+    getAttributeCoordinates(aid: AID): AttributeCoordinate | undefined {
+        return this.attributeIdToCoordinate.get(aid);
     }
 
-    // Lookup the Matrix that should be used to configure an Entity.
-    getMatrixForEntity(entityId: PID): Matrix {
-        const matrix = this.entityIdToMatrix.get(entityId);
+    // Returns a GenericEntity's Matrix.
+    getMatrixForEntity(pid: PID): Matrix {
+        const matrix = this.entityIdToMatrix.get(pid);
         if (matrix === undefined) {
-            throw TypeError('Matrix cannot be undefined.');
+            throw TypeError(`GenericEntity(pid=${pid}) has no matrix.`);
         }
         return matrix;
     }
