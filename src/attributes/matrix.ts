@@ -1,4 +1,12 @@
-import { AID, AttributeInfo, Catalog, DID, Dimension, MID, PID, GenericTypedEntity, KEY, } from '../';
+// <<<<<<< HEAD
+// import { AID, AttributeInfo, Catalog, DID, Dimension, MID, PID, GenericTypedEntity, KEY, } from '../';
+// =======
+import { Catalog, DID, GenericTypedEntity, KEY, MID, PID } from '../catalog';
+
+import { AttributeInfo } from './attribute_info';
+import { Dimension } from './dimension';
+import { AID } from './interfaces';
+// >>>>>>> Catalog.getGenericForKey()
 
 // Represents a configuration matrix consisting of a set of Dimensions
 // each of which corresponds to a set of Attributes.
@@ -20,7 +28,7 @@ export class Matrix {
     getKey(
         pid: PID,
         dimensionIdToAttribute: Map<DID, AID>,
-        info: AttributeInfo,
+        info: AttributeInfo
     ): string {
         const key = [pid];
         let attributeIndex = 1;
@@ -57,5 +65,14 @@ export class Matrix {
         const defaultKey: KEY = genericItem.defaultKey;
 
         return Number(defaultKey.split(':')[index]) as AID;
+    }
+
+    static pidFromKey(key: KEY) {
+        const pid = Number.parseInt(key, 10);
+        if (isNaN(pid)) {
+            throw TypeError(`Bad key "${key}""`);
+        }
+
+        return pid;
     }
 }

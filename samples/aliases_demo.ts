@@ -8,6 +8,12 @@ import { AID, aliasesFromPattern, patternFromExpression, setup, World, MENUITEM,
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+// Which aliases are for products and which are for options?
+// Can an alias be used for both? Don't see why not, from an API perspective.
+// From AID, get DID. Alias doesn't know its DID. Would need to build index.
+// From DID, get matrices. Again, would need some sort of index.
+// From matrices, look at all products and options.
+
 function printAttributes(world: World) {
     console.log();
     console.log('=== Dimensions and Attributes ===');

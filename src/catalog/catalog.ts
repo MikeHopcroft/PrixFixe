@@ -1,5 +1,7 @@
 // TODO: Update catalog for Prixfixe
 //       API needs to be refactored
+import { Matrix } from '../attributes';
+
 import {
     GenericTypedEntity,
     KEY,
@@ -83,6 +85,11 @@ export class Catalog {
             throw TypeError(`Catalog.get(): cannot find pid=${pid}`);
         }
         return item;
+    }
+
+    getGenericForKey(key: KEY): GenericTypedEntity {
+        const pid = Matrix.pidFromKey(key);
+        return this.getGeneric(pid);
     }
 
     genericEntities(): IterableIterator<GenericTypedEntity> {

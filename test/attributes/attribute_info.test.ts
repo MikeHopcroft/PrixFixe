@@ -446,22 +446,6 @@ describe('Attribute Info', () => {
             const f3 = () => info.getMatrixForEntity(unknownPID);
             assert.throws(f3, 'GenericEntity(pid=9999) has no matrix.');
         });
-
-        // it('addSpecificEntity()', () => {
-        //     const info = new AttributeInfo();
-
-        //     info['addSpecificEntity'](1, '123');
-
-        //     // Attempt to add entity with key="123" again.
-        //     const f = () => info['addSpecificEntity'](1, '123');
-        //     assert.throws(f, 'found duplicate entity key 123.');
-
-        //     info['addSpecificEntity'](2, '456');
-
-        //     assert.equal(1, info.getPID('123'));
-        //     assert.equal(2, info.getPID('456'));
-        //     assert.equal(undefined, info.getPID(unknownKey));
-        // });
     });
 
     ///////////////////////////////////////////////////////////////////////////
