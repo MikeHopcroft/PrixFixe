@@ -110,7 +110,7 @@ const flavors: AttributeItem[] = [
         aid: flavorChocolate,
         name: 'chocolate',
         aliases: ['chocolate'],
-    }
+    },
 ];
 
 const temperatureHot: AID = 4;
@@ -176,25 +176,28 @@ const smallVanillaCone: SpecificTypedEntity = {
     name: 'small vanilla cone',
     key: '8000:0:0',
     kind: MENUITEM,
-}
+};
+
 const smallChocolateCone: SpecificTypedEntity = {
     sku: 8002,
     name: 'small chocolate cone',
     key: '8000:0:1',
     kind: MENUITEM,
-}
+};
+
 const mediumVanillaCone: SpecificTypedEntity = {
     sku: 8003,
     name: 'medium vanilla cone',
     key: '8000:1:0',
     kind: MENUITEM,
-}
+};
+
 const mediumChocolateCone: SpecificTypedEntity = {
     sku: 8004,
     name: 'medium chocolate cone',
     key: '8000:1:1',
     kind: MENUITEM,
-}
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Specific coffees (size, temperature, caffeine)
@@ -204,49 +207,55 @@ const smallcoffee: SpecificTypedEntity = {
     name: 'small coffee',
     key: '9000:0:0:0',
     kind: MENUITEM,
-}
+};
+
 const smallDecafcoffee: SpecificTypedEntity = {
     sku: 9002,
     name: 'small coffee',
     key: '9000:0:0:1',
     kind: MENUITEM,
-}
+};
+
 const smallIcedcoffee: SpecificTypedEntity = {
     sku: 9003,
     name: 'small coffee',
     key: '9000:0:1:0',
     kind: MENUITEM,
-}
+};
+
 const smallIcedDecafcoffee: SpecificTypedEntity = {
     sku: 9004,
     name: 'small coffee',
     key: '9000:0:1:1',
     kind: MENUITEM,
-}
+};
 const mediumcoffee: SpecificTypedEntity = {
     sku: 9005,
     name: 'medium coffee',
     key: '9000:1:0:0',
     kind: MENUITEM,
-}
+};
+
 const mediumDecafcoffee: SpecificTypedEntity = {
     sku: 9006,
     name: 'medium decaf coffee',
     key: '9000:1:0:1',
     kind: MENUITEM,
-}
+};
+
 const mediumIcedcoffee: SpecificTypedEntity = {
     sku: 9007,
     name: 'medium iced coffee',
     key: '9000:1:1:0',
     kind: MENUITEM,
-}
+};
+
 const mediumIcedDecafcoffee: SpecificTypedEntity = {
     sku: 9008,
     name: 'medium iced decaf coffee',
     key: '9000:1:1:1',
     kind: MENUITEM,
-}
+};
 
 const specificItems: SpecificTypedEntity[] = [
     smallVanillaCone,
@@ -268,7 +277,7 @@ const specificItemsIterator: IterableIterator<SpecificTypedEntity> =
 ///////////////////////////////////////////////////////////////////////////////
 //  Add the Maps to the Catalog
 ///////////////////////////////////////////////////////////////////////////////
-const catalog = new Catalog(genericItemsIterator, specificItemsIterator);
+const catalog = Catalog.fromEntities(genericItemsIterator, specificItemsIterator);
 
 describe('Attribute Info', () => {
     ///////////////////////////////////////////////////////////////////////////

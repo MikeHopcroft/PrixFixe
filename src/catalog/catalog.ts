@@ -29,20 +29,18 @@ export class Catalog {
         genericItems: IterableIterator<GenericTypedEntity>,
         specificItems: IterableIterator<SpecificTypedEntity>
     ): Catalog {
-        const catalog = new Catalog(genericItems, specificItems);
+        const catalog = new Catalog();
+        catalog.mergeItems(genericItems, specificItems);
         return catalog;
     }
 
     static fromCatalog(other: Catalog): Catalog {
-        const catalog = new Catalog(other.genericEntities(), other.specificEntities());
+        const catalog = new Catalog();
+        catalog.merge(other);
         return catalog;
     }
 
-    constructor(
-        genericItems: IterableIterator<GenericTypedEntity>,
-        specificItems: IterableIterator<SpecificTypedEntity>
-    ) {
-        this.mergeItems(genericItems, specificItems);
+    constructor() {
     }
 
     // Merge another Catalog into this Catalog.
