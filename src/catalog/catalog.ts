@@ -1,12 +1,11 @@
 // TODO: Update catalog for Prixfixe
 //       API needs to be refactored
-import { Matrix } from '../attributes';
+import { AttributeInfo } from '../attributes';
 
 import {
     GenericTypedEntity,
     KEY,
     PID,
-    MatrixID,
     SpecificTypedEntity
 } from './interfaces';
 
@@ -86,7 +85,7 @@ export class Catalog {
     }
 
     getGenericForKey(key: KEY): GenericTypedEntity {
-        const pid = Matrix.pidFromKey(key);
+        const pid = AttributeInfo.pidFromKey(key);
         return this.getGeneric(pid);
     }
 
@@ -110,16 +109,10 @@ export class Catalog {
         return this.mapSpecific.values();
     }
 
-    // TODO: MatrixID Type?
-    getMatrixFromPID(pid: PID): MatrixID {
-        const result = this.mapGeneric.get(pid);
-
-        if (result) {
-            return result.matrix;
-        } else {
-            return -1;
-        }
-    }
+    // // TODO: MatrixID Type?
+    // getMIDFromPID(pid: PID): MatrixID {
+    //     return this.getGeneric(pid).matrix;
+    // }
 
     // TODO: Either rewrite or remove this function
     //isDefaultOf(child: PID, parent: PID): boolean {

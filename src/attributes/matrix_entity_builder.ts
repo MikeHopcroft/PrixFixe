@@ -56,12 +56,11 @@ export class MatrixEntityBuilder {
         if (this.pid === undefined) {
             throw TypeError(`no pid set`);
         }
-        const matrix: Matrix = this.info.getMatrixForEntity(this.pid);
+//        const matrix: Matrix = this.info.getMatrixForEntity(this.pid);
 
-        return matrix.getKey(
+        return this.info.getKey(
             this.pid,
-            this.dimensionIdToAttribute,
-            this.info
+            this.dimensionIdToAttribute
         );
     }
 
@@ -82,7 +81,7 @@ export class MatrixEntityBuilder {
             for (const [did, aid] of this.dimensionIdToAttribute.entries()) {
                 // Only yield attributes that are not associated with a
                 // dimension.
-                if (!matrix.hasDimension(did)) {
+                if (!AttributeInfo.hasDimension(matrix, did)) {
                     yield aid;
                 }
             }
