@@ -13,7 +13,7 @@ import {
     MENUITEM,
     MODIFIER,
     OPTION,
-    RuleChecker
+    RuleChecker,
 } from '..';
 
 export interface World {
@@ -33,15 +33,26 @@ export function setup(
     debugMode: boolean
 ): World {
     // Load items from menu data.
-    const products = catalogFromYamlString(fs.readFileSync(productsFile, 'utf8'), MENUITEM);
-    const options = catalogFromYamlString(fs.readFileSync(optionsFile, 'utf8'), OPTION);
-    const modifiers = catalogFromYamlString(fs.readFileSync(modifiersFile, 'utf8'), MODIFIER);
+    const products = catalogFromYamlString(
+        fs.readFileSync(productsFile, 'utf8'),
+        MENUITEM
+    );
+    const options = catalogFromYamlString(
+        fs.readFileSync(optionsFile, 'utf8'),
+        OPTION
+    );
+    const modifiers = catalogFromYamlString(
+        fs.readFileSync(modifiersFile, 'utf8'),
+        MODIFIER
+    );
     const catalog = Catalog.fromCatalog(products);
     catalog.merge(options);
     catalog.merge(modifiers);
 
     // Create the AttributeInfo instance.
-    const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
+    const attributes = attributesFromYamlString(
+        fs.readFileSync(attributesFile, 'utf8')
+    );
     const attributeInfo = new AttributeInfo(catalog, attributes);
 
     const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
@@ -49,7 +60,11 @@ export function setup(
 
     const uidGenerator = new IDGenerator();
 
-    const attributeOps = new AttributeUtils(catalog, uidGenerator, attributeInfo);
+    const attributeOps = new AttributeUtils(
+        catalog,
+        uidGenerator,
+        attributeInfo
+    );
     const cartOps = new CartUtils(catalog);
 
     return {

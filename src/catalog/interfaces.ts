@@ -117,7 +117,8 @@ export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
                 ...entity,
                 kind: OPTION,
             } as Option;
-        default:  // TODO: never type gaurd
+        default:
+            // TODO: never type gaurd
             throw TypeError('Unknown Type sent to `entityTyper`');
     }
 }

@@ -15,14 +15,7 @@ import {
     testCart,
     tomato3,
 } from './cart_fake_data';
-import {
-    AID,
-    Cart,
-    ItemInstance,
-    KEY,
-    PID,
-    setup,
-} from '../../src/';
+import { AID, Cart, ItemInstance, KEY, PID, setup } from '../../src/';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -31,11 +24,22 @@ import {
 ///////////////////////////////////////////////////////////////////////////////
 describe('Cart', () => {
     const world = setup(
-        path.join(__dirname, '../../../samples/data/restaurant-en/products.yaml'),
-        path.join(__dirname, '../../../samples/data/restaurant-en/options.yaml'),
-        path.join(__dirname, '../../../samples/data/restaurant-en/modifiers.yaml'),
-        path.join(__dirname,
-            '../../../samples/data/restaurant-en/attributes.yaml'),
+        path.join(
+            __dirname,
+            '../../../samples/data/restaurant-en/products.yaml'
+        ),
+        path.join(
+            __dirname,
+            '../../../samples/data/restaurant-en/options.yaml'
+        ),
+        path.join(
+            __dirname,
+            '../../../samples/data/restaurant-en/modifiers.yaml'
+        ),
+        path.join(
+            __dirname,
+            '../../../samples/data/restaurant-en/attributes.yaml'
+        ),
         path.join(__dirname, '../../../samples/data/restaurant-en/rules.yaml'),
         false
     );
@@ -115,7 +119,7 @@ describe('Cart', () => {
     it('addItem()', () => {
         const cart: Cart = clone(testCart);
         const expectedCart: Cart = {
-            items: [hamburger4Bread0Lettuce3, hamburger5Bread1, coke6,],
+            items: [hamburger4Bread0Lettuce3, hamburger5Bread1, coke6],
         };
 
         const resCart: Cart = cartOps.addItem(cart, coke6);
@@ -135,7 +139,7 @@ describe('Cart', () => {
     it('removeItem()', () => {
         const cart: Cart = clone(testCart);
         const expectedCart: Cart = {
-            items: [hamburger5Bread1,],
+            items: [hamburger5Bread1],
         };
 
         const resCart: Cart = cartOps.removeItem(
@@ -148,30 +152,21 @@ describe('Cart', () => {
     it('addChild()', () => {
         const parent: ItemInstance = clone(hamburger5Bread1);
 
-        const resItem: ItemInstance = cartOps.addChild(
-            parent,
-            tomato3
-        );
+        const resItem: ItemInstance = cartOps.addChild(parent, tomato3);
         expect(resItem).to.deep.equal(hamburger5Bread1Tomato3);
     });
 
     it('updateChild()', () => {
         const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
 
-        const resItem: ItemInstance = cartOps.updateChild(
-            parent,
-            tomato3
-        );
+        const resItem: ItemInstance = cartOps.updateChild(parent, tomato3);
         expect(resItem).to.deep.equal(hamburger4Bread0Tomato3);
     });
 
     it('removeChild()', () => {
         const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
 
-        const resItem: ItemInstance = cartOps.removeChild(
-            parent,
-            lettuce3
-        );
+        const resItem: ItemInstance = cartOps.removeChild(parent, lettuce3);
         expect(resItem).to.deep.equal(hamburger4Bread0);
     });
 
@@ -189,10 +184,11 @@ describe('Cart', () => {
         const pid: PID = 9000;
         // A set of AIDs that represent the "iced" and "decaf" attributes
         // of a  small iced decaf latte.
-        const attributes = new Set<AID>([9,11,]);
+        const attributes = new Set<AID>([9, 11]);
 
-        const resItem: ItemInstance | undefined =
-            attributeOps.createItemInstance(pid, attributes);
+        const resItem:
+            | ItemInstance
+            | undefined = attributeOps.createItemInstance(pid, attributes);
 
         const expectedItem: ItemInstance = {
             // UID count starts at 1, this will be the 4th item since there are
@@ -206,46 +202,37 @@ describe('Cart', () => {
             children: [
                 // From did = 1
                 {
-                    "aliases": [
-                        "iced",
-                    ],
-                    "children": [],
+                    aliases: ['iced'],
+                    children: [],
                     // TODO: Where do we get key from?
-                    "key": "0",
-                    "name": "iced",
-                    "pid": 11,
-                    "quantity": 1,
-                    "uid": 1,
+                    key: '0',
+                    name: 'iced',
+                    pid: 11,
+                    quantity: 1,
+                    uid: 1,
                 },
                 // From did = 3
                 {
-                    "aliases": [
-                        "decaf",
-                        "decaffeinated",
-                    ],
-                    "children": [],
-                    "key": "1",
-                    "name": "decaf",
-                    "pid": 9,
-                    "quantity": 1,
-                    "uid": 2,
+                    aliases: ['decaf', 'decaffeinated'],
+                    children: [],
+                    key: '1',
+                    name: 'decaf',
+                    pid: 9,
+                    quantity: 1,
+                    uid: 2,
                 },
                 // From did = 4
                 {
-                    "aliases": [
-                        "small",
-                    ],
-                    "children": [],
-                    "key": "2",
-                    "name": "small",
-                    "pid": 1,
-                    "quantity": 1,
-                    "uid": 3,
+                    aliases: ['small'],
+                    children: [],
+                    key: '2',
+                    name: 'small',
+                    pid: 1,
+                    quantity: 1,
+                    uid: 3,
                 },
             ],
-            aliases: [
-                'latte',
-            ],
+            aliases: ['latte'],
         };
         expect(resItem).to.deep.equal(expectedItem);
     });

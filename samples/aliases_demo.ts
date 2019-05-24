@@ -1,6 +1,15 @@
 import * as path from 'path';
 
-import { AID, aliasesFromPattern, patternFromExpression, setup, World, MENUITEM, MODIFIER, OPTION } from '../src';
+import {
+    AID,
+    aliasesFromPattern,
+    patternFromExpression,
+    setup,
+    World,
+    MENUITEM,
+    MODIFIER,
+    OPTION,
+} from '../src';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -59,13 +68,15 @@ function printProducts(world: World) {
     }
 }
 
-
 function go() {
     const world = setup(
         path.join(__dirname, '../../samples/data/restaurant-en/products.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/options.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/modifiers.yaml'),
-        path.join(__dirname, '../../samples/data/restaurant-en/attributes.yaml'),
+        path.join(
+            __dirname,
+            '../../samples/data/restaurant-en/attributes.yaml'
+        ),
         path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
         false
     );

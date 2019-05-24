@@ -1,11 +1,6 @@
 import * as path from 'path';
 
-import {
-    AID,
-    Cart,
-    Catalog,
-    setup,
-} from '../src/';
+import { AID, Cart, Catalog, setup } from '../src/';
 
 interface State {
     cart: Cart;
@@ -17,7 +12,10 @@ function go(debugMode: boolean) {
         path.join(__dirname, '../../samples/data/restaurant-en/products.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/options.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/modifiers.yaml'),
-        path.join(__dirname, '../../samples/data/restaurant-en/attributes.yaml'),
+        path.join(
+            __dirname,
+            '../../samples/data/restaurant-en/attributes.yaml'
+        ),
         path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
         debugMode
     );
@@ -29,14 +27,19 @@ function go(debugMode: boolean) {
 
     console.log('-----------------------------------------');
     console.log();
-    console.log("SHORT-ORDER: \"Welcome to Mike's American Grill. What can I get started for you?\"");
+    console.log(
+        'SHORT-ORDER: "Welcome to Mike\'s American Grill. What can I get started for you?"'
+    );
     console.log();
 
     console.log('\n##### CURRENT CART #####');
     printCart(state.cart);
 
-    const icedDecafAIDs = new Set<AID>([9,11,]);
-    const icedDecafSmallLatte = attributeOps.createItemInstance(9000, icedDecafAIDs);
+    const icedDecafAIDs = new Set<AID>([9, 11]);
+    const icedDecafSmallLatte = attributeOps.createItemInstance(
+        9000,
+        icedDecafAIDs
+    );
     if (icedDecafSmallLatte !== undefined) {
         state.cart.items.push(icedDecafSmallLatte);
     }

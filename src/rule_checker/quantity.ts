@@ -1,13 +1,6 @@
-import {
-    PID,
-    KEY,
-    GenericTypedEntity,
-} from '../catalog';
+import { PID, KEY, GenericTypedEntity } from '../catalog';
 
-import {
-    RuleConfig,
-    QuantityInformation,
-} from './interfaces';
+import { RuleConfig, QuantityInformation } from './interfaces';
 
 export interface QuantityMap {
     (child: KEY, downstream: KEY): QuantityInformation | undefined;

@@ -32,13 +32,17 @@ const unknownKey: KEY = '9999:9:9:9';
 
 // Generators to help in creation of the catalog. They take arrays of the
 // genericItems and SpecificItems, and yield the results as iterables.
-function* genericGenerator(generics: GenericTypedEntity[]): IterableIterator<GenericTypedEntity> {
+function* genericGenerator(
+    generics: GenericTypedEntity[]
+): IterableIterator<GenericTypedEntity> {
     for (const item of generics) {
         yield item;
     }
 }
 
-function* specificGenerator(specifics: SpecificTypedEntity[]): IterableIterator<SpecificTypedEntity> {
+function* specificGenerator(
+    specifics: SpecificTypedEntity[]
+): IterableIterator<SpecificTypedEntity> {
     for (const item of specifics) {
         yield item;
     }
@@ -53,10 +57,7 @@ const genericCone: GenericTypedEntity = {
     pid: genericConePID,
     cid: coneCID,
     name: 'cone',
-    aliases: [
-        'cone',
-        'ice cream [cone]',
-    ],
+    aliases: ['cone', 'ice cream [cone]'],
     defaultKey: '8000:0:0',
     matrix: 1,
     kind: MENUITEM,
@@ -68,17 +69,16 @@ const genericcoffee: GenericTypedEntity = {
     pid: genericcoffeePID,
     cid: coffeeCID,
     name: 'coffee',
-    aliases: [
-        'coffee',
-    ],
+    aliases: ['coffee'],
     defaultKey: '9000:0:0:0',
     matrix: 2,
     kind: MENUITEM,
 };
 
 const genericItems: GenericTypedEntity[] = [genericCone, genericcoffee];
-const genericItemsIterator: IterableIterator<GenericTypedEntity> =
-    genericGenerator(genericItems);
+const genericItemsIterator: IterableIterator<
+    GenericTypedEntity
+> = genericGenerator(genericItems);
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Create Size, Flavor, Temperature, and Caffeine Attributes
@@ -182,13 +182,13 @@ const caffieneDimensionDescription = {
 const softServeMatrixDescription: MatrixDescription = {
     mid: 1,
     name: 'soft serve',
-    dimensions: [ size, flavor ],
+    dimensions: [size, flavor],
 };
 
 const coffeeMatrixDescription: MatrixDescription = {
     mid: 2,
     name: 'coffee',
-    dimensions: [ size, temperature, caffeine ],
+    dimensions: [size, temperature, caffeine],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -206,10 +206,7 @@ const attributes: Attributes = {
         temperatureDimensionDescription,
         caffieneDimensionDescription,
     ],
-    matrices: [
-        softServeMatrixDescription,
-        coffeeMatrixDescription,
-    ],
+    matrices: [softServeMatrixDescription, coffeeMatrixDescription],
 };
 
 const sizeDimension = new Dimension(size, sizes.values());
@@ -217,16 +214,12 @@ const flavorDimension = new Dimension(flavor, flavors.values());
 const temperatureDimension = new Dimension(temperature, temperatures.values());
 const caffeineDimension = new Dimension(caffeine, caffeines.values());
 
-const softServeDimensions = [
-    sizeDimension,
-    flavorDimension,
-];
+const softServeDimensions = [sizeDimension, flavorDimension];
 const coffeeDimensions = [
     sizeDimension,
     temperatureDimension,
     caffeineDimension,
 ];
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Specific Cones (size, flavor)
@@ -333,13 +326,17 @@ const specificItems: SpecificTypedEntity[] = [
     mediumIcedDecafcoffee,
 ];
 
-const specificItemsIterator: IterableIterator<SpecificTypedEntity> =
-    specificGenerator(specificItems);
+const specificItemsIterator: IterableIterator<
+    SpecificTypedEntity
+> = specificGenerator(specificItems);
 
 ///////////////////////////////////////////////////////////////////////////////
 //  Add the Maps to the Catalog
 ///////////////////////////////////////////////////////////////////////////////
-const catalog = Catalog.fromEntities(genericItemsIterator, specificItemsIterator);
+const catalog = Catalog.fromEntities(
+    genericItemsIterator,
+    specificItemsIterator
+);
 
 describe('Attribute Info', () => {
     ///////////////////////////////////////////////////////////////////////////
@@ -354,10 +351,7 @@ describe('Attribute Info', () => {
             // now find the default from genericItem.
             // TODO: Add an equivalent default test for current project.
             const anyDimensionId: DID = 123;
-            const dimension = new Dimension(
-                anyDimensionId,
-                caffeines.values()
-            );
+            const dimension = new Dimension(anyDimensionId, caffeines.values());
 
             assert.equal(dimension.id, anyDimensionId);
             assert.deepEqual(dimension.attributes, caffeines);
@@ -366,7 +360,7 @@ describe('Attribute Info', () => {
         it('No attributes', () => {
             const anyDimensionId = 123;
             const f = () => new Dimension(anyDimensionId, [].values());
-    
+
             assert.throws(f, `expect at least one attribute`);
         });
     });
@@ -385,7 +379,6 @@ describe('Attribute Info', () => {
             assert.deepEqual(matrix.dimensions, softServeDimensions);
         });
     });
-
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -447,7 +440,10 @@ describe('Attribute Info', () => {
             const info = new AttributeInfo(catalog, emptyAttributes);
 
             const anyMatrixId: MID = 123;
-            const matrix: Matrix = { mid: anyMatrixId, dimensions: softServeDimensions };
+            const matrix: Matrix = {
+                mid: anyMatrixId,
+                dimensions: softServeDimensions,
+            };
 
             info['addMatrix'](matrix);
 
@@ -457,13 +453,13 @@ describe('Attribute Info', () => {
 
         it('getKey()', () => {
             const info = new AttributeInfo(catalog, attributes);
-    
+
             const dimensionIdToAttribute = new Map<DID, AID>();
             dimensionIdToAttribute.set(size, sizeMedium);
             dimensionIdToAttribute.set(flavor, flavorVanilla);
-    
+
             const genericConePID = 8000;
-    
+
             // genericConePID:   8000
             //         medium:   1
             //        vanilla:   0
@@ -472,7 +468,7 @@ describe('Attribute Info', () => {
                 info.getKey(genericConePID, dimensionIdToAttribute),
                 `${genericConePID}:1:0`
             );
-        });    
+        });
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -481,7 +477,7 @@ describe('Attribute Info', () => {
     //
     ///////////////////////////////////////////////////////////////////////////
     describe('MaxtrixEntityBuilder', () => {
-        it('Constructor', () => { });
+        it('Constructor', () => {});
 
         it('hasPID()/setPID()', () => {
             const info = new AttributeInfo(catalog, attributes);
@@ -504,8 +500,7 @@ describe('Attribute Info', () => {
 
             const builder = new MatrixEntityBuilder(info, catalog);
 
-            const f = () =>
-                builder.addAttribute(unknownPID);
+            const f = () => builder.addAttribute(unknownPID);
             assert.throws(f, 'Unknown attribute id 9999.');
 
             // First time adding a size should succeed.

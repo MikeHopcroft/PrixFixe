@@ -41,7 +41,7 @@ export const childTensorFactory = (
                     }
                 }
             }
-            
+
             return false;
         };
     }

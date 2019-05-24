@@ -1,8 +1,4 @@
-import {
-    KEY,
-    PID,
-    GenericTypedEntity,
-} from '../catalog';
+import { KEY, PID, GenericTypedEntity } from '../catalog';
 
 import { RuleConfig } from './interfaces';
 

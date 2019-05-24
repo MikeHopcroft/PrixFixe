@@ -3,13 +3,13 @@ import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
 import { Catalog } from './catalog';
-import { 
+import {
     GenericEntity,
     genericEntityFactory,
     GenericTypedEntity,
     SpecificEntity,
     specificEntityFactory,
-    SpecificTypedEntity
+    SpecificTypedEntity,
 } from './interfaces';
 
 const debug = Debug('pf:catalogFromYamlString');
@@ -19,89 +19,74 @@ const debug = Debug('pf:catalogFromYamlString');
 
 interface CatalogDescription {
     genericItems: GenericEntity[];
-    specificItems: SpecificEntity[]; 
+    specificItems: SpecificEntity[];
 }
 
 // Schema generated with typescript-json-schema:
 //   typescript-json-schema tsconfig.json CatalogDescription --required
 const catalogSchema = {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "definitions": {
-        "GenericEntity": {
-            "properties": {
-                "aliases": {
-                    "items": {
-                        "type": "string",
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    definitions: {
+        GenericEntity: {
+            properties: {
+                aliases: {
+                    items: {
+                        type: 'string',
                     },
-                    "type": "array",
+                    type: 'array',
                 },
-                "cid": {
-                    "type": "number",
+                cid: {
+                    type: 'number',
                 },
-                "defaultKey": {
-                    "type": "string",
+                defaultKey: {
+                    type: 'string',
                 },
-                "matrix": {
-                    "type": "number",
+                matrix: {
+                    type: 'number',
                 },
-                "name": {
-                    "type": "string",
+                name: {
+                    type: 'string',
                 },
-                "pid": {
-                    "type": "number",
+                pid: {
+                    type: 'number',
                 },
             },
-            "required": [
-                "aliases",
-                "cid",
-                "defaultKey",
-                "matrix",
-                "name",
-                "pid",
-            ],
-            "type": "object",
+            required: ['aliases', 'cid', 'defaultKey', 'matrix', 'name', 'pid'],
+            type: 'object',
         },
-        "SpecificEntity": {
-            "properties": {
-                "key": {
-                    "type": "string",
+        SpecificEntity: {
+            properties: {
+                key: {
+                    type: 'string',
                 },
-                "name": {
-                    "type": "string",
+                name: {
+                    type: 'string',
                 },
-                "sku": {
-                    "type": "number",
+                sku: {
+                    type: 'number',
                 },
             },
-            "required": [
-                "key",
-                "name",
-                "sku",
-            ],
-            "type": "object",
+            required: ['key', 'name', 'sku'],
+            type: 'object',
         },
     },
-    "properties": {
-        "genericItems": {
-            "items": {
-                "$ref": "#/definitions/GenericEntity",
+    properties: {
+        genericItems: {
+            items: {
+                $ref: '#/definitions/GenericEntity',
             },
-            "type": "array",
+            type: 'array',
         },
-        "specificItems": {
-            "items": {
-                "$ref": "#/definitions/SpecificEntity",
+        specificItems: {
+            items: {
+                $ref: '#/definitions/SpecificEntity',
             },
-            "type": "array",
+            type: 'array',
         },
     },
-    "required": [
-        "genericItems",
-        "specificItems",
-    ],
-    "type": "object",
+    required: ['genericItems', 'specificItems'],
+    type: 'object',
 };
-
 
 const ajv = new AJV();
 const catalogValidator = ajv.compile(catalogSchema);

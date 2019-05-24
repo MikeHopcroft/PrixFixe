@@ -1,8 +1,4 @@
-import {
-    CID,
-    PID,
-    KEY,
-} from '../catalog';
+import { CID, PID, KEY } from '../catalog';
 
 export interface QuantityInformation {
     defaultQty: number;
@@ -57,7 +53,7 @@ export interface RuleCheckerOps {
     //   if it can also have white sauce as a child item.
     //
     // Issue: should items be mutally exclusive with themselves?
-    isMutuallyExclusive(parent:KEY, modSet: IterableIterator<KEY>): boolean;
+    isMutuallyExclusive(parent: KEY, modSet: IterableIterator<KEY>): boolean;
 
     // Gets the default quantity of a child attached to a parent
     //

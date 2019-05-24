@@ -1,4 +1,4 @@
-import { AID, AttributeInfo, Catalog, KEY, Matrix, PID, } from '../';
+import { AID, AttributeInfo, Catalog, KEY, Matrix, PID } from '../';
 
 // MatrixEntityBuilder collects Attribute and Entity values that will later be
 // used to generate an Entity key which can be used to lookup the specific
@@ -31,7 +31,7 @@ export class MatrixEntityBuilder {
         } else {
             const message = `attempting to overwrite entity ${
                 this.pid
-                } with ${pid}`;
+            } with ${pid}`;
             throw TypeError(message);
         }
     }
@@ -41,10 +41,7 @@ export class MatrixEntityBuilder {
         if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
             return false;
         } else {
-            this.dimensionIdToAttribute.set(
-                coordinate.dimension.id,
-                aid
-            );
+            this.dimensionIdToAttribute.set(coordinate.dimension.id, aid);
             return true;
         }
     }
@@ -54,10 +51,7 @@ export class MatrixEntityBuilder {
             throw TypeError(`no pid set`);
         }
 
-        return this.info.getKey(
-            this.pid,
-            this.dimensionIdToAttribute
-        );
+        return this.info.getKey(this.pid, this.dimensionIdToAttribute);
     }
 
     // Iterator for PIDs of attributes that aren't associated with dimensions

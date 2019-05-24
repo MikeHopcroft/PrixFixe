@@ -114,7 +114,10 @@ export class CartUtils implements CartOps {
     // Operations involving ItemInstances
     //
 
-    *findChildByKey(item: ItemInstance, key: KEY): IterableIterator<ItemInstance> {
+    *findChildByKey(
+        item: ItemInstance,
+        key: KEY
+    ): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.key === key) {
                 yield child;
@@ -122,7 +125,10 @@ export class CartUtils implements CartOps {
         }
     }
 
-    *findChildByPID(item: ItemInstance, pid: PID): IterableIterator<ItemInstance> {
+    *findChildByPID(
+        item: ItemInstance,
+        pid: PID
+    ): IterableIterator<ItemInstance> {
         for (const child of item.children) {
             if (child.pid === pid) {
                 yield child;
@@ -238,7 +244,7 @@ export class CartUtils implements CartOps {
     }
 }
 
-import { AttributeInfo, Dimension, } from '../';
+import { AttributeInfo, Dimension } from '../';
 ///////////////////////////////////////////////////////////////////////////////
 //
 // AttributeUtils
@@ -255,7 +261,11 @@ export class AttributeUtils implements AttributeUtilities {
     // Operations involving Attributes.
     //
 
-    constructor(catalog: Catalog, idGenerator: IDGenerator, attributeInfo: AttributeInfo) {
+    constructor(
+        catalog: Catalog,
+        idGenerator: IDGenerator,
+        attributeInfo: AttributeInfo
+    ) {
         this.attributeInfo = attributeInfo;
         this.catalog = catalog;
         this.idGenerator = idGenerator;
@@ -273,13 +283,16 @@ export class AttributeUtils implements AttributeUtilities {
     // attributes like 'large' and 'iced' in order to get the SPID for the
     // specific product 'large iced latte'.
     // ISSUE: throw or return undefined?
-    createItemInstance(pid: PID, attributeIDs: Set<AID>):
-        ItemInstance | undefined {
+    createItemInstance(
+        pid: PID,
+        attributeIDs: Set<AID>
+    ): ItemInstance | undefined {
         if (this.catalog.hasPID(pid)) {
             const parent = this.catalog.getGeneric(pid);
 
-            const parentMatrix =
-                this.attributeInfo.getMatrixForEntity(parent.pid);
+            const parentMatrix = this.attributeInfo.getMatrixForEntity(
+                parent.pid
+            );
 
             // The key starts as the PID, but will have AIDs appended to it.
             let itemKey: KEY = String(pid);
@@ -298,20 +311,24 @@ export class AttributeUtils implements AttributeUtilities {
             // the number of dimensions that the defaultKey has. Any dimension
             // that does not map to a passed attribute will default.
             for (const dimension of parentMatrix.dimensions) {
-
-                const dimensionIndex = parentMatrix.dimensions.indexOf(dimension);
+                const dimensionIndex = parentMatrix.dimensions.indexOf(
+                    dimension
+                );
 
                 // Sets resAttribute if an AID has been passed in for the
                 // particular dimension.
                 let resAttribute: AttributeItem | undefined = this.getAttribute(
-                    attributeIDs, dimension);
+                    attributeIDs,
+                    dimension
+                );
 
                 // If the previous call returned undefined, no attributes
                 // belong to the current dimension. Instead, find the default
                 // attribute.
                 if (resAttribute === undefined) {
                     const defaultAttributeIndex = Number(
-                        defaultAttributeKeys[dimensionIndex]);
+                        defaultAttributeKeys[dimensionIndex]
+                    );
 
                     resAttribute = dimension.attributes[defaultAttributeIndex];
                 }
@@ -319,7 +336,7 @@ export class AttributeUtils implements AttributeUtilities {
                 // Create an ItemInstance from the AttributeItem, then add it
                 // to attributes.
                 if (resAttribute !== undefined) {
-                    const dimensionKey: KEY = (dimensionIndex).toString();
+                    const dimensionKey: KEY = dimensionIndex.toString();
 
                     const resAttributeItem: ItemInstance = {
                         pid: resAttribute.aid,
@@ -357,8 +374,10 @@ export class AttributeUtils implements AttributeUtilities {
     // TODO: This is a bit lazy right now. If there are multiple matching
     //       AIDs, then the first 0 through n attributes will be overwritten.
     //       In that case - what's the desired behavior?
-    getAttribute(attributeIDs: Set<AID>, dimension: Dimension)
-        : AttributeItem | undefined {
+    getAttribute(
+        attributeIDs: Set<AID>,
+        dimension: Dimension
+    ): AttributeItem | undefined {
         let resAttribute: AttributeItem | undefined = undefined;
 
         for (const attribute of dimension.attributes) {

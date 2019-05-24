@@ -6,13 +6,13 @@ import {
     GenericTypedEntity,
     KEY,
     PID,
-    SpecificTypedEntity
+    SpecificTypedEntity,
 } from './interfaces';
 
 //export type OptionOfPredicate = (
-    //catalog: Catalog,
-    //child: PID,
-    //parent: PID
+//catalog: Catalog,
+//child: PID,
+//parent: PID
 //) => boolean;
 
 // TODO: No need to implement CatalogItems.
@@ -39,8 +39,7 @@ export class Catalog {
         return catalog;
     }
 
-    constructor() {
-    }
+    constructor() {}
 
     // Merge another Catalog into this Catalog.
     merge(other: Catalog) {
@@ -116,91 +115,91 @@ export class Catalog {
 
     // TODO: Either rewrite or remove this function
     //isDefaultOf(child: PID, parent: PID): boolean {
-        //const p = this.get(parent);
-        //return (
-            //p.composition.defaults.find(
-                //component => component.pid === child
-            //) !== undefined
-        //);
+    //const p = this.get(parent);
+    //return (
+    //p.composition.defaults.find(
+    //component => component.pid === child
+    //) !== undefined
+    //);
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     //getDefaultInfo(child: PID, parent: PID): ComponentDescription | undefined {
-        //const p = this.get(parent);
-        //return p.composition.defaults.find(
-            //component => component.pid === child
-        //);
+    //const p = this.get(parent);
+    //return p.composition.defaults.find(
+    //component => component.pid === child
+    //);
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     //isChoiceOf(child: PID, parent: PID): boolean {
-        //const p = this.get(parent);
-        //for (const choice of p.composition.choices) {
-            //if (
-                //choice.alternatives.find(alternative => child === alternative)
-            //) {
-                //return true;
-            //}
-        //}
-        //return false;
+    //const p = this.get(parent);
+    //for (const choice of p.composition.choices) {
+    //if (
+    //choice.alternatives.find(alternative => child === alternative)
+    //) {
+    //return true;
+    //}
+    //}
+    //return false;
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     // ISSUE: This may be made obsolete by PredicateTensors
     //setOptionOfPredicate(predicate: OptionOfPredicate) {
-        //this.optionOfPredicate = predicate;
+    //this.optionOfPredicate = predicate;
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     //isOptionOf(child: PID, parent: PID): boolean {
-        //if (this.optionOfPredicate) {
-            //return this.optionOfPredicate(this, child, parent);
-        //} else {
-            //const p = this.get(parent);
-            //return (
-                //p.composition.options.find(option => option.pid === child) !==
-                //undefined
-            //);
-        //}
+    //if (this.optionOfPredicate) {
+    //return this.optionOfPredicate(this, child, parent);
+    //} else {
+    //const p = this.get(parent);
+    //return (
+    //p.composition.options.find(option => option.pid === child) !==
+    //undefined
+    //);
+    //}
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     // ISSUE: Is this buisiness logic in the scope of PrixFixe?
     //isSubstitutionOf(child: PID, parent: PID): boolean {
-        //const p = this.get(parent);
-        //return (
-            //p.composition.substitutions.find(
-                //substitution => substitution.replaceWith === child
-            //) !== undefined
-        //);
+    //const p = this.get(parent);
+    //return (
+    //p.composition.substitutions.find(
+    //substitution => substitution.replaceWith === child
+    //) !== undefined
+    //);
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     //isComponentOf(child: PID, parent: PID) {
-        //return (
-            //this.isDefaultOf(child, parent) ||
-            //this.isChoiceOf(child, parent) ||
-            //this.isOptionOf(child, parent) ||
-            //this.isSubstitutionOf(child, parent)
-        //);
+    //return (
+    //this.isDefaultOf(child, parent) ||
+    //this.isChoiceOf(child, parent) ||
+    //this.isOptionOf(child, parent) ||
+    //this.isSubstitutionOf(child, parent)
+    //);
     //}
 
     // TODO: Are notes a first class citizen in our universe?
     //isNote(pid: PID) {
-        //const item = this.get(pid);
-        //return item.note === true;
+    //const item = this.get(pid);
+    //return item.note === true;
     //}
 
     // TODO: Remove or decide this is a facade for RuleChecker
     //defaultQuantity(child: PID, parent: PID) {
-        //const p = this.get(parent);
-        //const component = p.composition.defaults.find(
-            //component => component.pid === child
-        //);
-        //if (component) {
-            //return component.defaultQuantity;
-        //} else {
-            //return 0;
-        //}
+    //const p = this.get(parent);
+    //const component = p.composition.defaults.find(
+    //component => component.pid === child
+    //);
+    //if (component) {
+    //return component.defaultQuantity;
+    //} else {
+    //return 0;
+    //}
     //}
 }

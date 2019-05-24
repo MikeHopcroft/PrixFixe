@@ -24,14 +24,17 @@ const genericTypedEntityFactory = (
     matrix: MID,
     kind: symbol
 ): GenericTypedEntity => {
-    return genericEntityFactory({
-        pid,
-        cid,
-        name,
-        aliases,
-        defaultKey,
-        matrix,
-    } as GenericEntity, kind);
+    return genericEntityFactory(
+        {
+            pid,
+            cid,
+            name,
+            aliases,
+            defaultKey,
+            matrix,
+        } as GenericEntity,
+        kind
+    );
 };
 
 const genericEntityMapFactory = (gens: GenericTypedEntity[]) => {
@@ -45,11 +48,51 @@ const genericEntityMapFactory = (gens: GenericTypedEntity[]) => {
 };
 
 const generics = [
-    genericTypedEntityFactory(8000, 100, 'cone', '8000:0:0', ['cone', 'ice cream [cone]'], 2, MENUITEM),
-    genericTypedEntityFactory(9000, 200, 'latte', '9000:0:0:0', ['latte'], 1, MENUITEM),
-    genericTypedEntityFactory(7000, 600, 'spinkles', '7000:2', ['sprinkle'], 4, OPTION),
-    genericTypedEntityFactory(5000, 500, 'milk', '5000:1', ['malk'], 3, MODIFIER),
-    genericTypedEntityFactory(6000, 700, 'drizzle', '6000:0:1', ['drizz'], 5, OPTION),
+    genericTypedEntityFactory(
+        8000,
+        100,
+        'cone',
+        '8000:0:0',
+        ['cone', 'ice cream [cone]'],
+        2,
+        MENUITEM
+    ),
+    genericTypedEntityFactory(
+        9000,
+        200,
+        'latte',
+        '9000:0:0:0',
+        ['latte'],
+        1,
+        MENUITEM
+    ),
+    genericTypedEntityFactory(
+        7000,
+        600,
+        'spinkles',
+        '7000:2',
+        ['sprinkle'],
+        4,
+        OPTION
+    ),
+    genericTypedEntityFactory(
+        5000,
+        500,
+        'milk',
+        '5000:1',
+        ['malk'],
+        3,
+        MODIFIER
+    ),
+    genericTypedEntityFactory(
+        6000,
+        700,
+        'drizzle',
+        '6000:0:1',
+        ['drizz'],
+        5,
+        OPTION
+    ),
 ];
 
 const genericMap = genericEntityMapFactory(generics);
@@ -158,7 +201,9 @@ describe('RuleChecker', () => {
 
         it('Invalid children evaluate to false', () => {
             // Sprinkles cannot be in an iced latte
-            assert.isFalse(ruleChecker.isValidChild(latteIcedKey, sprinklesKey));
+            assert.isFalse(
+                ruleChecker.isValidChild(latteIcedKey, sprinklesKey)
+            );
         });
 
         it('Invalid children evaluate to false', () => {
@@ -196,7 +241,7 @@ describe('RuleChecker', () => {
             );
         });
 
-        const failSetTwo = [ soyMilkKey, twoMilkKey];
+        const failSetTwo = [soyMilkKey, twoMilkKey];
 
         const failSetThree = [soyMilkKey, wholeMilkKey];
 
@@ -204,33 +249,51 @@ describe('RuleChecker', () => {
 
         it('Cannot have two items from a mutually exclusive set.', () => {
             assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteHotKey, failSetTwo.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteHotKey,
+                    failSetTwo.values()
+                )
             );
         });
         it('Cannot have two items from a mutually exclusive set.', () => {
             assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteHotKey, failSetThree.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteHotKey,
+                    failSetThree.values()
+                )
             );
         });
         it('Cannot have two items from a mutually exclusive set.', () => {
             assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteHotKey, failSetFour.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteHotKey,
+                    failSetFour.values()
+                )
             );
         });
 
         it('Cannot have two items from a mutually exclusive set.', () => {
             assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetTwo.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteIcedKey,
+                    failSetTwo.values()
+                )
             );
         });
         it('Cannot have two items from a mutually exclusive set.', () => {
             assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetThree.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteIcedKey,
+                    failSetThree.values()
+                )
             );
         });
         it('Cannot have two items from a mutually exclusive set.', () => {
             assert.isTrue(
-                ruleChecker.isMutuallyExclusive(latteIcedKey, failSetFour.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteIcedKey,
+                    failSetFour.values()
+                )
             );
         });
 
@@ -242,17 +305,26 @@ describe('RuleChecker', () => {
 
         it('Individual items can exist by themselves', () => {
             assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteHotKey, successSet.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteHotKey,
+                    successSet.values()
+                )
             );
         });
         it('Individual items can exist by themselves', () => {
             assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteHotKey, successSetTwo.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteHotKey,
+                    successSetTwo.values()
+                )
             );
         });
         it('Individual items can exist by themselves', () => {
             assert.isFalse(
-                ruleChecker.isMutuallyExclusive(latteHotKey, successSetThree.values())
+                ruleChecker.isMutuallyExclusive(
+                    latteHotKey,
+                    successSetThree.values()
+                )
             );
         });
 

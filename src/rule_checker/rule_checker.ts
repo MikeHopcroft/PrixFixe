@@ -5,13 +5,13 @@ import { RuleCheckerOps, RuleConfig, QuantityInformation } from './interfaces';
 import {
     ValidChildTensor,
     ValidChildPredicate,
-    childTensorFactory
+    childTensorFactory,
 } from './child_tensor';
 
 import {
     ExclusionTensor,
     MutualExclusionZone,
-    mutualExclusionTensorFactory
+    mutualExclusionTensorFactory,
 } from './exclusion_map';
 
 import { QuantityMap, QuantityTensor, quantityTensorFactory } from './quantity';
@@ -32,7 +32,6 @@ export class RuleChecker implements RuleCheckerOps {
         this.mutualTensor = mutualExclusionTensorFactory(ruleSet, genericMap);
         this.quantityTensor = quantityTensorFactory(ruleSet, genericMap);
     }
-
 
     private tensorWalker = (key: KEY, tensor: Tensor): Predicate[] => {
         const predicates: Predicate[] = [];
@@ -68,7 +67,7 @@ export class RuleChecker implements RuleCheckerOps {
         // Evaulate each predicate and take the logical-or
         const result = predicates
             .map(predicate => predicate(child))
-            .reduce((x, y): boolean =>  x || y);
+            .reduce((x, y): boolean => x || y);
 
         return result;
     };
@@ -95,7 +94,7 @@ export class RuleChecker implements RuleCheckerOps {
                     // Add any zone that doesn't exist yet
                     if (!exSet.has(cid)) {
                         exSet.add(cid);
-                    // If we've seen a zone before, then the set is exclusive
+                        // If we've seen a zone before, then the set is exclusive
                     } else {
                         return true;
                     }
@@ -109,7 +108,7 @@ export class RuleChecker implements RuleCheckerOps {
     private getQuanitityInfo = (
         par: KEY,
         child: KEY
-    ): (QuantityInformation | undefined) => {
+    ): QuantityInformation | undefined => {
         const upstreamAtts = par.split(':');
         const downstreamAtts = par.split(':').reverse();
 
@@ -122,7 +121,6 @@ export class RuleChecker implements RuleCheckerOps {
             if (map) {
                 if (map(child, downstream!)) {
                     return map(child, downstream!);
-
                 } else if (map(child, '')) {
                     return map(child, '');
                 }
@@ -130,7 +128,7 @@ export class RuleChecker implements RuleCheckerOps {
         }
 
         return undefined;
-    }
+    };
 
     // See `RuleCheckerOps for docs
     getDefaultQuantity = (par: KEY, child: KEY): number => {
@@ -148,8 +146,8 @@ export class RuleChecker implements RuleCheckerOps {
         const quantityInfo = this.getQuanitityInfo(par, child);
 
         if (quantityInfo) {
-            const result = qty >= quantityInfo.minQty
-                        && qty <= quantityInfo.maxQty;
+            const result =
+                qty >= quantityInfo.minQty && qty <= quantityInfo.maxQty;
 
             return result;
         }

@@ -62,7 +62,7 @@ export class AttributeInfo {
             if (this.attributeIdToCoordinate.has(attribute.aid)) {
                 const message = `found duplicate attribute pid ${
                     attribute.aid
-                    }.`;
+                }.`;
                 throw new TypeError(message);
             }
             this.attributeIdToCoordinate.set(attribute.aid, {
@@ -119,10 +119,7 @@ export class AttributeInfo {
     // Given a map from dimensionId to attributeId, return a number that
     // represents those set of attribute values associated Dimensions of
     // this Matrix.
-    getKey(
-        pid: PID,
-        dimensionIdToAttribute: Map<DID, AID>
-    ): string {
+    getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
         const matrix = this.getMatrixForEntity(pid);
         const key = [pid];
         let attributeIndex = 1;
@@ -148,7 +145,7 @@ export class AttributeInfo {
         return Number(defaultKey.split(':')[index]) as AID;
     }
 
-    static hasDimension(matrix:Matrix, did: DID): boolean {
+    static hasDimension(matrix: Matrix, did: DID): boolean {
         for (const dimension of matrix.dimensions) {
             if (dimension.id === did) {
                 return true;
