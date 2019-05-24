@@ -1,13 +1,11 @@
 import * as path from 'path';
 
 import {
+    AID,
     Cart,
     Catalog,
     setup,
 } from '../src/';
-import {
-    testCart
-} from '../test/';
 
 interface State {
     cart: Cart;
@@ -37,7 +35,11 @@ function go(debugMode: boolean) {
     console.log('\n##### CURRENT CART #####');
     printCart(state.cart);
 
-    state.cart = testCart;
+    const icedDecafAIDs = new Set<AID>([9,11,]);
+    const icedDecafSmallLatte = attributeOps.createItemInstance(9000, icedDecafAIDs);
+    if (icedDecafSmallLatte !== undefined) {
+        state.cart.items.push(icedDecafSmallLatte);
+    }
     console.log('\n##### CURRENT CART #####');
     printCart(state.cart);
 
