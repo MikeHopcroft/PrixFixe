@@ -2,11 +2,9 @@
 // Type aliases to keep various concepts delineated.
 ///////////////////////////////////////////////////////////////////////////////
 export type CID = number;
-export type DID = number;
+export type MID = number;
 export type PID = number;
 export type SKU = number;
-
-export type MatrixID = number;
 export type KEY = string;
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -22,7 +20,7 @@ export interface GenericEntity extends Entity {
     cid: CID; // While knowing a menu item's catagory may not help us,
     // it would be nice to have all entities have the same
     aliases: string[];
-    matrix: MatrixID;
+    matrix: MID;
     defaultKey: KEY;
 }
 

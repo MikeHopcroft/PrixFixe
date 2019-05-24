@@ -8,8 +8,8 @@ import {
     CID,
     OPTION,
     MENUITEM,
+    MID,
     MODIFIER,
-    MatrixID,
     GenericEntity,
     GenericTypedEntity,
     genericEntityFactory,
@@ -21,7 +21,7 @@ const genericTypedEntityFactory = (
     name: string,
     defaultKey: KEY,
     aliases: string[],
-    matrix: MatrixID,
+    matrix: MID,
     kind: symbol
 ): GenericTypedEntity => {
     return genericEntityFactory({

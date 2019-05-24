@@ -1,6 +1,6 @@
-import { Dimension } from './dimension';
+import { MID } from '../catalog';
 
-export type MID = number;
+import { Dimension } from './dimension';
 
 // Represents a configuration matrix consisting of a set of Dimensions
 // each of which corresponds to a set of Attributes.

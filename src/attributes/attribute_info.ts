@@ -1,8 +1,8 @@
-import { Catalog, DID, GenericTypedEntity, KEY, PID } from '../catalog';
-import { MID } from '../attributes';
+import { DID } from '../attributes';
+import { Catalog, GenericTypedEntity, KEY, MID, PID } from '../catalog';
 
 import { Dimension } from './dimension';
-import { AID, Attributes, MatrixDescription } from './interfaces';
+import { AID, Attributes } from './interfaces';
 import { Matrix } from './matrix';
 
 // The (dimension, position) coordinates of an attribute within a Matrix.
