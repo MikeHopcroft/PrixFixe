@@ -39,7 +39,7 @@ describe('Cart', () => {
         path.join(__dirname, '../../../samples/data/restaurant-en/rules.yaml'),
         false
     );
-    const {  attributeOps, attributes, cartOps, catalog } = world;
+    const { attributeOps, attributes, cartOps, catalog } = world;
     ///////////////////////////////////////////////////////////////////////////
     //
     //  CartUtils
@@ -185,11 +185,69 @@ describe('Cart', () => {
     //
     ///////////////////////////////////////////////////////////////////////////
     it('createItemInstance()', () => {
-        const pid: PID = 3;
-        const attributes = new Set<AID>([1, 2, 3,]);
+        // Some PID that maps to a generic item.
+        const pid: PID = 9000;
+        // A set of AIDs that represent the "iced" and "decaf" attributes
+        // of a  small iced decaf latte.
+        const attributes = new Set<AID>([9,11,]);
 
-        const resItem: ItemInstance | undefined = attributeOps.createItemInstance(pid,
-            attributes);
+        const resItem: ItemInstance | undefined =
+            attributeOps.createItemInstance(pid, attributes);
+
+        const expectedItem: ItemInstance = {
+            // UID count starts at 1, this will be the 4th item since there are
+            // 3 children.
+            uid: 4,
+            pid: 9000,
+            key: '9000:0:1:2',
+            name: 'iced decaf small latte',
+            quantity: 1,
+            // These are added by increasing order of DID.
+            children: [
+                // From did = 1
+                {
+                    "aliases": [
+                        "iced",
+                    ],
+                    "children": [],
+                    // TODO: Where do we get key from?
+                    "key": "0",
+                    "name": "iced",
+                    "pid": 11,
+                    "quantity": 1,
+                    "uid": 1,
+                },
+                // From did = 3
+                {
+                    "aliases": [
+                        "decaf",
+                        "decaffeinated",
+                    ],
+                    "children": [],
+                    "key": "1",
+                    "name": "decaf",
+                    "pid": 9,
+                    "quantity": 1,
+                    "uid": 2,
+                },
+                // From did = 4
+                {
+                    "aliases": [
+                        "small",
+                    ],
+                    "children": [],
+                    "key": "2",
+                    "name": "small",
+                    "pid": 1,
+                    "quantity": 1,
+                    "uid": 3,
+                },
+            ],
+            aliases: [
+                'latte',
+            ],
+        };
+        expect(resItem).to.deep.equal(expectedItem);
     });
 });
 

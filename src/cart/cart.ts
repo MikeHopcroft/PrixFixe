@@ -1,5 +1,6 @@
 import {
     AID,
+    AttributeItem,
     AttributeUtilities,
     Cart,
     CartOps,
@@ -8,7 +9,6 @@ import {
     ItemInstance,
     KEY,
     PID,
-    UID,
 } from '../';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ export class CartUtils implements CartOps {
     }
 }
 
-import { AttributeInfo, MatrixEntityBuilder, } from '../';
+import { AttributeInfo, Dimension, } from '../';
 ///////////////////////////////////////////////////////////////////////////////
 //
 // AttributeUtils
@@ -248,15 +248,15 @@ import { AttributeInfo, MatrixEntityBuilder, } from '../';
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class AttributeUtils implements AttributeUtilities {
-    private readonly atrInfo: AttributeInfo;
+    private readonly attributeInfo: AttributeInfo;
     private readonly catalog: Catalog;
     private readonly idGenerator: IDGenerator;
     //
     // Operations involving Attributes.
     //
 
-    constructor(catalog: Catalog, idGenerator: IDGenerator, atrInfo: AttributeInfo) {
-        this.atrInfo = atrInfo;
+    constructor(catalog: Catalog, idGenerator: IDGenerator, attributeInfo: AttributeInfo) {
+        this.attributeInfo = attributeInfo;
         this.catalog = catalog;
         this.idGenerator = idGenerator;
     }
@@ -272,48 +272,104 @@ export class AttributeUtils implements AttributeUtilities {
     // Use case: pass in the GPID for the generic 'latte' product along with
     // attributes like 'large' and 'iced' in order to get the SPID for the
     // specific product 'large iced latte'.
-    // TODO: ISSUE: throw or return undefined?
-    // TODO: IMPLEMENT
-    createItemInstance(pid: PID, attributeIDs: Set<AID>): ItemInstance | undefined {
+    // ISSUE: throw or return undefined?
+    createItemInstance(pid: PID, attributeIDs: Set<AID>):
+        ItemInstance | undefined {
         if (this.catalog.hasPID(pid)) {
             const parent = this.catalog.getGeneric(pid);
 
-            // Create the key by appending the PID, and one coordinate for each
-            // dimension.
-            // TODO: Generate key from MEB.
-            const key: KEY = String(pid);
+            const parentMatrix =
+                this.attributeInfo.getMatrixForEntity(parent.pid);
 
-            const builder = new MatrixEntityBuilder(this.atrInfo, this.catalog);
+            // The key starts as the PID, but will have AIDs appended to it.
+            let itemKey: KEY = String(pid);
 
-            // TODO: Create the children from the set of AIDs.
-            const children: [] = [];
-            for (const attributeID of attributeIDs) {
-                // Add attribute should return the attribute | undefin rather
-                // than a boolean.
-                const attribute = builder.addAttribute(attributeID);
-                // Can't push attribute since it returns a booelan.
-                // children.push(attribute)
+            // Append attribute names together to ultimately get the specific
+            // product's name.
+            let attributeNames = '';
+
+            // An index holds the default values for attributes. E.g. [0,0,0]
+            const defaultAttributeKeys = parent.defaultKey.split(':').splice(1);
+
+            // Store any attributes converted to ItemInstances.
+            const attributes: ItemInstance[] = [];
+
+            // Instead of looking at AIDs that have been passed in, we look at
+            // the number of dimensions that the defaultKey has. Any dimension
+            // that does not map to a passed attribute will default.
+            for (const dimension of parentMatrix.dimensions) {
+
+                const dimensionIndex = parentMatrix.dimensions.indexOf(dimension);
+
+                // Sets resAttribute if an AID has been passed in for the
+                // particular dimension.
+                let resAttribute: AttributeItem | undefined = this.getAttribute(
+                    attributeIDs, dimension);
+
+                // If the previous call returned undefined, no attributes
+                // belong to the current dimension. Instead, find the default
+                // attribute.
+                if (resAttribute === undefined) {
+                    const defaultAttributeIndex = Number(
+                        defaultAttributeKeys[dimensionIndex]);
+
+                    resAttribute = dimension.attributes[defaultAttributeIndex];
+                }
+
+                // Create an ItemInstance from the AttributeItem, then add it
+                // to attributes.
+                if (resAttribute !== undefined) {
+                    const dimensionKey: KEY = (dimensionIndex).toString();
+
+                    const resAttributeItem: ItemInstance = {
+                        pid: resAttribute.aid,
+                        name: resAttribute.name,
+                        aliases: resAttribute.aliases,
+                        uid: this.idGenerator.nextId(),
+                        key: dimensionKey,
+                        quantity: 1, // ISSUE: Default to 1 for now.
+                        children: [],
+                    };
+                    attributeNames += resAttribute.name + ' ';
+                    attributes.push(resAttributeItem);
+
+                    // Assemble a key for a specific product.
+                    itemKey += ':' + resAttributeItem.key;
+                }
             }
 
+            parent.name = attributeNames + parent.name;
             const newItem: ItemInstance = {
                 pid,
                 name: parent.name,
                 aliases: parent.aliases,
                 uid: this.idGenerator.nextId(),
-                key,
+                key: itemKey,
                 quantity: 1, // ISSUE: Default to 1 for now.
-                children,
+                children: attributes,
             };
+
             return newItem;
         }
-
-        // If an attribute is not assosciated with the gpid, ignore it.
-
-        // When there is no attribute for a particular dimension, the menu's
-        // default attribute id is used.
-
-        // Returns the specific product id for a generic product, configured by
-        // a set of attributes.
         return undefined;
+    }
+
+    // TODO: This is a bit lazy right now. If there are multiple matching
+    //       AIDs, then the first 0 through n attributes will be overwritten.
+    //       In that case - what's the desired behavior?
+    getAttribute(attributeIDs: Set<AID>, dimension: Dimension)
+        : AttributeItem | undefined {
+        let resAttribute: AttributeItem | undefined = undefined;
+
+        for (const attribute of dimension.attributes) {
+            // Check if the current dimension contains an attribute
+            // with an AID that is also in the set of attributeIDs.
+            if (attributeIDs.has(attribute.aid)) {
+                resAttribute = attribute;
+            }
+        }
+        // ISSUE: Do we want to throw or return undefined here?
+        // throw new Error(`Attribute ID ${attributeID} is not in the catalog.`);
+        return resAttribute;
     }
 }

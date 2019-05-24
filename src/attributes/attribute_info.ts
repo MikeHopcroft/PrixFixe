@@ -69,7 +69,7 @@ export class AttributeInfo {
             if (this.attributeIdToCoordinate.has(attribute.aid)) {
                 const message = `found duplicate attribute pid ${
                     attribute.aid
-                }.`;
+                    }.`;
                 throw new TypeError(message);
             }
             this.attributeIdToCoordinate.set(attribute.aid, {

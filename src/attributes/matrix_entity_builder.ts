@@ -61,7 +61,7 @@ export class MatrixEntityBuilder {
         return matrix.getKey(
             this.pid,
             this.dimensionIdToAttribute,
-            this.info,
+            this.info
         );
     }
 

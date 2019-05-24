@@ -229,6 +229,7 @@ const smallIcedDecafcoffee: SpecificTypedEntity = {
     key: '9000:0:1:1',
     kind: MENUITEM,
 };
+
 const mediumcoffee: SpecificTypedEntity = {
     sku: 9005,
     name: 'medium coffee',
@@ -271,6 +272,7 @@ const specificItems: SpecificTypedEntity[] = [
     mediumIcedcoffee,
     mediumIcedDecafcoffee,
 ];
+
 const specificItemsIterator: IterableIterator<SpecificTypedEntity> =
     specificGenerator(specificItems);
 

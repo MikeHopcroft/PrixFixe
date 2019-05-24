@@ -21,7 +21,7 @@ function go(debugMode: boolean) {
         path.join(__dirname, '../../samples/data/restaurant-en/modifiers.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/attributes.yaml'),
         path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
-        debugMode,
+        debugMode
     );
     const { attributeOps, attributes, catalog, cartOps } = world;
 
