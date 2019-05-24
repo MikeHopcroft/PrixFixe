@@ -23,13 +23,12 @@ export class AttributeInfo {
         AttributeCoordinate
     >();
     private readonly matrixIdToMatrix = new Map<PID, Matrix>();
-    // private readonly entityIdToMatrix = new Map<PID, Matrix>();
 
-    static factory(catalog: Catalog, attributes: Attributes): AttributeInfo {
-        const info = new AttributeInfo(catalog);
+    constructor(catalog: Catalog, attributes: Attributes) {
+        this.catalog = catalog;
 
         for (const dimension of attributes.dimensions) {
-            info.addDimension(
+            this.addDimension(
                 new Dimension(dimension.did, dimension.items.values())
             );
         }
@@ -38,33 +37,15 @@ export class AttributeInfo {
             // TODO: check for bad/unknown `did`.
             const dimensions: Dimension[] = [];
             for (const did of matrix.dimensions) {
-                const dimension = info.dimensionIdToDimension.get(did);
+                const dimension = this.dimensionIdToDimension.get(did);
                 if (!dimension) {
-                    const message = `unknown dimension ${did}.`;
+                    const message = `unknown dimension id ${did}.`;
                     throw TypeError(message);
                 }
                 dimensions.push(dimension);
             }
-            info.addMatrix(new Matrix(matrix.mid, dimensions, catalog));
+            this.addMatrix(new Matrix(matrix.mid, dimensions));
         }
-
-        // for (const item of catalog.mapGeneric.values()) {
-        //     if (item.matrix) {
-        //         info.addGenericEntity(item.pid, item.matrix);
-        //     }
-        // }
-
-        return info;
-    }
-
-    // TODO: can we move factory methods into constructor?
-    // Constructor private to force users to initialize via factory.
-    private constructor(catalog: Catalog) {
-        this.catalog = catalog;
-    }
-
-    getDimension(did: DID): Dimension | undefined {
-        return this.dimensionIdToDimension.get(did);
     }
 
     // Indexes a Dimension and its Attributes.
@@ -101,26 +82,16 @@ export class AttributeInfo {
         this.matrixIdToMatrix.set(matrix.id, matrix);
     }
 
-    // // Associates a genericEntity's PID with a matrix.
-    // private addGenericEntity(pid: PID, matrixId: PID) {
-    //     if (this.entityIdToMatrix.has(pid)) {
-    //         const message = `found duplicate entity id ${pid}.`;
-    //         throw new TypeError(message);
-    //     }
-    //     const matrix = this.matrixIdToMatrix.get(matrixId);
-    //     if (matrix) {
-    //         this.entityIdToMatrix.set(pid, matrix);
-    //     } else {
-    //         const message = `unknown matrix id ${matrixId}.`;
-    //         throw new TypeError(message);
-    //     }
-    // }
-
     // Lookup an AttributeCoordinate by AID. The Coordinate provides the
     // Attribute's Dimension (e.g. size) and its Position in the Dimension
     // (e.g. 0 ==> small).
-    getAttributeCoordinates(aid: AID): AttributeCoordinate | undefined {
-        return this.attributeIdToCoordinate.get(aid);
+    getAttributeCoordinates(aid: AID): AttributeCoordinate {
+        const coordinate = this.attributeIdToCoordinate.get(aid);
+        if (coordinate === undefined) {
+            const message = `Unknown attribute id ${aid}.`;
+            throw TypeError(message);
+        }
+        return coordinate;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -160,11 +131,6 @@ export class AttributeInfo {
                 attributeId = this.getDefaultAttribute(pid, attributeIndex);
             }
             const coordinate = this.getAttributeCoordinates(attributeId);
-            if (!coordinate) {
-                const message = `unknown attribute ${attributeId}.`;
-                throw TypeError(message);
-            }
-
             key.push(coordinate.position);
             attributeIndex++;
         }

@@ -42,7 +42,7 @@ export function setup(
 
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(fs.readFileSync(attributesFile, 'utf8'));
-    const attributeInfo = AttributeInfo.factory(catalog, attributes);
+    const attributeInfo = new AttributeInfo(catalog, attributes);
 
     const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
     const ruleChecker = new RuleChecker(ruleConfig, catalog.mapGeneric);

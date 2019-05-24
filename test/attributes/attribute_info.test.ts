@@ -191,7 +191,15 @@ const coffeeMatrixDescription: MatrixDescription = {
     dimensions: [ size, temperature, caffeine ],
 };
 
-const myAttributes: Attributes = {
+///////////////////////////////////////////////////////////////////////////////
+//  Attributes
+///////////////////////////////////////////////////////////////////////////////
+const emptyAttributes: Attributes = {
+    dimensions: [],
+    matrices: [],
+};
+
+const attributes: Attributes = {
     dimensions: [
         sizeDimensionDescription,
         flavorDimensionDescription,
@@ -218,14 +226,6 @@ const coffeeDimensions = [
     temperatureDimension,
     caffeineDimension,
 ];
-
-///////////////////////////////////////////////////////////////////////////////
-//  Attributes
-///////////////////////////////////////////////////////////////////////////////
-const emptyAttributes: Attributes = {
-    dimensions: [],
-    matrices: [],
-};
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -379,37 +379,13 @@ describe('Attribute Info', () => {
     describe('Matrix', () => {
         it('Constructor', () => {
             const anyMatrixId: MID = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions, catalog);
+            const matrix = new Matrix(anyMatrixId, softServeDimensions);
 
             assert.equal(matrix.id, anyMatrixId);
             assert.deepEqual(matrix.dimensions, softServeDimensions);
         });
     });
 
-    it('getKey()', () => {
-        // const anyMatrixId: MID = 123;
-        // const matrix = new Matrix(anyMatrixId, softServeDimensions, catalog);
-
-        const info = AttributeInfo.factory(catalog, myAttributes);
-        // for (const dimension of softServeDimensions) {
-        //     info['addDimension'](dimension);
-        // }
-
-        const dimensionIdToAttribute = new Map<DID, AID>();
-        dimensionIdToAttribute.set(size, sizeMedium);
-        dimensionIdToAttribute.set(flavor, flavorVanilla);
-
-        const genericConePID = 8000;
-
-        // anyEntityId:   8000
-        //      medium:   1
-        //     vanilla:   0
-        //         key:   8000:1:0
-        assert.equal(
-            info.getKey(genericConePID, dimensionIdToAttribute),
-            '8000:1:0'
-        );
-    });
 
     ///////////////////////////////////////////////////////////////////////////
     //
@@ -418,7 +394,7 @@ describe('Attribute Info', () => {
     ///////////////////////////////////////////////////////////////////////////
     describe('AttributeInfo', () => {
         it('addDimension()', () => {
-            const info = AttributeInfo.factory(catalog, emptyAttributes);
+            const info = new AttributeInfo(catalog, emptyAttributes);
 
             info['addDimension'](softServeDimensions[0]);
             info['addDimension'](softServeDimensions[1]);
@@ -443,9 +419,6 @@ describe('Attribute Info', () => {
                     aid: flavorChocolate,
                     coordinate: { dimension: flavorDimension, position: 1 },
                 },
-
-                // Unknown attribute
-                { aid: unknownPID, coordinate: undefined },
             ];
 
             for (const test of cases) {
@@ -456,7 +429,7 @@ describe('Attribute Info', () => {
         });
 
         it('addDimension() - exceptions', () => {
-            const info = AttributeInfo.factory(catalog, emptyAttributes);
+            const info = new AttributeInfo(catalog, emptyAttributes);
             info['addDimension'](softServeDimensions[0]);
 
             // Attempt adding a dimension with the same id.
@@ -471,10 +444,10 @@ describe('Attribute Info', () => {
         });
 
         it('addMatrix()', () => {
-            const info = AttributeInfo.factory(catalog, emptyAttributes);
+            const info = new AttributeInfo(catalog, emptyAttributes);
 
             const anyMatrixId: MID = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions, catalog);
+            const matrix = new Matrix(anyMatrixId, softServeDimensions);
 
             info['addMatrix'](matrix);
 
@@ -482,41 +455,24 @@ describe('Attribute Info', () => {
             assert.throws(f, 'found duplicate matrix id 123.');
         });
 
-    //     it('addGenericEntity()', () => {
-    //         const info = AttributeInfo.factory(emptyCatalog, emptyAttributes);
-
-    //         const softServeMatrixId: MID = 123;
-    //         const softServeMatrix = new Matrix(
-    //             softServeMatrixId,
-    //             softServeDimensions,
-    //             catalog
-    //         );
-    //         info['addMatrix'](softServeMatrix);
-
-    //         const coffeeMatrixId: MID = 456;
-    //         const coffeeMatrix = new Matrix(coffeeMatrixId, coffeeDimensions, catalog);
-    //         info['addMatrix'](coffeeMatrix);
-
-    //         // Attempt to reference a non-existant maxtrix.
-    //         const f1 = () => info['addGenericEntity'](1, unknownPID);
-    //         assert.throws(f1, 'unknown matrix id 9999.');
-
-    //         info['addGenericEntity'](1, softServeMatrixId);
-
-    //         // Attempt to add a duplicate entity.
-    //         const f2 = () => info['addGenericEntity'](1, unknownPID);
-    //         assert.throws(f2, 'found duplicate entity id 1.');
-
-    //         info['addGenericEntity'](2, coffeeMatrixId);
-
-    //         // Lookup entities with ids 1 and 2.
-    //         assert.equal(softServeMatrix, info.getMatrixForEntity(1));
-    //         assert.equal(coffeeMatrix, info.getMatrixForEntity(2));
-
-    //         // Attempt to lookup non-existant entity.
-    //         const f3 = () => info.getMatrixForEntity(unknownPID);
-    //         assert.throws(f3, 'GenericEntity(pid=9999) has no matrix.');
-    //     });
+        it('getKey()', () => {
+            const info = new AttributeInfo(catalog, attributes);
+    
+            const dimensionIdToAttribute = new Map<DID, AID>();
+            dimensionIdToAttribute.set(size, sizeMedium);
+            dimensionIdToAttribute.set(flavor, flavorVanilla);
+    
+            const genericConePID = 8000;
+    
+            // genericConePID:   8000
+            //         medium:   1
+            //        vanilla:   0
+            //            key:   8000:1:0
+            assert.equal(
+                info.getKey(genericConePID, dimensionIdToAttribute),
+                `${genericConePID}:1:0`
+            );
+        });    
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -528,7 +484,7 @@ describe('Attribute Info', () => {
         it('Constructor', () => { });
 
         it('hasPID()/setPID()', () => {
-            const info = AttributeInfo.factory(catalog, myAttributes);
+            const info = new AttributeInfo(catalog, attributes);
             const builder = new MatrixEntityBuilder(info, catalog);
 
             // Haven't added an entity yet.
@@ -544,15 +500,13 @@ describe('Attribute Info', () => {
         });
 
         it('addAttribute()', () => {
-            const info = AttributeInfo.factory(catalog, myAttributes);
-            // info['addDimension'](softServeDimensions[0]);
-            // info['addDimension'](softServeDimensions[1]);
+            const info = new AttributeInfo(catalog, attributes);
 
             const builder = new MatrixEntityBuilder(info, catalog);
 
             const f = () =>
                 builder.addAttribute(unknownPID);
-            assert.throws(f, 'unknown attribute 9999.');
+            assert.throws(f, 'Unknown attribute id 9999.');
 
             // First time adding a size should succeed.
             assert.isTrue(builder.addAttribute(sizeSmall));
@@ -565,36 +519,10 @@ describe('Attribute Info', () => {
         });
 
         it('getKey()', () => {
-            const info = AttributeInfo.factory(catalog, myAttributes);
-            // info['addDimension'](softServeDimensions[0]);
-            // info['addDimension'](softServeDimensions[1]);
-
-            // const softServeMatrixId: MID = 123;
-            // const softServeMatrix = new Matrix(
-            //     softServeMatrixId,
-            //     softServeDimensions,
-            //     catalog
-            // );
-            // info['addMatrix'](softServeMatrix);
-
-            // // Configure with a generic ice cream cone item.
+            const info = new AttributeInfo(catalog, attributes);
 
             // TODO: this should not hard code 8000 here or below.
-            const cone: PID = 8000;
-
-            // info['addGenericEntity'](cone, softServeMatrixId);
-
-            // // Configure with a specific `medium vanilla cone`.
-            // const mediumVanillaCone = 500;
-            // info['addSpecificEntity'](mediumVanillaCone, '8000:1:0');
-
-            // // Configure with a specific `medium chocolate cone`.
-            // const mediumChocolateCone = 501;
-            // info['addSpecificEntity'](mediumChocolateCone, '8000:1:1');
-
-            // // Configure with a specific `small chocolate cone`.
-            // const smallChocolateCone = 502;
-            // info['addSpecificEntity'](smallChocolateCone, '8000:0:1');
+            const genericConePID: PID = 8000;
 
             const builder = new MatrixEntityBuilder(info, catalog);
 
@@ -603,16 +531,16 @@ describe('Attribute Info', () => {
             assert.throws(f, 'no pid set');
 
             // Add a cone entity.
-            builder.setPID(cone);
+            builder.setPID(genericConePID);
 
             // All attributes are default.
             assert.equal(builder.getKey(), '8000:0:0');
 
-            // Allow size to default, add flavor=chocolate.
+            // Allow size to default, add flavor = chocolate.
             builder.addAttribute(flavorChocolate);
             assert.equal(builder.getKey(), '8000:0:1');
 
-            // Add size=medium, flavor is still chocolate.
+            // Add size = medium, flavor is still chocolate.
             builder.addAttribute(sizeMedium);
             assert.equal(builder.getKey(), '8000:1:1');
         });

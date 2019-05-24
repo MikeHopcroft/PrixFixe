@@ -38,10 +38,7 @@ export class MatrixEntityBuilder {
 
     addAttribute(aid: AID): boolean {
         const coordinate = this.info.getAttributeCoordinates(aid);
-        if (!coordinate) {
-            const message = `unknown attribute ${aid}.`;
-            throw TypeError(message);
-        } else if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
+        if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
             return false;
         } else {
             this.dimensionIdToAttribute.set(
@@ -56,7 +53,6 @@ export class MatrixEntityBuilder {
         if (this.pid === undefined) {
             throw TypeError(`no pid set`);
         }
-//        const matrix: Matrix = this.info.getMatrixForEntity(this.pid);
 
         return this.info.getKey(
             this.pid,
