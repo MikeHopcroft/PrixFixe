@@ -3,7 +3,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 export type CID = number;
 export type DID = number;
-export type MID = number;
 export type PID = number;
 export type SKU = number;
 

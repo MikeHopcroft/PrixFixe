@@ -379,7 +379,7 @@ describe('Attribute Info', () => {
     describe('Matrix', () => {
         it('Constructor', () => {
             const anyMatrixId: MID = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions);
+            const matrix = { id: anyMatrixId, dimensions: softServeDimensions };
 
             assert.equal(matrix.id, anyMatrixId);
             assert.deepEqual(matrix.dimensions, softServeDimensions);
@@ -447,7 +447,7 @@ describe('Attribute Info', () => {
             const info = new AttributeInfo(catalog, emptyAttributes);
 
             const anyMatrixId: MID = 123;
-            const matrix = new Matrix(anyMatrixId, softServeDimensions);
+            const matrix: Matrix = { mid: anyMatrixId, dimensions: softServeDimensions };
 
             info['addMatrix'](matrix);
 

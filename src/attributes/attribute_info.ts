@@ -1,7 +1,8 @@
-import { Catalog, DID, GenericTypedEntity, KEY, MID, PID } from '../catalog';
+import { Catalog, DID, GenericTypedEntity, KEY, PID } from '../catalog';
+import { MID } from '../attributes';
 
 import { Dimension } from './dimension';
-import { AID, Attributes } from './interfaces';
+import { AID, Attributes, MatrixDescription } from './interfaces';
 import { Matrix } from './matrix';
 
 // The (dimension, position) coordinates of an attribute within a Matrix.
@@ -44,7 +45,7 @@ export class AttributeInfo {
                 }
                 dimensions.push(dimension);
             }
-            this.addMatrix(new Matrix(matrix.mid, dimensions));
+            this.addMatrix({ mid: matrix.mid, dimensions });
         }
     }
 
@@ -75,11 +76,11 @@ export class AttributeInfo {
 
     // Indexes a Matrix.
     private addMatrix(matrix: Matrix) {
-        if (this.matrixIdToMatrix.has(matrix.id)) {
-            const message = `found duplicate matrix id ${matrix.id}.`;
+        if (this.matrixIdToMatrix.has(matrix.mid)) {
+            const message = `found duplicate matrix id ${matrix.mid}.`;
             throw new TypeError(message);
         }
-        this.matrixIdToMatrix.set(matrix.id, matrix);
+        this.matrixIdToMatrix.set(matrix.mid, matrix);
     }
 
     // Lookup an AttributeCoordinate by AID. The Coordinate provides the
