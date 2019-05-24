@@ -44,7 +44,8 @@
                 "--timeout",
                 "999999",
                 "--colors",
-                "${workspaceFolder}/build/test/"
+                "--recursive",
+                "build/test/**/*.js"
             ],
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"
