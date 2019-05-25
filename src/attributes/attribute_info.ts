@@ -159,7 +159,7 @@ export class AttributeInfo {
     }
 
     getAttributes(key: KEY): AID[] {
-        const fields = key.split(':').map(parseInt);
+        const fields = key.split(':').map(parseBase10Int);
         const pid = fields[0];
         const matrix = this.getMatrixForEntity(pid);
 
@@ -191,4 +191,8 @@ export class AttributeInfo {
 
         return pid;
     }
+}
+
+function parseBase10Int(text: string) {
+    return Number.parseInt(text, 10);
 }

@@ -12,7 +12,17 @@ import {
     smallWorldCatalog,
     soyMilk,
     wholeMilk,
+    mediumIcedDecafCoffee,
+    genericcoffee,
+    genericCone,
+    genericCoffeePID,
+    sizeMedium,
+    caffeineDecaf,
+    temperatureCold,
+    sizeSmall,
+    smallIcedDecafCoffee,
 } from '../shared';
+import { WSAEHOSTDOWN } from 'constants';
 
 const sampleCart: Cart = {
     items: [
@@ -72,7 +82,7 @@ const attributeInfo = new AttributeInfo(
 const ops: CartOps2 = new CartOps2(attributeInfo, smallWorldCatalog);
 
 describe('CartOps2', () => {
-    describe('Adding ItemInstanves', () => {
+    describe('Adding ItemInstances', () => {
         it('Add to Cart', () => {
             let cart: Cart = { items: [] };
 
@@ -100,7 +110,7 @@ describe('CartOps2', () => {
         });
     });
 
-    describe('Replacing ItemInstanves', () => {
+    describe('Replacing ItemInstances', () => {
         it('replaceInCart', () => {
             // The first item in sampleCart is a smallVanillaCone with UID 1.
             // Attempt to replace it with a smallChocolateCone.
@@ -134,7 +144,107 @@ describe('CartOps2', () => {
         });
     });
 
-    describe('Removing ItemInstanves', () => {
-        it('removeFromCart', () => {});
+    describe('Removing ItemInstances', () => {
+        it('removeFromCart', () => {
+            const remove1 = sampleCart.items[1].children[0];
+            const remove2 = sampleCart.items[1];
+            const remove3 = sampleCart.items[2];
+            const remove4 = sampleCart.items[0];
+
+            const cart1 = ops.removeFromCart(sampleCart, remove1);
+            assert.deepEqual(cart1.items, [
+                sampleCart.items[0],
+                { ...sampleCart.items[1], children: [] },
+                sampleCart.items[2],
+            ]);
+
+            const cart2 = ops.removeFromCart(cart1, remove2);
+            assert.deepEqual(cart2.items, [
+                sampleCart.items[0],
+                sampleCart.items[2],
+            ]);
+
+            const cart3 = ops.removeFromCart(cart2, remove3);
+            assert.deepEqual(cart3.items, [sampleCart.items[0]]);
+
+            const cart4 = ops.removeFromCart(cart3, remove4);
+            assert.deepEqual(cart4.items, []);
+        });
+    });
+
+    describe('ItemInstance operations', () => {
+        it('createItem', () => {
+            const pid = genericCoffeePID;
+            const quantity = 5;
+            const aids = [sizeMedium, caffeineDecaf];
+            const child: ItemInstance = {
+                uid: 9999,
+                quantity: 2,
+                key: wholeMilk.key,
+                children: [],
+            };
+
+            const item = ops.createItem(
+                quantity,
+                pid,
+                aids.values(),
+                [child].values()
+            );
+
+            // Use value of 1 for UIDs since we don't know what UID to expect.
+            assert.deepEqual(
+                { ...item, uid: 1 },
+                {
+                    uid: 1,
+                    key: mediumDecafCoffee.key,
+                    quantity,
+                    children: [child],
+                }
+            );
+        });
+
+        it('UIDs are unique', () => {
+            const pid = genericCoffeePID;
+            const quantity = 5;
+            const aids = [sizeMedium, caffeineDecaf];
+
+            const item1 = ops.createItem(
+                quantity,
+                pid,
+                aids.values(),
+                [].values()
+            );
+            const item2 = ops.createItem(
+                quantity,
+                pid,
+                aids.values(),
+                [].values()
+            );
+
+            assert.equal(item1.uid + 1, item2.uid);
+        });
+
+        it('changeItemAttributes', () => {
+            const original = {
+                uid: 1,
+                key: mediumDecafCoffee.key,
+                quantity: 5,
+                children: [],
+            };
+
+            const observed = ops.changeItemAttributes(
+                original,
+                [temperatureCold, sizeSmall].values()
+            );
+
+            const expected = {
+                uid: 1,
+                key: smallIcedDecafCoffee.key,
+                quantity: 5,
+                children: [],
+            };
+
+            assert.deepEqual(observed, expected);
+        });
     });
 });
