@@ -209,10 +209,18 @@ const attributes: Attributes = {
     matrices: [softServeMatrixDescription, coffeeMatrixDescription],
 };
 
-const sizeDimension = new Dimension(size, sizes.values());
-const flavorDimension = new Dimension(flavor, flavors.values());
-const temperatureDimension = new Dimension(temperature, temperatures.values());
-const caffeineDimension = new Dimension(caffeine, caffeines.values());
+const sizeDimension = new Dimension(size, 'sizes', sizes.values());
+const flavorDimension = new Dimension(flavor, 'flavors', flavors.values());
+const temperatureDimension = new Dimension(
+    temperature,
+    'temeperatures',
+    temperatures.values()
+);
+const caffeineDimension = new Dimension(
+    caffeine,
+    'caffeines',
+    caffeines.values()
+);
 
 const softServeDimensions = [sizeDimension, flavorDimension];
 const coffeeDimensions = [
@@ -351,15 +359,19 @@ describe('Attribute Info', () => {
             // now find the default from genericItem.
             // TODO: Add an equivalent default test for current project.
             const anyDimensionId: DID = 123;
-            const dimension = new Dimension(anyDimensionId, caffeines.values());
+            const dimension = new Dimension(
+                anyDimensionId,
+                'caffeines',
+                caffeines.values()
+            );
 
-            assert.equal(dimension.id, anyDimensionId);
+            assert.equal(dimension.did, anyDimensionId);
             assert.deepEqual(dimension.attributes, caffeines);
         });
 
         it('No attributes', () => {
             const anyDimensionId = 123;
-            const f = () => new Dimension(anyDimensionId, [].values());
+            const f = () => new Dimension(anyDimensionId, 'empty', [].values());
 
             assert.throws(f, `expect at least one attribute`);
         });
@@ -430,8 +442,12 @@ describe('Attribute Info', () => {
             assert.throws(f1, `found duplicate dimension id 0.`);
 
             // Attempt adding an attribute with a duplicate pid.
-            const uniqueId: UID = softServeDimensions[0].id + 1;
-            const sizesDimension = new Dimension(uniqueId, sizes.values());
+            const uniqueId: UID = softServeDimensions[0].did + 1;
+            const sizesDimension = new Dimension(
+                uniqueId,
+                'sizes',
+                sizes.values()
+            );
             const f2 = () => info['addDimension'](sizesDimension);
             assert.throws(f2, `found duplicate attribute pid 0.`);
         });

@@ -6,11 +6,17 @@ export type DID = number;
 // associated with a number of attributes such as `small`, `medium` and
 // `large`.
 export class Dimension {
-    readonly id: DID;
+    readonly did: DID;
+    readonly name: string;
     readonly attributes: AttributeItem[];
 
-    constructor(id: DID, attributesIterator: IterableIterator<AttributeItem>) {
-        this.id = id;
+    constructor(
+        did: DID,
+        name: string,
+        attributesIterator: IterableIterator<AttributeItem>
+    ) {
+        this.did = did;
+        this.name = name;
         this.attributes = [...attributesIterator[Symbol.iterator]()];
         if (this.attributes.length < 1) {
             const message = `expect at least one attribute`;

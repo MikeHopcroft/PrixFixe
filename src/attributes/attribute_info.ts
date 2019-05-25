@@ -30,7 +30,11 @@ export class AttributeInfo {
 
         for (const dimension of attributes.dimensions) {
             this.addDimension(
-                new Dimension(dimension.did, dimension.items.values())
+                new Dimension(
+                    dimension.did,
+                    dimension.name,
+                    dimension.items.values()
+                )
             );
         }
 
@@ -51,11 +55,11 @@ export class AttributeInfo {
 
     // Indexes a Dimension and its Attributes.
     private addDimension(dimension: Dimension) {
-        if (this.dimensionIdToDimension.has(dimension.id)) {
-            const message = `found duplicate dimension id ${dimension.id}.`;
+        if (this.dimensionIdToDimension.has(dimension.did)) {
+            const message = `found duplicate dimension id ${dimension.did}.`;
             throw new TypeError(message);
         }
-        this.dimensionIdToDimension.set(dimension.id, dimension);
+        this.dimensionIdToDimension.set(dimension.did, dimension);
 
         let position = 0;
         for (const attribute of dimension.attributes) {
@@ -72,6 +76,15 @@ export class AttributeInfo {
 
             position++;
         }
+    }
+
+    getDimension(did: DID) {
+        const dimension = this.dimensionIdToDimension.get(did);
+        if (dimension === undefined) {
+            const message = `Unknown dimension id ${did}.`;
+            throw TypeError(message);
+        }
+        return dimension;
     }
 
     // Indexes a Matrix.
@@ -124,7 +137,7 @@ export class AttributeInfo {
         const key = [pid];
         let attributeIndex = 1;
         for (const dimension of matrix.dimensions.values()) {
-            let attributeId = dimensionIdToAttribute.get(dimension.id);
+            let attributeId = dimensionIdToAttribute.get(dimension.did);
             if (attributeId === undefined) {
                 attributeId = this.getDefaultAttribute(pid, attributeIndex);
             }
@@ -147,7 +160,7 @@ export class AttributeInfo {
 
     static hasDimension(matrix: Matrix, did: DID): boolean {
         for (const dimension of matrix.dimensions) {
-            if (dimension.id === did) {
+            if (dimension.did === did) {
                 return true;
             }
         }

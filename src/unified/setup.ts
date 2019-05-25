@@ -17,6 +17,7 @@ import {
 } from '..';
 
 export interface World {
+    attributeInfo: AttributeInfo;
     attributeOps: AttributeUtils;
     attributes: Attributes;
     cartOps: CartUtils;
@@ -68,6 +69,7 @@ export function setup(
     const cartOps = new CartUtils(catalog);
 
     return {
+        attributeInfo,
         attributeOps,
         attributes,
         cartOps,

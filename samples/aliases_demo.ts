@@ -1,7 +1,7 @@
 import * as path from 'path';
 
 import {
-    AID,
+    DID,
     aliasesFromPattern,
     patternFromExpression,
     setup,
@@ -17,27 +17,55 @@ import {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-// Which aliases are for products and which are for options?
-// Can an alias be used for both? Don't see why not, from an API perspective.
-// From AID, get DID. Alias doesn't know its DID. Would need to build index.
-// From DID, get matrices. Again, would need some sort of index.
-// From matrices, look at all products and options.
+// Walks over the catalog collecting those dimensions that are referenced by
+// Producs and those referenced by Options and Modifiers.
+function categorizeAttributes(world: World) {
+    const productDimensions = new Set<DID>();
+    const optionDimensions = new Set<DID>();
 
-function printAttributes(world: World) {
-    console.log();
-    console.log('=== Dimensions and Attributes ===');
-    for (const d of world.attributes.dimensions) {
-        console.log(`Dimension(${d.did}): ${d.name}`);
-        for (const attribute of d.items) {
-            console.log(`  Attribute(${attribute.aid})`);
+    for (const product of world.catalog.genericEntities()) {
+        const matrix = world.attributeInfo.getMatrix(product.matrix);
+        for (const dimension of matrix.dimensions) {
+            if (product.kind === MENUITEM) {
+                productDimensions.add(dimension.did);
+            } else {
+                optionDimensions.add(dimension.did);
+            }
+        }
+    }
+
+    return { productDimensions, optionDimensions };
+}
+
+// Prints out information about dimensions associated with a set of DIDs.
+function printDimensions(world: World, dimensions: Set<DID>) {
+    for (const did of dimensions.values()) {
+        const d = world.attributeInfo.getDimension(did);
+        console.log(`  Dimension(${d.did}): ${d.name}`);
+        for (const attribute of d.attributes) {
+            console.log(`    Attribute(${attribute.aid})`);
             for (const alias of attribute.aliases) {
                 const pattern = patternFromExpression(alias);
                 for (const text of aliasesFromPattern(pattern)) {
-                    console.log(`    ${text}`);
+                    console.log(`      ${text}`);
                 }
             }
         }
     }
+}
+
+// Prints Dimensions and Attributes, first for Products, and then for
+// non-products (Options and Modifiers).
+function printAttributes(world: World) {
+    const { productDimensions, optionDimensions } = categorizeAttributes(world);
+
+    console.log();
+    console.log('=== Product Dimensions and Attributes ===');
+    printDimensions(world, productDimensions);
+
+    console.log();
+    console.log('=== Option and Modifier Dimensions and Attributes ===');
+    printDimensions(world, optionDimensions);
 }
 
 function printProducts(world: World) {

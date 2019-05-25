@@ -38,10 +38,10 @@ export class MatrixEntityBuilder {
 
     addAttribute(aid: AID): boolean {
         const coordinate = this.info.getAttributeCoordinates(aid);
-        if (this.dimensionIdToAttribute.has(coordinate.dimension.id)) {
+        if (this.dimensionIdToAttribute.has(coordinate.dimension.did)) {
             return false;
         } else {
-            this.dimensionIdToAttribute.set(coordinate.dimension.id, aid);
+            this.dimensionIdToAttribute.set(coordinate.dimension.did, aid);
             return true;
         }
     }
