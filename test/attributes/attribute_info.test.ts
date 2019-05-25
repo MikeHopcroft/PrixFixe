@@ -3,348 +3,33 @@ import 'mocha';
 
 import {
     AID,
-    AttributeItem,
-    Catalog,
-    CID,
     DID,
     Dimension,
-    GenericTypedEntity,
-    KEY,
     Matrix,
-    MENUITEM,
     MID,
     PID,
-    SpecificTypedEntity,
     AttributeInfo,
     MatrixEntityBuilder,
     UID,
-    Attributes,
-    MatrixDescription,
 } from '../../src/';
 
-// A PID that is not indexed in any data structure in this file. For testing
-// error cases.
-const unknownPID: PID = 9999;
-
-// A key that is not indexed in any data structure in this file. For testing
-// error cases.
-const unknownKey: KEY = '9999:9:9:9';
-
-// Generators to help in creation of the catalog. They take arrays of the
-// genericItems and SpecificItems, and yield the results as iterables.
-function* genericGenerator(
-    generics: GenericTypedEntity[]
-): IterableIterator<GenericTypedEntity> {
-    for (const item of generics) {
-        yield item;
-    }
-}
-
-function* specificGenerator(
-    specifics: SpecificTypedEntity[]
-): IterableIterator<SpecificTypedEntity> {
-    for (const item of specifics) {
-        yield item;
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//  Create the Generic Cone and coffee
-///////////////////////////////////////////////////////////////////////////////
-const genericConePID: PID = 8000;
-const coneCID: CID = 100;
-const genericCone: GenericTypedEntity = {
-    pid: genericConePID,
-    cid: coneCID,
-    name: 'cone',
-    aliases: ['cone', 'ice cream [cone]'],
-    defaultKey: '8000:0:0',
-    matrix: 1,
-    kind: MENUITEM,
-};
-
-const genericcoffeePID: PID = 9000;
-const coffeeCID: CID = 200;
-const genericcoffee: GenericTypedEntity = {
-    pid: genericcoffeePID,
-    cid: coffeeCID,
-    name: 'coffee',
-    aliases: ['coffee'],
-    defaultKey: '9000:0:0:0',
-    matrix: 2,
-    kind: MENUITEM,
-};
-
-const genericItems: GenericTypedEntity[] = [genericCone, genericcoffee];
-const genericItemsIterator: IterableIterator<
-    GenericTypedEntity
-> = genericGenerator(genericItems);
-
-///////////////////////////////////////////////////////////////////////////////
-//  Create Size, Flavor, Temperature, and Caffeine Attributes
-///////////////////////////////////////////////////////////////////////////////
-const sizeSmall: AID = 0;
-const sizeMedium: AID = 1;
-
-const sizes: AttributeItem[] = [
-    {
-        aid: sizeSmall,
-        name: 'small',
-        aliases: ['small'],
-    },
-    {
-        aid: sizeMedium,
-        name: 'medium',
-        aliases: ['medium'],
-    },
-];
-
-const flavorVanilla: AID = 2;
-const flavorChocolate: AID = 3;
-
-const flavors: AttributeItem[] = [
-    {
-        aid: flavorVanilla,
-        name: 'vanilla',
-        aliases: ['vanilla'],
-    },
-    {
-        aid: flavorChocolate,
-        name: 'chocolate',
-        aliases: ['chocolate'],
-    },
-];
-
-const temperatureHot: AID = 4;
-const temperatureCold: AID = 5;
-
-const temperatures: AttributeItem[] = [
-    {
-        aid: temperatureHot,
-        name: 'hot',
-        aliases: ['hot'],
-    },
-    {
-        aid: temperatureCold,
-        name: 'cold',
-        aliases: ['colr', ' iced'],
-    },
-];
-
-const caffeineRegular: AID = 6;
-const caffeineDecaf: AID = 7;
-
-const caffeines: AttributeItem[] = [
-    {
-        aid: caffeineRegular,
-        name: 'regular',
-        aliases: ['regular'],
-    },
-    {
-        aid: caffeineDecaf,
-        name: 'decaf',
-        aliases: ['decaf', 'unleaded'],
-    },
-];
-
-///////////////////////////////////////////////////////////////////////////////
-//  Dimensions for Soft Serve Ice Cream and coffees
-///////////////////////////////////////////////////////////////////////////////
-const size: DID = 0;
-const flavor: DID = 1;
-const temperature: DID = 2;
-const caffeine: DID = 3;
-
-const sizeDimensionDescription = {
-    did: size,
-    name: 'sizes',
-    items: sizes,
-};
-
-const flavorDimensionDescription = {
-    did: flavor,
-    name: 'flavors',
-    items: flavors,
-};
-
-const temperatureDimensionDescription = {
-    did: temperature,
-    name: 'temperatures',
-    items: temperatures,
-};
-
-const caffieneDimensionDescription = {
-    did: caffeine,
-    name: 'caffiene',
-    items: caffeines,
-};
-
-const softServeMatrixDescription: MatrixDescription = {
-    mid: 1,
-    name: 'soft serve',
-    dimensions: [size, flavor],
-};
-
-const coffeeMatrixDescription: MatrixDescription = {
-    mid: 2,
-    name: 'coffee',
-    dimensions: [size, temperature, caffeine],
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//  Attributes
-///////////////////////////////////////////////////////////////////////////////
-const emptyAttributes: Attributes = {
-    dimensions: [],
-    matrices: [],
-};
-
-const attributes: Attributes = {
-    dimensions: [
-        sizeDimensionDescription,
-        flavorDimensionDescription,
-        temperatureDimensionDescription,
-        caffieneDimensionDescription,
-    ],
-    matrices: [softServeMatrixDescription, coffeeMatrixDescription],
-};
-
-const sizeDimension = new Dimension(size, 'sizes', sizes.values());
-const flavorDimension = new Dimension(flavor, 'flavors', flavors.values());
-const temperatureDimension = new Dimension(
-    temperature,
-    'temeperatures',
-    temperatures.values()
-);
-const caffeineDimension = new Dimension(
-    caffeine,
-    'caffeines',
-    caffeines.values()
-);
-
-const softServeDimensions = [sizeDimension, flavorDimension];
-const coffeeDimensions = [
+import {
+    smallWorldAttributes,
+    caffeines,
+    smallWorldCatalog,
+    emptyAttributes,
+    flavor,
+    flavorChocolate,
+    flavorDimension,
+    flavorVanilla,
+    size,
     sizeDimension,
-    temperatureDimension,
-    caffeineDimension,
-];
-
-///////////////////////////////////////////////////////////////////////////////
-//  Specific Cones (size, flavor)
-///////////////////////////////////////////////////////////////////////////////
-const smallVanillaCone: SpecificTypedEntity = {
-    sku: 8001,
-    name: 'small vanilla cone',
-    key: '8000:0:0',
-    kind: MENUITEM,
-};
-
-const smallChocolateCone: SpecificTypedEntity = {
-    sku: 8002,
-    name: 'small chocolate cone',
-    key: '8000:0:1',
-    kind: MENUITEM,
-};
-
-const mediumVanillaCone: SpecificTypedEntity = {
-    sku: 8003,
-    name: 'medium vanilla cone',
-    key: '8000:1:0',
-    kind: MENUITEM,
-};
-
-const mediumChocolateCone: SpecificTypedEntity = {
-    sku: 8004,
-    name: 'medium chocolate cone',
-    key: '8000:1:1',
-    kind: MENUITEM,
-};
-
-///////////////////////////////////////////////////////////////////////////////
-//  Specific coffees (size, temperature, caffeine)
-///////////////////////////////////////////////////////////////////////////////
-const smallcoffee: SpecificTypedEntity = {
-    sku: 9001,
-    name: 'small coffee',
-    key: '9000:0:0:0',
-    kind: MENUITEM,
-};
-
-const smallDecafcoffee: SpecificTypedEntity = {
-    sku: 9002,
-    name: 'small coffee',
-    key: '9000:0:0:1',
-    kind: MENUITEM,
-};
-
-const smallIcedcoffee: SpecificTypedEntity = {
-    sku: 9003,
-    name: 'small coffee',
-    key: '9000:0:1:0',
-    kind: MENUITEM,
-};
-
-const smallIcedDecafcoffee: SpecificTypedEntity = {
-    sku: 9004,
-    name: 'small coffee',
-    key: '9000:0:1:1',
-    kind: MENUITEM,
-};
-
-const mediumcoffee: SpecificTypedEntity = {
-    sku: 9005,
-    name: 'medium coffee',
-    key: '9000:1:0:0',
-    kind: MENUITEM,
-};
-
-const mediumDecafcoffee: SpecificTypedEntity = {
-    sku: 9006,
-    name: 'medium decaf coffee',
-    key: '9000:1:0:1',
-    kind: MENUITEM,
-};
-
-const mediumIcedcoffee: SpecificTypedEntity = {
-    sku: 9007,
-    name: 'medium iced coffee',
-    key: '9000:1:1:0',
-    kind: MENUITEM,
-};
-
-const mediumIcedDecafcoffee: SpecificTypedEntity = {
-    sku: 9008,
-    name: 'medium iced decaf coffee',
-    key: '9000:1:1:1',
-    kind: MENUITEM,
-};
-
-const specificItems: SpecificTypedEntity[] = [
-    smallVanillaCone,
-    smallChocolateCone,
-    mediumVanillaCone,
-    mediumChocolateCone,
-    smallcoffee,
-    smallDecafcoffee,
-    smallIcedcoffee,
-    smallIcedDecafcoffee,
-    mediumcoffee,
-    mediumDecafcoffee,
-    mediumIcedcoffee,
-    mediumIcedDecafcoffee,
-];
-
-const specificItemsIterator: IterableIterator<
-    SpecificTypedEntity
-> = specificGenerator(specificItems);
-
-///////////////////////////////////////////////////////////////////////////////
-//  Add the Maps to the Catalog
-///////////////////////////////////////////////////////////////////////////////
-const catalog = Catalog.fromEntities(
-    genericItemsIterator,
-    specificItemsIterator
-);
+    sizeMedium,
+    sizes,
+    sizeSmall,
+    softServeDimensions,
+    unknownPID,
+} from '../shared';
 
 describe('Attribute Info', () => {
     ///////////////////////////////////////////////////////////////////////////
@@ -399,7 +84,7 @@ describe('Attribute Info', () => {
     ///////////////////////////////////////////////////////////////////////////
     describe('AttributeInfo', () => {
         it('addDimension()', () => {
-            const info = new AttributeInfo(catalog, emptyAttributes);
+            const info = new AttributeInfo(smallWorldCatalog, emptyAttributes);
 
             info['addDimension'](softServeDimensions[0]);
             info['addDimension'](softServeDimensions[1]);
@@ -434,7 +119,7 @@ describe('Attribute Info', () => {
         });
 
         it('addDimension() - exceptions', () => {
-            const info = new AttributeInfo(catalog, emptyAttributes);
+            const info = new AttributeInfo(smallWorldCatalog, emptyAttributes);
             info['addDimension'](softServeDimensions[0]);
 
             // Attempt adding a dimension with the same id.
@@ -453,7 +138,7 @@ describe('Attribute Info', () => {
         });
 
         it('addMatrix()', () => {
-            const info = new AttributeInfo(catalog, emptyAttributes);
+            const info = new AttributeInfo(smallWorldCatalog, emptyAttributes);
 
             const anyMatrixId: MID = 123;
             const matrix: Matrix = {
@@ -468,7 +153,10 @@ describe('Attribute Info', () => {
         });
 
         it('getKey()', () => {
-            const info = new AttributeInfo(catalog, attributes);
+            const info = new AttributeInfo(
+                smallWorldCatalog,
+                smallWorldAttributes
+            );
 
             const dimensionIdToAttribute = new Map<DID, AID>();
             dimensionIdToAttribute.set(size, sizeMedium);
@@ -496,8 +184,11 @@ describe('Attribute Info', () => {
         it('Constructor', () => {});
 
         it('hasPID()/setPID()', () => {
-            const info = new AttributeInfo(catalog, attributes);
-            const builder = new MatrixEntityBuilder(info, catalog);
+            const info = new AttributeInfo(
+                smallWorldCatalog,
+                smallWorldAttributes
+            );
+            const builder = new MatrixEntityBuilder(info, smallWorldCatalog);
 
             // Haven't added an entity yet.
             assert.isFalse(builder.hasPID());
@@ -512,9 +203,12 @@ describe('Attribute Info', () => {
         });
 
         it('addAttribute()', () => {
-            const info = new AttributeInfo(catalog, attributes);
+            const info = new AttributeInfo(
+                smallWorldCatalog,
+                smallWorldAttributes
+            );
 
-            const builder = new MatrixEntityBuilder(info, catalog);
+            const builder = new MatrixEntityBuilder(info, smallWorldCatalog);
 
             const f = () => builder.addAttribute(unknownPID);
             assert.throws(f, 'Unknown attribute id 9999.');
@@ -530,12 +224,15 @@ describe('Attribute Info', () => {
         });
 
         it('getKey()', () => {
-            const info = new AttributeInfo(catalog, attributes);
+            const info = new AttributeInfo(
+                smallWorldCatalog,
+                smallWorldAttributes
+            );
 
             // TODO: this should not hard code 8000 here or below.
             const genericConePID: PID = 8000;
 
-            const builder = new MatrixEntityBuilder(info, catalog);
+            const builder = new MatrixEntityBuilder(info, smallWorldCatalog);
 
             // getKey() before adding entity should throw.
             const f = () => builder.getKey();
