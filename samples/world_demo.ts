@@ -68,9 +68,9 @@ function printCart(cart: Cart) {
         console.log(`The cart is empty.`);
     } else {
         for (const item of cart.items) {
-            console.log(`${item.name} ${item.uid}`);
+            console.log(`UID(${item.uid})`);
             for (const child of item.children) {
-                console.log(`\t${child.name} ${child.uid}`);
+                console.log(`\tUID(${child.uid})`);
             }
         }
     }

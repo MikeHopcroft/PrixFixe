@@ -15,7 +15,7 @@ import {
     testCart,
     tomato3,
 } from './cart_fake_data';
-import { AID, Cart, ItemInstance, KEY, PID, setup } from '../../src/';
+import { AID, CartOld, ItemInstanceOld, KEY, PID, setup } from '../../src/';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -52,7 +52,7 @@ describe('Cart', () => {
     it('findItemByKey()', () => {
         const key: KEY = 'h';
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByKey(
+        const gen: IterableIterator<ItemInstanceOld> = cartOps.findItemByKey(
             testCart,
             key
         );
@@ -62,7 +62,7 @@ describe('Cart', () => {
     it('findItemByPID()', () => {
         const pid: PID = 2;
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByPID(
+        const gen: IterableIterator<ItemInstanceOld> = cartOps.findItemByPID(
             testCart,
             pid
         );
@@ -73,20 +73,18 @@ describe('Cart', () => {
     it('findItemByChildKey()', () => {
         const key: KEY = 'c';
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildKey(
-            testCart,
-            key
-        );
+        const gen: IterableIterator<
+            ItemInstanceOld
+        > = cartOps.findItemByChildKey(testCart, key);
         expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
     });
 
     it('findItemByChildPID()', () => {
         const pid: PID = 1;
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findItemByChildPID(
-            testCart,
-            pid
-        );
+        const gen: IterableIterator<
+            ItemInstanceOld
+        > = cartOps.findItemByChildPID(testCart, pid);
         expect(gen.next().value).to.deep.equal(hamburger4Bread0Lettuce3);
     });
 
@@ -99,7 +97,7 @@ describe('Cart', () => {
     it('findChildByKey', () => {
         const key: KEY = 'c';
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findChildByKey(
+        const gen: IterableIterator<ItemInstanceOld> = cartOps.findChildByKey(
             hamburger4Bread0Lettuce3,
             key
         );
@@ -109,7 +107,7 @@ describe('Cart', () => {
     it('findChildByPID()', () => {
         const pid: PID = 0;
 
-        const gen: IterableIterator<ItemInstance> = cartOps.findChildByPID(
+        const gen: IterableIterator<ItemInstanceOld> = cartOps.findChildByPID(
             hamburger4Bread0Lettuce3,
             pid
         );
@@ -117,32 +115,32 @@ describe('Cart', () => {
     });
 
     it('addItem()', () => {
-        const cart: Cart = clone(testCart);
-        const expectedCart: Cart = {
+        const cart: CartOld = clone(testCart);
+        const expectedCart: CartOld = {
             items: [hamburger4Bread0Lettuce3, hamburger5Bread1, coke6],
         };
 
-        const resCart: Cart = cartOps.addItem(cart, coke6);
+        const resCart: CartOld = cartOps.addItem(cart, coke6);
         expect(resCart).to.deep.equal(expectedCart);
     });
 
     it('replaceItem()', () => {
-        const cart: Cart = clone(testCart);
-        const expectedCart: Cart = {
+        const cart: CartOld = clone(testCart);
+        const expectedCart: CartOld = {
             items: [hamburger4Bread0Lettuce3, coke5],
         };
 
-        const resCart: Cart = cartOps.replaceItem(cart, coke5);
+        const resCart: CartOld = cartOps.replaceItem(cart, coke5);
         expect(resCart).to.deep.equal(expectedCart);
     });
 
     it('removeItem()', () => {
-        const cart: Cart = clone(testCart);
-        const expectedCart: Cart = {
+        const cart: CartOld = clone(testCart);
+        const expectedCart: CartOld = {
             items: [hamburger5Bread1],
         };
 
-        const resCart: Cart = cartOps.removeItem(
+        const resCart: CartOld = cartOps.removeItem(
             cart,
             hamburger4Bread0Lettuce3
         );
@@ -150,23 +148,23 @@ describe('Cart', () => {
     });
 
     it('addChild()', () => {
-        const parent: ItemInstance = clone(hamburger5Bread1);
+        const parent: ItemInstanceOld = clone(hamburger5Bread1);
 
-        const resItem: ItemInstance = cartOps.addChild(parent, tomato3);
+        const resItem: ItemInstanceOld = cartOps.addChild(parent, tomato3);
         expect(resItem).to.deep.equal(hamburger5Bread1Tomato3);
     });
 
     it('updateChild()', () => {
-        const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
+        const parent: ItemInstanceOld = clone(hamburger4Bread0Lettuce3);
 
-        const resItem: ItemInstance = cartOps.updateChild(parent, tomato3);
+        const resItem: ItemInstanceOld = cartOps.updateChild(parent, tomato3);
         expect(resItem).to.deep.equal(hamburger4Bread0Tomato3);
     });
 
     it('removeChild()', () => {
-        const parent: ItemInstance = clone(hamburger4Bread0Lettuce3);
+        const parent: ItemInstanceOld = clone(hamburger4Bread0Lettuce3);
 
-        const resItem: ItemInstance = cartOps.removeChild(parent, lettuce3);
+        const resItem: ItemInstanceOld = cartOps.removeChild(parent, lettuce3);
         expect(resItem).to.deep.equal(hamburger4Bread0);
     });
 
@@ -187,10 +185,10 @@ describe('Cart', () => {
         const attributes = new Set<AID>([9, 11]);
 
         const resItem:
-            | ItemInstance
+            | ItemInstanceOld
             | undefined = attributeOps.createItemInstance(pid, attributes);
 
-        const expectedItem: ItemInstance = {
+        const expectedItem: ItemInstanceOld = {
             // UID count starts at 1, this will be the 4th item since there are
             // 3 children.
             uid: 4,

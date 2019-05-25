@@ -1,6 +1,6 @@
-import { Cart, ItemInstance } from '../../src/cart/interfaces';
+import { CartOld, ItemInstanceOld } from '../../src/cart/interfaces';
 
-export const bread0: ItemInstance = {
+export const bread0: ItemInstanceOld = {
     uid: 0,
     pid: 0,
     name: 'Hamburger Bun',
@@ -10,7 +10,7 @@ export const bread0: ItemInstance = {
     children: [],
 };
 
-export const bread1: ItemInstance = {
+export const bread1: ItemInstanceOld = {
     uid: 1,
     pid: 0,
     name: 'Hamburger Bun',
@@ -20,7 +20,7 @@ export const bread1: ItemInstance = {
     children: [],
 };
 
-export const lettuce2: ItemInstance = {
+export const lettuce2: ItemInstanceOld = {
     uid: 2,
     pid: 1,
     name: 'Lettuce',
@@ -30,7 +30,7 @@ export const lettuce2: ItemInstance = {
     children: [],
 };
 
-export const lettuce3: ItemInstance = {
+export const lettuce3: ItemInstanceOld = {
     uid: 3,
     pid: 1,
     name: 'Lettuce',
@@ -40,7 +40,7 @@ export const lettuce3: ItemInstance = {
     children: [],
 };
 
-export const coke5: ItemInstance = {
+export const coke5: ItemInstanceOld = {
     uid: 5,
     pid: 3,
     name: 'Medium Coke',
@@ -50,7 +50,7 @@ export const coke5: ItemInstance = {
     children: [],
 };
 
-export const coke6: ItemInstance = {
+export const coke6: ItemInstanceOld = {
     uid: 6,
     pid: 3,
     name: 'Medium Coke',
@@ -60,7 +60,7 @@ export const coke6: ItemInstance = {
     children: [],
 };
 
-export const tomato3: ItemInstance = {
+export const tomato3: ItemInstanceOld = {
     uid: 3,
     pid: 4,
     name: 'Tomato',
@@ -70,7 +70,7 @@ export const tomato3: ItemInstance = {
     children: [],
 };
 
-export const hamburger4Bread0Lettuce3: ItemInstance = {
+export const hamburger4Bread0Lettuce3: ItemInstanceOld = {
     uid: 4,
     pid: 2,
     name: 'Hamburger',
@@ -80,7 +80,7 @@ export const hamburger4Bread0Lettuce3: ItemInstance = {
     children: [bread0, lettuce3],
 };
 
-export const hamburger4Bread0: ItemInstance = {
+export const hamburger4Bread0: ItemInstanceOld = {
     uid: 4,
     pid: 2,
     name: 'Hamburger',
@@ -90,7 +90,7 @@ export const hamburger4Bread0: ItemInstance = {
     children: [bread0],
 };
 
-export const hamburger4Bread0Tomato3: ItemInstance = {
+export const hamburger4Bread0Tomato3: ItemInstanceOld = {
     uid: 4,
     pid: 2,
     name: 'Hamburger',
@@ -100,7 +100,7 @@ export const hamburger4Bread0Tomato3: ItemInstance = {
     children: [bread0, tomato3],
 };
 
-export const hamburger5Bread1: ItemInstance = {
+export const hamburger5Bread1: ItemInstanceOld = {
     uid: 5,
     pid: 2,
     name: 'Hamburger',
@@ -110,7 +110,7 @@ export const hamburger5Bread1: ItemInstance = {
     children: [bread1],
 };
 
-export const hamburger5Bread1Tomato3: ItemInstance = {
+export const hamburger5Bread1Tomato3: ItemInstanceOld = {
     uid: 5,
     pid: 2,
     name: 'Hamburger',
@@ -120,6 +120,6 @@ export const hamburger5Bread1Tomato3: ItemInstance = {
     children: [bread1, tomato3],
 };
 
-export const testCart: Cart = {
+export const testCart: CartOld = {
     items: [hamburger4Bread0Lettuce3, hamburger5Bread1],
 };

@@ -2,11 +2,10 @@ import {
     AID,
     AttributeItem,
     AttributeUtilities,
-    Cart,
-    CartOps,
+    CartOld,
     Catalog,
     IDGenerator,
-    ItemInstance,
+    ItemInstanceOld,
     KEY,
     PID,
 } from '../';
@@ -18,7 +17,7 @@ import {
 // Convenience methofs to perform operations on the Cart.
 //
 ///////////////////////////////////////////////////////////////////////////////
-export class CartUtils implements CartOps {
+export class CartUtils {
     private readonly catalog: Catalog;
 
     //
@@ -34,7 +33,7 @@ export class CartUtils implements CartOps {
     //
     // Use case: find all instances of a specific drink like a 'large iced
     // latte'.
-    *findItemByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
+    *findItemByKey(cart: CartOld, key: KEY): IterableIterator<ItemInstanceOld> {
         for (const item of cart.items) {
             if (item.key === key) {
                 yield item;
@@ -49,7 +48,7 @@ export class CartUtils implements CartOps {
     // Use case: want to find all lattes, regardless of attributes. Searching
     // with the GPID for 'latte' might return ItemInstances for a 'medium iced
     // latte' and a 'small hot latte'.
-    *findItemByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
+    *findItemByPID(cart: CartOld, pid: PID): IterableIterator<ItemInstanceOld> {
         for (const item of cart.items) {
             if (item.pid === pid) {
                 yield item;
@@ -63,7 +62,10 @@ export class CartUtils implements CartOps {
     //
     // ISSUE: do we want a corresponding version that finds options associated
     // with a certain generic option.
-    *findItemByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
+    *findItemByChildKey(
+        cart: CartOld,
+        key: KEY
+    ): IterableIterator<ItemInstanceOld> {
         for (const item of cart.items) {
             for (const child of item.children) {
                 if (child.key === key) {
@@ -73,7 +75,10 @@ export class CartUtils implements CartOps {
         }
     }
 
-    *findItemByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
+    *findItemByChildPID(
+        cart: CartOld,
+        pid: PID
+    ): IterableIterator<ItemInstanceOld> {
         for (const item of cart.items) {
             for (const child of item.children) {
                 if (child.pid === pid) {
@@ -99,9 +104,9 @@ export class CartUtils implements CartOps {
     //      cross this bridge when we come to it
     // TODO: IMPLEMENT. WAITING ON RULE CHECKER FUNCTIONALITY.
     *findCompatibleItems(
-        cart: Cart,
-        option: ItemInstance
-    ): IterableIterator<ItemInstance> {
+        cart: CartOld,
+        option: ItemInstanceOld
+    ): IterableIterator<ItemInstanceOld> {
         for (const item of cart.items) {
             // TODO: THIS IS HARDCODED TO COMPILE FOR NOW.
             if (item.pid === 5) {
@@ -115,9 +120,9 @@ export class CartUtils implements CartOps {
     //
 
     *findChildByKey(
-        item: ItemInstance,
+        item: ItemInstanceOld,
         key: KEY
-    ): IterableIterator<ItemInstance> {
+    ): IterableIterator<ItemInstanceOld> {
         for (const child of item.children) {
             if (child.key === key) {
                 yield child;
@@ -126,9 +131,9 @@ export class CartUtils implements CartOps {
     }
 
     *findChildByPID(
-        item: ItemInstance,
+        item: ItemInstanceOld,
         pid: PID
-    ): IterableIterator<ItemInstance> {
+    ): IterableIterator<ItemInstanceOld> {
         for (const child of item.children) {
             if (child.pid === pid) {
                 yield child;
@@ -140,16 +145,16 @@ export class CartUtils implements CartOps {
     // ISSUE: If a hamburger is added when one is already in the cart, do we
     // simply up the quantity? Or, since keys are unique between instances,
     // do we still add a completely new instance of the duplicate item?
-    addItem = (cart: Cart, item: ItemInstance): Cart => {
-        const newCart: Cart = { ...cart };
+    addItem = (cart: CartOld, item: ItemInstanceOld): CartOld => {
+        const newCart: CartOld = { ...cart };
         newCart.items.push(item);
         return newCart;
     };
 
     // Returns a shallow copy of the Cart, where the item that shares the new
     // item's UID is replaced with the new item.
-    replaceItem = (cart: Cart, repItem: ItemInstance): Cart => {
-        const newCart: Cart = { ...cart };
+    replaceItem = (cart: CartOld, repItem: ItemInstanceOld): CartOld => {
+        const newCart: CartOld = { ...cart };
         for (let item of newCart.items) {
             if (item.uid === repItem.uid) {
                 item = Object.assign(item, repItem);
@@ -163,8 +168,8 @@ export class CartUtils implements CartOps {
     // TODO: ISSUE: throw or silently return when item not in cart.
     // ISSUE: NO CART PARAMTER IN THE INTERFACE, BUT ASSUMING FOR NOW THAT WE
     // NEED ONE.
-    removeItem = (cart: Cart, remItem: ItemInstance): Cart => {
-        const newCart: Cart = { ...cart };
+    removeItem = (cart: CartOld, remItem: ItemInstanceOld): CartOld => {
+        const newCart: CartOld = { ...cart };
         for (const item of cart.items) {
             if (item.uid === remItem.uid) {
                 // Remove the item
@@ -183,16 +188,19 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the ItemInstance with the OptionInstance
     // appended. Does not verify that the option is legal for the item.
-    addChild(parent: ItemInstance, child: ItemInstance): ItemInstance {
-        const newParent: ItemInstance = { ...parent };
+    addChild(parent: ItemInstanceOld, child: ItemInstanceOld): ItemInstanceOld {
+        const newParent: ItemInstanceOld = { ...parent };
         newParent.children.push(child);
         return newParent;
     }
 
     // Returns a shallow copy of the ItemInstance, where the option that
     // shares the new option's UID is replaced with the new option.
-    updateChild(parent: ItemInstance, updChild: ItemInstance): ItemInstance {
-        const newParent: ItemInstance = { ...parent };
+    updateChild(
+        parent: ItemInstanceOld,
+        updChild: ItemInstanceOld
+    ): ItemInstanceOld {
+        const newParent: ItemInstanceOld = { ...parent };
         for (const child of newParent.children) {
             if (child.uid === updChild.uid) {
                 Object.assign(child, updChild);
@@ -203,8 +211,11 @@ export class CartUtils implements CartOps {
 
     // Returns a shallow copy of the ItemInstance, omitting the option with
     // the specific UID.
-    removeChild(parent: ItemInstance, remChild: ItemInstance): ItemInstance {
-        const newParent: ItemInstance = { ...parent };
+    removeChild(
+        parent: ItemInstanceOld,
+        remChild: ItemInstanceOld
+    ): ItemInstanceOld {
+        const newParent: ItemInstanceOld = { ...parent };
         for (const child of newParent.children) {
             if (child.uid === remChild.uid) {
                 const index = newParent.children.indexOf(child);
@@ -225,7 +236,10 @@ export class CartUtils implements CartOps {
     // Test branch for unit tests in attributes
     //
     // TODO: IMPLEMENT IN ITS OWN BRANCH
-    updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance {
+    updateAttributes(
+        parent: ItemInstanceOld,
+        attributes: Set<AID>
+    ): ItemInstanceOld {
         /**
          * Run MEB backwards
          * From II get key
@@ -286,7 +300,7 @@ export class AttributeUtils implements AttributeUtilities {
     createItemInstance(
         pid: PID,
         attributeIDs: Set<AID>
-    ): ItemInstance | undefined {
+    ): ItemInstanceOld | undefined {
         if (this.catalog.hasPID(pid)) {
             const parent = this.catalog.getGeneric(pid);
 
@@ -305,7 +319,7 @@ export class AttributeUtils implements AttributeUtilities {
             const defaultAttributeKeys = parent.defaultKey.split(':').splice(1);
 
             // Store any attributes converted to ItemInstances.
-            const attributes: ItemInstance[] = [];
+            const attributes: ItemInstanceOld[] = [];
 
             // Instead of looking at AIDs that have been passed in, we look at
             // the number of dimensions that the defaultKey has. Any dimension
@@ -338,7 +352,7 @@ export class AttributeUtils implements AttributeUtilities {
                 if (resAttribute !== undefined) {
                     const dimensionKey: KEY = dimensionIndex.toString();
 
-                    const resAttributeItem: ItemInstance = {
+                    const resAttributeItem: ItemInstanceOld = {
                         pid: resAttribute.aid,
                         name: resAttribute.name,
                         aliases: resAttribute.aliases,
@@ -356,7 +370,7 @@ export class AttributeUtils implements AttributeUtilities {
             }
 
             parent.name = attributeNames + parent.name;
-            const newItem: ItemInstance = {
+            const newItem: ItemInstanceOld = {
                 pid,
                 name: parent.name,
                 aliases: parent.aliases,

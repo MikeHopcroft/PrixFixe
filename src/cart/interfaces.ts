@@ -1,5 +1,4 @@
 import { AID } from '../attributes';
-import { Item } from '../item';
 import { KEY, PID } from '../catalog';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -29,11 +28,22 @@ export type UID = number;
 // An instance of an item in the shopping cart.
 // DESIGN NOTE: The uid should be added just before returning the Cart to the
 // Host, using the addIdsToCart() function in cart.ts. TODO: explain rationale.
-export interface ItemInstance extends Item {
+export interface ItemInstance {
     uid?: UID;
     key: KEY;
     quantity: number;
     children: ItemInstance[];
+}
+
+export interface ItemInstanceOld {
+    pid: PID;
+    name: string;
+    aliases: string[];
+
+    uid?: UID;
+    key: KEY;
+    quantity: number;
+    children: ItemInstanceOld[];
 }
 
 // // An instance of an item in the shopping cart.
@@ -54,6 +64,10 @@ export interface ItemInstance extends Item {
 // sequence in the order they were added to the cart.
 export interface Cart {
     items: ItemInstance[];
+}
+
+export interface CartOld {
+    items: ItemInstanceOld[];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
