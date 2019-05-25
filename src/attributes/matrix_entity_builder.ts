@@ -46,6 +46,11 @@ export class MatrixEntityBuilder {
         }
     }
 
+    setAttribute(aid: AID) {
+        const coordinate = this.info.getAttributeCoordinates(aid);
+        this.dimensionIdToAttribute.set(coordinate.dimension.did, aid);
+    }
+
     getKey(): KEY {
         if (this.pid === undefined) {
             throw TypeError(`no pid set`);

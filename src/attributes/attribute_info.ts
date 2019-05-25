@@ -148,14 +148,30 @@ export class AttributeInfo {
         return key.join(':');
     }
 
-    getDefaultAttribute(id: PID, index: number): AID {
+    getDefaultAttribute(pid: PID, index: number): AID {
         // Lookup the generic entity in the catalog, using its PID.
-        const genericItem: GenericTypedEntity = this.catalog.getGeneric(id);
+        const genericItem: GenericTypedEntity = this.catalog.getGeneric(pid);
 
         // Get the generic entity's defaultKey.
         const defaultKey: KEY = genericItem.defaultKey;
 
         return Number(defaultKey.split(':')[index]) as AID;
+    }
+
+    getAttributes(key: KEY): AID[] {
+        const fields = key.split(':').map(parseInt);
+        const pid = fields[0];
+        const matrix = this.getMatrixForEntity(pid);
+
+        fields.shift();
+        const aids: AID[] = [];
+        for (let i = 0; i < fields.length; ++i) {
+            const dimension = matrix.dimensions[i];
+            const attribute = dimension.attributes[fields[i]];
+            aids.push(attribute.aid);
+        }
+
+        return aids;
     }
 
     static hasDimension(matrix: Matrix, did: DID): boolean {
