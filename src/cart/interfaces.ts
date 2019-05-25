@@ -29,7 +29,7 @@ export type UID = number;
 // DESIGN NOTE: The uid should be added just before returning the Cart to the
 // Host, using the addIdsToCart() function in cart.ts. TODO: explain rationale.
 export interface ItemInstance {
-    uid?: UID;
+    uid: UID;
     key: KEY;
     quantity: number;
     children: ItemInstance[];
@@ -192,5 +192,5 @@ export interface AttributeUtilities {
         pid: PID,
         attributes: Set<AID>,
         uid: UID
-    ) => ItemInstance | undefined;
+    ) => ItemInstanceOld | undefined;
 }

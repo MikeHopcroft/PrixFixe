@@ -1,9 +1,9 @@
 import * as path from 'path';
 
-import { AID, Cart, Catalog, setup } from '../src/';
+import { AID, CartOld, Catalog, setup } from '../src/';
 
 interface State {
-    cart: Cart;
+    cart: CartOld;
     actions: [];
 }
 
@@ -63,7 +63,7 @@ function printEntries(catalog: Catalog): void {
 }
 
 // Prints the name of each parent and child item in a cart.
-function printCart(cart: Cart) {
+function printCart(cart: CartOld) {
     if (cart.items === undefined || cart.items.length === 0) {
         console.log(`The cart is empty.`);
     } else {

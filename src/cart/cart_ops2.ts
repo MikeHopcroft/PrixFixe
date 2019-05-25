@@ -2,14 +2,13 @@ import { AID, AttributeInfo, MatrixEntityBuilder } from '../attributes';
 import { Catalog, KEY, PID } from '../catalog';
 
 import { Cart, ItemInstance } from './interfaces';
+import { IDGenerator } from '../unified';
 // import { CatagoryInfo } from '../rule_checker';
 
 type FindItemPredicate = (item: ItemInstance) => boolean;
 
 // TODO
-//   createItem()
 //   findCompatibleParent()
-//   Remove PID from Item
 //   Builder imports
 //   Unit tests for Cart2
 //   Unit test for setAttributes()
@@ -19,6 +18,8 @@ type FindItemPredicate = (item: ItemInstance) => boolean;
 class CartOps2 {
     catalog: Catalog;
     attributeInfo: AttributeInfo;
+
+    idGenerator = new IDGenerator();
 
     constructor(attributeInfo: AttributeInfo, catalog: Catalog) {
         this.attributeInfo = attributeInfo;
@@ -31,12 +32,10 @@ class CartOps2 {
     //
     ///////////////////////////////////////////////////////////////////////////
     addToCart(cart: Cart, item: ItemInstance): Cart {
-        // TODO: use Cart updater method to ensure future Cart fields are copied.
         return { ...cart, items: [...cart.items, item] };
     }
 
     addToItem(parent: ItemInstance, child: ItemInstance) {
-        // TODO: use ItemInstance updater method to ensure future ItemInstance fields are copied.
         return { ...parent, children: [...parent.children, child] };
     }
 
@@ -84,7 +83,7 @@ class CartOps2 {
     *findCompatibleParent(cart: Cart, child: ItemInstance) {
         const predicate = (item: ItemInstance) => {
             // TODO: implement with RulesChecker
-            return false;
+            return true;
         };
         yield* this.findInCart(cart, predicate);
     }
@@ -127,7 +126,6 @@ class CartOps2 {
             const message = `Cart does not have item with UID === ${item.uid}`;
             throw TypeError(message);
         } else {
-            // TODO: use cart updater method to ensure future Cart fields are copied.
             return { ...cart, items: modified };
         }
     }
@@ -182,7 +180,6 @@ class CartOps2 {
             const message = `Cart does not have item with UID === ${item.uid}`;
             throw TypeError(message);
         } else {
-            // TODO: use cart updater method to ensure future Cart fields are copied.
             return { ...cart, items: modified };
         }
     }
@@ -230,24 +227,28 @@ class CartOps2 {
     // Operations on ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
-    // createItem(
-    //     quantity: number,
-    //     pid: PID,
-    //     aids: IterableIterator<AID>,
-    //     children: IterableIterator<ItemInstance>
-    // ): ItemInstance {
-    //     const builder = new MatrixEntityBuilder(this.attributeInfo, this.catalog);
-    //     builder.setPID(pid);
-    //     for (const aid of aids) {
-    //         builder.addAttribute(aid);
-    //     }
+    createItem(
+        quantity: number,
+        pid: PID,
+        aids: IterableIterator<AID>,
+        children: IterableIterator<ItemInstance>
+    ): ItemInstance {
+        const builder = new MatrixEntityBuilder(
+            this.attributeInfo,
+            this.catalog
+        );
+        builder.setPID(pid);
+        for (const aid of aids) {
+            builder.addAttribute(aid);
+        }
 
-    //     return {
-    //         key: builder.getKey(),
-    //         quantity,
-    //         children: [...children]
-    //     };
-    // }
+        return {
+            uid: this.idGenerator.nextId(),
+            key: builder.getKey(),
+            quantity,
+            children: [...children],
+        };
+    }
 
     changeItemAttributes(
         item: ItemInstance,
@@ -279,19 +280,9 @@ class CartOps2 {
         }
     }
 
-    // TODO: is this necessary?
-    changeItemQuantity(item: ItemInstance, quantity: number): ItemInstance {
-        return { ...item, quantity };
-    }
-
-    // TODO: ChangeItemChildren()?
-
     ///////////////////////////////////////////////////////////////////////////
     //
     // Operations on Cart
     //
     ///////////////////////////////////////////////////////////////////////////
-    changeCartItems(cart: Cart, items: ItemInstance[]) {
-        return { ...cart, items };
-    }
 }
