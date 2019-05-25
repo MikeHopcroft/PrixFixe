@@ -42,7 +42,7 @@ export const genericCone: GenericTypedEntity = {
 
 export const genericCoffeePID: PID = 9000;
 export const coffeeCID: CID = 200;
-export const genericcoffee: GenericTypedEntity = {
+export const genericCoffee: GenericTypedEntity = {
     pid: genericCoffeePID,
     cid: coffeeCID,
     name: 'coffee',
@@ -52,7 +52,9 @@ export const genericcoffee: GenericTypedEntity = {
     kind: MENUITEM,
 };
 
-export const genericItems: GenericTypedEntity[] = [genericCone, genericcoffee];
+export const genericMilkPID = 10000;
+
+export const genericItems: GenericTypedEntity[] = [genericCone, genericCoffee];
 
 ///////////////////////////////////////////////////////////////////////////////
 //

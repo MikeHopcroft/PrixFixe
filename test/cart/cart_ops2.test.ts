@@ -12,15 +12,14 @@ import {
     smallWorldCatalog,
     soyMilk,
     wholeMilk,
-    mediumIcedDecafCoffee,
-    genericcoffee,
-    genericCone,
     genericCoffeePID,
+    genericMilkPID,
     sizeMedium,
     caffeineDecaf,
     temperatureCold,
     sizeSmall,
     smallIcedDecafCoffee,
+    genericCone,
 } from '../shared';
 import { WSAEHOSTDOWN } from 'constants';
 
@@ -245,6 +244,56 @@ describe('CartOps2', () => {
             };
 
             assert.deepEqual(observed, expected);
+        });
+
+        it('changeItemPID', () => {
+            const original = {
+                uid: 1,
+                key: smallCoffee.key,
+                quantity: 5,
+                children: [],
+            };
+
+            const observed = ops.changeItemPID(original, genericCone.pid);
+
+            const expected = {
+                uid: 1,
+                key: smallVanillaCone.key,
+                quantity: 5,
+                children: [],
+            };
+
+            assert.deepEqual(observed, expected);
+        });
+    });
+
+    describe('Find operations', () => {
+        it('findByKey', () => {
+            const items = [...ops.findByKey(sampleCart, soyMilk.key)];
+            const uids = items.map(x => x.uid);
+            assert.deepEqual(uids, [4]);
+        });
+
+        it('findByPID', () => {
+            const items = [...ops.findByPID(sampleCart, genericCoffeePID)];
+            const uids = items.map(x => x.uid);
+            assert.deepEqual(uids, [3, 2]);
+        });
+
+        it('findByChildKey', () => {
+            const items = [...ops.findByChildKey(sampleCart, wholeMilk.key)];
+            const uids = items.map(x => x.uid);
+            assert.deepEqual(uids, [3]);
+        });
+
+        it('findByChildPID', () => {
+            const items = [...ops.findByChildPID(sampleCart, genericMilkPID)];
+            const uids = items.map(x => x.uid);
+            assert.deepEqual(uids, [3, 2]);
+        });
+
+        it('findByCompatibleParent', () => {
+            // TODO: implement.
         });
     });
 });

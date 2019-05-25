@@ -44,19 +44,19 @@ export class CartOps2 {
     // Finding ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
-    *findByKey(cart: Cart, key: KEY) {
+    *findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => key === item.key;
         yield* this.findInCart(cart, predicate);
     }
 
-    *findByPID(cart: Cart, pid: PID) {
+    *findByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             return pid === AttributeInfo.pidFromKey(item.key);
         };
         yield* this.findInCart(cart, predicate);
     }
 
-    *findByChildKey(cart: Cart, key: KEY) {
+    *findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             for (const child of item.children) {
                 if (child.key === key) {
@@ -68,7 +68,7 @@ export class CartOps2 {
         yield* this.findInCart(cart, predicate);
     }
 
-    *findByChildPID(cart: Cart, pid: PID) {
+    *findByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             for (const child of item.children) {
                 if (AttributeInfo.pidFromKey(child.key) === pid) {
@@ -80,7 +80,10 @@ export class CartOps2 {
         yield* this.findInCart(cart, predicate);
     }
 
-    *findCompatibleParent(cart: Cart, child: ItemInstance) {
+    *findCompatibleParent(
+        cart: Cart,
+        child: ItemInstance
+    ): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             // TODO: implement with RulesChecker
             return true;
@@ -269,6 +272,28 @@ export class CartOps2 {
         // Copy over new attributes, overwriting existing attributes on same dimension.
         for (const aid of newAIDs) {
             builder.setAttribute(aid);
+        }
+
+        // Return the new item, if different from original item.
+        const key = builder.getKey();
+        if (key !== item.key) {
+            return { ...item, key: builder.getKey() };
+        } else {
+            return item;
+        }
+    }
+
+    changeItemPID(item: ItemInstance, newPID: PID): ItemInstance {
+        const existingAIDs = this.attributeInfo.getAttributes(item.key);
+        const builder = new MatrixEntityBuilder(
+            this.attributeInfo,
+            this.catalog
+        );
+        builder.setPID(newPID);
+
+        // Copy over previous attributes.
+        for (const aid of existingAIDs) {
+            builder.addAttribute(aid);
         }
 
         // Return the new item, if different from original item.
