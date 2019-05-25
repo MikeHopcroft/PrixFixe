@@ -29,7 +29,7 @@ export class CartUtils implements CartOps {
         this.catalog = catalog;
     }
 
-    // Returns a list of ItemInstances in the cart with a particular SPID.
+    // Returns a list of ItemInstances in the cart with a specific key.
     // Items are returned in the order they were added to the cart.
     //
     // Use case: find all instances of a specific drink like a 'large iced
