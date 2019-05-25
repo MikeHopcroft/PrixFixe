@@ -8,6 +8,7 @@ import {
     GenericTypedEntity,
     KEY,
     MENUITEM,
+    MODIFIER,
     PID,
     SpecificTypedEntity,
     Attributes,
@@ -255,60 +256,74 @@ export const mediumChocolateCone: SpecificTypedEntity = {
 //  Specific Coffees (size, temperature, caffeine)
 //
 ///////////////////////////////////////////////////////////////////////////////
-export const smallcoffee: SpecificTypedEntity = {
+export const smallCoffee: SpecificTypedEntity = {
     sku: 9001,
     name: 'small coffee',
     key: '9000:0:0:0',
     kind: MENUITEM,
 };
 
-export const smallDecafcoffee: SpecificTypedEntity = {
+export const smallDecafCoffee: SpecificTypedEntity = {
     sku: 9002,
     name: 'small coffee',
     key: '9000:0:0:1',
     kind: MENUITEM,
 };
 
-export const smallIcedcoffee: SpecificTypedEntity = {
+export const smallIcedCoffee: SpecificTypedEntity = {
     sku: 9003,
     name: 'small coffee',
     key: '9000:0:1:0',
     kind: MENUITEM,
 };
 
-export const smallIcedDecafcoffee: SpecificTypedEntity = {
+export const smallIcedDecafCoffee: SpecificTypedEntity = {
     sku: 9004,
     name: 'small coffee',
     key: '9000:0:1:1',
     kind: MENUITEM,
 };
 
-export const mediumcoffee: SpecificTypedEntity = {
+export const mediumCoffee: SpecificTypedEntity = {
     sku: 9005,
     name: 'medium coffee',
     key: '9000:1:0:0',
     kind: MENUITEM,
 };
 
-export const mediumDecafcoffee: SpecificTypedEntity = {
+export const mediumDecafCoffee: SpecificTypedEntity = {
     sku: 9006,
     name: 'medium decaf coffee',
     key: '9000:1:0:1',
     kind: MENUITEM,
 };
 
-export const mediumIcedcoffee: SpecificTypedEntity = {
+export const mediumIcedCoffee: SpecificTypedEntity = {
     sku: 9007,
     name: 'medium iced coffee',
     key: '9000:1:1:0',
     kind: MENUITEM,
 };
 
-export const mediumIcedDecafcoffee: SpecificTypedEntity = {
+export const mediumIcedDecafCoffee: SpecificTypedEntity = {
     sku: 9008,
     name: 'medium iced decaf coffee',
     key: '9000:1:1:1',
     kind: MENUITEM,
+};
+
+export const wholeMilk: SpecificTypedEntity = {
+    sku: 10001,
+    name: 'whole milk',
+    key: '10000:1',
+    kind: MODIFIER,
+};
+
+export const soyMilk: SpecificTypedEntity = {
+    sku: 10002,
+    name: 'soy milk',
+    key: '10000:2',
+    kind: MODIFIER,
 };
 
 export const specificItems: SpecificTypedEntity[] = [
@@ -316,14 +331,16 @@ export const specificItems: SpecificTypedEntity[] = [
     smallChocolateCone,
     mediumVanillaCone,
     mediumChocolateCone,
-    smallcoffee,
-    smallDecafcoffee,
-    smallIcedcoffee,
-    smallIcedDecafcoffee,
-    mediumcoffee,
-    mediumDecafcoffee,
-    mediumIcedcoffee,
-    mediumIcedDecafcoffee,
+    smallCoffee,
+    smallDecafCoffee,
+    smallIcedCoffee,
+    smallIcedDecafCoffee,
+    mediumCoffee,
+    mediumDecafCoffee,
+    mediumIcedCoffee,
+    mediumIcedDecafCoffee,
+    wholeMilk,
+    soyMilk,
 ];
 
 ///////////////////////////////////////////////////////////////////////////////

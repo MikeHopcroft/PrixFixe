@@ -11,11 +11,11 @@ type FindItemPredicate = (item: ItemInstance) => boolean;
 //   findCompatibleParent()
 //   Builder imports
 //   Unit tests for Cart2
-//   Unit test for setAttributes()
-//   Unit test for getAttributes()
+//   Unit test for MatrixEntityBuilder.setAttributes()
+//   Unit test for AttributeInfo.getAttributes()
 //   Unit test for changeItemAttributes()
 
-class CartOps2 {
+export class CartOps2 {
     catalog: Catalog;
     attributeInfo: AttributeInfo;
 
@@ -152,7 +152,7 @@ class CartOps2 {
                         existing.children,
                         replacement
                     );
-                    if (children !== replacement.children) {
+                    if (children !== existing.children) {
                         changed = true;
                         modified.push({ ...existing, children });
                     } else {
@@ -205,7 +205,7 @@ class CartOps2 {
                         existing.children,
                         remove
                     );
-                    if (children !== remove.children) {
+                    if (children !== existing.children) {
                         changed = true;
                         modified.push({ ...existing, children });
                     } else {
