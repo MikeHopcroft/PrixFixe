@@ -129,33 +129,31 @@ export class AttributeInfo {
         return this.getMatrix(genericEntity.matrix);
     }
 
-    // Given a map from dimensionId to attributeId, return a number that
-    // represents those set of attribute values associated Dimensions of
-    // this Matrix.
+    // Given a nggeneric entity PID and a map from DID to AID, return a number
+    // that represents those set of attribute values associated with Dimensions
+    // of the generic entity's Matrix.
     getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
-        const matrix = this.getMatrixForEntity(pid);
-        const key = [pid];
-        let attributeIndex = 1;
-        for (const dimension of matrix.dimensions.values()) {
-            let attributeId = dimensionIdToAttribute.get(dimension.did);
-            if (attributeId === undefined) {
-                attributeId = this.getDefaultAttribute(pid, attributeIndex);
+        // Get the genericEntity for its matrix and defaultKey.
+        const genericEntity = this.catalog.getGeneric(pid);
+        const matrix = this.getMatrix(genericEntity.matrix);
+
+        // Convert the default key into a sequence of coordinate fields.
+        const key = genericEntity.defaultKey;
+        const fields = key.split(':').map(parseBase10Int);
+        fields.shift();
+
+        // Overwrite default coordinate fields with values supplied from the
+        // map.
+        for (const [index, dimension] of matrix.dimensions.entries()) {
+            const aid = dimensionIdToAttribute.get(dimension.did);
+            if (aid !== undefined) {
+                const coordinate = this.getAttributeCoordinates(aid);
+                fields[index] = coordinate.position;
             }
-            const coordinate = this.getAttributeCoordinates(attributeId);
-            key.push(coordinate.position);
-            attributeIndex++;
         }
-        return key.join(':');
-    }
 
-    getDefaultAttribute(pid: PID, index: number): AID {
-        // Lookup the generic entity in the catalog, using its PID.
-        const genericItem: GenericTypedEntity = this.catalog.getGeneric(pid);
-
-        // Get the generic entity's defaultKey.
-        const defaultKey: KEY = genericItem.defaultKey;
-
-        return Number(defaultKey.split(':')[index]) as AID;
+        // Build and return the key string.
+        return [pid, ...fields].join(':');
     }
 
     getAttributes(key: KEY): AID[] {
@@ -183,7 +181,7 @@ export class AttributeInfo {
         return false;
     }
 
-    static pidFromKey(key: KEY) {
+    static pidFromKey(key: KEY): PID {
         const pid = Number.parseInt(key, 10);
         if (isNaN(pid)) {
             throw TypeError(`Bad key "${key}""`);
@@ -193,6 +191,10 @@ export class AttributeInfo {
     }
 }
 
-function parseBase10Int(text: string) {
-    return Number.parseInt(text, 10);
+function parseBase10Int(text: string): number {
+    const n = Number.parseInt(text, 10);
+    if (isNaN(n)) {
+        const message = `Invalid number ${text}.`;
+    }
+    return n;
 }

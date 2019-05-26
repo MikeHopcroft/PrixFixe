@@ -32,6 +32,9 @@ import {
     smallWorldCatalog,
     softServeDimensions,
     unknownPID,
+    smallIcedDecafCoffee,
+    temperatureCold,
+    caffeineDecaf,
 } from '../shared';
 
 ///////////////////////////////////////////////////////////////////////////
@@ -122,5 +125,12 @@ describe('AttributeInfo', () => {
             info.getKey(genericConePID, dimensionIdToAttribute),
             `${genericConePID}:1:0`
         );
+    });
+
+    it('getAttributes()', () => {
+        const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
+
+        const aids = info.getAttributes(smallIcedDecafCoffee.key);
+        assert.deepEqual(aids, [sizeSmall, temperatureCold, caffeineDecaf]);
     });
 });
