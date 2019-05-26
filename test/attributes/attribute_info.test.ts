@@ -188,7 +188,7 @@ describe('Attribute Info', () => {
                 smallWorldCatalog,
                 smallWorldAttributes
             );
-            const builder = new MatrixEntityBuilder(info, smallWorldCatalog);
+            const builder = new MatrixEntityBuilder(info);
 
             // Haven't added an entity yet.
             assert.isFalse(builder.hasPID());
@@ -208,7 +208,7 @@ describe('Attribute Info', () => {
                 smallWorldAttributes
             );
 
-            const builder = new MatrixEntityBuilder(info, smallWorldCatalog);
+            const builder = new MatrixEntityBuilder(info);
 
             const f = () => builder.addAttribute(unknownPID);
             assert.throws(f, 'Unknown attribute id 9999.');
@@ -232,7 +232,7 @@ describe('Attribute Info', () => {
             // TODO: this should not hard code 8000 here or below.
             const genericConePID: PID = 8000;
 
-            const builder = new MatrixEntityBuilder(info, smallWorldCatalog);
+            const builder = new MatrixEntityBuilder(info);
 
             // getKey() before adding entity should throw.
             const f = () => builder.getKey();

@@ -7,14 +7,6 @@ import { RuleChecker } from '../rule_checker';
 
 type FindItemPredicate = (item: ItemInstance) => boolean;
 
-// TODO
-//   findCompatibleParent()
-//   Builder imports
-//   Unit tests for Cart2
-//   Unit test for MatrixEntityBuilder.setAttributes()
-//   Unit test for AttributeInfo.getAttributes()
-//   Unit test for changeItemAttributes()
-
 export class CartOps2 {
     attributeInfo: AttributeInfo;
     catalog: Catalog;
@@ -241,10 +233,7 @@ export class CartOps2 {
         aids: IterableIterator<AID>,
         children: IterableIterator<ItemInstance>
     ): ItemInstance {
-        const builder = new MatrixEntityBuilder(
-            this.attributeInfo,
-            this.catalog
-        );
+        const builder = new MatrixEntityBuilder(this.attributeInfo);
         builder.setPID(pid);
         for (const aid of aids) {
             builder.addAttribute(aid);
@@ -263,10 +252,7 @@ export class CartOps2 {
         newAIDs: IterableIterator<AID>
     ): ItemInstance {
         const existingAIDs = this.attributeInfo.getAttributes(item.key);
-        const builder = new MatrixEntityBuilder(
-            this.attributeInfo,
-            this.catalog
-        );
+        const builder = new MatrixEntityBuilder(this.attributeInfo);
         builder.setPID(AttributeInfo.pidFromKey(item.key));
 
         // Copy over existing attributes.
@@ -290,10 +276,7 @@ export class CartOps2 {
 
     changeItemPID(item: ItemInstance, newPID: PID): ItemInstance {
         const existingAIDs = this.attributeInfo.getAttributes(item.key);
-        const builder = new MatrixEntityBuilder(
-            this.attributeInfo,
-            this.catalog
-        );
+        const builder = new MatrixEntityBuilder(this.attributeInfo);
         builder.setPID(newPID);
 
         // Copy over previous attributes.

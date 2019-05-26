@@ -1,13 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import {
-    Cart,
-    CartOps2,
-    ItemInstance,
-    AttributeInfo,
-    RuleChecker,
-} from '../../src';
+import { Cart, CartOps2, ItemInstance, AttributeInfo } from '../../src';
 
 import {
     caffeineDecaf,
@@ -92,6 +86,11 @@ const ops: CartOps2 = new CartOps2(
 );
 
 describe('CartOps2', () => {
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Adding ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
     describe('Adding ItemInstances', () => {
         it('Add to Cart', () => {
             let cart: Cart = { items: [] };
@@ -120,6 +119,11 @@ describe('CartOps2', () => {
         });
     });
 
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Replacing ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
     describe('Replacing ItemInstances', () => {
         it('replaceInCart', () => {
             // The first item in sampleCart is a smallVanillaCone with UID 1.
@@ -154,6 +158,11 @@ describe('CartOps2', () => {
         });
     });
 
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Removing ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
     describe('Removing ItemInstances', () => {
         it('removeFromCart', () => {
             const remove1 = sampleCart.items[1].children[0];
@@ -182,6 +191,11 @@ describe('CartOps2', () => {
         });
     });
 
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Operations on ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
     describe('ItemInstance operations', () => {
         it('createItem', () => {
             const pid = genericCoffeePID;
@@ -278,6 +292,11 @@ describe('CartOps2', () => {
         });
     });
 
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Finding ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
     describe('Find operations', () => {
         it('findByKey', () => {
             const items = [...ops.findByKey(sampleCart, soyMilk.key)];
