@@ -14,19 +14,22 @@ import {
 } from '../../src/';
 
 import {
-    smallWorldAttributes,
     caffeines,
-    smallWorldCatalog,
     emptyAttributes,
     flavor,
     flavorChocolate,
     flavorDimension,
     flavorVanilla,
+    genericCone,
+    mediumVanillaCone,
     size,
     sizeDimension,
     sizeMedium,
     sizes,
     sizeSmall,
+    smallChocolateCone,
+    smallWorldAttributes,
+    smallWorldCatalog,
     softServeDimensions,
     unknownPID,
 } from '../shared';
@@ -221,6 +224,26 @@ describe('Attribute Info', () => {
 
             // First time adding a flavor should succeed.
             assert.isTrue(builder.addAttribute(flavorChocolate));
+        });
+
+        it('setAttribute()', () => {
+            const info = new AttributeInfo(
+                smallWorldCatalog,
+                smallWorldAttributes
+            );
+
+            const builder = new MatrixEntityBuilder(info);
+
+            // Configure builder for small chocolate cone.
+            builder.setPID(genericCone.pid);
+            assert.isTrue(builder.addAttribute(sizeSmall));
+            assert.isTrue(builder.addAttribute(flavorChocolate));
+            assert.equal(builder.getKey(), smallChocolateCone.key);
+
+            // Now reconfigure for medium vanilla cone.
+            builder.setAttribute(sizeMedium);
+            builder.setAttribute(flavorVanilla);
+            assert.equal(builder.getKey(), mediumVanillaCone.key);
         });
 
         it('getKey()', () => {
