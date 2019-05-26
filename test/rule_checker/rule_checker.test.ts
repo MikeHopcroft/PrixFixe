@@ -175,50 +175,55 @@ const ruleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
 
 describe('RuleChecker', () => {
     describe('Is valid child', () => {
-        it('Invalid children evaluate to false', () => {
+        it('Invalid children evaluate to false (1)', () => {
             // Drizzles cannot be in hot lattes
             assert.isFalse(ruleChecker.isValidChild(latteHotKey, drizzleKey));
         });
 
-        it('Invalid children evaluate to false', () => {
+        it('No exception when no partial keys match', () => {
+            // Drizzles cannot be in hot lattes
+            assert.isFalse(ruleChecker.isValidChild(twoMilkKey, twoMilkKey));
+        });
+
+        it('Invalid children evaluate to false (2)', () => {
             // Another drizzle cannot be in a hot latte
             assert.isFalse(
                 ruleChecker.isValidChild(latteHotKey, anotherDrizzleKey)
             );
         });
 
-        it('Invalid children evaluate to false', () => {
+        it('Invalid children evaluate to false (3)', () => {
             // Sprinkles cannot be in lattes
             assert.isFalse(ruleChecker.isValidChild(latteHotKey, sprinklesKey));
         });
 
-        it('Invalid children evaluate to false', () => {
+        it('Invalid children evaluate to false (4)', () => {
             // More sprinkles also don't belong in lattes
             assert.isFalse(
                 ruleChecker.isValidChild(latteHotKey, anotherSprinleKey)
             );
         });
 
-        it('Invalid children evaluate to false', () => {
+        it('Invalid children evaluate to false (5)', () => {
             // Sprinkles cannot be in an iced latte
             assert.isFalse(
                 ruleChecker.isValidChild(latteIcedKey, sprinklesKey)
             );
         });
 
-        it('Invalid children evaluate to false', () => {
+        it('Invalid children evaluate to false (6)', () => {
             // More sprinkles cannot be in an iced latte
             assert.isFalse(
                 ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey)
             );
         });
 
-        it('Valid children evaluate to true', () => {
+        it('Valid children evaluate to true (1)', () => {
             // A drizzle can be in an iced latte
             assert.isTrue(ruleChecker.isValidChild(latteIcedKey, drizzleKey));
         });
 
-        it('Valid children evaluate to true', () => {
+        it('Valid children evaluate to true (2)', () => {
             // More drizzles can be in iced lattes
             assert.isTrue(
                 ruleChecker.isValidChild(latteIcedKey, anotherDrizzleKey)

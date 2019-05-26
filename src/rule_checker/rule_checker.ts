@@ -67,7 +67,7 @@ export class RuleChecker implements RuleCheckerOps {
         // Evaulate each predicate and take the logical-or
         const result = predicates
             .map(predicate => predicate(child))
-            .reduce((x, y): boolean => x || y);
+            .reduce((x, y): boolean => x || y, false);
 
         return result;
     };

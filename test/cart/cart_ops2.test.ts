@@ -1,27 +1,33 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { Cart, CartOps2, ItemInstance, AttributeInfo } from '../../src';
+import {
+    Cart,
+    CartOps2,
+    ItemInstance,
+    AttributeInfo,
+    RuleChecker,
+} from '../../src';
 
 import {
+    caffeineDecaf,
+    genericCoffeePID,
+    genericCone,
+    genericMilkPID,
     mediumDecafCoffee,
+    sizeMedium,
+    sizeSmall,
     smallCoffee,
     smallChocolateCone,
+    smallIcedDecafCoffee,
     smallVanillaCone,
     smallWorldAttributes,
     smallWorldCatalog,
+    smallWorldRuleChecker,
     soyMilk,
-    wholeMilk,
-    genericCoffeePID,
-    genericMilkPID,
-    sizeMedium,
-    caffeineDecaf,
     temperatureCold,
-    sizeSmall,
-    smallIcedDecafCoffee,
-    genericCone,
+    wholeMilk,
 } from '../shared';
-import { WSAEHOSTDOWN } from 'constants';
 
 const sampleCart: Cart = {
     items: [
@@ -78,7 +84,12 @@ const attributeInfo = new AttributeInfo(
     smallWorldCatalog,
     smallWorldAttributes
 );
-const ops: CartOps2 = new CartOps2(attributeInfo, smallWorldCatalog);
+
+const ops: CartOps2 = new CartOps2(
+    attributeInfo,
+    smallWorldCatalog,
+    smallWorldRuleChecker
+);
 
 describe('CartOps2', () => {
     describe('Adding ItemInstances', () => {
@@ -293,7 +304,11 @@ describe('CartOps2', () => {
         });
 
         it('findByCompatibleParent', () => {
-            // TODO: implement.
+            const items = [
+                ...ops.findCompatibleParent(sampleCart, wholeMilk.key),
+            ];
+            const uids = items.map(x => x.uid);
+            assert.deepEqual(uids, [3, 2]);
         });
     });
 });

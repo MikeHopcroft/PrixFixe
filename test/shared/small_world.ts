@@ -1,18 +1,20 @@
 import {
     AID,
     AttributeItem,
+    Attributes,
     Catalog,
     CID,
     DID,
     Dimension,
     GenericTypedEntity,
     KEY,
+    MatrixDescription,
     MENUITEM,
     MODIFIER,
     PID,
+    RuleChecker,
+    RuleConfig,
     SpecificTypedEntity,
-    Attributes,
-    MatrixDescription,
 } from '../../src/';
 
 // A PID that is not indexed in any data structure in this file. For testing
@@ -52,9 +54,23 @@ export const genericCoffee: GenericTypedEntity = {
     kind: MENUITEM,
 };
 
-export const genericMilkPID = 10000;
+export const genericMilkPID = 5000;
+export const milkCID: CID = 500;
+export const genericMilk: GenericTypedEntity = {
+    pid: genericMilkPID,
+    cid: milkCID,
+    name: 'milk',
+    aliases: ['milk'],
+    defaultKey: '5000:1',
+    matrix: 2,
+    kind: MENUITEM,
+};
 
-export const genericItems: GenericTypedEntity[] = [genericCone, genericCoffee];
+export const genericItems: GenericTypedEntity[] = [
+    genericCone,
+    genericCoffee,
+    genericMilk,
+];
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -124,6 +140,24 @@ export const caffeines: AttributeItem[] = [
         aliases: ['decaf', 'unleaded'],
     },
 ];
+
+// export const milkWhole: AID = 8;
+// export const milkTwo: AID = 9;
+// export const milkZero: AID = 10;
+// export const milkSoy: AID = 11;
+
+// export const milks: AttributeItem[] = [
+//     {
+//         aid: caffeineRegular,
+//         name: 'regular',
+//         aliases: ['regular'],
+//     },
+//     {
+//         aid: caffeineDecaf,
+//         name: 'decaf',
+//         aliases: ['decaf', 'unleaded'],
+//     },
+// ];
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -315,16 +349,30 @@ export const mediumIcedDecafCoffee: SpecificTypedEntity = {
 };
 
 export const wholeMilk: SpecificTypedEntity = {
-    sku: 10001,
+    sku: 5000,
     name: 'whole milk',
-    key: '10000:1',
+    key: '5000:0',
+    kind: MODIFIER,
+};
+
+export const twoMilk: SpecificTypedEntity = {
+    sku: 5001,
+    name: 'two percent milk',
+    key: '5000:1',
+    kind: MODIFIER,
+};
+
+export const zeroMilk: SpecificTypedEntity = {
+    sku: 5002,
+    name: 'fat free milk',
+    key: '5000:2',
     kind: MODIFIER,
 };
 
 export const soyMilk: SpecificTypedEntity = {
-    sku: 10002,
+    sku: 5003,
     name: 'soy milk',
-    key: '10000:2',
+    key: '5000:3',
     kind: MODIFIER,
 };
 
@@ -342,6 +390,8 @@ export const specificItems: SpecificTypedEntity[] = [
     mediumIcedCoffee,
     mediumIcedDecafCoffee,
     wholeMilk,
+    twoMilk,
+    zeroMilk,
     soyMilk,
 ];
 
@@ -353,4 +403,32 @@ export const specificItems: SpecificTypedEntity[] = [
 export const smallWorldCatalog = Catalog.fromEntities(
     genericItems.values(),
     specificItems.values()
+);
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Rules
+//
+///////////////////////////////////////////////////////////////////////////////
+export const smallWorldRules: RuleConfig = {
+    rules: [
+        {
+            partialKey: '9000', // All coffees
+            validCatagoryMap: {
+                '500': {
+                    validOptions: [5000],
+                    qtyInfo: {
+                        '': { defaultQty: 1, minQty: 1, maxQty: 1 },
+                    },
+                },
+            },
+            exclusionZones: { 500: [5000] }, // Milk is exclusive
+            specificExceptions: [],
+        },
+    ],
+};
+
+export const smallWorldRuleChecker = new RuleChecker(
+    smallWorldRules,
+    smallWorldCatalog.mapGeneric
 );

@@ -3,7 +3,7 @@ import { Catalog, KEY, PID } from '../catalog';
 
 import { Cart, ItemInstance } from './interfaces';
 import { IDGenerator } from '../unified';
-// import { CatagoryInfo } from '../rule_checker';
+import { RuleChecker } from '../rule_checker';
 
 type FindItemPredicate = (item: ItemInstance) => boolean;
 
@@ -16,14 +16,20 @@ type FindItemPredicate = (item: ItemInstance) => boolean;
 //   Unit test for changeItemAttributes()
 
 export class CartOps2 {
-    catalog: Catalog;
     attributeInfo: AttributeInfo;
+    catalog: Catalog;
+    ruleChecker: RuleChecker;
 
     idGenerator = new IDGenerator();
 
-    constructor(attributeInfo: AttributeInfo, catalog: Catalog) {
+    constructor(
+        attributeInfo: AttributeInfo,
+        catalog: Catalog,
+        ruleChecker: RuleChecker
+    ) {
         this.attributeInfo = attributeInfo;
         this.catalog = catalog;
+        this.ruleChecker = ruleChecker;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -82,11 +88,10 @@ export class CartOps2 {
 
     *findCompatibleParent(
         cart: Cart,
-        child: ItemInstance
+        childKey: KEY
     ): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
-            // TODO: implement with RulesChecker
-            return true;
+            return this.ruleChecker.isValidChild(item.key, childKey);
         };
         yield* this.findInCart(cart, predicate);
     }
