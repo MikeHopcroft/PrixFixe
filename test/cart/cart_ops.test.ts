@@ -85,7 +85,7 @@ const ops: CartOps = new CartOps(
     smallWorldRuleChecker
 );
 
-describe('CartOps2', () => {
+describe('CartOps', () => {
     ///////////////////////////////////////////////////////////////////////////
     //
     // Adding ItemInstances
@@ -165,10 +165,10 @@ describe('CartOps2', () => {
     ///////////////////////////////////////////////////////////////////////////
     describe('Removing ItemInstances', () => {
         it('removeFromCart', () => {
-            const remove1 = sampleCart.items[1].children[0];
-            const remove2 = sampleCart.items[1];
-            const remove3 = sampleCart.items[2];
-            const remove4 = sampleCart.items[0];
+            const remove1 = sampleCart.items[1].children[0].uid;
+            const remove2 = sampleCart.items[1].uid;
+            const remove3 = sampleCart.items[2].uid;
+            const remove4 = sampleCart.items[0].uid;
 
             const cart1 = ops.removeFromCart(sampleCart, remove1);
             assert.deepEqual(cart1.items, [

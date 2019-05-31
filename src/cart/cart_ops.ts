@@ -1,7 +1,13 @@
 import { AID, AttributeInfo, MatrixEntityBuilder } from '../attributes';
 import { Catalog, KEY, PID } from '../catalog';
 
-import { Cart, FindItemPredicate, ICartOps, ItemInstance } from './interfaces';
+import {
+    Cart,
+    FindItemPredicate,
+    ICartOps,
+    ItemInstance,
+    UID,
+} from './interfaces';
 import { IDGenerator } from '../unified';
 import { RuleChecker } from '../rule_checker';
 
@@ -197,10 +203,10 @@ export class CartOps implements ICartOps {
     // Removing ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
-    removeFromCart(cart: Cart, item: ItemInstance): Cart {
-        const modified = this.removeFromItemArray(cart.items, item);
+    removeFromCart(cart: Cart, uid: UID): Cart {
+        const modified = this.removeFromItemArray(cart.items, uid);
         if (modified === cart.items) {
-            const message = `Cart does not have item with UID === ${item.uid}`;
+            const message = `Cart does not have item with UID === ${uid}`;
             throw TypeError(message);
         } else {
             return { ...cart, items: modified };
@@ -209,7 +215,7 @@ export class CartOps implements ICartOps {
 
     private removeFromItemArray(
         items: ItemInstance[],
-        remove: ItemInstance
+        remove: UID
     ): ItemInstance[] {
         let changed = false;
         const modified: ItemInstance[] = [];
@@ -221,7 +227,7 @@ export class CartOps implements ICartOps {
             } else {
                 // Otherwise, search the existing item for the replacement
                 // target.
-                if (remove.uid === existing.uid) {
+                if (remove === existing.uid) {
                     // Don't copy the removed item.
                     changed = true;
                 } else {

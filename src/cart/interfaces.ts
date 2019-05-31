@@ -147,8 +147,8 @@ export interface ICartOps {
     //
     ///////////////////////////////////////////////////////////////////////////
     // Returns a shallow copy of the cart, omitting the item with the same UID
-    // as the specified item.
-    removeFromCart(cart: Cart, item: ItemInstance): Cart;
+    // as the one passed in.
+    removeFromCart(cart: Cart, uid: UID): Cart;
 
     ///////////////////////////////////////////////////////////////////////////
     //
