@@ -4,12 +4,12 @@ import {
     Attributes,
     AttributeInfo,
     attributesFromYamlString,
-    // AttributeUtils,
-    // CartUtils,
+    CartOps,
     Catalog,
     catalogFromYamlString,
+    ICartOps,
+    ICatalog,
     loadRuleConfig,
-    IDGenerator,
     MENUITEM,
     MODIFIER,
     OPTION,
@@ -18,10 +18,9 @@ import {
 
 export interface World {
     attributeInfo: AttributeInfo;
-    // attributeOps: AttributeUtils;
     attributes: Attributes;
-    // cartOps: CartUtils;
-    catalog: Catalog;
+    cartOps: ICartOps;
+    catalog: ICatalog;
     ruleChecker: RuleChecker;
 }
 
@@ -59,20 +58,12 @@ export function setup(
     const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
     const ruleChecker = new RuleChecker(ruleConfig, catalog.mapGeneric);
 
-    const uidGenerator = new IDGenerator();
-
-    // const attributeOps = new AttributeUtils(
-    //     catalog,
-    //     uidGenerator,
-    //     attributeInfo
-    // );
-    // const cartOps = new CartUtils(catalog);
+    const cart = new CartOps(attributeInfo, catalog, ruleChecker);
 
     return {
         attributeInfo,
-        // attributeOps,
         attributes,
-        // cartOps,
+        cartOps: cart,
         catalog,
         ruleChecker,
     };
