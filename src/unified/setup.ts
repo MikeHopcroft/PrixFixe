@@ -4,7 +4,7 @@ import {
     Attributes,
     AttributeInfo,
     attributesFromYamlString,
-    AttributeUtils,
+    // AttributeUtils,
     // CartUtils,
     Catalog,
     catalogFromYamlString,
@@ -18,7 +18,7 @@ import {
 
 export interface World {
     attributeInfo: AttributeInfo;
-    attributeOps: AttributeUtils;
+    // attributeOps: AttributeUtils;
     attributes: Attributes;
     // cartOps: CartUtils;
     catalog: Catalog;
@@ -61,16 +61,16 @@ export function setup(
 
     const uidGenerator = new IDGenerator();
 
-    const attributeOps = new AttributeUtils(
-        catalog,
-        uidGenerator,
-        attributeInfo
-    );
+    // const attributeOps = new AttributeUtils(
+    //     catalog,
+    //     uidGenerator,
+    //     attributeInfo
+    // );
     // const cartOps = new CartUtils(catalog);
 
     return {
         attributeInfo,
-        attributeOps,
+        // attributeOps,
         attributes,
         // cartOps,
         catalog,

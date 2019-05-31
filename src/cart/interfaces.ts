@@ -35,16 +35,16 @@ export interface ItemInstance {
     children: ItemInstance[];
 }
 
-export interface ItemInstanceOld {
-    pid: PID;
-    name: string;
-    aliases: string[];
+// export interface ItemInstanceOld {
+//     pid: PID;
+//     name: string;
+//     aliases: string[];
 
-    uid?: UID;
-    key: KEY;
-    quantity: number;
-    children: ItemInstanceOld[];
-}
+//     uid?: UID;
+//     key: KEY;
+//     quantity: number;
+//     children: ItemInstanceOld[];
+// }
 
 // // An instance of an item in the shopping cart.
 // // DESIGN NOTE: The uid should be added just before returning the Cart to the
@@ -66,9 +66,9 @@ export interface Cart {
     items: ItemInstance[];
 }
 
-export interface CartOld {
-    items: ItemInstanceOld[];
-}
+// export interface CartOld {
+//     items: ItemInstanceOld[];
+// }
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -165,32 +165,4 @@ export interface CartOps {
     removeChild(parent: ItemInstance, child: ItemInstance): ItemInstance;
 
     updateAttributes(parent: ItemInstance, attributes: Set<AID>): ItemInstance;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// RuleChecker
-//
-// Convenience methods relating to the menu and legal ItemInstance
-// configurations.
-//
-///////////////////////////////////////////////////////////////////////////////
-export interface AttributeUtilities {
-    // Returns the specific product id for a generic product, configured by a
-    // set of attributes. Each generic product specifies a matrix with
-    // configuration dimensions. Each coordinate in this matrix corresponds to
-    // a specific product. Coordinates are specified by attribute ids. When
-    // there is no attribute specified for a particular dimension, the menu's
-    // default attribute id is used. Attributes associated with dimensions not
-    // related to the generic product will be ignored.
-    //
-    // Use case: pass in the GPID for the generic 'latte' product along with
-    // attributes like 'large' and 'iced' in order to get the SPID for the
-    // specific product 'large iced latte'.
-    // TODO: ISSUE: throw or return undefined?
-    createItemInstance: (
-        pid: PID,
-        attributes: Set<AID>,
-        uid: UID
-    ) => ItemInstanceOld | undefined;
 }
