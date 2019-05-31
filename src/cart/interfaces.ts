@@ -58,11 +58,6 @@ export type FindItemPredicate = (item: ItemInstance) => boolean;
 // project, we use the 'I' prefix for interfaces that are like abstract base
 // classes, but not interfaces that are POJO structs.
 // tslint:disable-next-line:interface-name
-// NOTE: disabling tslint rule locally because TSLint only offers the choice of
-// all interfaces start with 'I' or no interfaces start with 'I'. On this
-// project, we use the 'I' prefix for interfaces that are like abstract base
-// classes, but not interfaces that are POJO structs.
-// tslint:disable-next-line:interface-name
 export interface ICartOps {
     ///////////////////////////////////////////////////////////////////////////
     //

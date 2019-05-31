@@ -4,25 +4,15 @@ import { AttributeInfo } from '../attributes';
 
 import {
     GenericTypedEntity,
+    ICatalog,
     KEY,
     PID,
     SpecificTypedEntity,
 } from './interfaces';
 
-//export type OptionOfPredicate = (
-//catalog: Catalog,
-//child: PID,
-//parent: PID
-//) => boolean;
-
-// TODO: No need to implement CatalogItems.
-export class Catalog {
-    // implements CatalogItems {
-    // TODO: don't really need to store items - just the map.
-    // items: ItemDescription[];
+export class Catalog implements ICatalog {
     mapGeneric = new Map<PID, GenericTypedEntity>();
     mapSpecific = new Map<KEY, SpecificTypedEntity>();
-    //private optionOfPredicate: OptionOfPredicate | undefined;
 
     static fromEntities(
         genericItems: IterableIterator<GenericTypedEntity>,
@@ -39,7 +29,8 @@ export class Catalog {
         return catalog;
     }
 
-    constructor() {}
+    // DESIGN INTENT: construct via factories.
+    private constructor() {}
 
     // Merge another Catalog into this Catalog.
     merge(other: Catalog) {
@@ -71,7 +62,7 @@ export class Catalog {
 
     // DESGIN NOTE: can't just assign `this.map.has` to `has` because `this` won't
     // be bound correctly.
-    hasPID(pid: PID) {
+    hasPID(pid: PID): boolean {
         return this.mapGeneric.has(pid);
     }
 
@@ -92,7 +83,7 @@ export class Catalog {
         return this.mapGeneric.values();
     }
 
-    hasKEY(key: KEY) {
+    hasKEY(key: KEY): boolean {
         return this.mapSpecific.has(key);
     }
 
@@ -107,99 +98,4 @@ export class Catalog {
     specificEntities(): IterableIterator<SpecificTypedEntity> {
         return this.mapSpecific.values();
     }
-
-    // // TODO: MatrixID Type?
-    // getMIDFromPID(pid: PID): MatrixID {
-    //     return this.getGeneric(pid).matrix;
-    // }
-
-    // TODO: Either rewrite or remove this function
-    //isDefaultOf(child: PID, parent: PID): boolean {
-    //const p = this.get(parent);
-    //return (
-    //p.composition.defaults.find(
-    //component => component.pid === child
-    //) !== undefined
-    //);
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    //getDefaultInfo(child: PID, parent: PID): ComponentDescription | undefined {
-    //const p = this.get(parent);
-    //return p.composition.defaults.find(
-    //component => component.pid === child
-    //);
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    //isChoiceOf(child: PID, parent: PID): boolean {
-    //const p = this.get(parent);
-    //for (const choice of p.composition.choices) {
-    //if (
-    //choice.alternatives.find(alternative => child === alternative)
-    //) {
-    //return true;
-    //}
-    //}
-    //return false;
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    // ISSUE: This may be made obsolete by PredicateTensors
-    //setOptionOfPredicate(predicate: OptionOfPredicate) {
-    //this.optionOfPredicate = predicate;
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    //isOptionOf(child: PID, parent: PID): boolean {
-    //if (this.optionOfPredicate) {
-    //return this.optionOfPredicate(this, child, parent);
-    //} else {
-    //const p = this.get(parent);
-    //return (
-    //p.composition.options.find(option => option.pid === child) !==
-    //undefined
-    //);
-    //}
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    // ISSUE: Is this buisiness logic in the scope of PrixFixe?
-    //isSubstitutionOf(child: PID, parent: PID): boolean {
-    //const p = this.get(parent);
-    //return (
-    //p.composition.substitutions.find(
-    //substitution => substitution.replaceWith === child
-    //) !== undefined
-    //);
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    //isComponentOf(child: PID, parent: PID) {
-    //return (
-    //this.isDefaultOf(child, parent) ||
-    //this.isChoiceOf(child, parent) ||
-    //this.isOptionOf(child, parent) ||
-    //this.isSubstitutionOf(child, parent)
-    //);
-    //}
-
-    // TODO: Are notes a first class citizen in our universe?
-    //isNote(pid: PID) {
-    //const item = this.get(pid);
-    //return item.note === true;
-    //}
-
-    // TODO: Remove or decide this is a facade for RuleChecker
-    //defaultQuantity(child: PID, parent: PID) {
-    //const p = this.get(parent);
-    //const component = p.composition.defaults.find(
-    //component => component.pid === child
-    //);
-    //if (component) {
-    //return component.defaultQuantity;
-    //} else {
-    //return 0;
-    //}
-    //}
 }

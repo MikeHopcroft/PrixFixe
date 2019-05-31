@@ -122,3 +122,24 @@ export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
             throw TypeError('Unknown Type sent to `entityTyper`');
     }
 }
+
+// NOTE: disabling tslint rule locally because TSLint only offers the choice of
+// all interfaces start with 'I' or no interfaces start with 'I'. On this
+// project, we use the 'I' prefix for interfaces that are like abstract base
+// classes, but not interfaces that are POJO structs.
+// tslint:disable-next-line:interface-name
+export interface ICatalog {
+    hasPID(pid: PID): boolean;
+
+    getGeneric(pid: PID): GenericTypedEntity;
+
+    getGenericForKey(key: KEY): GenericTypedEntity;
+
+    genericEntities(): IterableIterator<GenericTypedEntity>;
+
+    hasKEY(key: KEY): boolean;
+
+    getSpecific(key: KEY): SpecificTypedEntity;
+
+    specificEntities(): IterableIterator<SpecificTypedEntity>;
+}
