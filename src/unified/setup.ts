@@ -5,7 +5,7 @@ import {
     AttributeInfo,
     attributesFromYamlString,
     AttributeUtils,
-    CartUtils,
+    // CartUtils,
     Catalog,
     catalogFromYamlString,
     loadRuleConfig,
@@ -20,7 +20,7 @@ export interface World {
     attributeInfo: AttributeInfo;
     attributeOps: AttributeUtils;
     attributes: Attributes;
-    cartOps: CartUtils;
+    // cartOps: CartUtils;
     catalog: Catalog;
     ruleChecker: RuleChecker;
 }
@@ -66,13 +66,13 @@ export function setup(
         uidGenerator,
         attributeInfo
     );
-    const cartOps = new CartUtils(catalog);
+    // const cartOps = new CartUtils(catalog);
 
     return {
         attributeInfo,
         attributeOps,
         attributes,
-        cartOps,
+        // cartOps,
         catalog,
         ruleChecker,
     };

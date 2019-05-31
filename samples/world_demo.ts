@@ -19,7 +19,8 @@ function go(debugMode: boolean) {
         path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
         debugMode
     );
-    const { attributeOps, attributes, catalog, cartOps } = world;
+    // const { attributeOps, attributes, catalog, cartOps } = world;
+    const { attributeOps, attributes, catalog } = world;
 
     const state: State = { cart: { items: [] }, actions: [] };
 
