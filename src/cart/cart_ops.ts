@@ -7,7 +7,7 @@ import { RuleChecker } from '../rule_checker';
 
 type FindItemPredicate = (item: ItemInstance) => boolean;
 
-export class CartOps2 {
+export class CartOps {
     attributeInfo: AttributeInfo;
     catalog: Catalog;
     ruleChecker: RuleChecker;

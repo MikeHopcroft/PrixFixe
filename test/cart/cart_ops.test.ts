@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { Cart, CartOps2, ItemInstance, AttributeInfo } from '../../src';
+import { Cart, CartOps, ItemInstance, AttributeInfo } from '../../src';
 
 import {
     caffeineDecaf,
@@ -79,7 +79,7 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const ops: CartOps2 = new CartOps2(
+const ops: CartOps = new CartOps(
     attributeInfo,
     smallWorldCatalog,
     smallWorldRuleChecker

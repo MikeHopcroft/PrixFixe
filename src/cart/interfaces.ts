@@ -12,9 +12,6 @@ import { KEY, PID } from '../catalog';
 // product that must be configured with a size and iced vs hot to produce a
 // specific product like a "small iced latte".
 
-// Unique product identifer or SKU for generic products.
-//export type PID = number;
-
 // Unique product identifier or SKU for specific products.
 // Shares that same value-space with GPID. Therefore, the user must ensure that
 // the intersection of { GPIDs } and { SPIDs } is the empty set.
@@ -35,26 +32,6 @@ export interface ItemInstance {
     children: ItemInstance[];
 }
 
-// export interface ItemInstanceOld {
-//     pid: PID;
-//     name: string;
-//     aliases: string[];
-
-//     uid?: UID;
-//     key: KEY;
-//     quantity: number;
-//     children: ItemInstanceOld[];
-// }
-
-// // An instance of an item in the shopping cart.
-// // DESIGN NOTE: The uid should be added just before returning the Cart to the
-// // Host, using the addIdsToCart() function in cart.ts. TODO: explain rationale.
-// export interface OptionInstance {
-//     uid?: UID;
-//     spid: SPID;
-//     quantity?: number;
-// }
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Cart
@@ -66,10 +43,6 @@ export interface Cart {
     items: ItemInstance[];
 }
 
-// export interface CartOld {
-//     items: ItemInstanceOld[];
-// }
-
 ///////////////////////////////////////////////////////////////////////////////
 //
 // CartOps
@@ -77,7 +50,13 @@ export interface Cart {
 // Convenience methofs to perform operations on the Cart.
 //
 ///////////////////////////////////////////////////////////////////////////////
-export interface CartOps {
+
+// NOTE: disabling tslint rule locally because TSLint only offers the choice of
+// all interfaces start with 'I' or no interfaces start with 'I'. On this
+// project, we use the 'I' prefix for interfaces that are like abstract base
+// classes, but not interfaces that are POJO structs.
+// tslint:disable-next-line:interface-name
+export interface ICartOps {
     //
     // Operations involving Cart.
     //
