@@ -7,7 +7,84 @@ import { RuleChecker } from '../rule_checker';
 
 type FindItemPredicate = (item: ItemInstance) => boolean;
 
-export class CartOps {
+// NOTE: disabling tslint rule locally because TSLint only offers the choice of
+// all interfaces start with 'I' or no interfaces start with 'I'. On this
+// project, we use the 'I' prefix for interfaces that are like abstract base
+// classes, but not interfaces that are POJO structs.
+// tslint:disable-next-line:interface-name
+export interface ICartOps {
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Adding ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    addToCart(cart: Cart, item: ItemInstance): Cart;
+
+    addToItem(parent: ItemInstance, child: ItemInstance): ItemInstance;
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Finding ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance>;
+
+    findByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance>;
+
+    findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance>;
+
+    findByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance>;
+
+    findCompatibleParent(
+        cart: Cart,
+        childKey: KEY
+    ): IterableIterator<ItemInstance>;
+
+    findInCart(
+        cart: Cart,
+        predicate: FindItemPredicate
+    ): IterableIterator<ItemInstance>;
+
+    findInItemArray(
+        items: ItemInstance[],
+        predicate: FindItemPredicate
+    ): IterableIterator<ItemInstance>;
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Replacing ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    replaceInCart(cart: Cart, item: ItemInstance): Cart;
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Removing ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    removeFromCart(cart: Cart, item: ItemInstance): Cart;
+
+    ///////////////////////////////////////////////////////////////////////////
+    //
+    // Operations on ItemInstances
+    //
+    ///////////////////////////////////////////////////////////////////////////
+    createItem(
+        quantity: number,
+        pid: PID,
+        aids: IterableIterator<AID>,
+        children: IterableIterator<ItemInstance>
+    ): ItemInstance;
+
+    changeItemAttributes(
+        item: ItemInstance,
+        newAIDs: IterableIterator<AID>
+    ): ItemInstance;
+
+    changeItemPID(item: ItemInstance, newPID: PID): ItemInstance;
+}
+
+export class CartOps implements ICartOps {
     attributeInfo: AttributeInfo;
     catalog: Catalog;
     ruleChecker: RuleChecker;
@@ -33,7 +110,7 @@ export class CartOps {
         return { ...cart, items: [...cart.items, item] };
     }
 
-    addToItem(parent: ItemInstance, child: ItemInstance) {
+    addToItem(parent: ItemInstance, child: ItemInstance): ItemInstance {
         return { ...parent, children: [...parent.children, child] };
     }
 

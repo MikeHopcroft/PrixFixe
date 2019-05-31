@@ -56,7 +56,7 @@ export interface Cart {
 // project, we use the 'I' prefix for interfaces that are like abstract base
 // classes, but not interfaces that are POJO structs.
 // tslint:disable-next-line:interface-name
-export interface ICartOps {
+export interface ICartOpsOld {
     //
     // Operations involving Cart.
     //
