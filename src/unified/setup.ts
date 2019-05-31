@@ -29,8 +29,7 @@ export function setup(
     optionsFile: string,
     modifiersFile: string,
     attributesFile: string,
-    rulesFile: string,
-    debugMode: boolean
+    rulesFile: string
 ): World {
     // Load items from menu data.
     const products = catalogFromYamlString(

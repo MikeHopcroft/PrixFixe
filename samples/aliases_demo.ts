@@ -105,8 +105,7 @@ function go() {
             __dirname,
             '../../samples/data/restaurant-en/attributes.yaml'
         ),
-        path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml'),
-        false
+        path.join(__dirname, '../../samples/data/restaurant-en/rules.yaml')
     );
 
     printAttributes(world);
