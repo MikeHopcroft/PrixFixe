@@ -1,20 +1,47 @@
-///////////////////////////////////////////////////////////////////////////////
-// Type aliases to keep various concepts delineated.
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * Category ID. A type alias to keep various concepts delineated.
+ */
 export type CID = number;
+
+/**
+ * Matrix ID. A type alias to keep various concepts delineated.
+ */
 export type MID = number;
+
+/**
+ * Product ID.  A type alias to keep various concepts delineated. Each generic
+ * product such as `milkshakes` or `coffees` will have its own unique PID.
+ */
 export type PID = number;
+
+/**
+ * Stock Keeping Unit. A type alias to keep various concepts delineated. Each
+ * specific product such as `small strawberry` `milkshake` or `large decaf iced
+ * coffee` will have its own unique SKU.
+ */
 export type SKU = number;
+/**
+ * A type alias to keep various concepts delineated.
+ *
+ * Each specific product such as `small strawberry milkshake` or `large decaf`
+ * `iced coffee` will have its own unique Key. The Key is a tensor where the
+ * first dimesnion is a generic product's PID, and any other dimensions
+ * determine which attributes are added.
+ *
+ * @example '6122757:0:4'
+ */
 export type KEY = string;
 
-///////////////////////////////////////////////////////////////////////////////
-// Catch-all type
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * A catch-all type.
+ */
 export interface Entity {
     name: string;
 }
 
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * The interface for generic products like `milkshake` or `coffee`.
+ */
 export interface GenericEntity extends Entity {
     pid: PID;
     cid: CID; // While knowing a menu item's catagory may not help us,
@@ -24,17 +51,20 @@ export interface GenericEntity extends Entity {
     defaultKey: KEY;
 }
 
+
+/**
+ * The interface for specific products like `large chocolate milkshake no`
+ * `whipped cream` or `small coffee`.
+ */
 export interface SpecificEntity extends Entity {
     sku: SKU;
     key: KEY;
 }
 
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-// TypedEntity provides polymorphic behavior for both Generic and Specific
-//   entities. The intention here is for it to be used similar to a mixin.
-///////////////////////////////////////////////////////////////////////////////
+/**
+ * TypedEntity provides polymorphic behavior for both Generic and Specific
+ * entities. The intention here is for it to be used similar to a mixin.
+ */
 export type TypedEntity = MenuItem | Option | Modifier;
 export type GenericTypedEntity = TypedEntity & GenericEntity;
 export type SpecificTypedEntity = TypedEntity & SpecificEntity;
@@ -54,30 +84,33 @@ export type OPTION = typeof OPTION;
 
 ///////////////////////////////////////////////////////////////////////////////
 // MenuItem
-//
-// Menu item includes food, drink, or any "top-level" item which acts as a
-//   parent to other items (such as options).
 ///////////////////////////////////////////////////////////////////////////////
+/**
+ * Menu item includes food, drink, or any "top-level" item which acts as a
+ * parent to other items (such as options).
+ */
 export interface MenuItem extends Entity {
     kind: MENUITEM;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Option
-//
-// Options are items which attech to MenuItems and child items in the cart.
-//   An example of an Option would be a sauce or a drizzle.
 ///////////////////////////////////////////////////////////////////////////////
+/**
+ * Options are items which attach to MenuItems and child items in the cart. An
+ * example of an Option would be a sauce or a drizzle.
+ */
 export interface Option extends Entity {
     kind: OPTION;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 // Modifiers
-//
-// Modifiers are options who are mutally exclusive within their category.
-//   e.g., 2% Milk as a base for a Latte vs Whole Milk.
 ///////////////////////////////////////////////////////////////////////////////
+/**
+ * Modifiers are options who are mutally exclusive within their category. e.g.,
+ * 2% Milk as a base for a Latte vs Whole Milk.
+ */
 export interface Modifier extends Entity {
     kind: MODIFIER;
 }
@@ -85,11 +118,10 @@ export interface Modifier extends Entity {
 ///////////////////////////////////////////////////////////////////////////////
 // Entitiy Factories
 //
-// AJV will act as a schema validator for the storage of various types, and
-//   we will then add type discriminators based upon what file we are loading.
-//   In other words, we will have `kind=OPTION` when loading `option.yaml`.
+// AJV will act as a schema validator for the storage of various types, and we
+//   will then add type discriminators based upon what file we are loading. In
+//   other words, we will have `kind=OPTION` when loading `option.yaml`.
 ///////////////////////////////////////////////////////////////////////////////
-
 export const genericEntityFactory = (entity: GenericEntity, kind: symbol) => {
     return entityTyper(entity, kind) as GenericTypedEntity;
 };
@@ -98,8 +130,10 @@ export const specificEntityFactory = (entity: SpecificEntity, kind: symbol) => {
     return entityTyper(entity, kind) as SpecificTypedEntity;
 };
 
-// TODO: is there a AJV factory for types?
-// TODO: template T<kind>?
+/**
+ * @todo is there a AJV factory for types?
+ * @todo template T<kind>?
+ */
 export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
     switch (kind) {
         case MENUITEM:

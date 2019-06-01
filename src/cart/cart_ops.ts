@@ -1,6 +1,5 @@
 import { AID, AttributeInfo, MatrixEntityBuilder } from '../attributes';
 import { Catalog, KEY, PID } from '../catalog';
-
 import {
     Cart,
     FindItemPredicate,
@@ -8,8 +7,8 @@ import {
     ItemInstance,
     UID,
 } from './interfaces';
-import { IDGenerator } from '../unified';
 import { RuleChecker } from '../rule_checker';
+import { IDGenerator } from '../unified';
 
 export class CartOps implements ICartOps {
     attributeInfo: AttributeInfo;
@@ -33,13 +32,21 @@ export class CartOps implements ICartOps {
     // Adding ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
-    // Returns a shallow copy of the Cart, with the ItemInstance appended.
+    /**
+     * Adds an item to the cart.
+     *
+     * @returns a shallow copy of the cart with the item appended.
+     */
     addToCart(cart: Cart, item: ItemInstance): Cart {
         return { ...cart, items: [...cart.items, item] };
     }
 
-    // Returns a shallow copy of the ItemInstance with the OptionInstance
-    // appended. Does not verify that the option is legal for the item.
+    /**
+     * Adds a child item to a parent. Does not verify that the option is legal
+     * for the item.
+     *
+     * @returns a shallow copy of the parent with the child appended.
+     */
     addToItem(parent: ItemInstance, child: ItemInstance): ItemInstance {
         return { ...parent, children: [...parent.children, child] };
     }
@@ -49,25 +56,32 @@ export class CartOps implements ICartOps {
     // Finding ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
-    // Returns an iterable of ItemInstances in the cart with a particular KEY.
-    // Items are returned in the order they were added to the cart.
-    //
-    // Use case: find all instances of a specific drink like a 'large iced
-    // latte'.
-    //
+    /**
+     * Items with a Key matching the Key that is passed in are returned in the
+     * order they were added to the cart.
+     *
+     * @useCase find all instances of a specific drink like a `large iced`
+     * `latte`.
+     *
+     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * particular Key.
+     */
     *findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => key === item.key;
         yield* this.findInCart(cart, predicate);
     }
 
-    // Returns an iterable of ItemInstances in the cart that correspond to a
-    // particular PID (instance of generic entity). Items are returned in the
-    // order they were added to the cart.
-    //
-    // Use case: want to find all lattes, regardless of attributes. Searching
-    // with the PID for 'latte' might return ItemInstances for a 'medium iced
-    // latte' and a 'small hot latte'.
-    //
+    /**
+     * Items with a PID matching the PID that is passed in are returned in the
+     * order they were added to the cart.
+     *
+     * @useCase want to find all lattes, regardless of attributes. Searching
+     * with the PID for 'latte' might return ItemInstances for a 'medium iced
+     * latte' and a 'small hot latte'.
+     *
+     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * particular PID (instance of generic entity)
+     */
     *findByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             return pid === AttributeInfo.pidFromKey(item.key);
@@ -75,12 +89,16 @@ export class CartOps implements ICartOps {
         yield* this.findInCart(cart, predicate);
     }
 
-    // Returns a list of ItemInstances that contain an OptionInstance with a
-    // particular SPID. Items are returned in the order they were added to the
-    // cart.
-    //
-    // ISSUE: do we want a corresponding version that finds options associated
-    // with a certain generic option.
+    /**
+     * Items with a child that have a Key matching the Key that is passed in are
+     * returned in the order they were added to the cart.
+     *
+     * @returns an iterable of ItemInstances that contain a child with a
+     * particular Key (instance of specific entity).
+     *
+     * @issue do we want a corresponding version that finds options associated
+     * with a certain generic option.
+     */
     *findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             for (const child of item.children) {

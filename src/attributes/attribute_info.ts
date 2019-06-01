@@ -1,21 +1,24 @@
 import { DID } from '../attributes';
-import { Catalog, GenericTypedEntity, KEY, MID, PID } from '../catalog';
-
+import { Catalog, KEY, MID, PID } from '../catalog';
 import { Dimension } from './dimension';
 import { AID, Attributes } from './interfaces';
 import { Matrix } from './matrix';
 
-// The (dimension, position) coordinates of an attribute within a Matrix.
-// Dimension corresponds to a characteristic like `size`.
-// Position corresponds to a specific characteristic value such as `small`,
-// 'medium`, or `large`.
+/**
+ * The (dimension, position) coordinates of an attribute within a
+ * Matrix. Dimension corresponds to a characteristic like `size`. Position
+ * corresponds to a specific characteristic value such as `small`, `medium`, or
+ * `large`.
+ */
 export interface AttributeCoordinate {
     dimension: Dimension;
     position: number;
 }
 
-// Store information about the relationships between Attributes,
-// Dimensions, and Matrices.
+/**
+ * Store information about the relationships between Attributes,
+ * Dimensions, and Matrices.
+ */
 export class AttributeInfo {
     private readonly catalog: Catalog;
     private readonly dimensionIdToDimension = new Map<PID, Dimension>();
@@ -53,7 +56,11 @@ export class AttributeInfo {
         }
     }
 
-    // Indexes a Dimension and its Attributes.
+    /**
+     * Indexes a Dimension and its Attributes.
+     *
+     * @param dimension
+     */
     private addDimension(dimension: Dimension) {
         if (this.dimensionIdToDimension.has(dimension.did)) {
             const message = `found duplicate dimension id ${dimension.did}.`;
@@ -87,7 +94,11 @@ export class AttributeInfo {
         return dimension;
     }
 
-    // Indexes a Matrix.
+    /**
+     * Indexes a Matrix.
+     *
+     * @param {Matrix} matrix
+     */
     private addMatrix(matrix: Matrix) {
         if (this.matrixIdToMatrix.has(matrix.mid)) {
             const message = `found duplicate matrix id ${matrix.mid}.`;
@@ -96,9 +107,13 @@ export class AttributeInfo {
         this.matrixIdToMatrix.set(matrix.mid, matrix);
     }
 
-    // Lookup an AttributeCoordinate by AID. The Coordinate provides the
-    // Attribute's Dimension (e.g. size) and its Position in the Dimension
-    // (e.g. 0 ==> small).
+    /**
+     * Look up an AttributeCoordinate by AID. The Coordinate
+     * provides the Attribute's Dimension (e.g. `size`) and its Position in the
+     * Dimension (e.g. `0 ==> small`).
+     *
+     * @param {AID} aid
+     */
     getAttributeCoordinates(aid: AID): AttributeCoordinate {
         const coordinate = this.attributeIdToCoordinate.get(aid);
         if (coordinate === undefined) {
@@ -123,15 +138,24 @@ export class AttributeInfo {
         return matrix;
     }
 
-    // Returns a GenericEntity's Matrix.
+    /**
+     * Returns a GenericEntity's Matrix.
+     *
+     * @param pid
+     */
     getMatrixForEntity(pid: PID): Matrix {
         const genericEntity = this.catalog.getGeneric(pid);
         return this.getMatrix(genericEntity.matrix);
     }
 
-    // Given a nggeneric entity PID and a map from DID to AID, return a number
-    // that represents those set of attribute values associated with Dimensions
-    // of the generic entity's Matrix.
+    /**
+     * Given a GenericEntity's PID and a map from DID to AID,
+     * return a number that represents those set of attribute values associated
+     * with Dimensions of the GenericEntity's Matrix.
+     *
+     * @param pid
+     * @param dimensionIdToAttribute
+     */
     getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
         // Get the genericEntity for its matrix and defaultKey.
         const genericEntity = this.catalog.getGeneric(pid);

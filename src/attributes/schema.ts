@@ -7,7 +7,7 @@ import { Attributes, AttributeItem } from './interfaces';
 const debug = Debug('so:itemMapFromYamlString');
 
 // Schema generated with typescript-json-schema:
-//   typescript-json-schema tsconfig.json Attributes --required
+//    typescript-json-schema tsconfig.json Attributes --required
 const attributeSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     definitions: {

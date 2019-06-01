@@ -1,17 +1,18 @@
-import { KEY, PID } from '../catalog';
-
 import { AttributeInfo } from './attribute_info';
+import { KEY, PID } from '../catalog';
 import { AID } from './interfaces';
 
-// MatrixEntityBuilder collects Attribute and Entity values that will later be
-// used to generate an Entity key which can be used to lookup the specific
-// PID.
-//
-// For example, we might have a `cone` which is configured by `flavor` and
-// `size` dimensions.
-//
-// Adding the entity `cone` and the attributes `small` and `chocolate` will
-// allow us to generate a key which yields the PID for a `small chocolate cone`.
+/**
+ * MatrixEntityBuilder collects Attribute and Entity values that
+ * will later be used to generate an Entity key which can be used to lookup the
+ * specific PID.
+ *
+ * For example, we might have a `cone` which is configured by `flavor` and
+ * `size` dimensions.
+ *
+ * Adding the entity `cone` and the attributes `small` and `chocolate` will
+ * allow us to generate a key which yields the PID for a `small chocolate cone`.
+ */
 export class MatrixEntityBuilder {
     private readonly info: AttributeInfo;
 
@@ -61,11 +62,12 @@ export class MatrixEntityBuilder {
         return this.info.getKey(this.pid, this.dimensionIdToAttribute);
     }
 
-    // Iterator for PIDs of attributes that aren't associated with dimensions
-    // of the entity's matrix. This includes all collected attributes in the
-    // cases where the entity has not been set and where the entity is not
-    // associated with a matrix.
-    // TODO: Test.
+    /**
+     * Iterator for PIDs of attributes that aren't associated with
+     * dimensions of the entity's matrix. This includes all collected attributes
+     * in the cases where the entity has not been set and where the entity is
+     * not associated with a matrix.
+     */
     *getUnusedAttributes(): IterableIterator<AID> {
         // If a PID is undefined, we want to return every attribute.
         if (this.pid === undefined) {

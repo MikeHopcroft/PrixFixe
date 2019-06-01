@@ -1,7 +1,4 @@
-// TODO: Update catalog for Prixfixe
-//       API needs to be refactored
 import { AttributeInfo } from '../attributes';
-
 import {
     GenericTypedEntity,
     ICatalog,
@@ -29,10 +26,14 @@ export class Catalog implements ICatalog {
         return catalog;
     }
 
-    // DESIGN INTENT: construct via factories.
+    /**
+     * @designIntent construct via factories.
+     */
     private constructor() {}
 
-    // Merge another Catalog into this Catalog.
+    /**
+     * Merge another Catalog into this Catalog.
+     */
     merge(other: Catalog) {
         this.mergeItems(other.mapGeneric.values(), other.mapSpecific.values());
     }
@@ -60,8 +61,10 @@ export class Catalog implements ICatalog {
         }
     }
 
-    // DESGIN NOTE: can't just assign `this.map.has` to `has` because `this` won't
-    // be bound correctly.
+    /**
+     * @designNote can't just assign `this.map.has` to `has` because `this`
+     * won't be bound correctly.
+     */
     hasPID(pid: PID): boolean {
         return this.mapGeneric.has(pid);
     }
