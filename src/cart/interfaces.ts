@@ -7,11 +7,8 @@ import { KEY, PID } from '../catalog';
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-// A generic product is a top-level item that can be combined with a set of
-// attributes to form a specific product. For example, a "latte" is a generic
-// product that must be configured with a size and iced vs hot to produce a
-// specific product like a "small iced latte".
-
+// TODO: Is the below still relevant to anything?
+//
 // Unique product identifier or SKU for specific products. Shares that same
 // value-space with GPID. Therefore, the user must ensure that the intersection
 // of { GPIDs } and { SPIDs } is the empty set. export type SPID = number;
@@ -78,7 +75,7 @@ export interface ICartOps {
     /**
      * Adds an item to the cart.
      *
-     * @returns a shallow copy of the cart with the item appended.
+     * @returnType a shallow copy of the cart with the item appended.
      */
     addToCart(cart: Cart, item: ItemInstance): Cart;
 
@@ -86,7 +83,7 @@ export interface ICartOps {
      * Adds a child item to a parent. Does not verify that the option is legal
      * for the item.
      *
-     * @returns a shallow copy of the parent with the child appended.
+     * @returnType a shallow copy of the parent with the child appended.
      */
     addToItem(parent: ItemInstance, child: ItemInstance): ItemInstance;
 
@@ -102,7 +99,7 @@ export interface ICartOps {
      * @useCase find all instances of a specific drink like a `large iced`
      * `latte`.
      *
-     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular Key.
      */
     findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance>;
@@ -115,7 +112,7 @@ export interface ICartOps {
      * with the PID for `latte` might return ItemInstances for a `medium iced`
      * `latte` and a `small hot latte`.
      *
-     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular PID (instance of generic entity)
      */
     findByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance>;
@@ -124,7 +121,7 @@ export interface ICartOps {
      * Child items with a Key matching the Key that is passed in are returned in
      * the order they were added to the cart.
      *
-     * @returns an iterable of ItemInstances that contain a child with a
+     * @returnType an iterable of ItemInstances that contain a child with a
      * particular Key (instance of specific entity).
      */
     findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance>;
@@ -137,7 +134,7 @@ export interface ICartOps {
      * attributes. Searching with the PID for `latte` might return child
      * ItemInstances for a `medium iced latte` and a `small hot latte`.
      *
-     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular PID (instance of generic entity).
      */
     findByChildPID(cart: Cart, pid: PID): IterableIterator<ItemInstance>;
@@ -146,7 +143,7 @@ export interface ICartOps {
      * Yields any parent items that the rule checker deems legal to hold the
      * child whose type is specified by `childKey`.
      *
-     * @returns an iterable of parent ItemInstances that can legally hold the
+     * @returnType an iterable of parent ItemInstances that can legally hold the
      * child.
      */
     findCompatibleParent(
@@ -158,7 +155,7 @@ export interface ICartOps {
      * Finds ItemInstances in the cart for which some predicate is true, then
      * returns them in the order they were added to the cart.
      *
-     * @returns an iterable of ItemInstances in the Cart for which a specified
+     * @returnType an iterable of ItemInstances in the Cart for which a specified
      * predicate is true.
      */
     findInCart(
@@ -169,7 +166,7 @@ export interface ICartOps {
     /**
      * Finds ItemInstances in an array for which some predicate is true.
      *
-     * @returns an iterable of ItemInstances in the array for which a specified
+     * @returnType an iterable of ItemInstances in the array for which a specified
      * predicate is true.
      */
     findInItemArray(
@@ -182,8 +179,9 @@ export interface ICartOps {
     // Replacing ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
+
     /**
-     * @returns a shallow copy of the Cart, where the item that shares the new
+     * @returnType a shallow copy of the Cart, where the item that shares the new
      * item's UID is replaced with the new item.
      */
     replaceInCart(cart: Cart, item: ItemInstance): Cart;
@@ -194,7 +192,7 @@ export interface ICartOps {
     //
     ///////////////////////////////////////////////////////////////////////////
     /**
-     * @returns a shallow copy of the cart, omitting the item with the same UID
+     * @returnType a shallow copy of the cart, omitting the item with the same UID
      * as the one passed in.
      */
     removeFromCart(cart: Cart, uid: UID): Cart;
@@ -209,7 +207,7 @@ export interface ICartOps {
      * are passed in. This method generates a unique value for the
      * ItemInstance's UID field.
      *
-     * @returns a newly generated ItemInstance with a unique UID.
+     * @returnType a newly generated ItemInstance with a unique UID.
      */
     createItem(
         quantity: number,
@@ -222,7 +220,7 @@ export interface ICartOps {
      * Creates a new ItemInstance whose Key is derived from the original item's
      * attributes, with some being replaced by values in newAIDs.
      *
-     * @returns the new ItemInstance with the updated AIDs.
+     * @returnType the new ItemInstance with the updated AIDs.
      */
     changeItemAttributes(
         item: ItemInstance,
@@ -233,7 +231,7 @@ export interface ICartOps {
      * Creates a new ItemInstance whose key is derived from the original item's
      * attributes, with a different PID.
      *
-     * @returns the new ItemInstance with the updated PID.
+     * @returnType the new ItemInstance with the updated PID.
      */
     changeItemPID(item: ItemInstance, newPID: PID): ItemInstance;
 }

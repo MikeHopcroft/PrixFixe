@@ -3,9 +3,8 @@ import { AttributeItem } from '../';
 export type DID = number;
 
 /**
- * Represents a characteristic like size, color, or flavor. Each
- * Dimension is associated with a number of attributes such as `small` `medium`
- * and `large`.
+ * Represents a characteristic like size, color, or flavor. Each Dimension is
+ * associated with a number of attributes such as `small` `medium` and `large`.
  */
 export class Dimension {
     readonly did: DID;

@@ -1,8 +1,9 @@
 import { KEY, PID, GenericTypedEntity } from '../catalog';
-
 import { RuleConfig } from './interfaces';
 
-// Given a two modifiers, are they mutually exlusive with each other?
+/**
+ * Given a two modifiers, are they mutually exlusive with each other?
+ */
 export interface MutualExclusionZone {
     (modOne: KEY): number;
 }

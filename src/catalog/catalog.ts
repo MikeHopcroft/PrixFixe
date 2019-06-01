@@ -1,4 +1,5 @@
 import { AttributeInfo } from '../attributes';
+
 import {
     GenericTypedEntity,
     ICatalog,

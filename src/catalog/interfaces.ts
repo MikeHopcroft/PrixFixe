@@ -20,6 +20,7 @@ export type PID = number;
  * coffee` will have its own unique SKU.
  */
 export type SKU = number;
+
 /**
  * A type alias to keep various concepts delineated.
  *
@@ -40,7 +41,10 @@ export interface Entity {
 }
 
 /**
- * The interface for generic products like `milkshake` or `coffee`.
+ * A generic product is a top-level item that can be combined with a set of
+ * attributes to form a specific product. For example, a `latte` is a generic
+ * product that must be configured with a size and iced vs hot to produce a
+ * specific product like a `small iced latte`.
  */
 export interface GenericEntity extends Entity {
     pid: PID;
@@ -50,7 +54,6 @@ export interface GenericEntity extends Entity {
     matrix: MID;
     defaultKey: KEY;
 }
-
 
 /**
  * The interface for specific products like `large chocolate milkshake no`

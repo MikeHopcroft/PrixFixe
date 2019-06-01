@@ -1,5 +1,6 @@
 import { AID, AttributeInfo, MatrixEntityBuilder } from '../attributes';
 import { Catalog, KEY, PID } from '../catalog';
+
 import {
     Cart,
     FindItemPredicate,
@@ -7,9 +8,15 @@ import {
     ItemInstance,
     UID,
 } from './interfaces';
+
 import { RuleChecker } from '../rule_checker';
 import { IDGenerator } from '../unified';
 
+/**
+ * CartOps operates on Carts, ItemInstances, and attributes. Functionality
+ * includes searching Carts and ItemInstances, modifying Carts and
+ * ItemInstances, and creating new ItemInstances.
+ */
 export class CartOps implements ICartOps {
     attributeInfo: AttributeInfo;
     catalog: Catalog;
@@ -35,7 +42,7 @@ export class CartOps implements ICartOps {
     /**
      * Adds an item to the cart.
      *
-     * @returns a shallow copy of the cart with the item appended.
+     * @returnType a shallow copy of the cart with the item appended.
      */
     addToCart(cart: Cart, item: ItemInstance): Cart {
         return { ...cart, items: [...cart.items, item] };
@@ -45,7 +52,7 @@ export class CartOps implements ICartOps {
      * Adds a child item to a parent. Does not verify that the option is legal
      * for the item.
      *
-     * @returns a shallow copy of the parent with the child appended.
+     * @returnType a shallow copy of the parent with the child appended.
      */
     addToItem(parent: ItemInstance, child: ItemInstance): ItemInstance {
         return { ...parent, children: [...parent.children, child] };
@@ -63,7 +70,7 @@ export class CartOps implements ICartOps {
      * @useCase find all instances of a specific drink like a `large iced`
      * `latte`.
      *
-     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular Key.
      */
     *findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
@@ -79,7 +86,7 @@ export class CartOps implements ICartOps {
      * with the PID for 'latte' might return ItemInstances for a 'medium iced
      * latte' and a 'small hot latte'.
      *
-     * @returns an iterable of ItemInstances in the cart that correspond to a
+     * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular PID (instance of generic entity)
      */
     *findByPID(cart: Cart, pid: PID): IterableIterator<ItemInstance> {
@@ -93,7 +100,7 @@ export class CartOps implements ICartOps {
      * Items with a child that have a Key matching the Key that is passed in are
      * returned in the order they were added to the cart.
      *
-     * @returns an iterable of ItemInstances that contain a child with a
+     * @returnType an iterable of ItemInstances that contain a child with a
      * particular Key (instance of specific entity).
      *
      * @issue do we want a corresponding version that finds options associated

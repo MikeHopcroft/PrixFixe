@@ -62,9 +62,12 @@ export function* aliasesFromPattern(query: string) {
     }
 }
 
-// Returns the matching function specified by an expression of the form
-//   ['exact' | 'prefix' | 'levenshtein' ':'] patten
-// If no function is specified, defaults to defaultMatcher.
+/**
+ * Defaults to defaultMatcher is no function is specified.
+ *
+ * @returnType Returns the matching function specified by an expression of the form
+ * `['exact' | 'prefix' | 'levenshtein' ':']`
+ */
 export function matcherFromExpression(
     alias: string,
     defaultMatcher: string
@@ -77,8 +80,10 @@ export function matcherFromExpression(
     return defaultMatcher;
 }
 
-// Returns the pattern portion of an expression of the form
-//   ['exact' | 'prefix' | 'levenshtein' ':'] patten
+/**
+ * @returnType the pattern portion of an expression of the form `['exact' | 'prefix'`
+ * `| 'levenshtein' ':']`
+ */
 export function patternFromExpression(alias: string) {
     const index = alias.indexOf(':');
     if (index !== -1) {

@@ -1,7 +1,5 @@
 import { CID, PID, KEY, GenericTypedEntity } from '../catalog';
 
-import { RuleCheckerOps, RuleConfig, QuantityInformation } from './interfaces';
-
 import {
     ValidChildTensor,
     ValidChildPredicate,
@@ -14,6 +12,7 @@ import {
     mutualExclusionTensorFactory,
 } from './exclusion_map';
 
+import { RuleCheckerOps, RuleConfig, QuantityInformation } from './interfaces';
 import { QuantityMap, QuantityTensor, quantityTensorFactory } from './quantity';
 
 type Predicate = ValidChildPredicate | MutualExclusionZone | QuantityMap;
@@ -56,7 +55,7 @@ export class RuleChecker implements RuleCheckerOps {
         return predicates;
     };
 
-    // See `RuleCheckerOps for docs
+    // See `RuleCheckerOps` for docs.
     // TODO: Add specificExceptions checking
     isValidChild = (par: KEY, child: KEY): boolean => {
         const predicates = this.tensorWalker(
@@ -72,7 +71,7 @@ export class RuleChecker implements RuleCheckerOps {
         return result;
     };
 
-    // See `RuleCheckerOps for docs
+    // See `RuleCheckerOps` for docs.
     isMutuallyExclusive = (
         par: KEY,
         modSet: IterableIterator<KEY>
@@ -130,7 +129,7 @@ export class RuleChecker implements RuleCheckerOps {
         return undefined;
     };
 
-    // See `RuleCheckerOps for docs
+    // See `RuleCheckerOps` for docs.
     getDefaultQuantity = (par: KEY, child: KEY): number => {
         const quantityInfo = this.getQuanitityInfo(par, child);
 
@@ -141,7 +140,7 @@ export class RuleChecker implements RuleCheckerOps {
         return -1;
     };
 
-    // See `RuleCheckerOps for docs
+    // See `RuleCheckerOps` for docs.
     isValidQuantity = (par: KEY, child: KEY, qty: number): boolean => {
         const quantityInfo = this.getQuanitityInfo(par, child);
 
