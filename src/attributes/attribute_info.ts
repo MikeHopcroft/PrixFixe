@@ -21,12 +21,12 @@ export interface AttributeCoordinate {
  */
 export class AttributeInfo {
     private readonly catalog: Catalog;
-    private readonly dimensionIdToDimension = new Map<PID, Dimension>();
+    private readonly dimensionIdToDimension = new Map<DID, Dimension>();
     private readonly attributeIdToCoordinate = new Map<
-        PID,
+        AID,
         AttributeCoordinate
     >();
-    private readonly matrixIdToMatrix = new Map<PID, Matrix>();
+    private readonly matrixIdToMatrix = new Map<MID, Matrix>();
 
     constructor(catalog: Catalog, attributes: Attributes) {
         this.catalog = catalog;

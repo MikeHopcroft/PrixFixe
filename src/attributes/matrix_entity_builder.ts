@@ -1,3 +1,4 @@
+import { DID } from '../attributes';
 import { KEY, PID } from '../catalog';
 
 import { AttributeInfo } from './attribute_info';
@@ -17,7 +18,7 @@ export class MatrixEntityBuilder {
     private readonly info: AttributeInfo;
 
     private pid: PID | undefined = undefined;
-    private readonly dimensionIdToAttribute = new Map<PID, PID>();
+    private readonly dimensionIdToAttribute = new Map<DID, AID>();
 
     constructor(info: AttributeInfo) {
         this.info = info;

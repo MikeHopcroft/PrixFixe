@@ -1,4 +1,5 @@
-import { PID } from '../catalog';
+import { DID } from '../attributes';
+import { MID, PID } from '../catalog';
 
 /**
  * Unique attribute identifier. Attributes are SKU-specifying modifiers that
@@ -14,15 +15,15 @@ export interface AttributeItem {
 }
 
 export interface DimensionDescription {
-    did: PID;
+    did: DID;
     name: string;
     items: AttributeItem[];
 }
 
 export interface MatrixDescription {
-    mid: PID;
+    mid: MID;
     name: string;
-    dimensions: PID[];
+    dimensions: DID[];
 }
 
 export interface Attributes {
