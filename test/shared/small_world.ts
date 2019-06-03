@@ -8,7 +8,7 @@ import {
     Dimension,
     GenericTypedEntity,
     KEY,
-    MatrixDescription,
+    TensorDescription,
     MENUITEM,
     OPTION,
     PID,
@@ -38,7 +38,7 @@ export const genericCone: GenericTypedEntity = {
     name: 'cone',
     aliases: ['cone', 'ice cream [cone]'],
     defaultKey: '8000:0:0',
-    matrix: 1,
+    tensor: 1,
     kind: MENUITEM,
 };
 
@@ -50,7 +50,7 @@ export const genericCoffee: GenericTypedEntity = {
     name: 'coffee',
     aliases: ['coffee'],
     defaultKey: '9000:0:0:0',
-    matrix: 2,
+    tensor: 2,
     kind: MENUITEM,
 };
 
@@ -62,7 +62,7 @@ export const genericMilk: GenericTypedEntity = {
     name: 'milk',
     aliases: ['milk'],
     defaultKey: '5000:1',
-    matrix: 2,
+    tensor: 2,
     kind: MENUITEM,
 };
 
@@ -193,14 +193,14 @@ export const caffieneDimensionDescription = {
     items: caffeines,
 };
 
-export const softServeMatrixDescription: MatrixDescription = {
-    mid: 1,
+export const softServeMatrixDescription: TensorDescription = {
+    tid: 1,
     name: 'soft serve',
     dimensions: [size, flavor],
 };
 
-export const coffeeMatrixDescription: MatrixDescription = {
-    mid: 2,
+export const coffeeMatrixDescription: TensorDescription = {
+    tid: 2,
     name: 'coffee',
     dimensions: [size, temperature, caffeine],
 };
@@ -241,7 +241,7 @@ export const coffeeDimensions = [
 ///////////////////////////////////////////////////////////////////////////////
 export const emptyAttributes: Attributes = {
     dimensions: [],
-    matrices: [],
+    tensors: [],
 };
 
 export const smallWorldAttributes: Attributes = {
@@ -251,7 +251,7 @@ export const smallWorldAttributes: Attributes = {
         temperatureDimensionDescription,
         caffieneDimensionDescription,
     ],
-    matrices: [softServeMatrixDescription, coffeeMatrixDescription],
+    tensors: [softServeMatrixDescription, coffeeMatrixDescription],
 };
 
 ///////////////////////////////////////////////////////////////////////////////

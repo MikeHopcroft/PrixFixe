@@ -65,9 +65,9 @@ export class TensorEntityBuilder {
 
     /**
      * Iterator for PIDs of attributes that aren't associated with dimensions of
-     * the entity's matrix. This includes all collected attributes in the cases
+     * the entity's tensor. This includes all collected attributes in the cases
      * where the entity has not been set and where the entity is not associated
-     * with a matrix.
+     * with a tensor.
      */
     *getUnusedAttributes(): IterableIterator<AID> {
         // If a PID is undefined, we want to return every attribute.
@@ -76,12 +76,12 @@ export class TensorEntityBuilder {
                 yield aid;
             }
         } else {
-            // If we've collected an entity, attempt to get its matrix.
-            const matrix = this.info.getMatrixForEntity(this.pid);
+            // If we've collected an entity, attempt to get its tensor.
+            const tensor = this.info.getMatrixForEntity(this.pid);
             for (const [did, aid] of this.dimensionIdToAttribute.entries()) {
                 // Only yield attributes that are not associated with a
                 // dimension.
-                if (!AttributeInfo.hasDimension(matrix, did)) {
+                if (!AttributeInfo.hasDimension(tensor, did)) {
                     yield aid;
                 }
             }

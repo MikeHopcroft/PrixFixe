@@ -6,7 +6,7 @@ import {
     DID,
     Dimension,
     Matrix,
-    MID,
+    TID,
     PID,
     AttributeInfo,
     TensorEntityBuilder,
@@ -96,9 +96,9 @@ describe('AttributeInfo', () => {
     it('addMatrix()', () => {
         const info = new AttributeInfo(smallWorldCatalog, emptyAttributes);
 
-        const anyMatrixId: MID = 123;
+        const anyMatrixId: TID = 123;
         const matrix: Matrix = {
-            mid: anyMatrixId,
+            tid: anyMatrixId,
             dimensions: softServeDimensions,
         };
 

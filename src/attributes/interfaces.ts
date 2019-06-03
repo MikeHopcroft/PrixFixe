@@ -1,5 +1,5 @@
 import { DID } from '../attributes';
-import { MID, PID } from '../catalog';
+import { TID, PID } from '../catalog';
 
 /**
  * Unique attribute identifier. Attributes are SKU-specifying modifiers that
@@ -20,13 +20,13 @@ export interface DimensionDescription {
     items: AttributeItem[];
 }
 
-export interface MatrixDescription {
-    mid: MID;
+export interface TensorDescription {
+    tid: TID;
     name: string;
     dimensions: DID[];
 }
 
 export interface Attributes {
     dimensions: DimensionDescription[];
-    matrices: MatrixDescription[];
+    tensors: TensorDescription[];
 }

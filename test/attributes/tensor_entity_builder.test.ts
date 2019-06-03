@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { PID, AttributeInfo, TensorEntityBuilder } from '../../src/';
+import { PID, AttributeInfo, TensorEntityBuilder } from '../../src';
 
 import {
     flavorChocolate,

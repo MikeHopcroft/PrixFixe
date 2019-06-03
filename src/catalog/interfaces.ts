@@ -4,9 +4,9 @@
 export type CID = number;
 
 /**
- * Matrix ID. A type alias to keep various concepts delineated.
+ * Tensor ID. A type alias to keep various concepts delineated.
  */
-export type MID = number;
+export type TID = number;
 
 /**
  * Product ID.  A type alias to keep various concepts delineated. Each generic
@@ -51,7 +51,7 @@ export interface GenericEntity extends Entity {
     cid: CID; // While knowing a menu item's catagory may not help us,
     // it would be nice to have all entities have the same
     aliases: string[];
-    matrix: MID;
+    tensor: TID;
     defaultKey: KEY;
 }
 

@@ -8,7 +8,7 @@ import {
     CID,
     OPTION,
     MENUITEM,
-    MID,
+    TID,
     GenericEntity,
     GenericTypedEntity,
     genericEntityFactory,
@@ -20,7 +20,7 @@ const genericTypedEntityFactory = (
     name: string,
     defaultKey: KEY,
     aliases: string[],
-    matrix: MID,
+    tensor: TID,
     kind: symbol
 ): GenericTypedEntity => {
     return genericEntityFactory(
@@ -30,7 +30,7 @@ const genericTypedEntityFactory = (
             name,
             aliases,
             defaultKey,
-            matrix,
+            tensor,
         } as GenericEntity,
         kind
     );

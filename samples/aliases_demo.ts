@@ -23,7 +23,7 @@ function categorizeAttributes(world: World) {
     const optionDimensions = new Set<DID>();
 
     for (const product of world.catalog.genericEntities()) {
-        const matrix = world.attributeInfo.getMatrix(product.matrix);
+        const matrix = world.attributeInfo.getMatrix(product.tensor);
         for (const dimension of matrix.dimensions) {
             if (product.kind === MENUITEM) {
                 productDimensions.add(dimension.did);

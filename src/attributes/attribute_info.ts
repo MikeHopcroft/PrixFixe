@@ -1,5 +1,5 @@
 import { DID } from '../attributes';
-import { Catalog, KEY, MID, PID } from '../catalog';
+import { Catalog, KEY, TID, PID } from '../catalog';
 
 import { Dimension } from './dimension';
 import { AID, Attributes } from './interfaces';
@@ -26,7 +26,7 @@ export class AttributeInfo {
         AID,
         AttributeCoordinate
     >();
-    private readonly matrixIdToMatrix = new Map<MID, Matrix>();
+    private readonly matrixIdToMatrix = new Map<TID, Matrix>();
 
     constructor(catalog: Catalog, attributes: Attributes) {
         this.catalog = catalog;
@@ -41,7 +41,7 @@ export class AttributeInfo {
             );
         }
 
-        for (const matrix of attributes.matrices) {
+        for (const matrix of attributes.tensors) {
             // TODO: check for bad/unknown `did`.
             const dimensions: Dimension[] = [];
             for (const did of matrix.dimensions) {
@@ -52,7 +52,7 @@ export class AttributeInfo {
                 }
                 dimensions.push(dimension);
             }
-            this.addMatrix({ mid: matrix.mid, dimensions });
+            this.addMatrix({ tid: matrix.tid, dimensions });
         }
     }
 
@@ -96,11 +96,11 @@ export class AttributeInfo {
      * Indexes a Matrix.
      */
     private addMatrix(matrix: Matrix) {
-        if (this.matrixIdToMatrix.has(matrix.mid)) {
-            const message = `found duplicate matrix id ${matrix.mid}.`;
+        if (this.matrixIdToMatrix.has(matrix.tid)) {
+            const message = `found duplicate matrix id ${matrix.tid}.`;
             throw new TypeError(message);
         }
-        this.matrixIdToMatrix.set(matrix.mid, matrix);
+        this.matrixIdToMatrix.set(matrix.tid, matrix);
     }
 
     /**
@@ -123,10 +123,10 @@ export class AttributeInfo {
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    getMatrix(mid: MID) {
-        const matrix = this.matrixIdToMatrix.get(mid);
+    getMatrix(tid: TID) {
+        const matrix = this.matrixIdToMatrix.get(tid);
         if (matrix === undefined) {
-            const message = `Bad matrix id ${mid}.`;
+            const message = `Bad matrix id ${tid}.`;
             throw message;
         }
         return matrix;
@@ -137,7 +137,7 @@ export class AttributeInfo {
      */
     getMatrixForEntity(pid: PID): Matrix {
         const genericEntity = this.catalog.getGeneric(pid);
-        return this.getMatrix(genericEntity.matrix);
+        return this.getMatrix(genericEntity.tensor);
     }
 
     /**
@@ -148,7 +148,7 @@ export class AttributeInfo {
     getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
         // Get the genericEntity for its matrix and defaultKey.
         const genericEntity = this.catalog.getGeneric(pid);
-        const matrix = this.getMatrix(genericEntity.matrix);
+        const matrix = this.getMatrix(genericEntity.tensor);
 
         // Convert the default key into a sequence of coordinate fields.
         const key = genericEntity.defaultKey;

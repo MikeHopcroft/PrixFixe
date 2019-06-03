@@ -50,9 +50,9 @@ const attributes: Attributes = {
             ],
         },
     ],
-    matrices: [
+    tensors: [
         {
-            mid: 1,
+            tid: 1,
             name: 'cones',
             dimensions: [1, 2],
         },

@@ -50,7 +50,7 @@ const attributeSchema = {
             required: ['did', 'items', 'name'],
             type: 'object',
         },
-        MatrixDescription: {
+        TensorDescription: {
             properties: {
                 dimensions: {
                     items: {
@@ -58,14 +58,14 @@ const attributeSchema = {
                     },
                     type: 'array',
                 },
-                mid: {
+                tid: {
                     type: 'number',
                 },
                 name: {
                     type: 'string',
                 },
             },
-            required: ['dimensions', 'mid', 'name'],
+            required: ['dimensions', 'tid', 'name'],
             type: 'object',
         },
     },
@@ -76,14 +76,14 @@ const attributeSchema = {
             },
             type: 'array',
         },
-        matrices: {
+        tensors: {
             items: {
-                $ref: '#/definitions/MatrixDescription',
+                $ref: '#/definitions/TensorDescription',
             },
             type: 'array',
         },
     },
-    required: ['dimensions', 'matrices'],
+    required: ['dimensions', 'tensors'],
     type: 'object',
 };
 

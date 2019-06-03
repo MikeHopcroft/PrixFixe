@@ -1,4 +1,4 @@
-import { MID } from '../catalog';
+import { TID } from '../catalog';
 
 import { Dimension } from './dimension';
 
@@ -7,6 +7,6 @@ import { Dimension } from './dimension';
  * which corresponds to a set of Attributes. Used to generate entity keys.
  */
 export interface Matrix {
-    readonly mid: MID;
+    readonly tid: TID;
     readonly dimensions: Dimension[];
 }
