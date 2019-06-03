@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { aliasesFromPattern } from '../../src/unified/generate_aliases';
+import { aliasesFromPattern } from '../../src/utilities/generate_aliases';
 
 describe('Alias Generation', () => {
     it('should enumerate optionals', () => {

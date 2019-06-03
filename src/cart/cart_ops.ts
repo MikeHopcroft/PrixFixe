@@ -10,7 +10,7 @@ import {
 } from './interfaces';
 
 import { RuleChecker } from '../rule_checker';
-import { IDGenerator } from '../unified';
+import { IDGenerator } from '..//utilities';
 
 /**
  * CartOps operates on Carts, ItemInstances, and attributes. Functionality
