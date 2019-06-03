@@ -68,7 +68,7 @@ export interface SpecificEntity extends Entity {
  * TypedEntity provides polymorphic behavior for both Generic and Specific
  * entities. The intention here is for it to be used similar to a mixin.
  */
-export type TypedEntity = MenuItem | Option | Modifier;
+export type TypedEntity = MenuItem | Option;
 export type GenericTypedEntity = TypedEntity & GenericEntity;
 export type SpecificTypedEntity = TypedEntity & SpecificEntity;
 
@@ -78,9 +78,6 @@ export type SpecificTypedEntity = TypedEntity & SpecificEntity;
 ///////////////////////////////////////////////////////////////////////////////
 export const MENUITEM: unique symbol = Symbol('MENUITEM');
 export type MENUITEM = typeof MENUITEM;
-
-export const MODIFIER: unique symbol = Symbol('MODIFIER');
-export type MODIFIER = typeof MODIFIER;
 
 export const OPTION: unique symbol = Symbol('OPTION');
 export type OPTION = typeof OPTION;
@@ -105,17 +102,6 @@ export interface MenuItem extends Entity {
  */
 export interface Option extends Entity {
     kind: OPTION;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// Modifiers
-///////////////////////////////////////////////////////////////////////////////
-/**
- * Modifiers are options who are mutally exclusive within their category. e.g.,
- * 2% Milk as a base for a Latte vs Whole Milk.
- */
-export interface Modifier extends Entity {
-    kind: MODIFIER;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,11 +130,6 @@ export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
                 ...entity,
                 kind: MENUITEM,
             } as MenuItem;
-        case MODIFIER:
-            return {
-                ...entity,
-                kind: MODIFIER,
-            } as Modifier;
         case OPTION:
             return {
                 ...entity,

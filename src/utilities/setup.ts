@@ -11,7 +11,6 @@ import {
     ICatalog,
     loadRuleConfig,
     MENUITEM,
-    MODIFIER,
     OPTION,
     RuleChecker,
 } from '..';
@@ -27,7 +26,6 @@ export interface World {
 export function setup(
     productsFile: string,
     optionsFile: string,
-    modifiersFile: string,
     attributesFile: string,
     rulesFile: string
 ): World {
@@ -40,13 +38,8 @@ export function setup(
         fs.readFileSync(optionsFile, 'utf8'),
         OPTION
     );
-    const modifiers = catalogFromYamlString(
-        fs.readFileSync(modifiersFile, 'utf8'),
-        MODIFIER
-    );
     const catalog = Catalog.fromCatalog(products);
     catalog.merge(options);
-    catalog.merge(modifiers);
 
     // Create the AttributeInfo instance.
     const attributes = attributesFromYamlString(

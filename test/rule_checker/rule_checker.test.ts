@@ -9,7 +9,6 @@ import {
     OPTION,
     MENUITEM,
     MID,
-    MODIFIER,
     GenericEntity,
     GenericTypedEntity,
     genericEntityFactory,
@@ -75,15 +74,7 @@ const generics = [
         4,
         OPTION
     ),
-    genericTypedEntityFactory(
-        5000,
-        500,
-        'milk',
-        '5000:1',
-        ['malk'],
-        3,
-        MODIFIER
-    ),
+    genericTypedEntityFactory(5000, 500, 'milk', '5000:1', ['malk'], 3, OPTION),
     genericTypedEntityFactory(
         6000,
         700,

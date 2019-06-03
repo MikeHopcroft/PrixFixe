@@ -10,7 +10,7 @@ import {
     KEY,
     MatrixDescription,
     MENUITEM,
-    MODIFIER,
+    OPTION,
     PID,
     RuleChecker,
     RuleConfig,
@@ -352,28 +352,28 @@ export const wholeMilk: SpecificTypedEntity = {
     sku: 5000,
     name: 'whole milk',
     key: '5000:0',
-    kind: MODIFIER,
+    kind: OPTION,
 };
 
 export const twoMilk: SpecificTypedEntity = {
     sku: 5001,
     name: 'two percent milk',
     key: '5000:1',
-    kind: MODIFIER,
+    kind: OPTION,
 };
 
 export const zeroMilk: SpecificTypedEntity = {
     sku: 5002,
     name: 'fat free milk',
     key: '5000:2',
-    kind: MODIFIER,
+    kind: OPTION,
 };
 
 export const soyMilk: SpecificTypedEntity = {
     sku: 5003,
     name: 'soy milk',
     key: '5000:3',
-    kind: MODIFIER,
+    kind: OPTION,
 };
 
 export const specificItems: SpecificTypedEntity[] = [

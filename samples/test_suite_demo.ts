@@ -27,7 +27,6 @@ async function go() {
     const world = setup(
         path.join(__dirname, './data/restaurant-en/products.yaml'),
         path.join(__dirname, './data/restaurant-en/options.yaml'),
-        path.join(__dirname, './data/restaurant-en/modifiers.yaml'),
         path.join(__dirname, './data/restaurant-en/attributes.yaml'),
         path.join(__dirname, './data/restaurant-en/rules.yaml')
     );
