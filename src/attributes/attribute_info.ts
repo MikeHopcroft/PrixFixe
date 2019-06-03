@@ -6,7 +6,7 @@ import { AID, Attributes } from './interfaces';
 import { Matrix } from './matrix';
 
 /**
- * The (dimension, position) coordinates of an attribute within a Matrix.
+ * The (dimension, position) coordinates of an attribute within a Tensor.
  * Dimension corresponds to a characteristic like `size`. Position corresponds
  * to a specific characteristic value such as `small`, `medium`, or `large`.
  */
@@ -17,7 +17,7 @@ export interface AttributeCoordinate {
 
 /**
  * Store information about the relationships between Attributes, Dimensions, and
- * Matrices.
+ * Tensors.
  */
 export class AttributeInfo {
     private readonly catalog: Catalog;
@@ -41,10 +41,10 @@ export class AttributeInfo {
             );
         }
 
-        for (const matrix of attributes.tensors) {
+        for (const tensor of attributes.tensors) {
             // TODO: check for bad/unknown `did`.
             const dimensions: Dimension[] = [];
-            for (const did of matrix.dimensions) {
+            for (const did of tensor.dimensions) {
                 const dimension = this.dimensionIdToDimension.get(did);
                 if (!dimension) {
                     const message = `unknown dimension id ${did}.`;
@@ -52,7 +52,7 @@ export class AttributeInfo {
                 }
                 dimensions.push(dimension);
             }
-            this.addMatrix({ tid: matrix.tid, dimensions });
+            this.addMatrix({ tid: tensor.tid, dimensions });
         }
     }
 
@@ -93,14 +93,14 @@ export class AttributeInfo {
     }
 
     /**
-     * Indexes a Matrix.
+     * Indexes a Tensor.
      */
-    private addMatrix(matrix: Matrix) {
-        if (this.matrixIdToMatrix.has(matrix.tid)) {
-            const message = `found duplicate matrix id ${matrix.tid}.`;
+    private addMatrix(tensor: Matrix) {
+        if (this.matrixIdToMatrix.has(tensor.tid)) {
+            const message = `found duplicate tensor id ${tensor.tid}.`;
             throw new TypeError(message);
         }
-        this.matrixIdToMatrix.set(matrix.tid, matrix);
+        this.matrixIdToMatrix.set(tensor.tid, tensor);
     }
 
     /**
@@ -119,21 +119,21 @@ export class AttributeInfo {
 
     ///////////////////////////////////////////////////////////////////////////
     //
-    // Matrix-related methods
+    // Tensor-related methods
     //
     ///////////////////////////////////////////////////////////////////////////
 
     getMatrix(tid: TID) {
-        const matrix = this.matrixIdToMatrix.get(tid);
-        if (matrix === undefined) {
-            const message = `Bad matrix id ${tid}.`;
+        const tensor = this.matrixIdToMatrix.get(tid);
+        if (tensor === undefined) {
+            const message = `Bad tensor id ${tid}.`;
             throw message;
         }
-        return matrix;
+        return tensor;
     }
 
     /**
-     * Returns a GenericEntity's Matrix.
+     * Returns a GenericEntity's Tensor.
      */
     getMatrixForEntity(pid: PID): Matrix {
         const genericEntity = this.catalog.getGeneric(pid);
@@ -143,12 +143,12 @@ export class AttributeInfo {
     /**
      * Given a GenericEntity's PID and a map from DID to AID, return a number
      * that represents those set of attribute values associated with Dimensions
-     * of the GenericEntity's Matrix.
+     * of the GenericEntity's Tensor.
      */
     getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
-        // Get the genericEntity for its matrix and defaultKey.
+        // Get the genericEntity for its tensor and defaultKey.
         const genericEntity = this.catalog.getGeneric(pid);
-        const matrix = this.getMatrix(genericEntity.tensor);
+        const tensor = this.getMatrix(genericEntity.tensor);
 
         // Convert the default key into a sequence of coordinate fields.
         const key = genericEntity.defaultKey;
@@ -157,7 +157,7 @@ export class AttributeInfo {
 
         // Overwrite default coordinate fields with values supplied from the
         // map.
-        for (const [index, dimension] of matrix.dimensions.entries()) {
+        for (const [index, dimension] of tensor.dimensions.entries()) {
             const aid = dimensionIdToAttribute.get(dimension.did);
             if (aid !== undefined) {
                 const coordinate = this.getAttributeCoordinates(aid);
@@ -172,12 +172,12 @@ export class AttributeInfo {
     getAttributes(key: KEY): AID[] {
         const fields = key.split(':').map(parseBase10Int);
         const pid = fields[0];
-        const matrix = this.getMatrixForEntity(pid);
+        const tensor = this.getMatrixForEntity(pid);
 
         fields.shift();
         const aids: AID[] = [];
         for (let i = 0; i < fields.length; ++i) {
-            const dimension = matrix.dimensions[i];
+            const dimension = tensor.dimensions[i];
             const attribute = dimension.attributes[fields[i]];
             aids.push(attribute.aid);
         }
@@ -185,8 +185,8 @@ export class AttributeInfo {
         return aids;
     }
 
-    static hasDimension(matrix: Matrix, did: DID): boolean {
-        for (const dimension of matrix.dimensions) {
+    static hasDimension(tensor: Matrix, did: DID): boolean {
+        for (const dimension of tensor.dimensions) {
             if (dimension.did === did) {
                 return true;
             }

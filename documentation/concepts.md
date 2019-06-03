@@ -76,7 +76,7 @@ The `attributes.yaml` file specifies `Dimensions`, `Attributes`, and `Tensors`:
 ~~~
 export interface Attributes {
     dimensions: DimensionDescription[];
-    matrices: MatrixDescription[];
+    tensors: TensorDescription[];
 }
 ~~~
 

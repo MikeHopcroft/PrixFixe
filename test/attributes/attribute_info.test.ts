@@ -105,7 +105,7 @@ describe('AttributeInfo', () => {
         info['addMatrix'](matrix);
 
         const f = () => info['addMatrix'](matrix);
-        assert.throws(f, 'found duplicate matrix id 123.');
+        assert.throws(f, 'found duplicate tensor id 123.');
     });
 
     it('getKey()', () => {

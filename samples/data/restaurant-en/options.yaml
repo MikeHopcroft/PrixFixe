@@ -5,14 +5,14 @@ genericItems:
     aliases:
       - sprinkle
     defaultKey: '7000:2'
-    matrix: 4
+    tensor: 4
   - pid: 6000
     cid: 700
     name: drizzle
     aliases:
       - drizz
     defaultKey: '6000:0:1'
-    matrix: 5
+    tensor: 5
 
 specificItems:
   - sku: 7001

@@ -41,7 +41,7 @@ const catalogSchema = {
                 defaultKey: {
                     type: 'string',
                 },
-                matrix: {
+                tensor: {
                     type: 'number',
                 },
                 name: {
@@ -51,7 +51,7 @@ const catalogSchema = {
                     type: 'number',
                 },
             },
-            required: ['aliases', 'cid', 'defaultKey', 'matrix', 'name', 'pid'],
+            required: ['aliases', 'cid', 'defaultKey', 'tensor', 'name', 'pid'],
             type: 'object',
         },
         SpecificEntity: {
