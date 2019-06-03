@@ -1,4 +1,4 @@
-import { AID, AttributeInfo, MatrixEntityBuilder } from '../attributes';
+import { AID, AttributeInfo, TensorEntityBuilder } from '../attributes';
 import { Catalog, KEY, PID } from '../catalog';
 
 import {
@@ -289,7 +289,7 @@ export class CartOps implements ICartOps {
         aids: IterableIterator<AID>,
         children: IterableIterator<ItemInstance>
     ): ItemInstance {
-        const builder = new MatrixEntityBuilder(this.attributeInfo);
+        const builder = new TensorEntityBuilder(this.attributeInfo);
         builder.setPID(pid);
         for (const aid of aids) {
             builder.addAttribute(aid);
@@ -308,7 +308,7 @@ export class CartOps implements ICartOps {
         newAIDs: IterableIterator<AID>
     ): ItemInstance {
         const existingAIDs = this.attributeInfo.getAttributes(item.key);
-        const builder = new MatrixEntityBuilder(this.attributeInfo);
+        const builder = new TensorEntityBuilder(this.attributeInfo);
         builder.setPID(AttributeInfo.pidFromKey(item.key));
 
         // Copy over existing attributes.
@@ -333,7 +333,7 @@ export class CartOps implements ICartOps {
 
     changeItemPID(item: ItemInstance, newPID: PID): ItemInstance {
         const existingAIDs = this.attributeInfo.getAttributes(item.key);
-        const builder = new MatrixEntityBuilder(this.attributeInfo);
+        const builder = new TensorEntityBuilder(this.attributeInfo);
         builder.setPID(newPID);
 
         // Copy over previous attributes.

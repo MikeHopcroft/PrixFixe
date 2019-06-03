@@ -9,7 +9,7 @@ import {
     MID,
     PID,
     AttributeInfo,
-    MatrixEntityBuilder,
+    TensorEntityBuilder,
     UID,
 } from '../../src/';
 

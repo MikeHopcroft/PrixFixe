@@ -1,11 +1,11 @@
-import { DID } from '../attributes';
+import { DID } from '.';
 import { KEY, PID } from '../catalog';
 
 import { AttributeInfo } from './attribute_info';
 import { AID } from './interfaces';
 
 /**
- * MatrixEntityBuilder collects Attribute and Entity values that will later be
+ * TensorEntityBuilder collects Attribute and Entity values that will later be
  * used to generate an Entity key which can be used to lookup the specific PID.
  *
  * For example, we might have a `cone` which is configured by `flavor` and
@@ -14,7 +14,7 @@ import { AID } from './interfaces';
  * Adding the entity `cone` and the attributes `small` and `chocolate` will
  * allow us to generate a key which yields the PID for a `small chocolate cone`.
  */
-export class MatrixEntityBuilder {
+export class TensorEntityBuilder {
     private readonly info: AttributeInfo;
 
     private pid: PID | undefined = undefined;

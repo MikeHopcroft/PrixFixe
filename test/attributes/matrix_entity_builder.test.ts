@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { PID, AttributeInfo, MatrixEntityBuilder } from '../../src/';
+import { PID, AttributeInfo, TensorEntityBuilder } from '../../src/';
 
 import {
     flavorChocolate,
@@ -18,15 +18,15 @@ import {
 
 ///////////////////////////////////////////////////////////////////////////
 //
-//  MaxtrixEntityBuilder
+//  TensorEntityBuilder
 //
 ///////////////////////////////////////////////////////////////////////////
-describe('MaxtrixEntityBuilder', () => {
+describe('TensorEntityBuilder', () => {
     it('Constructor', () => {});
 
     it('hasPID()/setPID()', () => {
         const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
-        const builder = new MatrixEntityBuilder(info);
+        const builder = new TensorEntityBuilder(info);
 
         // Haven't added an entity yet.
         assert.isFalse(builder.hasPID());
@@ -43,7 +43,7 @@ describe('MaxtrixEntityBuilder', () => {
     it('addAttribute()', () => {
         const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
 
-        const builder = new MatrixEntityBuilder(info);
+        const builder = new TensorEntityBuilder(info);
 
         const f = () => builder.addAttribute(unknownPID);
         assert.throws(f, 'Unknown attribute id 9999.');
@@ -61,7 +61,7 @@ describe('MaxtrixEntityBuilder', () => {
     it('setAttribute()', () => {
         const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
 
-        const builder = new MatrixEntityBuilder(info);
+        const builder = new TensorEntityBuilder(info);
 
         // Configure builder for small chocolate cone.
         builder.setPID(genericCone.pid);
@@ -81,7 +81,7 @@ describe('MaxtrixEntityBuilder', () => {
         // TODO: this should not hard code 8000 here or below.
         const genericConePID: PID = 8000;
 
-        const builder = new MatrixEntityBuilder(info);
+        const builder = new TensorEntityBuilder(info);
 
         // getKey() before adding entity should throw.
         const f = () => builder.getKey();
