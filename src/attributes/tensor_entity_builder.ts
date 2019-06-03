@@ -77,7 +77,7 @@ export class TensorEntityBuilder {
             }
         } else {
             // If we've collected an entity, attempt to get its tensor.
-            const tensor = this.info.getMatrixForEntity(this.pid);
+            const tensor = this.info.getTensorForEntity(this.pid);
             for (const [did, aid] of this.dimensionIdToAttribute.entries()) {
                 // Only yield attributes that are not associated with a
                 // dimension.

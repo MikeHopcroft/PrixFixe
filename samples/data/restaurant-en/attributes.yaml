@@ -122,19 +122,19 @@ dimensions:
         aliases:
           - nada
 
-matrices:
-  - mid: 1
+tensors:
+  - tid: 1
     name: coffees
     dimensions: [1,3,4]
-  - mid: 2
+  - tid: 2
     name: cones
     dimensions: [1,2]
-  - mid: 3
+  - tid: 3
     name: milk
     dimensions: [5]
-  - mid: 4
+  - tid: 4
     name: sprinkles
     dimensions: [6]
-  - mid: 5
+  - tid: 5
     name: drizzles
     dimensions: [7,2]

@@ -3,7 +3,7 @@ import { Catalog, KEY, TID, PID } from '../catalog';
 
 import { Dimension } from './dimension';
 import { AID, Attributes } from './interfaces';
-import { Matrix } from './matrix';
+import { Tensor } from './tensor';
 
 /**
  * The (dimension, position) coordinates of an attribute within a Tensor.
@@ -26,7 +26,7 @@ export class AttributeInfo {
         AID,
         AttributeCoordinate
     >();
-    private readonly matrixIdToMatrix = new Map<TID, Matrix>();
+    private readonly tensorIdToTensor = new Map<TID, Tensor>();
 
     constructor(catalog: Catalog, attributes: Attributes) {
         this.catalog = catalog;
@@ -52,7 +52,7 @@ export class AttributeInfo {
                 }
                 dimensions.push(dimension);
             }
-            this.addMatrix({ tid: tensor.tid, dimensions });
+            this.addTensor({ tid: tensor.tid, dimensions });
         }
     }
 
@@ -95,12 +95,12 @@ export class AttributeInfo {
     /**
      * Indexes a Tensor.
      */
-    private addMatrix(tensor: Matrix) {
-        if (this.matrixIdToMatrix.has(tensor.tid)) {
+    private addTensor(tensor: Tensor) {
+        if (this.tensorIdToTensor.has(tensor.tid)) {
             const message = `found duplicate tensor id ${tensor.tid}.`;
             throw new TypeError(message);
         }
-        this.matrixIdToMatrix.set(tensor.tid, tensor);
+        this.tensorIdToTensor.set(tensor.tid, tensor);
     }
 
     /**
@@ -123,8 +123,8 @@ export class AttributeInfo {
     //
     ///////////////////////////////////////////////////////////////////////////
 
-    getMatrix(tid: TID) {
-        const tensor = this.matrixIdToMatrix.get(tid);
+    getTensor(tid: TID) {
+        const tensor = this.tensorIdToTensor.get(tid);
         if (tensor === undefined) {
             const message = `Bad tensor id ${tid}.`;
             throw message;
@@ -135,9 +135,9 @@ export class AttributeInfo {
     /**
      * Returns a GenericEntity's Tensor.
      */
-    getMatrixForEntity(pid: PID): Matrix {
+    getTensorForEntity(pid: PID): Tensor {
         const genericEntity = this.catalog.getGeneric(pid);
-        return this.getMatrix(genericEntity.tensor);
+        return this.getTensor(genericEntity.tensor);
     }
 
     /**
@@ -148,7 +148,7 @@ export class AttributeInfo {
     getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
         // Get the genericEntity for its tensor and defaultKey.
         const genericEntity = this.catalog.getGeneric(pid);
-        const tensor = this.getMatrix(genericEntity.tensor);
+        const tensor = this.getTensor(genericEntity.tensor);
 
         // Convert the default key into a sequence of coordinate fields.
         const key = genericEntity.defaultKey;
@@ -172,7 +172,7 @@ export class AttributeInfo {
     getAttributes(key: KEY): AID[] {
         const fields = key.split(':').map(parseBase10Int);
         const pid = fields[0];
-        const tensor = this.getMatrixForEntity(pid);
+        const tensor = this.getTensorForEntity(pid);
 
         fields.shift();
         const aids: AID[] = [];
@@ -185,7 +185,7 @@ export class AttributeInfo {
         return aids;
     }
 
-    static hasDimension(tensor: Matrix, did: DID): boolean {
+    static hasDimension(tensor: Tensor, did: DID): boolean {
         for (const dimension of tensor.dimensions) {
             if (dimension.did === did) {
                 return true;

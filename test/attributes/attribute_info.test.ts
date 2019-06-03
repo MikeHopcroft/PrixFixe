@@ -5,7 +5,7 @@ import {
     AID,
     DID,
     Dimension,
-    Matrix,
+    Tensor,
     TID,
     PID,
     AttributeInfo,
@@ -93,18 +93,18 @@ describe('AttributeInfo', () => {
         assert.throws(f2, `found duplicate attribute pid 0.`);
     });
 
-    it('addMatrix()', () => {
+    it('addTensor()', () => {
         const info = new AttributeInfo(smallWorldCatalog, emptyAttributes);
 
-        const anyMatrixId: TID = 123;
-        const matrix: Matrix = {
-            tid: anyMatrixId,
+        const anyTensorId: TID = 123;
+        const tensor: Tensor = {
+            tid: anyTensorId,
             dimensions: softServeDimensions,
         };
 
-        info['addMatrix'](matrix);
+        info['addTensor'](tensor);
 
-        const f = () => info['addMatrix'](matrix);
+        const f = () => info['addTensor'](tensor);
         assert.throws(f, 'found duplicate tensor id 123.');
     });
 

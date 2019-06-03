@@ -193,13 +193,13 @@ export const caffieneDimensionDescription = {
     items: caffeines,
 };
 
-export const softServeMatrixDescription: TensorDescription = {
+export const softServeTensorDescription: TensorDescription = {
     tid: 1,
     name: 'soft serve',
     dimensions: [size, flavor],
 };
 
-export const coffeeMatrixDescription: TensorDescription = {
+export const coffeeTensorDescription: TensorDescription = {
     tid: 2,
     name: 'coffee',
     dimensions: [size, temperature, caffeine],
@@ -251,7 +251,7 @@ export const smallWorldAttributes: Attributes = {
         temperatureDimensionDescription,
         caffieneDimensionDescription,
     ],
-    tensors: [softServeMatrixDescription, coffeeMatrixDescription],
+    tensors: [softServeTensorDescription, coffeeTensorDescription],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
