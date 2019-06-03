@@ -21,14 +21,17 @@
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run check"
+    "posttest": "npm run check",
+    "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build"
   },
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/js-yaml": "^3.12.1",
+    "@types/minimist": "^1.2.0",
     "@types/mocha": "^5.2.6",
     "@types/node": "^12.0.0",
     "chai": "^4.2.0",
+    "copyfiles": "^2.1.0",
     "gts": "^1.0.0",
     "mocha": "^6.1.4",
     "typescript": "~3.4.0"
@@ -38,7 +41,8 @@
     "@types/js-yaml": "^3.12.1",
     "ajv": "^6.10.0",
     "debug": "^4.1.1",
-    "js-yaml": "^3.13.1"
+    "js-yaml": "^3.13.1",
+    "minimist": "^1.2.0"
   },
   "prettier": {
     "tabWidth": 4,

@@ -17,18 +17,8 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch World Demo",
-            "program": "${workspaceFolder}/build/samples/world_demo.js",
-            "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": [
-                "${workspaceFolder}/build/**/*.js"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}/build/src/index.js",
+            "name": "Launch TestSuite Demo",
+            "program": "${workspaceFolder}/build/samples/test_suite_demo.js",
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"
