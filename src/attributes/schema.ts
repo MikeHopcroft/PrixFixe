@@ -2,7 +2,7 @@ import * as AJV from 'ajv';
 import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
-import { Attributes, AttributeItem } from './interfaces';
+import { Attributes, AttributeDescription } from './interfaces';
 
 const debug = Debug('so:itemMapFromYamlString');
 
@@ -11,7 +11,7 @@ const debug = Debug('so:itemMapFromYamlString');
 const attributeSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     definitions: {
-        AttributeItem: {
+        AttributeDescription: {
             properties: {
                 aid: {
                     type: 'number',
@@ -39,7 +39,7 @@ const attributeSchema = {
                 },
                 items: {
                     items: {
-                        $ref: '#/definitions/AttributeItem',
+                        $ref: '#/definitions/AttributeDescription',
                     },
                     type: 'array',
                 },
@@ -92,7 +92,7 @@ const attributesValidator = ajv.compile(attributeSchema);
 
 export function* itemsFromAttributes(
     attributes: Attributes
-): IterableIterator<AttributeItem> {
+): IterableIterator<AttributeDescription> {
     for (const dimension of attributes.dimensions) {
         for (const item of dimension.items) {
             yield item;

@@ -1,4 +1,4 @@
-import { AttributeItem } from '../';
+import { AttributeDescription } from '../';
 
 export type DID = number;
 
@@ -9,12 +9,12 @@ export type DID = number;
 export class Dimension {
     readonly did: DID;
     readonly name: string;
-    readonly attributes: AttributeItem[];
+    readonly attributes: AttributeDescription[];
 
     constructor(
         did: DID,
         name: string,
-        attributesIterator: IterableIterator<AttributeItem>
+        attributesIterator: IterableIterator<AttributeDescription>
     ) {
         this.did = did;
         this.name = name;

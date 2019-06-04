@@ -1,6 +1,6 @@
 import {
     AID,
-    AttributeItem,
+    AttributeDescription,
     Attributes,
     Catalog,
     CID,
@@ -80,7 +80,7 @@ export const genericItems: GenericTypedEntity[] = [
 export const sizeSmall: AID = 0;
 export const sizeMedium: AID = 1;
 
-export const sizes: AttributeItem[] = [
+export const sizes: AttributeDescription[] = [
     {
         aid: sizeSmall,
         name: 'small',
@@ -96,7 +96,7 @@ export const sizes: AttributeItem[] = [
 export const flavorVanilla: AID = 2;
 export const flavorChocolate: AID = 3;
 
-export const flavors: AttributeItem[] = [
+export const flavors: AttributeDescription[] = [
     {
         aid: flavorVanilla,
         name: 'vanilla',
@@ -112,7 +112,7 @@ export const flavors: AttributeItem[] = [
 export const temperatureHot: AID = 4;
 export const temperatureCold: AID = 5;
 
-export const temperatures: AttributeItem[] = [
+export const temperatures: AttributeDescription[] = [
     {
         aid: temperatureHot,
         name: 'hot',
@@ -128,7 +128,7 @@ export const temperatures: AttributeItem[] = [
 export const caffeineRegular: AID = 6;
 export const caffeineDecaf: AID = 7;
 
-export const caffeines: AttributeItem[] = [
+export const caffeines: AttributeDescription[] = [
     {
         aid: caffeineRegular,
         name: 'regular',
@@ -146,7 +146,7 @@ export const caffeines: AttributeItem[] = [
 // export const milkZero: AID = 10;
 // export const milkSoy: AID = 11;
 
-// export const milks: AttributeItem[] = [
+// export const milks: AttributeDescription[] = [
 //     {
 //         aid: caffeineRegular,
 //         name: 'regular',

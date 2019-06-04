@@ -87,14 +87,14 @@ A `Dimension` is a set of related, but mutually exclusive attributes. In the exa
 export interface DimensionDescription {
     did: DID;
     name: string;
-    items: AttributeItem[];
+    items: AttributeDescription[];
 }
 ~~~
 
 The fields of `DimensionDescription` are as follows:
 * did - an integer dimension identifier that is unique across all dimensions.
 * name - a friendly name for the dimension. This name is not intended to be used by NLP algorithms to recognize dimensions, but it might be used to generate text to prompt the customer to provide a value for a dimension. For example, "what size cone would you like?".
-* items: an array of `AttributeItems` that make up the dimension. For example, a `size` dimension might have entries for `small`, `medium`, and `large`.
+* items: an array of `AttributeDescription` that make up the dimension. For example, a `size` dimension might have entries for `small`, `medium`, and `large`.
 
 ### Attributes
 

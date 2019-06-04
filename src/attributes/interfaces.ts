@@ -7,7 +7,7 @@ import { TID, PID } from '../catalog';
  */
 export type AID = number;
 
-export interface AttributeItem {
+export interface AttributeDescription {
     aid: AID;
     name: string;
     aliases: string[];
@@ -17,7 +17,7 @@ export interface AttributeItem {
 export interface DimensionDescription {
     did: DID;
     name: string;
-    items: AttributeItem[];
+    items: AttributeDescription[];
 }
 
 export interface TensorDescription {
