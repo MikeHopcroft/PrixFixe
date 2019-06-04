@@ -3,9 +3,9 @@ import 'mocha';
 
 import * as yaml from 'js-yaml';
 
-import { Attributes, attributesFromYamlString } from '../../src/attributes';
+import { AttributesYaml, attributesFromYamlString } from '../../src/attributes';
 
-const attributes: Attributes = {
+const attributes: AttributesYaml = {
     dimensions: [
         {
             did: 1,
@@ -59,7 +59,7 @@ const attributes: Attributes = {
     ],
 };
 
-describe('Attributes', () => {
+describe('AttributesYaml', () => {
     ///////////////////////////////////////////////////////////////////////////////
     //
     //  itemsFromAttributes

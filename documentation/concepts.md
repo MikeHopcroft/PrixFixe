@@ -72,9 +72,9 @@ The `SpecificEntity` fields are as follows:
 Note that `SpecificEntity` does not specify aliases. These are provided by the `GenericEntity`.
 
 ## Dimensions, Attributes and Tensors
-The `attributes.yaml` file specifies `Dimensions`, `Attributes`, and `Tensors`:
+The `attributes.yaml` file specifies `Dimensions`, `AttributesYaml`, and `Tensors`:
 ~~~
-export interface Attributes {
+export interface AttributesYaml {
     dimensions: DimensionDescription[];
     tensors: TensorDescription[];
 }

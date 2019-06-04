@@ -2,7 +2,7 @@ import { DID } from '../attributes';
 import { Catalog, KEY, TID, PID } from '../catalog';
 
 import { Dimension } from './dimension';
-import { AID, Attributes } from './interfaces';
+import { AID, AttributesYaml } from './interfaces';
 import { Tensor } from './tensor';
 
 /**
@@ -16,8 +16,8 @@ export interface AttributeCoordinate {
 }
 
 /**
- * Store information about the relationships between Attributes, Dimensions, and
- * Tensors.
+ * Store information about the relationships between AttributesYaml, Dimensions,
+ * and Tensors.
  */
 export class AttributeInfo {
     private readonly catalog: Catalog;
@@ -28,7 +28,7 @@ export class AttributeInfo {
     >();
     private readonly tensorIdToTensor = new Map<TID, Tensor>();
 
-    constructor(catalog: Catalog, attributes: Attributes) {
+    constructor(catalog: Catalog, attributes: AttributesYaml) {
         this.catalog = catalog;
 
         for (const dimension of attributes.dimensions) {

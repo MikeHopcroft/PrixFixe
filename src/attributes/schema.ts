@@ -2,7 +2,7 @@ import * as AJV from 'ajv';
 import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
-import { Attributes, AttributeDescription } from './interfaces';
+import { AttributesYaml, AttributeDescription } from './interfaces';
 
 const debug = Debug('so:itemMapFromYamlString');
 
@@ -91,7 +91,7 @@ const ajv = new AJV();
 const attributesValidator = ajv.compile(attributeSchema);
 
 export function* itemsFromAttributes(
-    attributes: Attributes
+    attributes: AttributesYaml
 ): IterableIterator<AttributeDescription> {
     for (const dimension of attributes.dimensions) {
         for (const item of dimension.items) {
@@ -101,7 +101,7 @@ export function* itemsFromAttributes(
 }
 
 export function attributesFromYamlString(yamlText: string) {
-    const yamlRoot = yaml.safeLoad(yamlText) as Attributes;
+    const yamlRoot = yaml.safeLoad(yamlText) as AttributesYaml;
 
     if (!attributesValidator(yamlRoot)) {
         const message =

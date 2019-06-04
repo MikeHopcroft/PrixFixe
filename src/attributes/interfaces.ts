@@ -26,7 +26,7 @@ export interface TensorDescription {
     dimensions: DID[];
 }
 
-export interface Attributes {
+export interface AttributesYaml {
     dimensions: DimensionDescription[];
     tensors: TensorDescription[];
 }
