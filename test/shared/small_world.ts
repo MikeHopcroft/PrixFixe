@@ -1,7 +1,7 @@
 import {
     AID,
     AttributeDescription,
-    AttributesYaml,
+    DimensionAndTensorDescription,
     Catalog,
     CID,
     DID,
@@ -240,12 +240,12 @@ export const coffeeDimensions = [
 //  AttributesYaml
 //
 ///////////////////////////////////////////////////////////////////////////////
-export const emptyAttributes: AttributesYaml = {
+export const emptyAttributes: DimensionAndTensorDescription = {
     dimensions: [],
     tensors: [],
 };
 
-export const smallWorldAttributes: AttributesYaml = {
+export const smallWorldAttributes: DimensionAndTensorDescription = {
     dimensions: [
         sizeDimensionDescription,
         flavorDimensionDescription,

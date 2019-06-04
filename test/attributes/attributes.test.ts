@@ -3,9 +3,12 @@ import 'mocha';
 
 import * as yaml from 'js-yaml';
 
-import { AttributesYaml, attributesFromYamlString } from '../../src/attributes';
+import {
+    DimensionAndTensorDescription,
+    attributesFromYamlString,
+} from '../../src/attributes';
 
-const attributes: AttributesYaml = {
+const attributes: DimensionAndTensorDescription = {
     dimensions: [
         {
             did: 1,

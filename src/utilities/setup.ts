@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 
 import {
-    AttributesYaml,
+    DimensionAndTensorDescription,
     AttributeInfo,
     attributesFromYamlString,
     CartOps,
@@ -17,7 +17,7 @@ import {
 
 export interface World {
     attributeInfo: AttributeInfo;
-    attributes: AttributesYaml;
+    attributes: DimensionAndTensorDescription;
     cartOps: ICartOps;
     catalog: ICatalog;
     ruleChecker: RuleChecker;
