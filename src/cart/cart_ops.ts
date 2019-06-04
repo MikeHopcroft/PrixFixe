@@ -58,6 +58,30 @@ export class CartOps implements ICartOps {
         return { ...parent, children: [...parent.children, child] };
     }
 
+    addToItemWithReplacement(
+        parent: ItemInstance,
+        child: ItemInstance
+    ): ItemInstance {
+        let inserted = false;
+        const f = this.ruleChecker.getMutualExclusionPredicate(
+            parent.key,
+            child.key
+        );
+        const newChildren: ItemInstance[] = [];
+        for (const c of parent.children) {
+            if (!f(c.key)) {
+                newChildren.push(c);
+            } else {
+                if (!inserted) {
+                    inserted = true;
+                    newChildren.push(child);
+                }
+            }
+        }
+        //        newChildren.push(child);
+        return { ...parent, children: newChildren };
+    }
+
     ///////////////////////////////////////////////////////////////////////////
     //
     // Finding ItemInstances

@@ -104,6 +104,52 @@ export class RuleChecker implements RuleCheckerOps {
         return false;
     };
 
+    // Given the key of a parent item (parent) and the key of a child item
+    // (child) return a curried function thta indicates whether another child
+    // (existing) would violate mutual exclusivity.
+    //
+    // USE CASE: when adding an child item, one might want to detect and remove
+    // items in the same exclusion zone. For example, suppose we have
+    //
+    //   grande latte
+    //     soy milk
+    //
+    // and we want to add fat free milk. If soy milk and fat free milk were
+    // in the same exclusion zone, we'd really like to replace soy milk with
+    // fat free milk.
+    //
+    // Even if we didn't do this replacement automatically, we'd like the
+    // ability to detect those children that would conflict, in order to apply
+    // an appropriate policy.
+    getMutualExclusionPredicate(parent: KEY, child: KEY) {
+        const predicates = this.tensorWalker(
+            parent,
+            this.mutualTensor
+        ) as MutualExclusionZone[];
+
+        const exclusionCIDs = new Set<CID>();
+        const childPID = child.split(':')[0];
+        for (const predicate of predicates) {
+            const childCID = predicate(childPID);
+            if (childCID > -1) {
+                exclusionCIDs.add(childCID);
+            }
+        }
+
+        return (existing: KEY): boolean => {
+            const existingPID = existing.split(':')[0];
+            for (const predicate of predicates) {
+                const existingCID = predicate(existingPID);
+                if (existingCID > -1) {
+                    if (exclusionCIDs.has(existingCID)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        };
+    }
+
     private getQuanitityInfo = (
         par: KEY,
         child: KEY
