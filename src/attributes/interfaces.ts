@@ -17,7 +17,7 @@ export interface AttributeDescription {
 export interface DimensionDescription {
     did: DID;
     name: string;
-    items: AttributeDescription[];
+    attributes: AttributeDescription[];
 }
 
 export interface TensorDescription {

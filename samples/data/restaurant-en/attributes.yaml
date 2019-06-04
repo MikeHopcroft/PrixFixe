@@ -1,7 +1,7 @@
 dimensions:
   - did: 1
     name: temperature
-    items:
+    attributes:
       - aid: 10
         name: hot
         hidden: true
@@ -14,7 +14,7 @@ dimensions:
           - iced
   - did: 2
     name: flavor
-    items:
+    attributes:
       - aid: 4
         name: vanilla
         isDefault: true
@@ -30,7 +30,7 @@ dimensions:
           - strawberry
   - did: 3
     name: caffeine
-    items:
+    attributes:
       - aid: 7
         name: caffinated
         hidden: true
@@ -53,7 +53,7 @@ dimensions:
           - decaffeinated
   - did: 4
     name: size
-    items:
+    attributes:
       - aid: 1
         name: small
         aliases:
@@ -69,7 +69,7 @@ dimensions:
           - large
   - did: 5
     name: milk
-    items:
+    attributes:
       - aid: 100
         name: whole milk
         isDefault: true
@@ -91,7 +91,7 @@ dimensions:
           - soy [milk]
   - did: 6
     name: shape
-    items:
+    attributes:
       - aid: 200
         name: round
         isDefault: true
@@ -107,7 +107,7 @@ dimensions:
           - starry
   - did: 7
     name: relative
-    items:
+    attributes:
       - aid: 300
         name: extra
         aliases:

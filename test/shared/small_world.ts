@@ -15,6 +15,7 @@ import {
     RuleChecker,
     RuleConfig,
     SpecificTypedEntity,
+    DimensionDescription,
 } from '../../src/';
 
 // A PID that is not indexed in any data structure in this file. For testing
@@ -169,28 +170,28 @@ export const flavor: DID = 1;
 export const temperature: DID = 2;
 export const caffeine: DID = 3;
 
-export const sizeDimensionDescription = {
+export const sizeDimensionDescription: DimensionDescription = {
     did: size,
     name: 'sizes',
-    items: sizes,
+    attributes: sizes,
 };
 
-export const flavorDimensionDescription = {
+export const flavorDimensionDescription: DimensionDescription = {
     did: flavor,
     name: 'flavors',
-    items: flavors,
+    attributes: flavors,
 };
 
-export const temperatureDimensionDescription = {
+export const temperatureDimensionDescription: DimensionDescription = {
     did: temperature,
     name: 'temperatures',
-    items: temperatures,
+    attributes: temperatures,
 };
 
-export const caffieneDimensionDescription = {
+export const caffieneDimensionDescription: DimensionDescription = {
     did: caffeine,
     name: 'caffiene',
-    items: caffeines,
+    attributes: caffeines,
 };
 
 export const softServeTensorDescription: TensorDescription = {

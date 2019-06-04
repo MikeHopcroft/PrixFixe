@@ -10,7 +10,7 @@ const attributes: AttributesYaml = {
         {
             did: 1,
             name: 'size',
-            items: [
+            attributes: [
                 {
                     aid: 1,
                     name: 'small',
@@ -31,7 +31,7 @@ const attributes: AttributesYaml = {
         {
             did: 2,
             name: 'flavor',
-            items: [
+            attributes: [
                 {
                     aid: 4,
                     name: 'vanilla',

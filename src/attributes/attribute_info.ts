@@ -36,7 +36,7 @@ export class AttributeInfo {
                 new Dimension(
                     dimension.did,
                     dimension.name,
-                    dimension.items.values()
+                    dimension.attributes.values()
                 )
             );
         }

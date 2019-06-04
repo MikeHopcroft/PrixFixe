@@ -37,7 +37,7 @@ const attributeSchema = {
                 did: {
                     type: 'number',
                 },
-                items: {
+                attributes: {
                     items: {
                         $ref: '#/definitions/AttributeDescription',
                     },
@@ -47,7 +47,7 @@ const attributeSchema = {
                     type: 'string',
                 },
             },
-            required: ['did', 'items', 'name'],
+            required: ['did', 'attributes', 'name'],
             type: 'object',
         },
         TensorDescription: {
@@ -94,8 +94,8 @@ export function* itemsFromAttributes(
     attributes: AttributesYaml
 ): IterableIterator<AttributeDescription> {
     for (const dimension of attributes.dimensions) {
-        for (const item of dimension.items) {
-            yield item;
+        for (const attribute of dimension.attributes) {
+            yield attribute;
         }
     }
 }
