@@ -1,5 +1,5 @@
 import { AID } from '../attributes';
-import { KEY, PID } from '../catalog';
+import { Key, PID } from '../catalog';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -22,7 +22,7 @@ export type UID = number;
  */
 export interface ItemInstance {
     uid: UID;
-    key: KEY;
+    key: Key;
     quantity: number;
     children: ItemInstance[];
 }
@@ -96,7 +96,7 @@ export interface ICartOps {
      * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular Key.
      */
-    findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance>;
+    findByKey(cart: Cart, key: Key): IterableIterator<ItemInstance>;
 
     /**
      * Items with a PID matching the PID that is passed in are returned in the
@@ -118,7 +118,7 @@ export interface ICartOps {
      * @returnType an iterable of ItemInstances that contain a child with a
      * particular Key (instance of specific entity).
      */
-    findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance>;
+    findByChildKey(cart: Cart, key: Key): IterableIterator<ItemInstance>;
 
     /**
      * Child items with a PID matching the PID that is passed in are returned in
@@ -142,7 +142,7 @@ export interface ICartOps {
      */
     findCompatibleParent(
         cart: Cart,
-        childKey: KEY
+        childKey: Key
     ): IterableIterator<ItemInstance>;
 
     /**

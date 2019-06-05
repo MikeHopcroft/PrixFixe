@@ -7,7 +7,7 @@ import {
     DID,
     Dimension,
     GenericTypedEntity,
-    KEY,
+    Key,
     TensorDescription,
     MENUITEM,
     OPTION,
@@ -24,7 +24,7 @@ export const unknownPID: PID = 9999;
 
 // A key that is not indexed in any data structure in this file. For testing
 // error cases.
-export const unknownKey: KEY = '9999:9:9:9';
+export const unknownKey: Key = '9999:9:9:9';
 
 ///////////////////////////////////////////////////////////////////////////////
 //

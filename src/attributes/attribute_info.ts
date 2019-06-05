@@ -1,5 +1,5 @@
 import { DID } from '../attributes';
-import { Catalog, KEY, TID, PID } from '../catalog';
+import { Catalog, Key, TID, PID } from '../catalog';
 
 import { Dimension } from './dimension';
 import { AID, DimensionAndTensorDescription } from './interfaces';
@@ -168,7 +168,7 @@ export class AttributeInfo {
         return [pid, ...fields].join(':');
     }
 
-    getAttributes(key: KEY): AID[] {
+    getAttributes(key: Key): AID[] {
         const fields = key.split(':').map(parseBase10Int);
         const pid = fields[0];
         const tensor = this.getTensorForEntity(pid);
@@ -193,7 +193,7 @@ export class AttributeInfo {
         return false;
     }
 
-    static pidFromKey(key: KEY): PID {
+    static pidFromKey(key: Key): PID {
         const pid = Number.parseInt(key, 10);
         if (isNaN(pid)) {
             throw TypeError(`Bad key "${key}""`);

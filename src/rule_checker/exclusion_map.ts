@@ -1,15 +1,15 @@
-import { KEY, PID, GenericTypedEntity } from '../catalog';
+import { Key, PID, GenericTypedEntity } from '../catalog';
 import { RuleConfig } from './interfaces';
 
 /**
  * Given a two modifiers, are they mutually exlusive with each other?
  */
 export interface MutualExclusionZone {
-    (modOne: KEY): number;
+    (modOne: Key): number;
 }
 
 export interface ExclusionTensor {
-    // NOTE: Weird how I can't use KEY type alias here:
+    // NOTE: Weird how I can't use Key type alias here:
     //   https://github.com/microsoft/TypeScript/issues/1778
     [key: string]: MutualExclusionZone;
 }
@@ -21,7 +21,7 @@ export const mutualExclusionTensorFactory = (
     const exclusionTensor: ExclusionTensor = {};
 
     for (const rule of ruleSet.rules) {
-        exclusionTensor[rule.partialKey] = (modOne: KEY): number => {
+        exclusionTensor[rule.partialKey] = (modOne: Key): number => {
             const modPID = Number(modOne.split(':')[0]);
             const option = genMap.get(modPID);
 

@@ -1,5 +1,5 @@
 import { DID } from '.';
-import { KEY, PID } from '../catalog';
+import { Key, PID } from '../catalog';
 
 import { AttributeInfo } from './attribute_info';
 import { AID } from './interfaces';
@@ -55,7 +55,7 @@ export class TensorEntityBuilder {
         this.dimensionIdToAttribute.set(coordinate.dimension.did, aid);
     }
 
-    getKey(): KEY {
+    getKey(): Key {
         if (this.pid === undefined) {
             throw TypeError(`no pid set`);
         }

@@ -1,4 +1,4 @@
-import { CID, PID, KEY } from '../catalog';
+import { CID, PID, Key } from '../catalog';
 
 export interface QuantityInformation {
     defaultQty: number;
@@ -26,10 +26,10 @@ export interface ExclusionSet {
 }
 
 export interface PartialRule {
-    partialKey: KEY;
+    partialKey: Key;
     validCatagoryMap: CatagoryMap;
     exclusionZones: ExclusionSet;
-    specificExceptions: KEY[];
+    specificExceptions: Key[];
 }
 
 /**
@@ -47,7 +47,7 @@ export interface RuleCheckerOps {
      *
      * @useCase Can an ingredient be added to a standalone item?
      */
-    isValidChild(parent: KEY, child: KEY): boolean;
+    isValidChild(parent: Key, child: Key): boolean;
 
     /**
      * Check if two modifiers are in a mutually exclusive set
@@ -55,7 +55,7 @@ export interface RuleCheckerOps {
      * @useCase If a pizza has red sauce as a child item, then I want to know if
      * it can also have white sauce as a child item.
      */
-    isMutuallyExclusive(parent: KEY, modSet: IterableIterator<KEY>): boolean;
+    isMutuallyExclusive(parent: Key, modSet: IterableIterator<Key>): boolean;
 
     /**
      * Gets the default quantity of a child attached to a parent.
@@ -63,7 +63,7 @@ export interface RuleCheckerOps {
      * @useCase When I add ketchup packets to a burger, I want to know whether I
      * should add one or two.
      */
-    getDefaultQuantity(parent: KEY, child: KEY): number;
+    getDefaultQuantity(parent: Key, child: Key): number;
 
     /**
      * Predicate to validate that a quantity is within a threshold.
@@ -72,5 +72,5 @@ export interface RuleCheckerOps {
      * number of lemons allowed in the drink to 5. If I pass this function 6 -
      * with drink as parent and lemons as child, then return false.
      */
-    isValidQuantity(parent: KEY, child: KEY, qty: number): boolean;
+    isValidQuantity(parent: Key, child: Key, qty: number): boolean;
 }

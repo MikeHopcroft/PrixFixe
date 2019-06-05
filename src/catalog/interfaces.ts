@@ -31,7 +31,7 @@ export type SKU = number;
  *
  * @example '6122757:0:4'
  */
-export type KEY = string;
+export type Key = string;
 
 /**
  * A catch-all type.
@@ -52,7 +52,7 @@ export interface GenericEntity extends Entity {
     // it would be nice to have all entities have the same
     aliases: string[];
     tensor: TID;
-    defaultKey: KEY;
+    defaultKey: Key;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface GenericEntity extends Entity {
  */
 export interface SpecificEntity extends Entity {
     sku: SKU;
-    key: KEY;
+    key: Key;
 }
 
 /**
@@ -146,13 +146,13 @@ export interface ICatalog {
 
     getGeneric(pid: PID): GenericTypedEntity;
 
-    getGenericForKey(key: KEY): GenericTypedEntity;
+    getGenericForKey(key: Key): GenericTypedEntity;
 
     genericEntities(): IterableIterator<GenericTypedEntity>;
 
-    hasKEY(key: KEY): boolean;
+    hasKEY(key: Key): boolean;
 
-    getSpecific(key: KEY): SpecificTypedEntity;
+    getSpecific(key: Key): SpecificTypedEntity;
 
     specificEntities(): IterableIterator<SpecificTypedEntity>;
 }

@@ -3,14 +3,14 @@ import { AttributeInfo } from '../attributes';
 import {
     GenericTypedEntity,
     ICatalog,
-    KEY,
+    Key,
     PID,
     SpecificTypedEntity,
 } from './interfaces';
 
 export class Catalog implements ICatalog {
     mapGeneric = new Map<PID, GenericTypedEntity>();
-    mapSpecific = new Map<KEY, SpecificTypedEntity>();
+    mapSpecific = new Map<Key, SpecificTypedEntity>();
 
     static fromEntities(
         genericItems: IterableIterator<GenericTypedEntity>,
@@ -78,7 +78,7 @@ export class Catalog implements ICatalog {
         return item;
     }
 
-    getGenericForKey(key: KEY): GenericTypedEntity {
+    getGenericForKey(key: Key): GenericTypedEntity {
         const pid = AttributeInfo.pidFromKey(key);
         return this.getGeneric(pid);
     }
@@ -87,11 +87,11 @@ export class Catalog implements ICatalog {
         return this.mapGeneric.values();
     }
 
-    hasKEY(key: KEY): boolean {
+    hasKEY(key: Key): boolean {
         return this.mapSpecific.has(key);
     }
 
-    getSpecific(key: KEY): SpecificTypedEntity {
+    getSpecific(key: Key): SpecificTypedEntity {
         const item = this.mapSpecific.get(key);
         if (!item) {
             throw TypeError(`Catalog.get(): cannot find key=${key}`);

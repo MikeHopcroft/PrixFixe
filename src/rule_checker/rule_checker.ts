@@ -1,4 +1,4 @@
-import { CID, PID, KEY, GenericTypedEntity } from '../catalog';
+import { CID, PID, Key, GenericTypedEntity } from '../catalog';
 
 import {
     ValidChildTensor,
@@ -30,7 +30,7 @@ export class RuleChecker implements RuleCheckerOps {
         this.quantityTensor = quantityTensorFactory(ruleSet, genericMap);
     }
 
-    private tensorWalker = (key: KEY, tensor: Tensor): Predicate[] => {
+    private tensorWalker = (key: Key, tensor: Tensor): Predicate[] => {
         const predicates: Predicate[] = [];
         const dimensions = key.split(':');
 
@@ -54,7 +54,7 @@ export class RuleChecker implements RuleCheckerOps {
     };
 
     // See `RuleCheckerOps` for docs.
-    isValidChild = (par: KEY, child: KEY): boolean => {
+    isValidChild = (par: Key, child: Key): boolean => {
         const predicates = this.tensorWalker(
             par,
             this.childTensor
@@ -70,8 +70,8 @@ export class RuleChecker implements RuleCheckerOps {
 
     // See `RuleCheckerOps` for docs.
     isMutuallyExclusive = (
-        par: KEY,
-        modSet: IterableIterator<KEY>
+        par: Key,
+        modSet: IterableIterator<Key>
     ): boolean => {
         const predicates = this.tensorWalker(
             par,
@@ -118,7 +118,7 @@ export class RuleChecker implements RuleCheckerOps {
     // Even if we didn't do this replacement automatically, we'd like the
     // ability to detect those children that would conflict, in order to apply
     // an appropriate policy.
-    getMutualExclusionPredicate(parent: KEY, child: KEY) {
+    getMutualExclusionPredicate(parent: Key, child: Key) {
         const predicates = this.tensorWalker(
             parent,
             this.mutualTensor
@@ -133,7 +133,7 @@ export class RuleChecker implements RuleCheckerOps {
             }
         }
 
-        return (existing: KEY): boolean => {
+        return (existing: Key): boolean => {
             const existingPID = existing.split(':')[0];
             for (const predicate of predicates) {
                 const existingCID = predicate(existingPID);
@@ -148,8 +148,8 @@ export class RuleChecker implements RuleCheckerOps {
     }
 
     private getQuanitityInfo = (
-        par: KEY,
-        child: KEY
+        par: Key,
+        child: Key
     ): QuantityInformation | undefined => {
         const upstreamAtts = par.split(':');
         const downstreamAtts = par.split(':').reverse();
@@ -173,7 +173,7 @@ export class RuleChecker implements RuleCheckerOps {
     };
 
     // See `RuleCheckerOps` for docs.
-    getDefaultQuantity = (par: KEY, child: KEY): number => {
+    getDefaultQuantity = (par: Key, child: Key): number => {
         const quantityInfo = this.getQuanitityInfo(par, child);
 
         if (quantityInfo) {
@@ -184,7 +184,7 @@ export class RuleChecker implements RuleCheckerOps {
     };
 
     // See `RuleCheckerOps` for docs.
-    isValidQuantity = (par: KEY, child: KEY, qty: number): boolean => {
+    isValidQuantity = (par: Key, child: Key, qty: number): boolean => {
         const quantityInfo = this.getQuanitityInfo(par, child);
 
         if (quantityInfo) {

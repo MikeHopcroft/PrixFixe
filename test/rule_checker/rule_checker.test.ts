@@ -3,7 +3,7 @@ import 'mocha';
 
 import { RuleChecker, RuleConfig } from '../../src/rule_checker';
 import {
-    KEY,
+    Key,
     PID,
     CID,
     OPTION,
@@ -18,7 +18,7 @@ const genericTypedEntityFactory = (
     pid: PID,
     cid: CID,
     name: string,
-    defaultKey: KEY,
+    defaultKey: Key,
     aliases: string[],
     tensor: TID,
     kind: symbol
@@ -146,21 +146,21 @@ const SAMPLE_RULES: RuleConfig = {
     ],
 };
 
-const latteIcedKey: KEY = '9000:1:0';
-const latteHotKey: KEY = '9000:0:2';
+const latteIcedKey: Key = '9000:1:0';
+const latteHotKey: Key = '9000:0:2';
 
-const smallIced: KEY = '9000:1:0';
-const mediumIced: KEY = '9000:1:1';
-const largeIced: KEY = '9000:1:2';
+const smallIced: Key = '9000:1:0';
+const mediumIced: Key = '9000:1:1';
+const largeIced: Key = '9000:1:2';
 
-const drizzleKey: KEY = '6000:1:0';
-const anotherDrizzleKey: KEY = '6000:1:2';
-const sprinklesKey: KEY = '7000:2';
-const anotherSprinleKey: KEY = '7000:1';
+const drizzleKey: Key = '6000:1:0';
+const anotherDrizzleKey: Key = '6000:1:2';
+const sprinklesKey: Key = '7000:2';
+const anotherSprinleKey: Key = '7000:1';
 
-const soyMilkKey: KEY = '5000:3';
-const twoMilkKey: KEY = '5000:1';
-const wholeMilkKey: KEY = '5000:0';
+const soyMilkKey: Key = '5000:3';
+const twoMilkKey: Key = '5000:1';
+const wholeMilkKey: Key = '5000:0';
 
 const ruleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
 
@@ -223,7 +223,7 @@ describe('RuleChecker', () => {
     });
 
     describe('Are mutually exclusive', () => {
-        const failSet: IterableIterator<KEY> = [
+        const failSet: IterableIterator<Key> = [
             soyMilkKey,
             twoMilkKey,
             wholeMilkKey,

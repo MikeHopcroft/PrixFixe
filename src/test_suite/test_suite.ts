@@ -2,7 +2,7 @@ import * as AJV from 'ajv';
 import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
-import { ICatalog, KEY, Catalog } from '../catalog';
+import { ICatalog, Key, Catalog } from '../catalog';
 import { Cart, ItemInstance } from '../cart';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
@@ -31,7 +31,7 @@ const UNVERIFIED = 'unverified';
 export interface TestLineItem {
     readonly indent: number;
     readonly quantity: number;
-    readonly key: KEY;
+    readonly key: Key;
     readonly name: string;
 }
 

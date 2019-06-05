@@ -18,8 +18,8 @@
 The `Catalog` class provides methods for inspecting its contents:
 * hasPID(pid: PID) - returns true if the catalog contains a `generic entitiy` with the specified `PID`.
 * getGeneric(pid: PID) - returns the `generic enntity` with the specified `PID`.
-* hasKey(key: KEY) - returns true if the catalog contains a `specific entity` with the specified `KEY`.
-* getSpecific(key: KEY) - returns the `specific entity` with the specified `KEY`.
+* hasKey(key: Key) - returns true if the catalog contains a `specific entity` with the specified `Key`.
+* getSpecific(key: Key) - returns the `specific entity` with the specified `Key`.
 * getTensorFromPID(pid: PID) - returns the id of the tensor associated with the `generic product` with the specified `PID`.
 * genericEntities() - iterator of all `generic entities` in the catalog.
 * specificEntities() - iterator of all `specific entities` in the catalog.
@@ -40,7 +40,7 @@ export interface GenericEntity extends Entity {
     cid: CID;
     aliases: string[];
     tensor: TID;
-    defaultKey: KEY;
+    defaultKey: Key;
 }
 ~~~
 
@@ -62,7 +62,7 @@ In the `Catalog`, a specific product is represented by the `SpecificEntity` inte
 ~~~
 export interface SpecificEntity extends Entity {
     sku: SKU;
-    key: KEY;
+    key: Key;
 }
 ~~~
 The `SpecificEntity` fields are as follows:

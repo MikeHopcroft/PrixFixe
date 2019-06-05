@@ -1,13 +1,13 @@
-import { PID, KEY, GenericTypedEntity } from '../catalog';
+import { PID, Key, GenericTypedEntity } from '../catalog';
 
 import { RuleConfig, QuantityInformation } from './interfaces';
 
 export interface QuantityMap {
-    (child: KEY, downstream: KEY): QuantityInformation | undefined;
+    (child: Key, downstream: Key): QuantityInformation | undefined;
 }
 
 export interface QuantityTensor {
-    // NOTE: Weird how I can't use KEY type alias here:
+    // NOTE: Weird how I can't use Key type alias here:
     //   https://github.com/microsoft/TypeScript/issues/1778
     [key: string]: QuantityMap;
 }
@@ -19,7 +19,7 @@ export const quantityTensorFactory = (
     const quantityTensor: QuantityTensor = {};
 
     for (const rule of ruleSet.rules) {
-        quantityTensor[rule.partialKey] = (child: KEY, downstream: KEY) => {
+        quantityTensor[rule.partialKey] = (child: Key, downstream: Key) => {
             const childPID = Number(child.split(':')[0]);
             const option = genMap.get(childPID);
 

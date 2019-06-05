@@ -1,5 +1,5 @@
 import { AID, AttributeInfo, TensorEntityBuilder } from '../attributes';
-import { Catalog, KEY, PID } from '../catalog';
+import { Catalog, Key, PID } from '../catalog';
 
 import {
     Cart,
@@ -97,7 +97,7 @@ export class CartOps implements ICartOps {
      * @returnType an iterable of ItemInstances in the cart that correspond to a
      * particular Key.
      */
-    *findByKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
+    *findByKey(cart: Cart, key: Key): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => key === item.key;
         yield* this.findInCart(cart, predicate);
     }
@@ -127,7 +127,7 @@ export class CartOps implements ICartOps {
      * @returnType an iterable of ItemInstances that contain a child with a
      * particular Key (instance of specific entity).
      */
-    *findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
+    *findByChildKey(cart: Cart, key: Key): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             for (const child of item.children) {
                 if (child.key === key) {
@@ -153,7 +153,7 @@ export class CartOps implements ICartOps {
 
     *findCompatibleParent(
         cart: Cart,
-        childKey: KEY
+        childKey: Key
     ): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {
             return this.ruleChecker.isValidChild(item.key, childKey);

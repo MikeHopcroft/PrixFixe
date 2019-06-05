@@ -1,15 +1,15 @@
-import { PID, KEY, GenericTypedEntity } from '../catalog';
+import { PID, Key, GenericTypedEntity } from '../catalog';
 import { RuleConfig } from './interfaces';
 
 /**
  * Given a child PID, is this child valid at the tensor coordinate?
  */
 export interface ValidChildPredicate {
-    (child: KEY): boolean;
+    (child: Key): boolean;
 }
 
 export interface ValidChildTensor {
-    // NOTE: Weird how I can't use KEY type alias here:
+    // NOTE: Weird how I can't use Key type alias here:
     //   https://github.com/microsoft/TypeScript/issues/1778
     [key: string]: ValidChildPredicate;
 }
@@ -26,8 +26,8 @@ export const childTensorFactory = (
 
     for (const rule of ruleSet.rules) {
         // Assign a ValidChildPredicate function to the partial key
-        childTensor[rule.partialKey] = (child: KEY): boolean => {
-            // API specifies KEY, but we use PIDs in this implementation
+        childTensor[rule.partialKey] = (child: Key): boolean => {
+            // API specifies Key, but we use PIDs in this implementation
             const childPID = Number(child.split(':')[0]);
             const option = genMap.get(childPID);
 
