@@ -7,12 +7,6 @@ import { KEY, PID } from '../catalog';
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-// TODO: Is the below still relevant to anything?
-//
-// Unique product identifier or SKU for specific products. Shares that same
-// value-space with GPID. Therefore, the user must ensure that the intersection
-// of { GPIDs } and { SPIDs } is the empty set. export type SPID = number;
-
 /**
  * Unique instance identfier. No two ItemInstances/child ItemInstances can share
  * a UID. Used by React-like libraries that need to detect changes in data

@@ -34,8 +34,6 @@ export interface PartialRule {
 
 /**
  * The shape of the `rule.yaml` file.
- *
- * @todo define shape of RuleConfig.
  */
 export interface RuleConfig {
     rules: PartialRule[];
@@ -56,8 +54,6 @@ export interface RuleCheckerOps {
      *
      * @useCase If a pizza has red sauce as a child item, then I want to know if
      * it can also have white sauce as a child item.
-     *
-     * @issue should items be mutally exclusive with themselves?
      */
     isMutuallyExclusive(parent: KEY, modSet: IterableIterator<KEY>): boolean;
 

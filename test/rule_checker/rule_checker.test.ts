@@ -220,8 +220,6 @@ describe('RuleChecker', () => {
                 ruleChecker.isValidChild(latteIcedKey, anotherDrizzleKey)
             );
         });
-
-        // TODO: Add test for specificException
     });
 
     describe('Are mutually exclusive', () => {
@@ -323,8 +321,6 @@ describe('RuleChecker', () => {
                 )
             );
         });
-
-        // TODO: Add test for items that belong to different exclusion zones
     });
 
     describe('Default quantity', () => {

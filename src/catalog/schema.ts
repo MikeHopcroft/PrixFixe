@@ -14,9 +14,6 @@ import {
 
 const debug = Debug('pf:catalogFromYamlString');
 
-// TODO: create `CatalogItems` interface in './interfaces.ts' for loading YAML
-// TODO: generate schema with AJV, to validate YAML
-
 interface CatalogDescription {
     genericItems: GenericEntity[];
     specificItems: SpecificEntity[];

@@ -78,7 +78,6 @@ describe('TensorEntityBuilder', () => {
     it('getKey()', () => {
         const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
 
-        // TODO: this should not hard code 8000 here or below.
         const genericConePID: PID = 8000;
 
         const builder = new TensorEntityBuilder(info);

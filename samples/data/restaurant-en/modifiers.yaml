@@ -4,8 +4,7 @@ genericItems:
     name: milk
     aliases:
         - malk
-    defaultKey: '5000:1' # TODO: decide if attribute IDs should be unique
-                         #       or simply enums within their catagory
+    defaultKey: '5000:1'
     tensor: 3
 
 specificItems:

@@ -482,7 +482,6 @@ export class TestSuite {
             }
         }
 
-        // TODO: let the caller do the printing.
         aggregator.print(showPassedCases);
 
         return aggregator;

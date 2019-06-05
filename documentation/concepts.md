@@ -46,7 +46,7 @@ export interface GenericEntity extends Entity {
 
 The `GenericEntity` fields are as follows:
 * `pid`: an integer product identifier that is unique across all generic products.
-* `cid`: an integer category identifier. **TODO**: more on this later.
+* `cid`: an integer category identifier. Allows us to implement mutual exclusivity of any options.
 * `aliases`: an array of alias generator expressions for the phrases that represent this entity. Continuing the ice cream example, the aliases for `ice cream cone` might include
     * ice cream
     * ice cream cone
@@ -154,7 +154,7 @@ In the `Catalog`, a specific product is represented by the `SpecificEntity` inte
 ## Rules
 
 ## <a name="aliases"></a>Aliases
-Aliases are used to configure the NLP system to recognized `products`, `options`, and `attributes`. 
+Aliases are used to configure the NLP system to recognized `products`, `options`, and `attributes`.
 
 The `prix-fixe` alias generator supports a few constructs to simplify the job of writing aliases:
 * optional: a comma-separated list of phrases inside square brackets is treated an a choice of zero or one phrase from the list. So, the pattern `"chicago [combo,meal]"` would match any of the following:

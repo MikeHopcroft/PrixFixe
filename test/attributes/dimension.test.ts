@@ -12,10 +12,6 @@ import { caffeines } from '../shared';
 ///////////////////////////////////////////////////////////////////////////
 describe('Dimension', () => {
     it('Constructor', () => {
-        // We used to test dimension.defaultAttribute here. This value came
-        // from attribute.isDefault - a property that no longer exists. We
-        // now find the default from genericItem.
-        // TODO: Add an equivalent default test for current project.
         const anyDimensionId: DID = 123;
         const dimension = new Dimension(
             anyDimensionId,

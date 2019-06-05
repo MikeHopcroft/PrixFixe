@@ -126,9 +126,6 @@ export class CartOps implements ICartOps {
      *
      * @returnType an iterable of ItemInstances that contain a child with a
      * particular Key (instance of specific entity).
-     *
-     * @issue do we want a corresponding version that finds options associated
-     * with a certain generic option.
      */
     *findByChildKey(cart: Cart, key: KEY): IterableIterator<ItemInstance> {
         const predicate = (item: ItemInstance) => {

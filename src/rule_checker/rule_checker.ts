@@ -20,12 +20,10 @@ type Tensor = ValidChildTensor | ExclusionTensor | QuantityTensor;
 
 export class RuleChecker implements RuleCheckerOps {
     private childTensor: ValidChildTensor;
-    // TODO: implement ExceptionTensor
     //private exceptionTensor: ExceptionTensor;
     private mutualTensor: ExclusionTensor;
     private quantityTensor: QuantityTensor;
 
-    // TODO: constructor will utilize various tensor factories
     constructor(ruleSet: RuleConfig, genericMap: Map<PID, GenericTypedEntity>) {
         this.childTensor = childTensorFactory(ruleSet, genericMap);
         this.mutualTensor = mutualExclusionTensorFactory(ruleSet, genericMap);
@@ -56,7 +54,6 @@ export class RuleChecker implements RuleCheckerOps {
     };
 
     // See `RuleCheckerOps` for docs.
-    // TODO: Add specificExceptions checking
     isValidChild = (par: KEY, child: KEY): boolean => {
         const predicates = this.tensorWalker(
             par,

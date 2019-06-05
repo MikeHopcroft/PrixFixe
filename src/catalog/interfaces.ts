@@ -119,10 +119,6 @@ export const specificEntityFactory = (entity: SpecificEntity, kind: symbol) => {
     return entityTyper(entity, kind) as SpecificTypedEntity;
 };
 
-/**
- * @todo is there a AJV factory for types?
- * @todo template T<kind>?
- */
 export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
     switch (kind) {
         case MENUITEM:
@@ -136,7 +132,6 @@ export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
                 kind: OPTION,
             } as Option;
         default:
-            // TODO: never type gaurd
             throw TypeError('Unknown Type sent to `entityTyper`');
     }
 }

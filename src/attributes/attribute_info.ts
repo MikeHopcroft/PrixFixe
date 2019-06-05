@@ -42,7 +42,6 @@ export class AttributeInfo {
         }
 
         for (const tensor of attributes.tensors) {
-            // TODO: check for bad/unknown `did`.
             const dimensions: Dimension[] = [];
             for (const did of tensor.dimensions) {
                 const dimension = this.dimensionIdToDimension.get(did);
