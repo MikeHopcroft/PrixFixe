@@ -321,7 +321,7 @@ export class TestSuite {
     readonly tests: TestCase[] = [];
 
     // typescript-json-schema tsconfig.json YamlTestCases --required
-    static fromYamlString(yamlText: string) {
+    static fromYamlString(yamlText: string): TestSuite {
         const schemaForTestCases = {
             $schema: 'http://json-schema.org/draft-07/schema#',
             definitions: {

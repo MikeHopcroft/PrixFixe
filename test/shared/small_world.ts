@@ -62,8 +62,8 @@ export const genericMilk: GenericTypedEntity = {
     name: 'milk',
     aliases: ['milk'],
     defaultKey: '5000:1',
-    matrix: 2,
-    kind: MENUITEM,
+    matrix: 3,
+    kind: MODIFIER,
 };
 
 export const genericItems: GenericTypedEntity[] = [
@@ -141,23 +141,33 @@ export const caffeines: AttributeItem[] = [
     },
 ];
 
-// export const milkWhole: AID = 8;
-// export const milkTwo: AID = 9;
-// export const milkZero: AID = 10;
-// export const milkSoy: AID = 11;
+export const milkWhole: AID = 8;
+export const milkTwo: AID = 9;
+export const milkZero: AID = 10;
+export const milkSoy: AID = 11;
 
-// export const milks: AttributeItem[] = [
-//     {
-//         aid: caffeineRegular,
-//         name: 'regular',
-//         aliases: ['regular'],
-//     },
-//     {
-//         aid: caffeineDecaf,
-//         name: 'decaf',
-//         aliases: ['decaf', 'unleaded'],
-//     },
-// ];
+export const milks: AttributeItem[] = [
+    {
+        aid: milkWhole,
+        name: 'whole milk',
+        aliases: ['whole'],
+    },
+    {
+        aid: milkTwo,
+        name: 'two percent milk',
+        aliases: ['two percent', 'lowfat'],
+    },
+    {
+        aid: milkZero,
+        name: 'fat free milk',
+        aliases: ['fat free', 'skim', 'skinny'],
+    },
+    {
+        aid: milkSoy,
+        name: 'soy',
+        aliases: ['soy'],
+    },
+];
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -168,6 +178,7 @@ export const size: DID = 0;
 export const flavor: DID = 1;
 export const temperature: DID = 2;
 export const caffeine: DID = 3;
+export const milk: DID = 4;
 
 export const sizeDimensionDescription = {
     did: size,
@@ -193,6 +204,17 @@ export const caffieneDimensionDescription = {
     items: caffeines,
 };
 
+export const milkDimensionDescription = {
+    did: milk,
+    name: 'milk',
+    items: milks,
+};
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Matrix descriptions
+//
+///////////////////////////////////////////////////////////////////////////////
 export const softServeMatrixDescription: MatrixDescription = {
     mid: 1,
     name: 'soft serve',
@@ -205,34 +227,52 @@ export const coffeeMatrixDescription: MatrixDescription = {
     dimensions: [size, temperature, caffeine],
 };
 
+export const milkMatrixDescription: MatrixDescription = {
+    mid: 3,
+    name: 'milk',
+    dimensions: [milk],
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 //  Dimensions
 //
 ///////////////////////////////////////////////////////////////////////////////
 export const sizeDimension = new Dimension(size, 'sizes', sizes.values());
+
 export const flavorDimension = new Dimension(
     flavor,
     'flavors',
     flavors.values()
 );
+
 export const temperatureDimension = new Dimension(
     temperature,
     'temeperatures',
     temperatures.values()
 );
+
 export const caffeineDimension = new Dimension(
     caffeine,
     'caffeines',
     caffeines.values()
 );
 
+export const milkDimension = new Dimension(
+    milk,
+    'milks',
+    milks.values()
+);
+
 export const softServeDimensions = [sizeDimension, flavorDimension];
+
 export const coffeeDimensions = [
     sizeDimension,
     temperatureDimension,
     caffeineDimension,
 ];
+
+export const milkDimensions = [milkDimension];
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -250,8 +290,12 @@ export const smallWorldAttributes: Attributes = {
         flavorDimensionDescription,
         temperatureDimensionDescription,
         caffieneDimensionDescription,
+        milkDimensionDescription,
     ],
-    matrices: [softServeMatrixDescription, coffeeMatrixDescription],
+    matrices: [
+        softServeMatrixDescription,
+        coffeeMatrixDescription,
+        milkMatrixDescription],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -348,6 +392,12 @@ export const mediumIcedDecafCoffee: SpecificTypedEntity = {
     kind: MENUITEM,
 };
 
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//  Specific milks (whole, lowfat, skinny, soy)
+//
+///////////////////////////////////////////////////////////////////////////////
 export const wholeMilk: SpecificTypedEntity = {
     sku: 5000,
     name: 'whole milk',

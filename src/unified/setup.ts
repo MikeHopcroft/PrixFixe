@@ -57,12 +57,12 @@ export function setup(
     const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
     const ruleChecker = new RuleChecker(ruleConfig, catalog.mapGeneric);
 
-    const cart = new CartOps(attributeInfo, catalog, ruleChecker);
+    const cartOps = new CartOps(attributeInfo, catalog, ruleChecker);
 
     return {
         attributeInfo,
         attributes,
-        cartOps: cart,
+        cartOps,
         catalog,
         ruleChecker,
     };
