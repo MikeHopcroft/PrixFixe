@@ -3,11 +3,24 @@
 Everyone should start by reading [concepts.md](https://github.com/MikeHopcroft/PrixFixe/blob/master/documentation/concepts.md) for a conceptual overview of the project.
 
 ## Table of Contents
+* [Git Configuration](#Git-Configuration)
 * [Styling](#Styling)
    * [Imports](#Imports)
    * [Line Length](#Line-Length)
    * [Naming](#)
 * [VS Code Extensions](#VS-Code-Extensions)
+
+## Git Configuration
+
+Before pushing to the remote, developers should configure pushing tags as default.
+
+To do this globally for any one machine, run:
+
+`git config --global push.followTags true`
+
+Or, to do this locally for a single project, `cd` into `PrixFixe/` and run:
+
+`git config --local push.followTags true`
 
 ## Style
 
