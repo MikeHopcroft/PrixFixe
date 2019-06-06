@@ -431,5 +431,5 @@ export const smallWorldRules: RuleConfig = {
 
 export const smallWorldRuleChecker = new RuleChecker(
     smallWorldRules,
-    smallWorldCatalog.mapGeneric
+    smallWorldCatalog.getGenericMap()
 );

@@ -9,8 +9,8 @@ import {
 } from './interfaces';
 
 export class Catalog implements ICatalog {
-    mapGeneric = new Map<PID, GenericTypedEntity>();
-    mapSpecific = new Map<Key, SpecificTypedEntity>();
+    private mapGeneric = new Map<PID, GenericTypedEntity>();
+    private mapSpecific = new Map<Key, SpecificTypedEntity>();
 
     static fromEntities(
         genericItems: IterableIterator<GenericTypedEntity>,
@@ -81,6 +81,10 @@ export class Catalog implements ICatalog {
     getGenericForKey(key: Key): GenericTypedEntity {
         const pid = AttributeInfo.pidFromKey(key);
         return this.getGeneric(pid);
+    }
+
+    getGenericMap() {
+        return this.mapGeneric;
     }
 
     genericEntities(): IterableIterator<GenericTypedEntity> {
