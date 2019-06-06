@@ -241,7 +241,7 @@ describe('RuleChecker', () => {
 
         const failSetFour = [twoMilkKey, wholeMilkKey];
 
-        it('Cannot have two items from a mutually exclusive set.', () => {
+        it('Cannot have two items from a mutually exclusive set (1)', () => {
             assert.isTrue(
                 ruleChecker.isMutuallyExclusive(
                     latteHotKey,
@@ -249,7 +249,7 @@ describe('RuleChecker', () => {
                 )
             );
         });
-        it('Cannot have two items from a mutually exclusive set.', () => {
+        it('Cannot have two items from a mutually exclusive set (2)', () => {
             assert.isTrue(
                 ruleChecker.isMutuallyExclusive(
                     latteHotKey,
@@ -257,7 +257,7 @@ describe('RuleChecker', () => {
                 )
             );
         });
-        it('Cannot have two items from a mutually exclusive set.', () => {
+        it('Cannot have two items from a mutually exclusive set (3)', () => {
             assert.isTrue(
                 ruleChecker.isMutuallyExclusive(
                     latteHotKey,
@@ -266,7 +266,7 @@ describe('RuleChecker', () => {
             );
         });
 
-        it('Cannot have two items from a mutually exclusive set.', () => {
+        it('Cannot have two items from a mutually exclusive set (4)', () => {
             assert.isTrue(
                 ruleChecker.isMutuallyExclusive(
                     latteIcedKey,
@@ -274,7 +274,7 @@ describe('RuleChecker', () => {
                 )
             );
         });
-        it('Cannot have two items from a mutually exclusive set.', () => {
+        it('Cannot have two items from a mutually exclusive set (5)', () => {
             assert.isTrue(
                 ruleChecker.isMutuallyExclusive(
                     latteIcedKey,
@@ -282,7 +282,7 @@ describe('RuleChecker', () => {
                 )
             );
         });
-        it('Cannot have two items from a mutually exclusive set.', () => {
+        it('Cannot have two items from a mutually exclusive set (6)', () => {
             assert.isTrue(
                 ruleChecker.isMutuallyExclusive(
                     latteIcedKey,
@@ -297,7 +297,7 @@ describe('RuleChecker', () => {
 
         const successSetThree = [wholeMilkKey];
 
-        it('Individual items can exist by themselves', () => {
+        it('Individual items can exist by themselves (1)', () => {
             assert.isFalse(
                 ruleChecker.isMutuallyExclusive(
                     latteHotKey,
@@ -305,7 +305,7 @@ describe('RuleChecker', () => {
                 )
             );
         });
-        it('Individual items can exist by themselves', () => {
+        it('Individual items can exist by themselves (2)', () => {
             assert.isFalse(
                 ruleChecker.isMutuallyExclusive(
                     latteHotKey,
@@ -313,7 +313,7 @@ describe('RuleChecker', () => {
                 )
             );
         });
-        it('Individual items can exist by themselves', () => {
+        it('Individual items can exist by themselves (3)', () => {
             assert.isFalse(
                 ruleChecker.isMutuallyExclusive(
                     latteHotKey,
