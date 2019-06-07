@@ -17,8 +17,7 @@
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
-    "coverage": "nyc mocha -r ts-node/register --require source-map-support/register",
-    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
+    "coverage": "nyc mocha -r ts-node/register --require source-map-support/register && nyc report --reporter=text-lcov | coveralls",
     "fix": "gts fix",
     "posttest": "npm run check",
     "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build",
@@ -33,13 +32,13 @@
     ],
     "exclude": [
       "build/**/*.d.ts",
+      "prettier.config.js",
       "samples/*.ts",
-      "src/test_suite/*.ts",
       "src/index.ts",
+      "src/test_suite/*.ts",
       "src/**/index.ts",
       "src/**/interfaces.ts",
-      "test/**/*.ts",
-      "prettier.config.js"
+      "test/**/*.ts"
     ],
     "reporter": [
       "text"
@@ -55,8 +54,10 @@
     "@types/node": "^12.0.0",
     "chai": "^4.2.0",
     "copyfiles": "^2.1.0",
+    "coveralls": "^3.0.4",
     "gts": "^1.0.0",
     "mocha": "^6.1.4",
+    "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^14.1.1",
     "source-map-support": "^0.5.12",
     "ts-node": "^8.2.0",

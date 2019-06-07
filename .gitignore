@@ -8,5 +8,3 @@ junk*
 .repl_history
 .nyc_output/
 .coveralls.yml
-Gemfile.lock
-coverage
