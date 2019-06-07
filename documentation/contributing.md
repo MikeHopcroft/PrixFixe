@@ -4,6 +4,7 @@ Everyone should start by reading [concepts.md](https://github.com/MikeHopcroft/P
 
 ## Table of Contents
 * [Git Configuration](#Git-Configuration)
+* [Ignored Files](#Ignored-Files)
 * [Styling](#Styling)
    * [Imports](#Imports)
    * [Line Length](#Line-Length)
@@ -21,6 +22,18 @@ To do this globally for any one machine, run:
 Or, to do this locally for a single project, `cd` into `PrixFixe/` and run:
 
 `git config --local push.followTags true`
+
+## Ignored Files
+
+### .coveralls.yml
+
+[Coveralls.io](https://coveralls.io/) can be linked to repos on any GitHub account. It will generate the code coverage badge found in README.md. Upon enabling the PrixFixe repo, you will be given a `repo_token`.
+
+Create a file `./.coveralls.yml` and paste the `repo_token` in, following this structure:
+
+```
+repo_token: someRepoTokenHereYgRjsQWoaH`
+```
 
 ## Style
 
