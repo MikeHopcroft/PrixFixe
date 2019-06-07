@@ -6,4 +6,7 @@ junk*
 .DS_Store
 .node_repl_history
 .repl_history
-
+.nyc_output/
+.coveralls.yml
+Gemfile.lock
+coverage

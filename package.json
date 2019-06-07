@@ -14,17 +14,40 @@
   ],
   "repository": "https://github.com/MikeHopcroft/PrixFixe",
   "scripts": {
-    "test": "mocha",
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
+    "coverage": "nyc mocha -r ts-node/register --require source-map-support/register",
+    "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "fix": "gts fix",
+    "posttest": "npm run check",
+    "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "posttest": "npm run check",
-    "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build"
+    "test": "mocha"
+  },
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "build/**/*.d.ts",
+      "samples/*.ts",
+      "src/test_suite/*.ts",
+      "src/index.ts",
+      "src/**/index.ts",
+      "src/**/interfaces.ts",
+      "test/**/*.ts",
+      "prettier.config.js"
+    ],
+    "reporter": [
+      "text"
+    ],
+    "all": true
   },
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^0.1.3",
     "@types/chai": "^4.1.7",
     "@types/js-yaml": "^3.12.1",
     "@types/minimist": "^1.2.0",
@@ -34,6 +57,9 @@
     "copyfiles": "^2.1.0",
     "gts": "^1.0.0",
     "mocha": "^6.1.4",
+    "nyc": "^14.1.1",
+    "source-map-support": "^0.5.12",
+    "ts-node": "^8.2.0",
     "typescript": "~3.4.0"
   },
   "dependencies": {
