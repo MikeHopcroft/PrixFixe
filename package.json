@@ -17,7 +17,7 @@
     "check": "gts check",
     "clean": "gts clean",
     "compile": "tsc -p .",
-    "coverage": "nyc mocha -r ts-node/register --require source-map-support/register && nyc report --reporter=text-lcov | coveralls",
+    "coverage": "nyc mocha -r ts-node/register -r source-map-support/register && nyc report --reporter=text-lcov | coveralls",
     "fix": "gts fix",
     "posttest": "npm run check",
     "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build",
@@ -26,24 +26,28 @@
     "test": "mocha"
   },
   "nyc": {
-    "extension": [
-      ".ts",
-      ".tsx"
-    ],
+    "check-coverage": true,
     "exclude": [
-      "build/**/*.d.ts",
-      "prettier.config.js",
-      "samples/*.ts",
       "src/index.ts",
-      "src/test_suite/*.ts",
       "src/**/index.ts",
       "src/**/interfaces.ts",
-      "test/**/*.ts"
+      "src/test_suite",
+      "test"
     ],
+    "extends": "@istanbuljs/nyc-config-typescript",
     "reporter": [
       "text"
     ],
-    "all": true
+    "branches": 70,
+    "functions": 70,
+    "lines": 70,
+    "statements": 70,
+    "watermarks": {
+      "lines": [70, 80],
+      "functions": [70, 80],
+      "branches": [70, 80],
+      "statements": [70, 80]
+    }
   },
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^0.1.3",
