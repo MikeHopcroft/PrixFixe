@@ -26,7 +26,6 @@
     "test": "mocha"
   },
   "nyc": {
-    "check-coverage": true,
     "exclude": [
       "src/index.ts",
       "src/**/index.ts",
@@ -38,10 +37,6 @@
     "reporter": [
       "text"
     ],
-    "branches": 70,
-    "functions": 70,
-    "lines": 70,
-    "statements": 70,
     "watermarks": {
       "lines": [70, 80],
       "functions": [70, 80],
