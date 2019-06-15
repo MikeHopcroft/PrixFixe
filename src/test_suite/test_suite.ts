@@ -263,15 +263,15 @@ function formatItem(
     item: ItemInstance,
     indent: number
 ): void {
-    for (const child of item.children) {
-        formatItem(catalog, order, child, indent + 1);
-    }
-
     const name = catalog.getSpecific(item.key).name;
     const quantity = item.quantity;
     const key = item.key;
 
-    order.unshift({ indent, quantity, key, name });
+    order.push({ indent, quantity, key, name });
+
+    for (const child of item.children) {
+        formatItem(catalog, order, child, indent + 1);
+    }
 }
 
 function ordersAreEqual(observed: TestOrder, expected: TestOrder): boolean {
