@@ -105,6 +105,10 @@ export class RuleChecker implements RuleCheckerOps {
     // (child) return a curried function that indicates whether another child
     // (existing) would violate mutual exclusivity.
     //
+    // The closure that is returned will return true if its parameter
+    // (existingKey) could coexist (i.e. would not conflict) with the proposed
+    // child.
+    //
     // USE CASE: when adding an child item, one might want to detect and remove
     // items in the same exclusion zone. For example, suppose we have
     //
@@ -135,7 +139,7 @@ export class RuleChecker implements RuleCheckerOps {
 
         return (existing: Key): boolean => {
             if (existing === child) {
-                return true;
+                return false;
             }
 
             const existingPID = existing.split(':')[0];
@@ -143,15 +147,15 @@ export class RuleChecker implements RuleCheckerOps {
                 const existingCID = predicate(existingPID);
                 if (existingCID > -1) {
                     if (exclusionCIDs.has(existingCID)) {
-                        return true;
+                        return false;
                     }
                 }
             }
-            return false;
+            return true;
         };
     }
 
-    // Returns a closuire the helps check whether a set of child Keys violate
+    // Returns a closure the helps check whether a set of child Keys violate
     // mutual exclusivity constraints when added to a parent.
     //
     // The closure that is returned maintains a set of all child Keys passed

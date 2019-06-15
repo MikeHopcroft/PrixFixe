@@ -333,9 +333,9 @@ describe('RuleChecker', () => {
                 latteHotKey,
                 soyMilkKey
             );
-            assert.isTrue(f(wholeMilkKey));
-            assert.isFalse(f(someOtherKey1));
-            assert.isTrue(f(twoMilkKey));
+            assert.isFalse(f(wholeMilkKey));
+            assert.isTrue(f(someOtherKey1));
+            assert.isFalse(f(twoMilkKey));
         });
 
         it('self exclusion', () => {
@@ -343,10 +343,10 @@ describe('RuleChecker', () => {
                 latteHotKey,
                 someOtherKey1
             );
-            assert.isTrue(f(someOtherKey1));
-            assert.isFalse(f(someOtherKey2));
-            assert.isFalse(f(wholeMilkKey));
-            assert.isFalse(f(twoMilkKey));
+            assert.isFalse(f(someOtherKey1));
+            assert.isTrue(f(someOtherKey2));
+            assert.isTrue(f(wholeMilkKey));
+            assert.isTrue(f(twoMilkKey));
         });
     });
 
