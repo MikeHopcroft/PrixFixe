@@ -162,6 +162,10 @@ const soyMilkKey: Key = '5000:3';
 const twoMilkKey: Key = '5000:1';
 const wholeMilkKey: Key = '5000:0';
 
+// The following two keys are not mutually exclusive with any others.
+const someOtherKey1: Key = '9999:1';
+const someOtherKey2: Key = '9999:2';
+
 const ruleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
 
 describe('RuleChecker', () => {
@@ -320,6 +324,57 @@ describe('RuleChecker', () => {
                     successSetThree.values()
                 )
             );
+        });
+    });
+
+    describe('getPairwiseMutualExclusionPredicate()', () => {
+        it('general', () => {
+            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
+                latteHotKey,
+                soyMilkKey
+            );
+            assert.isTrue(f(wholeMilkKey));
+            assert.isFalse(f(someOtherKey1));
+            assert.isTrue(f(twoMilkKey));
+        });
+
+        it('self exclusion', () => {
+            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
+                latteHotKey,
+                someOtherKey1
+            );
+            assert.isTrue(f(someOtherKey1));
+            assert.isFalse(f(someOtherKey2));
+            assert.isFalse(f(wholeMilkKey));
+            assert.isFalse(f(twoMilkKey));
+        });
+    });
+
+    describe('getIncrementalMutualExclusionPredicate()', () => {
+        it('general', () => {
+            const f = ruleChecker.getIncrementalMutualExclusionPredicate(
+                latteHotKey
+            );
+
+            // First call always succeeds because there are no children.
+            assert.isTrue(f(wholeMilkKey));
+
+            // Second call succeeds because someOtherKey1 does not conflict
+            // with wholeMilkKey.
+            assert.isTrue(f(someOtherKey1));
+
+            // Third call fails because soyMilkKey conflicts with wholeMilkKey.
+            assert.isFalse(f(soyMilkKey));
+
+            // Fourth call succeeds because someOtherKey2 does not conflict
+            // with wholeMilkKey and someOtherKey1.
+            assert.isTrue(f(someOtherKey2));
+
+            // Fifth call fails because twoMilkKey conflicts with wholeMilkKey.
+            assert.isFalse(f(twoMilkKey));
+
+            // Sixth call fails because someOtherKey2 conflicts with itself.
+            assert.isFalse(f(someOtherKey2));
         });
     });
 

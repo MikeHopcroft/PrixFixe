@@ -63,7 +63,7 @@ export class CartOps implements ICartOps {
         child: ItemInstance
     ): ItemInstance {
         let inserted = false;
-        const f = this.ruleChecker.getMutualExclusionPredicate(
+        const f = this.ruleChecker.getPairwiseMutualExclusionPredicate(
             parent.key,
             child.key
         );

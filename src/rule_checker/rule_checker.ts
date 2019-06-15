@@ -102,7 +102,7 @@ export class RuleChecker implements RuleCheckerOps {
     };
 
     // Given the key of a parent item (parent) and the key of a child item
-    // (child) return a curried function thta indicates whether another child
+    // (child) return a curried function that indicates whether another child
     // (existing) would violate mutual exclusivity.
     //
     // USE CASE: when adding an child item, one might want to detect and remove
@@ -118,7 +118,7 @@ export class RuleChecker implements RuleCheckerOps {
     // Even if we didn't do this replacement automatically, we'd like the
     // ability to detect those children that would conflict, in order to apply
     // an appropriate policy.
-    getMutualExclusionPredicate(parent: Key, child: Key) {
+    getPairwiseMutualExclusionPredicate(parent: Key, child: Key) {
         const predicates = this.tensorWalker(
             parent,
             this.mutualTensor
@@ -134,6 +134,10 @@ export class RuleChecker implements RuleCheckerOps {
         }
 
         return (existing: Key): boolean => {
+            if (existing === child) {
+                return true;
+            }
+
             const existingPID = existing.split(':')[0];
             for (const predicate of predicates) {
                 const existingCID = predicate(existingPID);
@@ -144,6 +148,48 @@ export class RuleChecker implements RuleCheckerOps {
                 }
             }
             return false;
+        };
+    }
+
+    // Returns a closuire the helps check whether a set of child Keys violate
+    // mutual exclusivity constraints when added to a parent.
+    //
+    // The closure that is returned maintains a set of all child Keys passed
+    // that did not collectively violate mutual exclusivity. Returns true if
+    // the most recently passed Key does not violate mutual exclusivity.
+    // Otherwise returns false. Keys that violate mutual exclusivity are not
+    // added to the set of valid child keys.
+    //
+    // USE CASE: filtering a sequence of child keys to arrive at a sequence
+    // that does not violate mutual exclusivity.
+    getIncrementalMutualExclusionPredicate(parent: Key) {
+        const predicates = this.tensorWalker(
+            parent,
+            this.mutualTensor
+        ) as MutualExclusionZone[];
+
+        const exclusionCIDs = new Set<CID>();
+        const children = new Set<Key>();
+
+        return (child: Key): boolean => {
+            if (children.has(child)) {
+                return false;
+            }
+
+            children.add(child);
+
+            const childPID = child.split(':')[0];
+            for (const predicate of predicates) {
+                const childCID = predicate(childPID);
+                if (childCID > -1) {
+                    if (exclusionCIDs.has(childCID)) {
+                        return false;
+                    } else {
+                        exclusionCIDs.add(childCID);
+                    }
+                }
+            }
+            return true;
         };
     }
 
