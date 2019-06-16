@@ -1,6 +1,6 @@
 # Contributing
 
-Welcome to `prix-fixe`. Please look at [concepts.md](https://github.com/MikeHopcroft/PrixFixe/blob/master/documentation/concepts.md) for a conceptual overview of the project.
+Welcome to `prix-fixe`. Please look at [concepts.md](documentation/concepts.md) for a conceptual overview of the project.
 
 ## Table of Contents
 * [Before Starting](#Before-Starting)
