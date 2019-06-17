@@ -8,7 +8,7 @@ import { RuleConfig } from './interfaces';
 const ruleConfigSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     definitions: {
-        CatagoryInfo: {
+        CategoryInfo: {
             properties: {
                 qtyInfo: {
                     $ref: '#/definitions/DownstreamQuantity',
@@ -44,6 +44,8 @@ const ruleConfigSchema = {
                     type: 'object',
                 },
                 partialKey: {
+                    description:
+                        "A type alias to keep various concepts delineated.\n\nEach specific product such as `small strawberry milkshake` or `large decaf`\n`iced coffee` will have its own unique Key. The Key is a tensor where the\nfirst dimesnion is a generic product's PID, and any other dimensions\ndetermine which attributes are added.",
                     type: 'string',
                 },
                 specificExceptions: {
@@ -52,11 +54,11 @@ const ruleConfigSchema = {
                     },
                     type: 'array',
                 },
-                validCatagoryMap: {
+                validCategoryMap: {
                     additionalProperties: false,
                     patternProperties: {
                         '^[0-9]+$': {
-                            $ref: '#/definitions/CatagoryInfo',
+                            $ref: '#/definitions/CategoryInfo',
                         },
                     },
                     type: 'object',
@@ -66,7 +68,7 @@ const ruleConfigSchema = {
                 'exclusionZones',
                 'partialKey',
                 'specificExceptions',
-                'validCatagoryMap',
+                'validCategoryMap',
             ],
             type: 'object',
         },
@@ -86,6 +88,7 @@ const ruleConfigSchema = {
             type: 'object',
         },
     },
+    description: 'The shape of the `rule.yaml` file.',
     properties: {
         rules: {
             items: {

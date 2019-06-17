@@ -415,7 +415,7 @@ export const smallWorldRules: RuleConfig = {
     rules: [
         {
             partialKey: '9000', // All coffees
-            validCatagoryMap: {
+            validCategoryMap: {
                 '500': {
                     validOptions: [5000],
                     qtyInfo: {

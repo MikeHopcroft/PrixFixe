@@ -25,7 +25,7 @@ export const quantityTensorFactory = (
 
             if (option) {
                 const categoryID = option.cid;
-                const category = rule.validCatagoryMap[categoryID];
+                const category = rule.validCategoryMap[categoryID];
 
                 if (category) {
                     return category.qtyInfo[downstream];

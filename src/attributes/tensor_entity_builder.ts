@@ -33,7 +33,9 @@ export class TensorEntityBuilder {
             this.pid = pid;
             return true;
         } else {
-            const message = `attempting to overwrite entity ${this.pid} with ${pid}`;
+            const message = `attempting to overwrite entity ${
+                this.pid
+            } with ${pid}`;
             throw TypeError(message);
         }
     }

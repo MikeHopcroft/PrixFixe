@@ -48,7 +48,7 @@ export interface Entity {
  */
 export interface GenericEntity extends Entity {
     pid: PID;
-    cid: CID; // While knowing a menu item's catagory may not help us,
+    cid: CID; // While knowing a menu item's category may not help us,
     // it would be nice to have all entities have the same
     aliases: string[];
     tensor: TID;

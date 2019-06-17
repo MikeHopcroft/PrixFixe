@@ -93,7 +93,7 @@ const SAMPLE_RULES: RuleConfig = {
         // For all lattes, we can only add one type of milk
         {
             partialKey: '9000', // All lattes
-            validCatagoryMap: {
+            validCategoryMap: {
                 '500': {
                     validOptions: [5000],
                     qtyInfo: {
@@ -107,14 +107,14 @@ const SAMPLE_RULES: RuleConfig = {
         // For hot lattes, we have no valid catagories of options
         {
             partialKey: '9000:0',
-            validCatagoryMap: {},
+            validCategoryMap: {},
             exclusionZones: {},
             specificExceptions: [],
         },
         // For iced lattes, we may add drizzles as a valid catagory of options
         {
             partialKey: '9000:1', // Iced lattes
-            validCatagoryMap: {
+            validCategoryMap: {
                 '700': {
                     // Drizzle catagory
                     validOptions: [6000], // Generic drizzle

@@ -12,13 +12,13 @@ export interface DownstreamQuantity {
     [partialKey: string]: QuantityInformation;
 }
 
-export interface CatagoryInfo {
+export interface CategoryInfo {
     validOptions: PID[];
     qtyInfo: DownstreamQuantity;
 }
 
-export interface CatagoryMap {
-    [cid: number]: CatagoryInfo;
+export interface CategoryMap {
+    [cid: number]: CategoryInfo;
 }
 
 export interface ExclusionSet {
@@ -27,7 +27,7 @@ export interface ExclusionSet {
 
 export interface PartialRule {
     partialKey: Key;
-    validCatagoryMap: CatagoryMap;
+    validCategoryMap: CategoryMap;
     exclusionZones: ExclusionSet;
     specificExceptions: Key[];
 }

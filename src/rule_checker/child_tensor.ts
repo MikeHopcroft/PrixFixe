@@ -33,13 +33,13 @@ export const childTensorFactory = (
 
             // If the option exists
             if (option) {
-                const catagoryID = option.cid;
-                const catagory = rule.validCatagoryMap[catagoryID];
+                const categoryID = option.cid;
+                const category = rule.validCategoryMap[categoryID];
 
-                // If the catagory of the option is valid for the partial key
-                if (catagory) {
-                    // If the PID exists as a valid generic in the catagory
-                    if (catagory.validOptions.indexOf(childPID) > -1) {
+                // If the category of the option is valid for the partial key
+                if (category) {
+                    // If the PID exists as a valid generic in the category
+                    if (category.validOptions.indexOf(childPID) > -1) {
                         return true;
                     }
                 }

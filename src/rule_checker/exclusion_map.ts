@@ -26,12 +26,12 @@ export const mutualExclusionTensorFactory = (
             const option = genMap.get(modPID);
 
             if (option) {
-                const catagoryID = option.cid;
-                const exclusionZone = rule.exclusionZones[catagoryID];
+                const categoryID = option.cid;
+                const exclusionZone = rule.exclusionZones[categoryID];
 
                 if (exclusionZone) {
                     if (exclusionZone.indexOf(modPID) > -1) {
-                        return catagoryID;
+                        return categoryID;
                     }
                 }
             }
