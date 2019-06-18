@@ -50,14 +50,6 @@ export interface RuleCheckerOps {
     isValidChild(parent: Key, child: Key): boolean;
 
     /**
-     * Check if two modifiers are in a mutually exclusive set
-     *
-     * @useCase If a pizza has red sauce as a child item, then I want to know if
-     * it can also have white sauce as a child item.
-     */
-    isMutuallyExclusive(parent: Key, modSet: IterableIterator<Key>): boolean;
-
-    /**
      * Gets the default quantity of a child attached to a parent.
      *
      * @useCase When I add ketchup packets to a burger, I want to know whether I

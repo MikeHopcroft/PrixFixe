@@ -68,39 +68,6 @@ export class RuleChecker implements RuleCheckerOps {
         return result;
     };
 
-    // See `RuleCheckerOps` for docs.
-    isMutuallyExclusive = (
-        par: Key,
-        modSet: IterableIterator<Key>
-    ): boolean => {
-        const predicates = this.tensorWalker(
-            par,
-            this.mutualTensor
-        ) as MutualExclusionZone[];
-
-        const exSet = new Set<CID>();
-
-        for (const mod of modSet) {
-            for (const predicate of predicates) {
-                const modPID = mod.split(':')[0];
-                const cid = predicate(modPID);
-
-                // If the mod belongs to an exclusion category
-                if (cid > -1) {
-                    // Add any zone that doesn't exist yet
-                    if (!exSet.has(cid)) {
-                        exSet.add(cid);
-                        // If we've seen a zone before, then the set is exclusive
-                    } else {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
-    };
-
     // Given the key of a parent item (parent) and the key of a child item
     // (child) return a curried function that indicates whether another child
     // (existing) would violate mutual exclusivity.
