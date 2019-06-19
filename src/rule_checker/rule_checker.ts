@@ -168,19 +168,36 @@ export class RuleChecker implements RuleCheckerOps {
         par: Key,
         child: Key
     ): QuantityInformation | undefined => {
+        // First, check if theres a fully qualified key with a wildcard
+        const fullyQualifiedKeyMap = this.quantityTensor[par];
+
+        if (fullyQualifiedKeyMap) {
+            const specificQuantityRule = fullyQualifiedKeyMap(child, '');
+
+            if (specificQuantityRule) {
+                return specificQuantityRule;
+            }
+        }
+
         const upstreamAtts = par.split(':');
         const downstreamAtts = par.split(':').reverse();
 
+        // Search through partial keys
         for (let i = downstreamAtts.length - 1; i > 0; i--) {
+            // Partition key by taking off the last coordinate and using that
+            // to search for rules that apply to downstream keys
             const partialKey = upstreamAtts.slice(0, i).join(':');
             const downstream = downstreamAtts.shift();
 
+            // Get config map for parent's partialKey
             const map = this.quantityTensor[partialKey];
 
             if (map) {
+                // Check if the config map has a rule for the current partition
                 if (map(child, downstream!)) {
                     return map(child, downstream!);
                 } else if (map(child, '')) {
+                    // ...else if there's a wildcard rule in the config map
                     return map(child, '');
                 }
             }
