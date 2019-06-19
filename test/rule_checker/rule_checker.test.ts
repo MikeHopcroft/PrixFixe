@@ -474,5 +474,17 @@ describe('RuleChecker', () => {
                 ruleChecker.isValidQuantity(latteHotKey, drizzleKey, 47)
             );
         });
+
+        it('Wildcard partialKeys specify rules for all downstream keys', () => {
+            assert.isTrue(
+                ruleChecker.isValidQuantity(latteHotKey, twoMilkKey, 1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, twoMilkKey, 0)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(latteHotKey, twoMilkKey, 2)
+            );
+        });
     });
 });
