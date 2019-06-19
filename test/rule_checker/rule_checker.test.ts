@@ -84,6 +84,15 @@ const generics = [
         5,
         OPTION
     ),
+    genericTypedEntityFactory(
+        2000,
+        808,
+        'whipped cream',
+        '6000:2',
+        ['whip'],
+        4,
+        OPTION
+    ),
 ];
 
 const genericMap = genericEntityMapFactory(generics);
@@ -143,6 +152,25 @@ const SAMPLE_RULES: RuleConfig = {
             exclusionZones: {},
             specificExceptions: [],
         },
+        // For iced large lattes, we may add whipped cream
+        {
+            partialKey: '9000:1:2',
+            validCategoryMap: {
+                // Whipped cream category
+                '808': {
+                    validOptions: [2000], // Generic whipped cream
+                    qtyInfo: {
+                        '': {
+                            defaultQty: 1,
+                            minQty: 1,
+                            maxQty: 1,
+                        },
+                    },
+                },
+            },
+            exclusionZones: {},
+            specificExceptions: [],
+        },
     ],
 };
 
@@ -161,6 +189,8 @@ const anotherSprinleKey: Key = '7000:1';
 const soyMilkKey: Key = '5000:3';
 const twoMilkKey: Key = '5000:1';
 const wholeMilkKey: Key = '5000:0';
+
+const whippedCreamKey: Key = '2000:2';
 
 // The following two keys are not mutually exclusive with any others.
 const someOtherKey1: Key = '9999:1';
@@ -585,6 +615,18 @@ describe('RuleChecker', () => {
             );
             assert.isFalse(
                 ruleChecker.isValidQuantity(latteHotKey, twoMilkKey, 2)
+            );
+        });
+
+        it('Wildcards work on fully qualified keys', () => {
+            assert.isTrue(
+                ruleChecker.isValidQuantity(largeIced, whippedCreamKey, 1)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(largeIced, whippedCreamKey, 0)
+            );
+            assert.isFalse(
+                ruleChecker.isValidQuantity(largeIced, whippedCreamKey, 2)
             );
         });
     });
