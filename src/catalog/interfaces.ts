@@ -148,6 +148,8 @@ export interface ICatalog {
 
     getGenericForKey(key: Key): GenericTypedEntity;
 
+    getGenericMap(): Map<PID, GenericTypedEntity>;
+
     genericEntities(): IterableIterator<GenericTypedEntity>;
 
     hasKEY(key: Key): boolean;

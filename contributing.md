@@ -98,8 +98,8 @@ interface IFoo {
 
 TODO:
 * Preference for immutable style. Avoid state machines.
-* Keep public API surface to a minimum. Avoid export.
-* Don't make methods public to enable unit testing. Unit tests can access private methods.
+* Keep public API surface to a minimum. Avoid unnecessary export.
+* Don't make methods public to enable unit testing. Unit tests can access private methods using ['name'].
 * Appropriate amount of code coverage and unit testing.
 * Rules of thumb for unit tests.
 * **TODO:** comments
@@ -112,9 +112,11 @@ TODO:
 * Logging/tracing
 * VSCode configuration and tips
 * Mocha test explorer and test debugging
+* Guidelines for use of YAML and AJV
+* Guidelines for error handling/exceptions
 
 ## VS Code Extensions
-TODO: add hyperlinks here
+TODO: add hyperlinks to extensions here
 TODO: add automatic extension recommendations to VSCode
 
 **Mocha Test Explorer** *Recommended*</br>Run your Mocha tests using a UI embedded in VS Code.

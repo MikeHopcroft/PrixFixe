@@ -83,7 +83,7 @@ export class Catalog implements ICatalog {
         return this.getGeneric(pid);
     }
 
-    getGenericMap() {
+    getGenericMap(): Map<PID, GenericTypedEntity>  {
         return this.mapGeneric;
     }
 
