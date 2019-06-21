@@ -276,7 +276,7 @@ export class TestCase {
 
         const end = process.hrtime.bigint();
 
-        return new Result(this, orders, succeeded, Number(end - start) / 1000);
+        return new Result(this, orders, succeeded, Number(end - start) / 10e6);
     }
 }
 
