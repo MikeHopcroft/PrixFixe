@@ -5,6 +5,8 @@ import * as yaml from 'js-yaml';
 import { ICatalog, Key, Catalog } from '../catalog';
 import { Cart, ItemInstance } from '../cart';
 
+import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
+
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 
 export interface State {
@@ -51,10 +53,19 @@ export class Result {
     // Determination of the success of the test case.
     readonly passed: boolean;
 
-    constructor(test: TestCase, observed: TestOrder[], passed: boolean) {
+    // Latency in milliseconds.
+    readonly latencyMS: number;
+
+    constructor(
+        test: TestCase,
+        observed: TestOrder[],
+        passed: boolean,
+        latencyMS: number
+    ) {
         this.test = test;
         this.observed = observed;
         this.passed = passed;
+        this.latencyMS = latencyMS;
     }
 
     rebase(): YamlTestCase {
@@ -91,6 +102,7 @@ export class AggregatedResults {
     suites: { [suite: string]: TestCounts } = {};
     results: Result[] = [];
     passCount = 0;
+    statistics = new StatisticsAggregator();
 
     recordResult(result: Result): void {
         const test = result.test;
@@ -123,6 +135,8 @@ export class AggregatedResults {
         if (passed) {
             this.passCount++;
         }
+
+        this.statistics.record(result.latencyMS);
     }
 
     print(showPassedCases = false) {
@@ -168,6 +182,20 @@ export class AggregatedResults {
         console.log();
 
         console.log(`Overall: ${this.passCount}/${this.results.length}`);
+
+        console.log();
+        this.printLatencyStatistics();
+    }
+
+    printLatencyStatistics() {
+        const summary = this.statistics.computeStatistics([
+            0.5,
+            0.9,
+            0.95,
+            0.99,
+            0.999,
+        ]);
+        printStatistics('Latency', 'ms', summary);
     }
 
     rebase(): YamlTestCases {
@@ -230,6 +258,9 @@ export class TestCase {
         let succeeded = true;
 
         let state: State = { cart: { items: [] } };
+
+        const start = process.hrtime.bigint();
+
         for (const [i, input] of this.inputs.entries()) {
             // Run the parser
             state = await processor(input, state);
@@ -243,7 +274,9 @@ export class TestCase {
             succeeded = ordersAreEqual(observed, expected);
         }
 
-        return new Result(this, orders, succeeded);
+        const end = process.hrtime.bigint();
+
+        return new Result(this, orders, succeeded, Number(end - start) / 1000);
     }
 }
 
