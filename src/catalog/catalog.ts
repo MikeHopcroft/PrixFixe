@@ -11,6 +11,7 @@ import {
 export class Catalog implements ICatalog {
     private mapGeneric = new Map<PID, GenericTypedEntity>();
     private mapSpecific = new Map<Key, SpecificTypedEntity>();
+    private pidToKeys = new Map<PID, Key[]>();
 
     static fromEntities(
         genericItems: IterableIterator<GenericTypedEntity>,
@@ -58,7 +59,18 @@ export class Catalog implements ICatalog {
                     `Catalog: encountered duplicate key ${item.key}.`
                 );
             }
+
+            // Add item to map from key to SpecificTypedEntity
             this.mapSpecific.set(item.key, item);
+
+            // Add item's key to map from pid to keys.
+            const pid = AttributeInfo.pidFromKey(item.key);
+            const keys = this.pidToKeys.get(pid);
+            if (keys === undefined) {
+                this.pidToKeys.set(pid, [item.key]);
+            } else {
+                keys.push(item.key);
+            }
         }
     }
 
@@ -101,6 +113,15 @@ export class Catalog implements ICatalog {
             throw TypeError(`Catalog.get(): cannot find key=${key}`);
         }
         return item;
+    }
+
+    getSpecificsForGeneric(pid: PID): IterableIterator<Key> {
+        if (this.pidToKeys.has(pid)) {
+            return this.pidToKeys.get(pid)!.values();
+        } else {
+            const message = `Catalog.getSpecificsForGeneric: unknown pid ${pid}.`;
+            throw TypeError(message);
+        }
     }
 
     specificEntities(): IterableIterator<SpecificTypedEntity> {
