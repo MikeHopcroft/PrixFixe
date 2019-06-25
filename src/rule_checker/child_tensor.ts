@@ -1,5 +1,5 @@
 import { PID, Key, GenericTypedEntity } from '../catalog';
-import { RuleConfig } from './interfaces';
+import { RuleConfig, CategoryInfo } from './interfaces';
 
 /**
  * Given a child PID, is this child valid at the tensor coordinate?
@@ -51,3 +51,26 @@ export const childTensorFactory = (
 
     return childTensor;
 };
+
+export type ValidChildren = Map<Key, Set<PID>>;
+
+export function validChildrenFactory(ruleSet: RuleConfig) {
+    const keyToPIDs = new Map<Key, Set<PID>>();
+
+    for (const rule of ruleSet.rules) {
+        for (const [cid, value] of Object.entries(rule.validCategoryMap)) {
+            const info = value as CategoryInfo;
+
+            const pids = keyToPIDs.get(rule.partialKey);
+            if (pids === undefined) {
+                keyToPIDs.set(rule.partialKey, new Set(info.validOptions));
+            } else {
+                for (const pid of info.validOptions) {
+                    pids.add(pid);
+                }
+            }
+        }
+    }
+
+    return keyToPIDs;
+}

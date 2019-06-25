@@ -256,6 +256,18 @@ describe('RuleChecker', () => {
         });
     });
 
+    describe('getValidChildren', () => {
+        it('getValidChildren()', () => {
+            // NOTE: sort pids to avoid testing ordering of the enumeration of
+            // pids in the set.
+            const pids = [...ruleChecker.getValidChildren('9000:1:2')].sort(
+                (a, b) => a - b
+            );
+            const expected = [2000, 5000, 6000];
+            assert.deepEqual([...pids], expected);
+        });
+    });
+
     describe('getPairwiseMutualExclusionPredicate()', () => {
         it('general', () => {
             const f = ruleChecker.getPairwiseMutualExclusionPredicate(

@@ -49,6 +49,8 @@ export interface RuleCheckerOps {
      */
     isValidChild(parent: Key, child: Key): boolean;
 
+    getValidChildren(parent: Key): Set<PID>;
+
     /**
      * Gets the default quantity of a child attached to a parent.
      *

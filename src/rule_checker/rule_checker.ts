@@ -1,6 +1,8 @@
 import { CID, PID, Key, GenericTypedEntity } from '../catalog';
 
 import {
+    ValidChildren,
+    validChildrenFactory,
     ValidChildTensor,
     ValidChildPredicate,
     childTensorFactory,
@@ -14,18 +16,21 @@ import {
 
 import { RuleCheckerOps, RuleConfig, QuantityInformation } from './interfaces';
 import { QuantityMap, QuantityTensor, quantityTensorFactory } from './quantity';
+import { AggregatedResults } from '../test_suite';
 
 type Predicate = ValidChildPredicate | MutualExclusionZone | QuantityMap;
 type Tensor = ValidChildTensor | ExclusionTensor | QuantityTensor;
 
 export class RuleChecker implements RuleCheckerOps {
     private childTensor: ValidChildTensor;
+    private validChildren: ValidChildren;
     //private exceptionTensor: ExceptionTensor;
     private mutualTensor: ExclusionTensor;
     private quantityTensor: QuantityTensor;
 
     constructor(ruleSet: RuleConfig, genericMap: Map<PID, GenericTypedEntity>) {
         this.childTensor = childTensorFactory(ruleSet, genericMap);
+        this.validChildren = validChildrenFactory(ruleSet);
         this.mutualTensor = mutualExclusionTensorFactory(ruleSet, genericMap);
         this.quantityTensor = quantityTensorFactory(ruleSet, genericMap);
     }
@@ -67,6 +72,31 @@ export class RuleChecker implements RuleCheckerOps {
 
         return result;
     };
+
+    // TODO: reduce code and concept overlap between getValidChildren() and
+    // tensorWalker().
+    // TODO: change implementation of isValidChild to use this.validChildren.
+    getValidChildren(key: Key): Set<PID> {
+        const result = new Set<PID>();
+
+        const dimensions = key.split(':');
+        let nextSection: string | undefined = dimensions.shift();
+        let partialKey = nextSection;
+
+        while (nextSection) {
+            const pids = this.validChildren.get(partialKey!);
+            if (pids !== undefined) {
+                for (const pid of pids) {
+                    result.add(pid);
+                }
+            }
+
+            nextSection = dimensions.shift();
+            partialKey = `${partialKey}:${nextSection}`;
+        }
+
+        return result;
+    }
 
     // Given the key of a parent item (parent) and the key of a child item
     // (child) return a curried function that indicates whether another child
