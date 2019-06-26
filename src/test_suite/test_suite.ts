@@ -298,9 +298,9 @@ function formatItem(
 ): void {
     let name: string;
     if (catalog.hasKey(item.key)) {
-        name = `UNKNOWN(${item.key})`;
-    } else {
         name = catalog.getSpecific(item.key).name;
+    } else {
+        name = `UNKNOWN(${item.key})`;
     }
     const quantity = item.quantity;
     const key = item.key;
