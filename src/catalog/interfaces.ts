@@ -152,7 +152,7 @@ export interface ICatalog {
 
     genericEntities(): IterableIterator<GenericTypedEntity>;
 
-    hasKEY(key: Key): boolean;
+    hasKey(key: Key): boolean;
 
     getSpecific(key: Key): SpecificTypedEntity;
 

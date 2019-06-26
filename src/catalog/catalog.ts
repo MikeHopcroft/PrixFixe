@@ -103,7 +103,7 @@ export class Catalog implements ICatalog {
         return this.mapGeneric.values();
     }
 
-    hasKEY(key: Key): boolean {
+    hasKey(key: Key): boolean {
         return this.mapSpecific.has(key);
     }
 

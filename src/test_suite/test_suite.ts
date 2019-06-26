@@ -296,7 +296,12 @@ function formatItem(
     item: ItemInstance,
     indent: number
 ): void {
-    const name = catalog.getSpecific(item.key).name;
+    let name: string;
+    if (catalog.hasKey(item.key)) {
+        name = `UNKNOWN(${item.key})`;
+    } else {
+        name = catalog.getSpecific(item.key).name;
+    }
     const quantity = item.quantity;
     const key = item.key;
 
