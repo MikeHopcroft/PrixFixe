@@ -54,7 +54,10 @@ export const childTensorFactory = (
 
 export type ValidChildren = Map<Key, Set<PID>>;
 
-export function validChildrenFactory(ruleSet: RuleConfig) {
+export function validChildrenFactory(
+    ruleSet: RuleConfig,
+    genericMap: Map<PID, GenericTypedEntity>
+) {
     const keyToPIDs = new Map<Key, Set<PID>>();
 
     for (const rule of ruleSet.rules) {
@@ -66,7 +69,13 @@ export function validChildrenFactory(ruleSet: RuleConfig) {
                 keyToPIDs.set(rule.partialKey, new Set(info.validOptions));
             } else {
                 for (const pid of info.validOptions) {
-                    pids.add(pid);
+                    const child = genericMap.get(pid);
+                    // NOTE: it is possible for the rules to mention a pid that
+                    // is not in the catalog. Therefore, child could be
+                    // undefined.
+                    if (child !== undefined && child.cid === Number(cid)) {
+                        pids.add(pid);
+                    }
                 }
             }
         }

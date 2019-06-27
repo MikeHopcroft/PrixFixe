@@ -30,7 +30,7 @@ export class RuleChecker implements RuleCheckerOps {
 
     constructor(ruleSet: RuleConfig, genericMap: Map<PID, GenericTypedEntity>) {
         this.childTensor = childTensorFactory(ruleSet, genericMap);
-        this.validChildren = validChildrenFactory(ruleSet);
+        this.validChildren = validChildrenFactory(ruleSet, genericMap);
         this.mutualTensor = mutualExclusionTensorFactory(ruleSet, genericMap);
         this.quantityTensor = quantityTensorFactory(ruleSet, genericMap);
     }
