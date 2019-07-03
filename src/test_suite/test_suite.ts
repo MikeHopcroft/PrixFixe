@@ -164,6 +164,14 @@ export class AggregatedResults {
 
                 if (result.exception) {
                     console.log(`  Exception message: "${result.exception}"`);
+                    for (const [i, input] of result.test.inputs.entries()) {
+                        const observed = result.observed[i];
+                        const expected = result.test.expected[i];
+
+                        console.log(
+                            `  Utterance ${i}: "${result.test.inputs[i]}"`
+                        );
+                    }
                 } else {
                     for (const [i, input] of result.test.inputs.entries()) {
                         const observed = result.observed[i];
