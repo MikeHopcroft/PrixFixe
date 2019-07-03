@@ -53,6 +53,8 @@ export class Result {
     // Determination of the success of the test case.
     readonly passed: boolean;
 
+    readonly exception: string | undefined;
+
     // Latency in milliseconds.
     readonly latencyMS: number;
 
@@ -60,11 +62,13 @@ export class Result {
         test: TestCase,
         observed: TestOrder[],
         passed: boolean,
+        exception: string | undefined,
         latencyMS: number
     ) {
         this.test = test;
         this.observed = observed;
         this.passed = passed;
+        this.exception = exception;
         this.latencyMS = latencyMS;
     }
 
@@ -151,17 +155,26 @@ export class AggregatedResults {
             if (!result.passed || showPassedCases) {
                 const suites = result.test.suites.join(' ');
                 const passFail = result.passed ? 'PASSED' : 'FAILED';
-                console.log(`${result.test.id} - ${passFail}`);
+                const exception = result.exception
+                    ? ' *** EXCEPTION THROWN ***'
+                    : '';
+                console.log(`${result.test.id} - ${passFail}${exception}`);
                 console.log(`  Comment: ${result.test.comment}`);
                 console.log(`  Suites: ${suites}`);
 
-                for (const [i, input] of result.test.inputs.entries()) {
-                    const observed = result.observed[i];
-                    const expected = result.test.expected[i];
+                if (result.exception) {
+                    console.log(`  Exception message: "${result.exception}"`);
+                } else {
+                    for (const [i, input] of result.test.inputs.entries()) {
+                        const observed = result.observed[i];
+                        const expected = result.test.expected[i];
 
-                    console.log(`  Utterance ${i}: "${result.test.inputs[i]}"`);
+                        console.log(
+                            `  Utterance ${i}: "${result.test.inputs[i]}"`
+                        );
 
-                    explainDifferences(observed, expected);
+                        explainDifferences(observed, expected);
+                    }
                 }
                 console.log();
             }
@@ -256,27 +269,43 @@ export class TestCase {
     async run(processor: Processor, catalog: ICatalog): Promise<Result> {
         const orders = [];
         let succeeded = true;
+        let exception: string | undefined = undefined;
 
         let state: State = { cart: { items: [] } };
 
         const start = process.hrtime.bigint();
 
-        for (const [i, input] of this.inputs.entries()) {
-            // Run the parser
-            state = await processor(input, state);
+        try {
+            for (const [i, input] of this.inputs.entries()) {
+                // Run the parser
+                state = await processor(input, state);
 
-            // Convert the Cart to an Order
-            const observed = formatCart(state.cart, catalog);
-            orders.push(observed);
+                // Convert the Cart to an Order
+                const observed = formatCart(state.cart, catalog);
+                orders.push(observed);
 
-            // Compare observed Orders
-            const expected = this.expected[i];
-            succeeded = ordersAreEqual(observed, expected);
+                // Compare observed Orders
+                const expected = this.expected[i];
+                succeeded = ordersAreEqual(observed, expected);
+            }
+        } catch (e) {
+            succeeded = false;
+            if (e instanceof Error) {
+                exception = e.message;
+            } else {
+                exception = 'Unknown exception.';
+            }
         }
 
         const end = process.hrtime.bigint();
 
-        return new Result(this, orders, succeeded, Number(end - start) / 10e6);
+        return new Result(
+            this,
+            orders,
+            succeeded,
+            exception,
+            Number(end - start) / 10e6
+        );
     }
 }
 

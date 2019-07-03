@@ -5,8 +5,14 @@ import { setup, State, TestSuite } from '../src';
 
 // This processor does nothing. Replace it with code that processes the text
 // utterance to produce a new State.
+let counter = 0;
 async function nopProcessor(text: string, state: State): Promise<State> {
-    return state;
+    counter++;
+    if (counter % 2 === 0) {
+        throw Error('hi');
+    } else {
+        return state;
+    }
 }
 
 async function go() {
