@@ -1,6 +1,6 @@
 {
   "name": "prix-fixe",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A rules checking system for validating restaurant orders.",
   "main": "build/src/index.js",
   "types": "build/src/index.d.ts",
