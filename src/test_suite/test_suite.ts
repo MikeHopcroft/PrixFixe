@@ -190,19 +190,26 @@ export class AggregatedResults {
 
         console.log('Suites:');
         for (const [suite, counts] of Object.entries(this.suites)) {
-            console.log(`  ${suite}: ${counts.passCount}/${counts.runCount}`);
+            const rate = (counts.passCount / counts.runCount).toFixed(3);
+            console.log(
+                `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})`
+            );
         }
         console.log();
 
         console.log('Priorities:');
         for (const [priority, counts] of Object.entries(this.priorities)) {
+            const rate = (counts.passCount / counts.runCount).toFixed(3);
             console.log(
-                `  ${priority}: ${counts.passCount}/${counts.runCount}`
+                `  ${priority}: ${counts.passCount}/${counts.runCount} (${rate})`
             );
         }
         console.log();
 
-        console.log(`Overall: ${this.passCount}/${this.results.length}`);
+        const rate = (this.passCount / this.results.length).toFixed(3);
+        console.log(
+            `Overall: ${this.passCount}/${this.results.length} (${rate})`
+        );
 
         console.log();
         this.printLatencyStatistics();
@@ -532,7 +539,7 @@ export class TestSuite {
         // Create a TestSuite from the TestCases, and then run it to collect
         // the observed output.
         const suite = new TestSuite(tests);
-        const results = await suite.run(processor, catalog, false, undefined);
+        const results = await suite.run(processor, catalog, undefined);
 
         // Generate a yamlTestCase from each Result, using the observed output
         // for the expected output.
@@ -546,7 +553,6 @@ export class TestSuite {
     async run(
         processor: Processor,
         catalog: ICatalog,
-        showPassedCases = false,
         suite: string | undefined = undefined
     ): Promise<AggregatedResults> {
         const aggregator = new AggregatedResults();
@@ -557,7 +563,7 @@ export class TestSuite {
             }
         }
 
-        aggregator.print(showPassedCases);
+        // aggregator.print(showPassedCases);
 
         return aggregator;
     }
