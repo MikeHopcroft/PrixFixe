@@ -319,7 +319,7 @@ export class TestCase {
             orders,
             succeeded,
             exception,
-            Number(end - start) / 10e6
+            Number(end - start) / 1.0e6
         );
     }
 }
