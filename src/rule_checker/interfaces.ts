@@ -39,7 +39,8 @@ export interface RuleConfig {
     rules: PartialRule[];
 }
 
-export interface RuleCheckerOps {
+// tslint:disable-next-line:interface-name
+export interface IRuleChecker {
     /**
      * Check if an item is a valid child for another item. Uses a
      * ValidChildTensor to build a set of predicates, which must evaluate to
@@ -50,6 +51,51 @@ export interface RuleCheckerOps {
     isValidChild(parent: Key, child: Key): boolean;
 
     getValidChildren(parent: Key): Set<PID>;
+
+    /**
+     * Given the key of a parent item (parent) and the key of a child item
+     * (child) return a curried function that indicates whether another child
+     * (existing) would violate mutual exclusivity.
+     *
+     * The closure that is returned will return true if its parameter
+     * (existingKey) could coexist (i.e. would not conflict) with the proposed
+     * child.
+     *
+     * USE CASE: when adding an child item, one might want to detect and remove
+     * items in the same exclusion zone. For example, suppose we have
+     *
+     *   grande latte
+     *     soy milk
+     *
+     * and we want to add fat free milk. If soy milk and fat free milk were
+     * in the same exclusion zone, we'd really like to replace soy milk with
+     * fat free milk.
+     *
+     * Even if we didn't do this replacement automatically, we'd like the
+     * ability to detect those children that would conflict, in order to apply
+     * an appropriate policy.
+     */
+    getPairwiseMutualExclusionPredicate(
+        parent: Key,
+        child: Key
+    ): (existing: string) => boolean;
+
+    /**
+     * Returns a closure the helps check whether a set of child Keys violate
+     * mutual exclusivity constraints when added to a parent.
+     *
+     * The closure that is returned maintains a set of all child Keys passed
+     * that did not collectively violate mutual exclusivity. Returns true if
+     * the most recently passed Key does not violate mutual exclusivity.
+     * Otherwise returns false. Keys that violate mutual exclusivity are not
+     * added to the set of valid child keys.
+     *
+     * USE CASE: filtering a sequence of child keys to arrive at a sequence
+     * that does not violate mutual exclusivity.
+     */
+    getIncrementalMutualExclusionPredicate(
+        parent: Key
+    ): (existing: string) => boolean;
 
     /**
      * Gets the default quantity of a child attached to a parent.

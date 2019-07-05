@@ -9,6 +9,7 @@ import {
     catalogFromYamlString,
     ICartOps,
     ICatalog,
+    IRuleChecker,
     loadRuleConfig,
     MENUITEM,
     OPTION,
@@ -20,7 +21,7 @@ export interface World {
     attributes: DimensionAndTensorDescription;
     cartOps: ICartOps;
     catalog: ICatalog;
-    ruleChecker: RuleChecker;
+    ruleChecker: IRuleChecker;
 }
 
 export function setup(
@@ -48,7 +49,10 @@ export function setup(
     const attributeInfo = new AttributeInfo(catalog, attributes);
 
     const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
-    const ruleChecker = new RuleChecker(ruleConfig, catalog.getGenericMap());
+    const ruleChecker: IRuleChecker = new RuleChecker(
+        ruleConfig,
+        catalog.getGenericMap()
+    );
 
     const cart = new CartOps(attributeInfo, catalog, ruleChecker);
 

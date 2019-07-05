@@ -14,14 +14,13 @@ import {
     mutualExclusionTensorFactory,
 } from './exclusion_map';
 
-import { RuleCheckerOps, RuleConfig, QuantityInformation } from './interfaces';
+import { IRuleChecker, RuleConfig, QuantityInformation } from './interfaces';
 import { QuantityMap, QuantityTensor, quantityTensorFactory } from './quantity';
-import { AggregatedResults } from '../test_suite';
 
 type Predicate = ValidChildPredicate | MutualExclusionZone | QuantityMap;
 type Tensor = ValidChildTensor | ExclusionTensor | QuantityTensor;
 
-export class RuleChecker implements RuleCheckerOps {
+export class RuleChecker implements IRuleChecker {
     private childTensor: ValidChildTensor;
     private validChildren: ValidChildren;
     //private exceptionTensor: ExceptionTensor;
@@ -58,7 +57,7 @@ export class RuleChecker implements RuleCheckerOps {
         return predicates;
     };
 
-    // See `RuleCheckerOps` for docs.
+    // See `IRuleChecker` for docs.
     isValidChild = (par: Key, child: Key): boolean => {
         const predicates = this.tensorWalker(
             par,
@@ -119,7 +118,10 @@ export class RuleChecker implements RuleCheckerOps {
     // Even if we didn't do this replacement automatically, we'd like the
     // ability to detect those children that would conflict, in order to apply
     // an appropriate policy.
-    getPairwiseMutualExclusionPredicate(parent: Key, child: Key) {
+    getPairwiseMutualExclusionPredicate(
+        parent: Key,
+        child: Key
+    ): (existing: string) => boolean {
         const predicates = this.tensorWalker(
             parent,
             this.mutualTensor
@@ -163,7 +165,9 @@ export class RuleChecker implements RuleCheckerOps {
     //
     // USE CASE: filtering a sequence of child keys to arrive at a sequence
     // that does not violate mutual exclusivity.
-    getIncrementalMutualExclusionPredicate(parent: Key) {
+    getIncrementalMutualExclusionPredicate(
+        parent: Key
+    ): (existing: string) => boolean {
         const predicates = this.tensorWalker(
             parent,
             this.mutualTensor
@@ -236,7 +240,7 @@ export class RuleChecker implements RuleCheckerOps {
         return undefined;
     };
 
-    // See `RuleCheckerOps` for docs.
+    // See `IRuleChecker` for docs.
     getDefaultQuantity = (par: Key, child: Key): number => {
         const quantityInfo = this.getQuanitityInfo(par, child);
 
@@ -247,7 +251,7 @@ export class RuleChecker implements RuleCheckerOps {
         return -1;
     };
 
-    // See `RuleCheckerOps` for docs.
+    // See `IRuleChecker` for docs.
     isValidQuantity = (par: Key, child: Key, qty: number): boolean => {
         const quantityInfo = this.getQuanitityInfo(par, child);
 

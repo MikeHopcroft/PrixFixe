@@ -1,7 +1,8 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { RuleChecker, RuleConfig } from '../../src/rule_checker';
+import { IRuleChecker, RuleChecker, RuleConfig } from '../../src/rule_checker';
+
 import {
     Key,
     PID,
@@ -196,7 +197,7 @@ const whippedCreamKey: Key = '2000:2';
 const someOtherKey1: Key = '9999:1';
 const someOtherKey2: Key = '9999:2';
 
-const ruleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
+const ruleChecker: IRuleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
 
 describe('RuleChecker', () => {
     describe('Is valid child', () => {

@@ -9,7 +9,7 @@ import {
     UID,
 } from './interfaces';
 
-import { RuleChecker } from '../rule_checker';
+import { IRuleChecker } from '../rule_checker';
 import { IDGenerator } from '..//utilities';
 
 /**
@@ -20,14 +20,14 @@ import { IDGenerator } from '..//utilities';
 export class CartOps implements ICartOps {
     attributeInfo: AttributeInfo;
     catalog: Catalog;
-    ruleChecker: RuleChecker;
+    ruleChecker: IRuleChecker;
 
     idGenerator = new IDGenerator();
 
     constructor(
         attributeInfo: AttributeInfo,
         catalog: Catalog,
-        ruleChecker: RuleChecker
+        ruleChecker: IRuleChecker
     ) {
         this.attributeInfo = attributeInfo;
         this.catalog = catalog;
