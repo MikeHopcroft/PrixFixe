@@ -285,7 +285,11 @@ export class TestCase {
         this.expected = expected;
     }
 
-    async run(processor: Processor, catalog: ICatalog, isomorphic = false): Promise<Result> {
+    async run(
+        processor: Processor,
+        catalog: ICatalog,
+        isomorphic = false
+    ): Promise<Result> {
         const orders = [];
         let succeeded = true;
         let exception: string | undefined = undefined;
@@ -305,9 +309,9 @@ export class TestCase {
 
                 // Compare observed Orders
                 const expected = this.expected[i];
-                succeeded = (isomorphic) ? 
-                    ordersAreEqualCanonical(observed, expected) : 
-                    ordersAreEqual(observed, expected);
+                succeeded = isomorphic
+                    ? ordersAreEqualCanonical(observed, expected)
+                    : ordersAreEqual(observed, expected);
             }
         } catch (e) {
             succeeded = false;
@@ -404,8 +408,7 @@ function canonicalize(order: TestOrder): string[] {
             lastTopLevel = formatLineCanonical(String(topLevelCounter), line);
             ++topLevelCounter;
             canonical.push(lastTopLevel);
-        }
-        else {
+        } else {
             const text = formatLineCanonical(lastTopLevel, line);
             canonical.push(text);
         }
@@ -416,7 +419,10 @@ function canonicalize(order: TestOrder): string[] {
     return canonical;
 }
 
-export function ordersAreEqualCanonical(expected: TestOrder, observed: TestOrder) {
+export function ordersAreEqualCanonical(
+    expected: TestOrder,
+    observed: TestOrder
+) {
     const e = canonicalize(expected);
     const o = canonicalize(observed);
 
@@ -425,15 +431,18 @@ export function ordersAreEqualCanonical(expected: TestOrder, observed: TestOrder
     for (let i = 0; i < o.length; ++i) {
         const ovalue = i < o.length ? o[i] : 'BLANK';
         const evalue = i < e.length ? e[i] : 'BLANK';
-        const equality = (ovalue === evalue) ? "===" : "!==";
-        const ok = (ovalue === evalue) ? "OK" : "<=== ERROR";
-        allok = allok && (ovalue === evalue);
+        const equality = ovalue === evalue ? '===' : '!==';
+        const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
+        allok = allok && ovalue === evalue;
     }
 
     return allok;
 }
 
-export function explainDifferencesCanonical(expected: TestOrder, observed: TestOrder) {
+export function explainDifferencesCanonical(
+    expected: TestOrder,
+    observed: TestOrder
+) {
     const e = canonicalize(expected);
     const o = canonicalize(observed);
 
@@ -442,16 +451,14 @@ export function explainDifferencesCanonical(expected: TestOrder, observed: TestO
     for (let i = 0; i < o.length; ++i) {
         const ovalue = i < o.length ? o[i] : 'BLANK';
         const evalue = i < e.length ? e[i] : 'BLANK';
-        const equality = (ovalue === evalue) ? "===" : "!==";
-        const ok = (ovalue === evalue) ? "OK" : "<=== ERROR";
-        allok = allok && (ovalue === evalue);
+        const equality = ovalue === evalue ? '===' : '!==';
+        const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
+        allok = allok && ovalue === evalue;
         console.log(`    "${evalue}" ${equality} "${ovalue}" - ${ok}`);
     }
 
     return allok;
 }
-
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -635,7 +642,9 @@ export class TestSuite {
 
         for (const test of this.tests) {
             if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
-                aggregator.recordResult(await test.run(processor, catalog, isomorphic));
+                aggregator.recordResult(
+                    await test.run(processor, catalog, isomorphic)
+                );
             }
         }
 
