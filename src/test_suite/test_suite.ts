@@ -143,7 +143,7 @@ export class AggregatedResults {
         this.statistics.record(result.latencyMS);
     }
 
-    print(showPassedCases = false) {
+    print(showPassedCases = false, isomorphic = false) {
         if (this.results.find(result => !result.passed)) {
             console.log('Failing tests:');
         } else {
@@ -181,7 +181,11 @@ export class AggregatedResults {
                             `  Utterance ${i}: "${result.test.inputs[i]}"`
                         );
 
-                        explainDifferences(observed, expected);
+                        if (isomorphic) {
+                            explainDifferencesCanonical(observed, expected);
+                        } else {
+                            explainDifferences(observed, expected);
+                        }
                     }
                 }
                 console.log();
@@ -281,7 +285,7 @@ export class TestCase {
         this.expected = expected;
     }
 
-    async run(processor: Processor, catalog: ICatalog): Promise<Result> {
+    async run(processor: Processor, catalog: ICatalog, isomorphic = false): Promise<Result> {
         const orders = [];
         let succeeded = true;
         let exception: string | undefined = undefined;
@@ -301,7 +305,9 @@ export class TestCase {
 
                 // Compare observed Orders
                 const expected = this.expected[i];
-                succeeded = ordersAreEqual(observed, expected);
+                succeeded = (isomorphic) ? 
+                    ordersAreEqualCanonical(observed, expected) : 
+                    ordersAreEqual(observed, expected);
             }
         } catch (e) {
             succeeded = false;
@@ -377,6 +383,75 @@ function ordersAreEqual(observed: TestOrder, expected: TestOrder): boolean {
 
     return true;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Alternative implementation of ordersAreEqual that does an isomorphic tree
+// compare.
+//
+///////////////////////////////////////////////////////////////////////////////
+function formatLineCanonical(prefix: string, line: TestLineItem) {
+    return `${prefix} / ${line.indent}:${line.quantity}:${line.name}:${line.key}`;
+}
+
+function canonicalize(order: TestOrder): string[] {
+    let topLevelCounter = 0;
+    let lastTopLevel = '';
+    const canonical: string[] = [];
+
+    for (const line of order.lines) {
+        if (line.indent === 0) {
+            lastTopLevel = formatLineCanonical(String(topLevelCounter), line);
+            ++topLevelCounter;
+            canonical.push(lastTopLevel);
+        }
+        else {
+            const text = formatLineCanonical(lastTopLevel, line);
+            canonical.push(text);
+        }
+    }
+
+    canonical.sort();
+
+    return canonical;
+}
+
+export function ordersAreEqualCanonical(expected: TestOrder, observed: TestOrder) {
+    const e = canonicalize(expected);
+    const o = canonicalize(observed);
+
+    let allok = true;
+
+    for (let i = 0; i < o.length; ++i) {
+        const ovalue = i < o.length ? o[i] : 'BLANK';
+        const evalue = i < e.length ? e[i] : 'BLANK';
+        const equality = (ovalue === evalue) ? "===" : "!==";
+        const ok = (ovalue === evalue) ? "OK" : "<=== ERROR";
+        allok = allok && (ovalue === evalue);
+    }
+
+    return allok;
+}
+
+export function explainDifferencesCanonical(expected: TestOrder, observed: TestOrder) {
+    const e = canonicalize(expected);
+    const o = canonicalize(observed);
+
+    let allok = true;
+
+    for (let i = 0; i < o.length; ++i) {
+        const ovalue = i < o.length ? o[i] : 'BLANK';
+        const evalue = i < e.length ? e[i] : 'BLANK';
+        const equality = (ovalue === evalue) ? "===" : "!==";
+        const ok = (ovalue === evalue) ? "OK" : "<=== ERROR";
+        allok = allok && (ovalue === evalue);
+        console.log(`    "${evalue}" ${equality} "${ovalue}" - ${ok}`);
+    }
+
+    return allok;
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -553,13 +628,14 @@ export class TestSuite {
     async run(
         processor: Processor,
         catalog: ICatalog,
-        suite: string | undefined = undefined
+        suite: string | undefined = undefined,
+        isomorphic = false
     ): Promise<AggregatedResults> {
         const aggregator = new AggregatedResults();
 
         for (const test of this.tests) {
             if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
-                aggregator.recordResult(await test.run(processor, catalog));
+                aggregator.recordResult(await test.run(processor, catalog, isomorphic));
             }
         }
 

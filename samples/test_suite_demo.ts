@@ -23,6 +23,7 @@ async function go() {
 
     const showAll = args['a'] === true;
     const suiteFilter = args['s'];
+    const isomorphic = args['i'] === true;
 
     if (suiteFilter) {
         console.log(`Running tests in suite: ${suiteFilter}`);
@@ -41,9 +42,10 @@ async function go() {
     const aggregator = await suite.run(
         nopProcessor,
         world.catalog,
-        suiteFilter
+        suiteFilter,
+        isomorphic
     );
-    aggregator.print(showAll);
+    aggregator.print(showAll, isomorphic);
 }
 
 go();
