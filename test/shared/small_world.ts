@@ -96,6 +96,7 @@ export const sizes: AttributeDescription[] = [
 
 export const flavorVanilla: AID = 2;
 export const flavorChocolate: AID = 3;
+export const flavorForbidden: AID = 666;
 
 export const flavors: AttributeDescription[] = [
     {
@@ -107,6 +108,11 @@ export const flavors: AttributeDescription[] = [
         aid: flavorChocolate,
         name: 'chocolate',
         aliases: ['chocolate'],
+    },
+    {
+        aid: flavorForbidden,
+        name: 'forbiddenFruit',
+        aliases: ['forbidden'],
     },
 ];
 

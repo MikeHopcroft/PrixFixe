@@ -19,6 +19,7 @@ import {
     flavor,
     flavorChocolate,
     flavorDimension,
+    flavorForbidden,
     flavorVanilla,
     genericCone,
     mediumVanillaCone,
@@ -125,6 +126,11 @@ describe('AttributeInfo', () => {
             info.getKey(genericConePID, dimensionIdToAttribute),
             `${genericConePID}:1:0`
         );
+
+        dimensionIdToAttribute.set(flavor, flavorForbidden);
+
+        const f = () => info['getKey'](genericConePID, dimensionIdToAttribute);
+        assert.throws(f, 'Invalid attribute set for pid:8000');
     });
 
     it('getAttributes()', () => {
