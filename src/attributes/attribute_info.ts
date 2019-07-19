@@ -163,7 +163,13 @@ export class AttributeInfo {
         }
 
         // Build and return the key string.
-        return [pid, ...fields].join(':');
+        const newKey = [pid, ...fields].join(':');
+
+        if (this.catalog.hasKey(newKey)) {
+            return newKey;
+        } else {
+            throw TypeError(`Invalid attribute set for pid:${pid}`);
+        }
     }
 
     getAttributes(key: Key): AID[] {
