@@ -67,12 +67,12 @@ describe('TensorEntityBuilder', () => {
         builder.setPID(genericCone.pid);
         assert.isTrue(builder.addAttribute(sizeSmall));
         assert.isTrue(builder.addAttribute(flavorChocolate));
-        assert.equal(builder.getKey(), smallChocolateCone.key);
+        assert.equal(builder.getKey(false), smallChocolateCone.key);
 
         // Now reconfigure for medium vanilla cone.
         builder.setAttribute(sizeMedium);
         builder.setAttribute(flavorVanilla);
-        assert.equal(builder.getKey(), mediumVanillaCone.key);
+        assert.equal(builder.getKey(false), mediumVanillaCone.key);
     });
 
     it('getKey()', () => {
@@ -83,21 +83,21 @@ describe('TensorEntityBuilder', () => {
         const builder = new TensorEntityBuilder(info);
 
         // getKey() before adding entity should throw.
-        const f = () => builder.getKey();
+        const f = () => builder.getKey(false);
         assert.throws(f, 'no pid set');
 
         // Add a cone entity.
         builder.setPID(genericConePID);
 
         // All attributes are default.
-        assert.equal(builder.getKey(), '8000:0:0');
+        assert.equal(builder.getKey(false), '8000:0:0');
 
         // Allow size to default, add flavor = chocolate.
         builder.addAttribute(flavorChocolate);
-        assert.equal(builder.getKey(), '8000:0:1');
+        assert.equal(builder.getKey(false), '8000:0:1');
 
         // Add size = medium, flavor is still chocolate.
         builder.addAttribute(sizeMedium);
-        assert.equal(builder.getKey(), '8000:1:1');
+        assert.equal(builder.getKey(false), '8000:1:1');
     });
 });

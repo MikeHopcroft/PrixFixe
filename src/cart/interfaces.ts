@@ -197,9 +197,17 @@ export interface ICartOps {
     //
     ///////////////////////////////////////////////////////////////////////////
     /**
-     * Creates an ItemInstance whose Key is determined by the PID and AIDs that
-     * are passed in. This method generates a unique value for the
-     * ItemInstance's UID field.
+     * Creates an ItemInstance representing a SpecificEntity.
+     * The Key is determined by the PID and AIDs that are passed in.
+     * This method generates a unique value for the ItemInstance's UID field.
+     *
+     * @param {PID} pid A GenericEntity product id.
+     * @param aids An iterator of attribute ids used to configure the
+     * GenericEntity into a SpecificEntity.
+     * @param children The child entities (options)
+     * @param generateRegexKey If true, the ItemInstance key will be a regex
+     * with `"\d+"` in coordinate fields that were not specified by attributes
+     * in `aids`.
      *
      * @returnType a newly generated ItemInstance with a unique UID.
      */
@@ -207,7 +215,8 @@ export interface ICartOps {
         quantity: number,
         pid: PID,
         aids: IterableIterator<AID>,
-        children: IterableIterator<ItemInstance>
+        children: IterableIterator<ItemInstance>,
+        generateRegexKey: boolean
     ): ItemInstance;
 
     /**

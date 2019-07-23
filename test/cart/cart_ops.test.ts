@@ -212,7 +212,8 @@ describe('CartOps', () => {
                 quantity,
                 pid,
                 aids.values(),
-                [child].values()
+                [child].values(),
+                false
             );
 
             // Use value of 1 for UIDs since we don't know what UID to expect.
@@ -236,13 +237,15 @@ describe('CartOps', () => {
                 quantity,
                 pid,
                 aids.values(),
-                [].values()
+                [].values(),
+                false
             );
             const item2 = ops.createItem(
                 quantity,
                 pid,
                 aids.values(),
-                [].values()
+                [].values(),
+                false
             );
 
             assert.equal(item1.uid + 1, item2.uid);

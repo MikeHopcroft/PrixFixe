@@ -304,11 +304,27 @@ export class CartOps implements ICartOps {
     // Operations on ItemInstances
     //
     ///////////////////////////////////////////////////////////////////////////
+    /**
+     * Creates an ItemInstance representing a SpecificEntity.
+     * The Key is determined by the PID and AIDs that are passed in.
+     * This method generates a unique value for the ItemInstance's UID field.
+     *
+     * @param {PID} pid A GenericEntity product id.
+     * @param aids An iterator of attribute ids used to configure the
+     * GenericEntity into a SpecificEntity.
+     * @param children The child entities (options)
+     * @param generateRegexKey If true, the ItemInstance key will be a regex
+     * with `"\d+"` in coordinate fields that were not specified by attributes
+     * in `aids`.
+     *
+     * @returnType a newly generated ItemInstance with a unique UID.
+     */
     createItem(
         quantity: number,
         pid: PID,
         aids: IterableIterator<AID>,
-        children: IterableIterator<ItemInstance>
+        children: IterableIterator<ItemInstance>,
+        generateRegexKey: boolean
     ): ItemInstance {
         const builder = new TensorEntityBuilder(this.attributeInfo);
         builder.setPID(pid);
@@ -318,7 +334,7 @@ export class CartOps implements ICartOps {
 
         return {
             uid: this.idGenerator.nextId(),
-            key: builder.getKey(),
+            key: builder.getKey(generateRegexKey),
             quantity,
             children: [...children],
         };
@@ -344,9 +360,9 @@ export class CartOps implements ICartOps {
         }
 
         // Return the new item, if different from original item.
-        const key = builder.getKey();
+        const key = builder.getKey(false);
         if (key !== item.key) {
-            return { ...item, key: builder.getKey() };
+            return { ...item, key };
         } else {
             return item;
         }
@@ -363,9 +379,9 @@ export class CartOps implements ICartOps {
         }
 
         // Return the new item, if different from original item.
-        const key = builder.getKey();
+        const key = builder.getKey(false);
         if (key !== item.key) {
-            return { ...item, key: builder.getKey() };
+            return { ...item, key };
         } else {
             return item;
         }

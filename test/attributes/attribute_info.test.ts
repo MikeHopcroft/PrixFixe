@@ -109,7 +109,7 @@ describe('AttributeInfo', () => {
         assert.throws(f, 'found duplicate tensor id 123.');
     });
 
-    it('getKey()', () => {
+    it('getKey(false)', () => {
         const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
 
         const dimensionIdToAttribute = new Map<DID, AID>();
@@ -123,14 +123,53 @@ describe('AttributeInfo', () => {
         //        vanilla:   0
         //            key:   8000:1:0
         assert.equal(
-            info.getKey(genericConePID, dimensionIdToAttribute),
+            info.getKey(genericConePID, dimensionIdToAttribute, false),
             `${genericConePID}:1:0`
         );
 
         dimensionIdToAttribute.set(flavor, flavorForbidden);
 
-        const f = () => info['getKey'](genericConePID, dimensionIdToAttribute);
+        const f = () =>
+            info.getKey(genericConePID, dimensionIdToAttribute, false);
         assert.throws(f, 'Invalid attribute set for pid:8000');
+    });
+
+    it('getKey(true)', () => {
+        const info = new AttributeInfo(smallWorldCatalog, smallWorldAttributes);
+
+        const genericConePID = 8000;
+        const dimensionIdToAttribute = new Map<DID, AID>();
+
+        // genericConePID:   8000
+        //         medium:   unspecified
+        //        vanilla:   unspecified
+        //            key:   8000:\d+:\d+
+        assert.equal(
+            info.getKey(genericConePID, dimensionIdToAttribute, true),
+            `${genericConePID}:\\d+:\\d+`
+        );
+
+        dimensionIdToAttribute.set(size, sizeMedium);
+
+        // genericConePID:   8000
+        //         medium:   1
+        //        vanilla:   unspecified
+        //            key:   8000:\d+:\d+
+        assert.equal(
+            info.getKey(genericConePID, dimensionIdToAttribute, true),
+            `${genericConePID}:1:\\d+`
+        );
+
+        dimensionIdToAttribute.set(flavor, flavorVanilla);
+
+        // genericConePID:   8000
+        //         medium:   1
+        //        vanilla:   0
+        //            key:   8000:1:0
+        assert.equal(
+            info.getKey(genericConePID, dimensionIdToAttribute, true),
+            `${genericConePID}:1:0`
+        );
     });
 
     it('getAttributes()', () => {

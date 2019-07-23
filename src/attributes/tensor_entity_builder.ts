@@ -53,12 +53,16 @@ export class TensorEntityBuilder {
         this.dimensionIdToAttribute.set(coordinate.dimension.did, aid);
     }
 
-    getKey(): Key {
+    getKey(generateRegexKey: boolean): Key {
         if (this.pid === undefined) {
             throw TypeError(`no pid set`);
         }
 
-        return this.info.getKey(this.pid, this.dimensionIdToAttribute);
+        return this.info.getKey(
+            this.pid,
+            this.dimensionIdToAttribute,
+            generateRegexKey
+        );
     }
 
     /**

@@ -141,16 +141,32 @@ export class AttributeInfo {
      * Given a GenericEntity's PID and a map from DID to AID, return a number
      * that represents those set of attribute values associated with Dimensions
      * of the GenericEntity's Tensor.
+     *
+     * @param {PID} pid A GenericEntity product id.
+     * @param dimensionIdToAttribute Attribute ids, indexed by their
+     * dimensions.
+     * @param generateRegexKey If true, generate regex fragment `"\d+"` instead of default
+     * coordinate.
      */
-    getKey(pid: PID, dimensionIdToAttribute: Map<DID, AID>): string {
+    getKey(
+        pid: PID,
+        dimensionIdToAttribute: Map<DID, AID>,
+        generateRegexKey: boolean
+    ): string {
         // Get the genericEntity for its tensor and defaultKey.
         const genericEntity = this.catalog.getGeneric(pid);
         const tensor = this.getTensor(genericEntity.tensor);
 
         // Convert the default key into a sequence of coordinate fields.
         const key = genericEntity.defaultKey;
-        const fields = key.split(':').map(parseBase10Int);
+        const fields = key.split(':'); //.map(parseBase10Int);
         fields.shift();
+
+        if (generateRegexKey) {
+            for (let i = 0; i < fields.length; ++i) {
+                fields[i] = '\\d+';
+            }
+        }
 
         // Overwrite default coordinate fields with values supplied from the
         // map.
@@ -158,14 +174,14 @@ export class AttributeInfo {
             const aid = dimensionIdToAttribute.get(dimension.did);
             if (aid !== undefined) {
                 const coordinate = this.getAttributeCoordinates(aid);
-                fields[index] = coordinate.position;
+                fields[index] = coordinate.position.toString();
             }
         }
 
         // Build and return the key string.
-        const newKey = [pid, ...fields].join(':');
+        const newKey = [pid.toString(), ...fields].join(':');
 
-        if (this.catalog.hasKey(newKey)) {
+        if (generateRegexKey || this.catalog.hasKey(newKey)) {
             return newKey;
         } else {
             throw TypeError(`Invalid attribute set for pid:${pid}`);
