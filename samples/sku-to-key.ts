@@ -1,13 +1,6 @@
 import * as path from 'path';
 
-import {
-    Key,
-    setup,
-    SKU,
-    MENUITEM,
-    OPTION,
-    World,
-} from '../src';
+import { Key, setup, SKU, MENUITEM, OPTION, World } from '../src';
 
 export interface KeyName {
     name: string;
@@ -33,7 +26,6 @@ const getKeyNameLookup = (world: World) => {
     return keyLookup;
 };
 
-
 async function go() {
     const world = setup(
         path.join(__dirname, '../../samples/data/restaurant-en/products.yaml'),
@@ -55,4 +47,3 @@ async function go() {
 }
 
 go();
-

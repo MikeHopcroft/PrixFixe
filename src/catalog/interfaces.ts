@@ -74,7 +74,7 @@ export type SpecificTypedEntity = TypedEntity & SpecificEntity;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Symbols to be used for type annotations, allowing for polymorphic behavior
-//   within the class of specific or generic items
+// within the class of specific or generic items
 ///////////////////////////////////////////////////////////////////////////////
 export const MENUITEM: unique symbol = Symbol('MENUITEM');
 export type MENUITEM = typeof MENUITEM;
