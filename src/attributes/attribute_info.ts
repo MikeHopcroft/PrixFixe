@@ -179,13 +179,7 @@ export class AttributeInfo {
         }
 
         // Build and return the key string.
-        const newKey = [pid.toString(), ...fields].join(':');
-
-        if (generateRegexKey || this.catalog.hasKey(newKey)) {
-            return newKey;
-        } else {
-            throw TypeError(`Invalid attribute set for pid:${pid}`);
-        }
+        return [pid.toString(), ...fields].join(':');
     }
 
     getAttributes(key: Key): AID[] {

@@ -129,9 +129,17 @@ describe('AttributeInfo', () => {
 
         dimensionIdToAttribute.set(flavor, flavorForbidden);
 
-        const f = () =>
-            info.getKey(genericConePID, dimensionIdToAttribute, false);
-        assert.throws(f, 'Invalid attribute set for pid:8000');
+        // The following case demonstrates that getKey() can return a key to an
+        // item that is not in the catalog. This case rolls back commit e7ce0210.
+        //
+        // genericConePID:   8000
+        //         medium:   1
+        //      forbidden:   2
+        //            key:   8000:1:2
+        assert.equal(
+            info.getKey(genericConePID, dimensionIdToAttribute, false),
+            `${genericConePID}:1:2`
+        );
     });
 
     it('getKey(true)', () => {
