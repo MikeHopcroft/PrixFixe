@@ -99,6 +99,18 @@ export interface ICartOps {
     findByKey(cart: Cart, key: Key): IterableIterator<ItemInstance>;
 
     /**
+     * Items with a Key matching the regular expression Key that is passed in
+     * are returned in the order they were added to the cart.
+     *
+     * @useCase find all instances of a specific drink like a `large iced`
+     * `latte`.
+     *
+     * @returnType an iterable of ItemInstances in the cart that correspond to a
+     * particular Key.
+     */
+    findByKeyRegex(cart: Cart, key: Key): IterableIterator<ItemInstance>;
+
+    /**
      * Items with a PID matching the PID that is passed in are returned in the
      * order they were added to the cart.
      *
