@@ -288,7 +288,8 @@ export class TestCase {
     async run(
         processor: Processor,
         catalog: ICatalog,
-        isomorphic = false
+        isomorphic = false,
+        evaluateIntermediate = true
     ): Promise<Result> {
         const orders = [];
         let succeeded = true;
@@ -307,11 +308,13 @@ export class TestCase {
                 const observed = formatCart(state.cart, catalog);
                 orders.push(observed);
 
-                // Compare observed Orders
-                const expected = this.expected[i];
-                succeeded = isomorphic
-                    ? ordersAreEqualCanonical(observed, expected)
-                    : ordersAreEqual(observed, expected);
+                if (succeeded && (evaluateIntermediate || this.inputs.length - 1 === i)) {
+                    // Compare observed Orders
+                    const expected = this.expected[i];
+                    succeeded = isomorphic
+                        ? ordersAreEqualCanonical(observed, expected)
+                        : ordersAreEqual(observed, expected);
+                }
             }
         } catch (e) {
             succeeded = false;
@@ -636,14 +639,15 @@ export class TestSuite {
         processor: Processor,
         catalog: ICatalog,
         suite: string | undefined = undefined,
-        isomorphic = false
+        isomorphic = false,
+        evaluateIntermediate = true
     ): Promise<AggregatedResults> {
         const aggregator = new AggregatedResults();
 
         for (const test of this.tests) {
             if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
                 aggregator.recordResult(
-                    await test.run(processor, catalog, isomorphic)
+                    await test.run(processor, catalog, isomorphic, evaluateIntermediate)
                 );
             }
         }
