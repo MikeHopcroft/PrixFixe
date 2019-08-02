@@ -308,7 +308,10 @@ export class TestCase {
                 const observed = formatCart(state.cart, catalog);
                 orders.push(observed);
 
-                if (succeeded && (evaluateIntermediate || i === this.inputs.length - 1)) {
+                if (
+                    succeeded &&
+                    (evaluateIntermediate || i === this.inputs.length - 1)
+                ) {
                     // Compare observed Orders
                     const expected = this.expected[i];
                     succeeded = isomorphic
@@ -647,7 +650,12 @@ export class TestSuite {
         for (const test of this.tests) {
             if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
                 aggregator.recordResult(
-                    await test.run(processor, catalog, isomorphic, evaluateIntermediate)
+                    await test.run(
+                        processor,
+                        catalog,
+                        isomorphic,
+                        evaluateIntermediate
+                    )
                 );
             }
         }
