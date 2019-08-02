@@ -24,6 +24,7 @@ async function go() {
     const showAll = args['a'] === true;
     const suiteFilter = args['s'];
     const isomorphic = args['i'] === true;
+    const finalCartOnly = args['final'] === true;
 
     if (suiteFilter) {
         console.log(`Running tests in suite: ${suiteFilter}`);
@@ -43,7 +44,8 @@ async function go() {
         nopProcessor,
         world.catalog,
         suiteFilter,
-        isomorphic
+        isomorphic,
+        !finalCartOnly
     );
     aggregator.print(showAll, isomorphic);
 }

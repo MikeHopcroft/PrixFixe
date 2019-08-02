@@ -308,7 +308,7 @@ export class TestCase {
                 const observed = formatCart(state.cart, catalog);
                 orders.push(observed);
 
-                if (succeeded && (evaluateIntermediate || this.inputs.length - 1 === i)) {
+                if (succeeded && (evaluateIntermediate || i === this.inputs.length - 1)) {
                     // Compare observed Orders
                     const expected = this.expected[i];
                     succeeded = isomorphic
