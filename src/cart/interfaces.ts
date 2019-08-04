@@ -81,6 +81,11 @@ export interface ICartOps {
      */
     addToItem(parent: ItemInstance, child: ItemInstance): ItemInstance;
 
+    addToItemWithReplacement(
+        parent: ItemInstance,
+        child: ItemInstance
+    ): ItemInstance;
+
     ///////////////////////////////////////////////////////////////////////////
     //
     // Finding ItemInstances
