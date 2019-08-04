@@ -69,7 +69,7 @@ export class CartOps implements ICartOps {
         );
         const newChildren: ItemInstance[] = [];
         for (const c of parent.children) {
-            if (!f(c.key)) {
+            if (f(c.key)) {
                 newChildren.push(c);
             } else {
                 if (!inserted) {
@@ -78,7 +78,9 @@ export class CartOps implements ICartOps {
                 }
             }
         }
-        //        newChildren.push(child);
+        if (!inserted) {
+            newChildren.push(child);
+        }
         return { ...parent, children: newChildren };
     }
 
