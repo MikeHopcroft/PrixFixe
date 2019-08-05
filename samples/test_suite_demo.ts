@@ -29,17 +29,17 @@ async function go() {
         {
             name: 'nop',
             description: 'does nothing',
-            factory: (w: World, d: string) => nopProcessor,
+            create: (w: World, d: string) => nopProcessor,
         },
         {
             name: 'throw',
             description: 'always throws',
-            factory: (w: World, d: string) => throwProcessor,
+            create: (w: World, d: string) => throwProcessor,
         },
         {
             name: 'both',
             description: 'alternates between doing nothing and throwing.',
-            factory: (w: World, d: string) => nopThrowProcessor,
+            create: (w: World, d: string) => nopThrowProcessor,
         },
     ]);
 

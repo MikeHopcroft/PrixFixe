@@ -12,7 +12,7 @@ export type Processor = (text: string, state: State) => Promise<State>;
 export interface ProcessorDescription {
     name: string;
     description: string;
-    factory: (world: World, dataPath: string) => Processor;
+    create: (world: World, dataPath: string) => Processor;
 }
 
 export class ProcessorFactory {
@@ -29,9 +29,14 @@ export class ProcessorFactory {
         }
     }
 
-    get(name: string, world: World, dataPath: string): Processor {
-        if (this.nameToProcessor.has(name)) {
-            return this.nameToProcessor.get(name)!.factory(world, dataPath);
+    create(name: string, world: World, dataPath: string): Processor {
+        return this.get(name).create(world, dataPath);
+    }
+
+    get(name: string): ProcessorDescription {
+        const description = this.nameToProcessor.get(name);
+        if (description !== undefined) {
+            return description;
         } else {
             const message = `Unknown processor "${name}".`;
             throw TypeError(message);
@@ -46,7 +51,7 @@ export class ProcessorFactory {
         return this.nameToProcessor.size;
     }
 
-    defaultProcessorDescription(): ProcessorDescription {
+    getDefault(): ProcessorDescription {
         const first = this.nameToProcessor.values().next();
         if (first.done) {
             // This should never happen because of check in constructor.

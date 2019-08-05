@@ -6,7 +6,6 @@ import * as path from 'path';
 import { createWorld, Processor, ProcessorFactory, World } from '../processors';
 
 import { TestSuite } from './test_suite';
-import { Test } from 'mocha';
 
 export async function testRunnerMain(
     title: string,
@@ -20,10 +19,22 @@ export async function testRunnerMain(
 
     const args = minimist(process.argv.slice(2));
 
-    if (args._.length !== 1) {
-        const message = 'Expected YAML input file on command line.';
-        fail(message, true, processorFactory);
+    // NOTE: must check for help before other flags as an error related to a
+    // flag value might cause an early fail that would prevent showing the
+    // help message.
+    if (args.h || args.help || args['?']) {
+        showUsage(processorFactory);
+        process.exit(0);
     }
+
+    if (args._.length === 0) {
+        const message = 'Expected YAML input file on command line.';
+        fail(message);
+    } else if (args._.length > 1) {
+        const message = 'Found extra arguments on command line.';
+        fail(message);
+    }
+
     const testFile = args._[0];
     console.log(`test file = ${testFile}`);
 
@@ -34,7 +45,7 @@ export async function testRunnerMain(
     if (dataPath === undefined) {
         const message =
             'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
-        fail(message, false, processorFactory);
+        fail(message);
 
         // NOTE: fail() terminates the program. The unreachable return
         // statement allows type system to know dataPath as string instead of
@@ -44,11 +55,6 @@ export async function testRunnerMain(
     console.log(`data path = ${dataPath}`);
 
     const verify = args['v'];
-
-    if (args.h || args.help || args['?']) {
-        showUsage(processorFactory);
-        process.exit(0);
-    }
 
     const showAll = args['a'] === true;
 
@@ -64,7 +70,6 @@ export async function testRunnerMain(
         console.log('Using isomorphic tree comparison in cart.');
     }
 
-    // TODO: -n=<n> parameter
     let runOneTest: number | undefined = undefined;
     if (args['n']) {
         runOneTest = Number(args['n']);
@@ -74,27 +79,37 @@ export async function testRunnerMain(
     // Set up short-order processor
     //
     if (!world) {
-        world = createWorld(dataPath);
+        try {
+            world = createWorld(dataPath);
+        } catch (err) {
+            if (err.code === 'ENOENT' || err.code === 'EISDIR') {
+                const message = `Create world failed: cannot open "${err.path}"`;
+                fail(message);
+                // Unreachable code for type assertion.
+                world = undefined!;
+            } else {
+                throw err;
+            }
+        }
     }
 
     if (processorFactory.count() === 0) {
         const message = `ProcessorFactory must contain at least one ProcessorDescription.`;
-        fail(message, false, processorFactory);
+        fail(message);
         return;
     }
 
-    // TODO: cleanup this code.
     let processor: Processor;
     if (verify) {
         if (!processorFactory.has(verify)) {
             const message = `Unknown processor v=${verify}`;
-            fail(message, false, processorFactory);
+            fail(message);
         }
-        processor = processorFactory.get(verify, world, dataPath);
+        processor = processorFactory.create(verify, world, dataPath);
         console.log(`processor = ${verify}`);
     } else {
-        const description = processorFactory.defaultProcessorDescription();
-        processor = description.factory(world, dataPath);
+        const description = processorFactory.getDefault();
+        processor = description.create(world, dataPath);
         console.log(`processor = ${description.name}`);
     }
 
@@ -103,23 +118,36 @@ export async function testRunnerMain(
     //
     // Run the tests
     //
-    const suiteFilter = args['s'];
+    let suiteFilter = args['s'];
     if (runOneTest !== undefined) {
         console.log(`Running test number ${runOneTest}.`);
-    }
-    if (suiteFilter) {
+        suiteFilter = undefined;
+    } else if (suiteFilter) {
         console.log(`Running tests in suite: ${suiteFilter}`);
     } else {
         console.log('Running all tests.');
     }
 
-    let suite = TestSuite.fromYamlString(fs.readFileSync(testFile, 'utf8'));
+    let suite: TestSuite;
+    try {
+        suite = TestSuite.fromYamlString(fs.readFileSync(testFile, 'utf8'));
+    } catch (err) {
+        if (err.code === 'ENOENT' || err.code === 'EISDIR') {
+            const message = `Cannot open test file "${err.path}"`;
+            fail(message);
+            // Unreachable code exists for type assertion.
+            suite = undefined!;
+        } else {
+            throw err;
+        }
+    }
+
     if (runOneTest !== undefined) {
         if (runOneTest >= 0 && runOneTest < suite.tests.length) {
             suite = new TestSuite([suite.tests[runOneTest]]);
         } else {
             const message = `Invalid test number ${runOneTest}`;
-            fail(message, false, processorFactory);
+            fail(message);
         }
     }
 
@@ -150,23 +178,9 @@ export async function testRunnerMain(
     }
 }
 
-// TODO: consider making the runner a class so that we don't have to pass processorFactory around.
-function fail(
-    message: string,
-    showHelp: boolean,
-    processorFactory: ProcessorFactory
-) {
-    console.log(message);
-    console.log('Aborting');
-    console.log();
-    if (showHelp) {
-        showUsage(processorFactory);
-    }
-    process.exit(1);
-}
-
 function showUsage(processorFactory: ProcessorFactory) {
     const program = path.basename(process.argv[1]);
+    const defaultProcessor = processorFactory.getDefault().name;
 
     console.log('Run test cases from YAML file');
     console.log('');
@@ -189,6 +203,7 @@ function showUsage(processorFactory: ProcessorFactory) {
     console.log(
         '-v <processor>  Run the generated cases with the specified processor.'
     );
+    console.log(`                  (default is -v=${defaultProcessor}).`);
     console.log('-x              Do not verify intermediate results.');
     console.log('-d <datapath>   Path to prix-fixe data files.');
     console.log('                    attributes.yaml');
@@ -217,4 +232,14 @@ function showUsage(processorFactory: ProcessorFactory) {
             'The supplied ProcessorFactory has no ProcessorDescriptions'
         );
     }
+}
+
+function fail(message: string) {
+    console.log(' ');
+    console.log(message);
+    console.log('Use the -h flag for help.');
+    console.log(' ');
+    console.log('Aborting');
+    console.log(' ');
+    process.exit(1);
 }

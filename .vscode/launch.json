@@ -22,7 +22,9 @@
             "preLaunchTask": "tsc: build - tsconfig.json",
             "outFiles": [
                 "${workspaceFolder}/build/**/*.js"
-            ]
+            ],
+            "outputCapture": "std",
+            "args": ["c:\\temp\\foofoo.yamlx", "-d=..\\mochajava\\data"]
         },
         {
             "type": "node",
