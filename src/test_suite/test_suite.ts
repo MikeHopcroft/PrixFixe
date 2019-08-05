@@ -102,6 +102,7 @@ export class AggregatedResults {
     suites: { [suite: string]: TestCounts } = {};
     results: Result[] = [];
     passCount = 0;
+    failCount = 0;
     statistics = new StatisticsAggregator();
 
     recordResult(result: Result): void {
@@ -134,6 +135,8 @@ export class AggregatedResults {
 
         if (passed) {
             this.passCount++;
+        } else {
+            this.failCount++;
         }
 
         this.statistics.record(result.latencyMS);

@@ -19,6 +19,11 @@ export class ProcessorFactory {
     private readonly nameToProcessor = new Map<string, ProcessorDescription>();
 
     constructor(processors: ProcessorDescription[]) {
+        if (processors.length < 1) {
+            const message =
+                'ProcessorFactory must have at least one ProcessorDescription.';
+            throw TypeError(message);
+        }
         for (const processor of processors) {
             this.nameToProcessor.set(processor.name, processor);
         }
@@ -44,6 +49,7 @@ export class ProcessorFactory {
     defaultProcessorDescription(): ProcessorDescription {
         const first = this.nameToProcessor.values().next();
         if (first.done) {
+            // This should never happen because of check in constructor.
             const message = 'ProcessorFactory has no processors.';
             throw TypeError(message);
         } else {

@@ -6,6 +6,7 @@ import * as path from 'path';
 import { createWorld, Processor, ProcessorFactory, World } from '../processors';
 
 import { TestSuite } from './test_suite';
+import { Test } from 'mocha';
 
 export async function testRunnerMain(
     title: string,
@@ -64,6 +65,10 @@ export async function testRunnerMain(
     }
 
     // TODO: -n=<n> parameter
+    let runOneTest: number | undefined = undefined;
+    if (args['n']) {
+        runOneTest = Number(args['n']);
+    }
 
     //
     // Set up short-order processor
@@ -99,13 +104,25 @@ export async function testRunnerMain(
     // Run the tests
     //
     const suiteFilter = args['s'];
+    if (runOneTest !== undefined) {
+        console.log(`Running test number ${runOneTest}.`);
+    }
     if (suiteFilter) {
         console.log(`Running tests in suite: ${suiteFilter}`);
     } else {
         console.log('Running all tests.');
     }
 
-    const suite = TestSuite.fromYamlString(fs.readFileSync(testFile, 'utf8'));
+    let suite = TestSuite.fromYamlString(fs.readFileSync(testFile, 'utf8'));
+    if (runOneTest !== undefined) {
+        if (runOneTest >= 0 && runOneTest < suite.tests.length) {
+            suite = new TestSuite([suite.tests[runOneTest]]);
+        } else {
+            const message = `Invalid test number ${runOneTest}`;
+            fail(message, false, processorFactory);
+        }
+    }
+
     const aggregator = await suite.run(
         processor,
         world.catalog,
@@ -118,12 +135,18 @@ export async function testRunnerMain(
     console.log('');
     console.log('');
 
-    // TODO: implement aggregator.failCount
-    // TODO: implement aggregateo.testCount
-    // TODO: print out verdict message here
-    if (aggregator.passCount < aggregator.results.length) {
+    if (
+        aggregator.failCount > 0 ||
+        aggregator.passCount < aggregator.results.length
+    ) {
         // At least one test failed, so exit with an error.
+        console.log(`${aggregator.failCount} tests failed.`);
+        console.log('Exiting with failing return code.');
         process.exit(1);
+    } else {
+        console.log(`${aggregator.passCount} tests passed.`);
+        console.log('Exiting with successful return code.');
+        process.exit(0);
     }
 }
 
