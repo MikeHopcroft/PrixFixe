@@ -5,10 +5,17 @@ import * as yaml from 'js-yaml';
 import { ICatalog, Key, Catalog } from '../catalog';
 import { Cart, ItemInstance } from '../cart';
 import { Processor, State } from '../processors';
-
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
+import jsontoxml = require('jsontoxml');
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
+
+interface XmlNode {
+    name: string;
+    // tslint:disable-next-line: no-any
+    attrs: any;
+    children?: XmlNode[] | string;
+}
 
 export type SpeechToTextSimulator = (text: string) => string;
 
@@ -88,6 +95,35 @@ export class Result {
             inputs: t.inputs,
             expected: this.observed,
         };
+    }
+
+    toJUnitXml() {
+        const testCase = this.test.toJUnitXml();
+
+        testCase.attrs.time = (this.latencyMS / 1.0e3).toFixed(3);
+        if (!this.passed) {
+            testCase.children = new Array<XmlNode>();
+            let failureMessage = '';
+            if (this.exception) {
+                failureMessage = this.exception;
+            } else {
+                for (const [i, expected] of this.test.expected.entries()) {
+                    failureMessage += getDifferencesText(
+                        this.observed[i],
+                        expected
+                    );
+                }
+            }
+
+            testCase.children.push({
+                name: 'failure',
+                attrs: {
+                    message: 'failure',
+                },
+                children: jsontoxml.escape(failureMessage),
+            });
+        }
+        return testCase;
     }
 }
 
@@ -218,6 +254,26 @@ export class AggregatedResults {
         this.printLatencyStatistics();
     }
 
+    toJUnitXml() {
+        const output = { testsuites: [] as XmlNode[] };
+
+        output.testsuites = Object.keys(this.suites).map(suite => ({
+            name: 'testsuite',
+            attrs: {
+                name: suite,
+            },
+            children: this.results
+                .filter(r => r.test.suites.includes(suite))
+                .map(r => r.toJUnitXml()),
+        }));
+
+        return jsontoxml(output, {
+            indent: ' ',
+            prettyPrint: true,
+            xmlHeader: true,
+        });
+    }
+
     printLatencyStatistics() {
         const summary = this.statistics.computeStatistics([
             0.5,
@@ -234,18 +290,24 @@ export class AggregatedResults {
     }
 }
 
-export function explainDifferences(observed: TestOrder, expected: TestOrder) {
+function getDifferencesText(observed: TestOrder, expected: TestOrder): string {
     const o = observed.lines;
     const e = expected.lines;
     const n = Math.max(o.length, e.length);
 
+    let differencesText = '';
     for (let i = 0; i < n; ++i) {
         const ovalue = i < o.length ? formatLine(o[i]) : 'BLANK';
         const evalue = i < e.length ? formatLine(e[i]) : 'BLANK';
         const equality = ovalue === evalue ? '===' : '!==';
         const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
-        console.log(`    "${evalue}" ${equality} "${ovalue}" - ${ok}`);
+        differencesText += `    "${evalue}" ${equality} "${ovalue}" - ${ok}\n`;
     }
+    return differencesText;
+}
+
+export function explainDifferences(observed: TestOrder, expected: TestOrder) {
+    console.log(getDifferencesText(observed, expected));
 }
 
 function formatLine(line: TestLineItem) {
@@ -340,6 +402,16 @@ export class TestCase {
             exception,
             Number(end - start) / 1.0e6
         );
+    }
+
+    toJUnitXml() {
+        return {
+            name: 'testcase',
+            attrs: {
+                classname: this.suites,
+                name: this.comment,
+            },
+        } as XmlNode;
     }
 }
 
