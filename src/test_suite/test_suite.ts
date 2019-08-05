@@ -641,6 +641,16 @@ export class TestSuite {
         this.tests = tests;
     }
 
+    *filteredTests(
+        suite: string | undefined = undefined
+    ): IterableIterator<TestCase> {
+        for (const test of this.tests) {
+            if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
+                yield test;
+            }
+        }
+    }
+
     async run(
         processor: Processor,
         catalog: ICatalog,

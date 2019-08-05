@@ -57,6 +57,7 @@ export async function testRunnerMain(
     const verify = args['v'];
 
     const showAll = args['a'] === true;
+    const brief = args['b'] === true;
 
     const skipIntermediate = args['x'] === true;
     if (skipIntermediate) {
@@ -150,31 +151,45 @@ export async function testRunnerMain(
             fail(message);
         }
     }
-
-    const aggregator = await suite.run(
-        processor,
-        world.catalog,
-        suiteFilter,
-        isomorphic,
-        !skipIntermediate
-    );
-    aggregator.print(showAll);
-
-    console.log('');
-    console.log('');
-
-    if (
-        aggregator.failCount > 0 ||
-        aggregator.passCount < aggregator.results.length
-    ) {
-        // At least one test failed, so exit with an error.
-        console.log(`${aggregator.failCount} tests failed.`);
+    if (brief) {
+        console.log(' ');
+        console.log('Displaying test utterances without running.');
+        for (const test of suite.filteredTests(suiteFilter)) {
+            console.log(`Test ${test.id}: ${test.comment}`);
+            for (const line of test.inputs) {
+                console.log(`  ${line}`);
+            }
+            console.log(' ');
+        }
+        console.log('Tests not run.');
         console.log('Exiting with failing return code.');
         process.exit(1);
     } else {
-        console.log(`${aggregator.passCount} tests passed.`);
-        console.log('Exiting with successful return code.');
-        process.exit(0);
+        const aggregator = await suite.run(
+            processor,
+            world.catalog,
+            suiteFilter,
+            isomorphic,
+            !skipIntermediate
+        );
+        aggregator.print(showAll);
+
+        console.log('');
+        console.log('');
+
+        if (
+            aggregator.failCount > 0 ||
+            aggregator.passCount < aggregator.results.length
+        ) {
+            // At least one test failed, so exit with an error.
+            console.log(`${aggregator.failCount} tests failed.`);
+            console.log('Exiting with failing return code.');
+            process.exit(1);
+        } else {
+            console.log(`${aggregator.passCount} tests passed.`);
+            console.log('Exiting with successful return code.');
+            process.exit(0);
+        }
     }
 }
 
@@ -196,6 +211,7 @@ function showUsage(processorFactory: ProcessorFactory) {
     console.log(
         '-a              Print results for all tests, passing and failing.'
     );
+    console.log('-b              Just print utterances. Do not run tests.');
     console.log('-i              Perform isomorphic tree comparison on carts.');
     console.log('-n <N>          Run only the Nth test.');
     // TODO: get default processor name from factory.
