@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import * as path from 'path';
 
 import {
     DimensionAndTensorDescription,
@@ -22,6 +23,18 @@ export interface World {
     cartOps: ICartOps;
     catalog: ICatalog;
     ruleChecker: IRuleChecker;
+}
+
+export function createWorld(dataPath: string): World {
+    // TODO: should these be path.resolve?
+    const productsFile = path.join(dataPath, 'products.yaml');
+    const optionsFile = path.join(dataPath, 'options.yaml');
+    const attributesFile = path.join(dataPath, 'attributes.yaml');
+    const rulesFile = path.join(dataPath, 'rules.yaml');
+
+    const world = setup(productsFile, optionsFile, attributesFile, rulesFile);
+
+    return world;
 }
 
 export function setup(

@@ -4,17 +4,13 @@ import * as yaml from 'js-yaml';
 
 import { ICatalog, Key, Catalog } from '../catalog';
 import { Cart, ItemInstance } from '../cart';
+import { Processor, State } from '../processors';
 
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 
-export interface State {
-    cart: Cart;
-}
-
 export type SpeechToTextSimulator = (text: string) => string;
-export type Processor = (text: string, state: State) => Promise<State>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -297,7 +293,9 @@ export class TestCase {
 
         let state: State = { cart: { items: [] } };
 
-        const start = process.hrtime.bigint();
+        // TODO: figure out how to remove the type assertion to any.
+        // tslint:disable-next-line:no-any
+        const start = (process.hrtime as any).bigint();
 
         try {
             for (const [i, input] of this.inputs.entries()) {
@@ -328,7 +326,9 @@ export class TestCase {
             }
         }
 
-        const end = process.hrtime.bigint();
+        // TODO: figure out how to remove the type assertion to any.
+        // tslint:disable-next-line:no-any
+        const end = (process.hrtime as any).bigint();
 
         return new Result(
             this,
