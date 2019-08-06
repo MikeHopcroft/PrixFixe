@@ -222,9 +222,7 @@ export class AggregatedResults {
                         const observed = result.observed[index];
                         const expected = result.test.expected[index];
 
-                        console.log(
-                            `  Utterance ${index}: "${input}"`
-                        );
+                        console.log(`  Utterance ${index}: "${input}"`);
 
                         if (isomorphic) {
                             explainDifferencesCanonical(observed, expected);
@@ -235,7 +233,9 @@ export class AggregatedResults {
 
                     if (i.length !== e.length) {
                         console.log(' ');
-                        console.log('  ERROR: test has mismatched input and expected counts.');
+                        console.log(
+                            '  ERROR: test has mismatched input and expected counts.'
+                        );
                         console.log(`    inputs.length = ${i.length}`);
                         console.log(`     expected.length = ${e.length}`);
                         console.log(' ');
@@ -365,7 +365,9 @@ export class TestCase {
 
         if (this.inputs.length !== this.expected.length) {
             console.log(' ');
-            console.log(`WARNING: test ${id} has mismatched input and expected counts.`);
+            console.log(
+                `WARNING: test ${id} has mismatched input and expected counts.`
+            );
             console.log(`  inputs.length = ${inputs.length}`);
             console.log(`  expected.length = ${expected.length}`);
             console.log(' ');
