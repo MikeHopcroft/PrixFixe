@@ -6,7 +6,7 @@ import { ICatalog, Key, Catalog } from '../catalog';
 import { Cart, ItemInstance } from '../cart';
 import { Processor, State } from '../processors';
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
-import jsontoxml = require('jsontoxml');
+import * as jsontoxml from 'jsontoxml';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 
@@ -97,7 +97,7 @@ export class Result {
         };
     }
 
-    toJUnitXml() {
+    toJUnitXml(): XmlNode {
         const testCase = this.test.toJUnitXml();
 
         testCase.attrs.time = (this.latencyMS / 1.0e3).toFixed(3);
@@ -272,7 +272,7 @@ export class AggregatedResults {
         this.printLatencyStatistics();
     }
 
-    toJUnitXml() {
+    toJUnitXml(): string {
         const output = { testsuites: [] as XmlNode[] };
 
         output.testsuites = Object.keys(this.suites).map(suite => ({
