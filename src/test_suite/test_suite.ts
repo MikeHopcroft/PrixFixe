@@ -144,7 +144,11 @@ export class AggregatedResults {
 
     print(showPassedCases = false, isomorphic = false) {
         if (this.results.find(result => !result.passed)) {
-            console.log('Failing tests:');
+            if (showPassedCases) {
+                console.log('Passing and failing tests:');
+            } else {
+                console.log('Failing tests:');
+            }
         } else {
             console.log('All tests passed.');
             console.log();
@@ -172,12 +176,18 @@ export class AggregatedResults {
                         );
                     }
                 } else {
-                    for (const [i, input] of result.test.inputs.entries()) {
-                        const observed = result.observed[i];
-                        const expected = result.test.expected[i];
+                    const i = result.test.inputs;
+                    const o = result.observed;
+                    const e = result.test.expected;
+                    const limit = Math.min(i.length, o.length, e.length);
+
+                    for (let index = 0; index < limit; ++index) {
+                        const input = result.test.inputs[index];
+                        const observed = result.observed[index];
+                        const expected = result.test.expected[index];
 
                         console.log(
-                            `  Utterance ${i}: "${result.test.inputs[i]}"`
+                            `  Utterance ${index}: "${input}"`
                         );
 
                         if (isomorphic) {
@@ -185,6 +195,14 @@ export class AggregatedResults {
                         } else {
                             explainDifferences(observed, expected);
                         }
+                    }
+
+                    if (i.length !== e.length) {
+                        console.log(' ');
+                        console.log('  ERROR: test has mismatched input and expected counts.');
+                        console.log(`    inputs.length = ${i.length}`);
+                        console.log(`     expected.length = ${e.length}`);
+                        console.log(' ');
                     }
                 }
                 console.log();
@@ -282,6 +300,14 @@ export class TestCase {
         this.comment = comment;
         this.inputs = inputs;
         this.expected = expected;
+
+        if (this.inputs.length !== this.expected.length) {
+            console.log(' ');
+            console.log(`WARNING: test ${id} has mismatched input and expected counts.`);
+            console.log(`  inputs.length = ${inputs.length}`);
+            console.log(`  expected.length = ${expected.length}`);
+            console.log(' ');
+        }
     }
 
     async run(
@@ -332,6 +358,12 @@ export class TestCase {
         // TODO: figure out how to remove the type assertion to any.
         // tslint:disable-next-line:no-any
         const end = (process.hrtime as any).bigint();
+
+        // We can never succeed if the test is not constructed with the same
+        // number of inputs as outputs.
+        if (this.inputs.length !== this.expected.length) {
+            succeeded = false;
+        }
 
         return new Result(
             this,
@@ -432,6 +464,10 @@ export function ordersAreEqualCanonical(
     expected: TestOrder,
     observed: TestOrder
 ) {
+    if (observed.lines.length !== expected.lines.length) {
+        return false;
+    }
+
     const e = canonicalize(expected);
     const o = canonicalize(observed);
 
