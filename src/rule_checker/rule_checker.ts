@@ -184,16 +184,34 @@ export class RuleChecker implements IRuleChecker {
             children.add(child);
 
             const childPID = child.split(':')[0];
+            const thisChildCIDs = new Set<CID>();
             for (const predicate of predicates) {
                 const childCID = predicate(childPID);
                 if (childCID > -1) {
                     if (exclusionCIDs.has(childCID)) {
                         return false;
                     } else {
-                        exclusionCIDs.add(childCID);
+                        thisChildCIDs.add(childCID);
                     }
                 }
             }
+
+            // DESIGN NOTE: in the case where a parent has multiple
+            // MutualExclusionZone predicates, it is possible that two or more
+            // predicates could return the same CID. This would result in a
+            // return value of false, even if the child were legal.
+            //
+            // What would happen is that the first iteration through the
+            // predicates loop for a given CID would succeed because the CID
+            // would not be in exclusionCIDs. A later iteration for the same
+            // CID would fail because the CID would now be in exclusionCIDs.
+            //
+            // The fix is to save the current child's CIDs until after the
+            // predicates loop, and only then merge these CIDs into exclusionCIDs.
+            for (const cid of thisChildCIDs.values()) {
+                exclusionCIDs.add(cid);
+            }
+
             return true;
         };
     }
