@@ -97,7 +97,56 @@ export class Result {
         };
     }
 
-    toJUnitXml(): XmlNode {
+    toString(isomorphic = false) {
+        let stringValue = '';
+        const suites = this.test.suites.join(' ');
+        const passFail = this.passed ? 'PASSED' : 'FAILED';
+        const exception = this.exception ? ' *** EXCEPTION THROWN ***' : '';
+        stringValue += `${this.test.id} - ${passFail}${exception}\n`;
+        stringValue += `  Comment: ${this.test.comment}\n`;
+        stringValue += `  Suites: ${suites}\n`;
+
+        if (this.exception) {
+            stringValue += `  Exception message: "${this.exception}"\n`;
+            for (const [i, input] of this.test.inputs.entries()) {
+                stringValue += `  Utterance ${i}: "${input}"\n`;
+            }
+        } else {
+            const i = this.test.inputs;
+            const o = this.observed;
+            const e = this.test.expected;
+            const limit = Math.min(i.length, o.length, e.length);
+
+            for (let index = 0; index < limit; ++index) {
+                const input = this.test.inputs[index];
+                const observed = this.observed[index];
+                const expected = this.test.expected[index];
+
+                stringValue += `  Utterance ${index}: "${input}"\n`;
+
+                if (isomorphic) {
+                    stringValue += getDifferencesTextCanonical(
+                        observed,
+                        expected
+                    );
+                } else {
+                    stringValue += getDifferencesText(observed, expected);
+                }
+            }
+
+            if (i.length !== e.length) {
+                stringValue += '\n';
+                stringValue +=
+                    '  ERROR: test has mismatched input and expected counts.\n';
+                stringValue += `     inputs.length = ${i.length}\n`;
+                stringValue += `     expected.length = ${e.length}\n`;
+                stringValue += '\n';
+            }
+        }
+        return stringValue;
+    }
+
+    toJUnitXml(isomorphic = false): XmlNode {
         const testCase = this.test.toJUnitXml();
 
         testCase.attrs.time = (this.latencyMS / 1.0e3).toFixed(3);
@@ -107,12 +156,7 @@ export class Result {
             if (this.exception) {
                 failureMessage = this.exception;
             } else {
-                for (const [i, expected] of this.test.expected.entries()) {
-                    failureMessage += getDifferencesText(
-                        this.observed[i],
-                        expected
-                    );
-                }
+                failureMessage = this.toString(isomorphic);
             }
 
             testCase.children.push({
@@ -178,96 +222,47 @@ export class AggregatedResults {
         this.statistics.record(result.latencyMS);
     }
 
-    print(showPassedCases = false, isomorphic = false) {
+    toString(showPassedCases = false, isomorphic = false) {
+        let stringValue = '';
         if (this.results.find(result => !result.passed)) {
             if (showPassedCases) {
-                console.log('Passing and failing tests:');
+                stringValue += 'Passing and failing tests:\n';
             } else {
-                console.log('Failing tests:');
+                stringValue += 'Failing tests:\n';
             }
         } else {
-            console.log('All tests passed.');
-            console.log();
+            stringValue += 'All tests passed.\n\n';
         }
 
         for (const result of this.results) {
             if (!result.passed || showPassedCases) {
-                const suites = result.test.suites.join(' ');
-                const passFail = result.passed ? 'PASSED' : 'FAILED';
-                const exception = result.exception
-                    ? ' *** EXCEPTION THROWN ***'
-                    : '';
-                console.log(`${result.test.id} - ${passFail}${exception}`);
-                console.log(`  Comment: ${result.test.comment}`);
-                console.log(`  Suites: ${suites}`);
-
-                if (result.exception) {
-                    console.log(`  Exception message: "${result.exception}"`);
-                    for (const [i, input] of result.test.inputs.entries()) {
-                        const observed = result.observed[i];
-                        const expected = result.test.expected[i];
-
-                        console.log(
-                            `  Utterance ${i}: "${result.test.inputs[i]}"`
-                        );
-                    }
-                } else {
-                    const i = result.test.inputs;
-                    const o = result.observed;
-                    const e = result.test.expected;
-                    const limit = Math.min(i.length, o.length, e.length);
-
-                    for (let index = 0; index < limit; ++index) {
-                        const input = result.test.inputs[index];
-                        const observed = result.observed[index];
-                        const expected = result.test.expected[index];
-
-                        console.log(`  Utterance ${index}: "${input}"`);
-
-                        if (isomorphic) {
-                            explainDifferencesCanonical(observed, expected);
-                        } else {
-                            explainDifferences(observed, expected);
-                        }
-                    }
-
-                    if (i.length !== e.length) {
-                        console.log(' ');
-                        console.log(
-                            '  ERROR: test has mismatched input and expected counts.'
-                        );
-                        console.log(`    inputs.length = ${i.length}`);
-                        console.log(`     expected.length = ${e.length}`);
-                        console.log(' ');
-                    }
-                }
-                console.log();
+                stringValue += result.toString(isomorphic);
+                stringValue += '\n';
             }
         }
 
-        console.log('Suites:');
+        stringValue += 'Suites:\n';
         for (const [suite, counts] of Object.entries(this.suites)) {
             const rate = (counts.passCount / counts.runCount).toFixed(3);
-            console.log(
-                `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})`
-            );
+            stringValue += `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
         }
-        console.log();
+        stringValue += '\n';
 
-        console.log('Priorities:');
+        stringValue += 'Priorities:\n';
         for (const [priority, counts] of Object.entries(this.priorities)) {
             const rate = (counts.passCount / counts.runCount).toFixed(3);
-            console.log(
-                `  ${priority}: ${counts.passCount}/${counts.runCount} (${rate})`
-            );
+            stringValue += `  ${priority}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
         }
-        console.log();
+        stringValue += '\n';
 
         const rate = (this.passCount / this.results.length).toFixed(3);
-        console.log(
-            `Overall: ${this.passCount}/${this.results.length} (${rate})`
-        );
+        stringValue += `Overall: ${this.passCount}/${this.results.length} (${rate})\n`;
 
+        return stringValue;
+    }
+
+    print(showPassedCases = false, isomorphic = false) {
+        console.log(this.toString(showPassedCases, isomorphic));
         console.log();
         this.printLatencyStatistics();
     }
@@ -558,25 +553,31 @@ export function ordersAreEqualCanonical(
     return allok;
 }
 
-export function explainDifferencesCanonical(
-    expected: TestOrder,
-    observed: TestOrder
-) {
+function getDifferencesTextCanonical(expected: TestOrder, observed: TestOrder) {
     const e = canonicalize(expected);
     const o = canonicalize(observed);
 
     let allok = true;
-
+    let differencesText = '';
     for (let i = 0; i < o.length; ++i) {
         const ovalue = i < o.length ? o[i] : 'BLANK';
         const evalue = i < e.length ? e[i] : 'BLANK';
         const equality = ovalue === evalue ? '===' : '!==';
         const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
         allok = allok && ovalue === evalue;
-        console.log(`    "${evalue}" ${equality} "${ovalue}" - ${ok}`);
+        differencesText += `    "${evalue}" ${equality} "${ovalue}" - ${ok}\n`;
     }
 
-    return allok;
+    return { differencesText, allok };
+}
+
+export function explainDifferencesCanonical(
+    expected: TestOrder,
+    observed: TestOrder
+) {
+    const differences = getDifferencesTextCanonical(expected, observed);
+    console.log(differences.differencesText);
+    return differences.allok;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
