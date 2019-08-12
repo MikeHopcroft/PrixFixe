@@ -2,7 +2,7 @@ import * as replServer from 'repl';
 
 import { Processor, World } from '../processors';
 
-export interface ProcessorDescription2 {
+export interface ReplProcessor {
     // Name used two switch processors vis the REPL's .processor command.
     // It is a good idea to keep the name short, and easy to type, since the
     // REPL doesn't yet provide auto-complete.
@@ -11,6 +11,8 @@ export interface ProcessorDescription2 {
     // Friendly description will be printed by the REPL's .processor command
     // with no arguemtns.
     description: string;
+
+    // The processor.
     processor: Processor;
 }
 
@@ -26,7 +28,7 @@ export interface IReplExtension {
 
     // Main extensibility point for providing processors to the REPL.
     // Returns null if this extension doesn't provide a processor.
-    createProcessor(): ProcessorDescription2 | null;
+    createProcessor(): ReplProcessor | null;
 
     // Main extensibility point for adding commands to the REPL.
     // Called during REPL startup. See Node.JS REPLServer documentation for

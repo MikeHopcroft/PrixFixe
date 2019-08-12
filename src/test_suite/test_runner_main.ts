@@ -3,13 +3,14 @@ import * as fs from 'fs';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
-import { createWorld, Processor, ProcessorFactory, World } from '../processors';
+import { createWorld, Processor, World } from '../processors';
 
+import { TestProcessors } from './test_processors';
 import { TestSuite } from './test_suite';
 
 export async function testRunnerMain(
     title: string,
-    processorFactory: ProcessorFactory,
+    processorFactory: TestProcessors,
     world: World | undefined = undefined
 ) {
     dotenv.config();
@@ -193,7 +194,7 @@ export async function testRunnerMain(
     }
 }
 
-function showUsage(processorFactory: ProcessorFactory) {
+function showUsage(processorFactory: TestProcessors) {
     const program = path.basename(process.argv[1]);
     const defaultProcessor = processorFactory.getDefault().name;
 

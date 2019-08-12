@@ -8,7 +8,7 @@ import { aliasesFromPattern, patternFromExpression } from '../utilities';
 import {
     IReplExtension,
     IReplExtensionFactory,
-    ProcessorDescription2,
+    ReplProcessor,
 } from './interfaces';
 
 import { World } from '../processors';
@@ -51,7 +51,7 @@ export class PrixFixeReplExtension implements IReplExtension {
         });
     }
 
-    createProcessor(): ProcessorDescription2 | null {
+    createProcessor(): ReplProcessor | null {
         return null;
     }
 }

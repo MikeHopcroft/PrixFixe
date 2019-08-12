@@ -3,7 +3,7 @@ import * as replServer from 'repl';
 import {
     IReplExtensionFactory,
     prixFixeReplExtensionFactory,
-    ProcessorDescription2,
+    ReplProcessor,
     replMain,
     State,
     World,
@@ -17,7 +17,7 @@ class NopReplExtension implements IReplExtension {
         return 'nop';
     }
 
-    createProcessor(): ProcessorDescription2 | null {
+    createProcessor(): ReplProcessor | null {
         return {
             name: 'nop',
             description: 'Sample processor that leaves the State unchanged.',

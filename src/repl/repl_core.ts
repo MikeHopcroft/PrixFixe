@@ -14,7 +14,7 @@ import { formatCart, formatOrder } from './formatting';
 import {
     IReplExtension,
     IReplExtensionFactory,
-    ProcessorDescription2,
+    ReplProcessor,
 } from './interfaces';
 
 import { speechToTextFilter } from './speech_to_text_filter';
@@ -52,7 +52,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
 
     // Incorporate REPL extensions.
     const extensions: IReplExtension[] = [];
-    const processors: ProcessorDescription2[] = [];
+    const processors: ReplProcessor[] = [];
     for (const factory of factories) {
         const extension = factory.create(world, dataPath);
         extensions.push(extension);

@@ -1,5 +1,7 @@
-import { ProcessorFactory, State, World } from '../src';
-import { testRunnerMain } from '../src/test_suite/test_runner_main';
+import { TestProcessors, testRunnerMain, State, World } from '../src';
+
+// This sample application demonstrates how to configure the test runner
+// with a set of Processors.
 
 // This example processor does nothing. Replace it with code that processes the
 // text utterance to produce a new State.
@@ -25,7 +27,7 @@ async function nopThrowProcessor(text: string, state: State): Promise<State> {
 
 async function go() {
     // Define the processor factory.
-    const processorFactory = new ProcessorFactory([
+    const processorFactory = new TestProcessors([
         {
             name: 'nop',
             description: 'does nothing',
