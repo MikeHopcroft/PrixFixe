@@ -383,6 +383,20 @@ export const soyMilk: SpecificTypedEntity = {
     kind: OPTION,
 };
 
+export const whippedCream: SpecificTypedEntity = {
+    sku: 2002,
+    name: 'with whipped cream',
+    key: '2000:2',
+    kind: OPTION,
+};
+
+export const noWhippedCream: SpecificTypedEntity = {
+    sku: 2000,
+    name: 'with no whipped cream',
+    key: '2000:0',
+    kind: OPTION,
+};
+
 export const specificItems: SpecificTypedEntity[] = [
     smallVanillaCone,
     smallChocolateCone,
@@ -400,6 +414,8 @@ export const specificItems: SpecificTypedEntity[] = [
     twoMilk,
     zeroMilk,
     soyMilk,
+    whippedCream,
+    noWhippedCream,
 ];
 
 ///////////////////////////////////////////////////////////////////////////////

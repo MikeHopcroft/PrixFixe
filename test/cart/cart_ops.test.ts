@@ -21,6 +21,8 @@ import {
     soyMilk,
     temperatureCold,
     wholeMilk,
+    whippedCream,
+    noWhippedCream,
 } from '../shared';
 
 const sampleCart: Cart = {
@@ -117,6 +119,61 @@ describe('CartOps', () => {
             // Make sure original was left unchanged.
             assert.deepEqual(original, smallVanillaConeItem);
         });
+
+        it('Add to ItemInstance With Replacement', () => {
+            const original = { ...smallVanillaConeItem };
+            const modified = ops.addToItemWithReplacement(
+                original,
+                smallCoffeeItem
+            );
+
+            // Look for the correct change.
+            assert.deepEqual(modified, {
+                ...original,
+                children: [smallCoffeeItem],
+            });
+
+            // Make sure original was left unchanged.
+            assert.deepEqual(original, smallVanillaConeItem);
+        });
+
+        it('Add to ItemInstance With Replacement (Same PID)', () => {
+            const whippedCreamItem: ItemInstance = {
+                uid: 6,
+                key: whippedCream.key,
+                quantity: 1,
+                children: [],
+            };
+
+            const noWhippedCreamItem: ItemInstance = {
+                uid: 6,
+                key: noWhippedCream.key,
+                quantity: 1,
+                children: [],
+            };
+
+            let cart: Cart = { items: [] };
+
+            const coffeeWithWhippedCream = ops.addToItem(
+                smallCoffeeItem,
+                whippedCreamItem
+            );
+            const coffeeWithoutWhippedCream = ops.addToItemWithReplacement(
+                coffeeWithWhippedCream,
+                noWhippedCreamItem
+            );
+
+            cart = ops.addToCart(cart, coffeeWithWhippedCream);
+
+            assert.deepEqual(cart.items, [
+                { ...cart.items[0], children: [whippedCreamItem] },
+            ]);
+
+            const cart2 = ops.replaceInCart(cart, coffeeWithoutWhippedCream);
+            assert.deepEqual(cart2.items, [
+                { ...cart2.items[0], children: [noWhippedCreamItem] },
+            ]);
+        });
     });
 
     ///////////////////////////////////////////////////////////////////////////
@@ -142,7 +199,7 @@ describe('CartOps', () => {
 
             // The second item in the sample cart is a smallCoffee that has a
             // soyMilk child with UID 4. Attempt to replace this child with
-            // whoteMilk.
+            // wholeMilk.
             const wholeMilkItem: ItemInstance = {
                 uid: 4,
                 key: wholeMilk.key,
