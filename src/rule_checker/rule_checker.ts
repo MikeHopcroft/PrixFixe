@@ -144,6 +144,10 @@ export class RuleChecker implements IRuleChecker {
                 return false;
             }
 
+            if (existingPID === childPID) {
+                return false;
+            }
+
             for (const predicate of predicates) {
                 const existingCID = predicate(existingPID);
                 if (existingCID > -1) {
@@ -151,10 +155,6 @@ export class RuleChecker implements IRuleChecker {
                         return false;
                     }
                 }
-            }
-
-            if (existingPID === childPID) {
-                return false;
             }
 
             return true;
