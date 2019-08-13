@@ -173,6 +173,15 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         process.exit();
     });
 
+    repl.defineCommand('cart', {
+        help: 'Display shopping cart.',
+        action(text: string) {
+            const session = stack[stack.length - 1];
+            displayState(catalog, session.state());
+            repl.displayPrompt();
+        },
+    });
+
     repl.defineCommand('debug', {
         help: 'Toggle debug mode.',
         action(text: string) {
