@@ -49,6 +49,22 @@ export class PrixFixeReplExtension implements IReplExtension {
                 repl.displayPrompt();
             },
         });
+
+        repl.defineCommand('aliases', {
+            help: 'Display aliases for a generic',
+            action: (line: string) => {
+                const pid = Number(line);
+                if (!isNaN(pid) && catalog.hasPID(pid)) {
+                    // This is a generic entity. Print out its aliases.
+                    const item = catalog.getGeneric(pid);
+                    console.log(`${item.name} (${item.pid})`);
+                    printAliases(world, pid);
+                } else {
+                    console.log(`Unknown item "${line}".`);
+                }
+                repl.displayPrompt();
+            },
+        });
     }
 
     createProcessor(): ReplProcessor | null {
@@ -103,18 +119,7 @@ export function describeGeneric(world: World, pid: PID) {
         const item = catalog.getGeneric(pid);
         console.log(`${item.name} (${item.pid})`);
 
-        console.log('  Aliases:');
-        const aliases: string[] = [];
-        for (const alias of item.aliases) {
-            const pattern = patternFromExpression(alias);
-            for (const text of aliasesFromPattern(pattern)) {
-                aliases.push(text);
-            }
-        }
-        aliases.sort();
-        for (const alias of aliases) {
-            console.log(`    ${alias}`);
-        }
+        printAliases(world, pid);
 
         console.log('  Attributes:');
         const tensor = world.attributeInfo.getTensor(item.tensor);
@@ -160,6 +165,28 @@ export function describeGeneric(world: World, pid: PID) {
         lines.sort();
         for (const line of lines) {
             console.log(`    ${line}`);
+        }
+    }
+}
+
+function printAliases(world: World, pid: PID) {
+    const catalog = world.catalog;
+
+    if (!catalog.hasPID(pid)) {
+        console.log(`${style.red.open}Unknown PID ${pid}${style.red.close}`);
+    } else {
+        const item = catalog.getGeneric(pid);
+        console.log('  Aliases:');
+        const aliases: string[] = [];
+        for (const alias of item.aliases) {
+            const pattern = patternFromExpression(alias);
+            for (const text of aliasesFromPattern(pattern)) {
+                aliases.push(text);
+            }
+        }
+        aliases.sort();
+        for (const alias of aliases) {
+            console.log(`    ${alias}`);
         }
     }
 }

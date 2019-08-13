@@ -4,7 +4,6 @@ import * as path from 'path';
 
 import { IReplExtensionFactory } from './interfaces';
 import { runRepl } from './repl_core';
-import { gold } from 'color-name';
 
 export function replMain(extensions: IReplExtensionFactory[]) {
     dotenv.config();
