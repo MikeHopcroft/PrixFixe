@@ -137,11 +137,13 @@ export class RuleChecker implements IRuleChecker {
         }
 
         return (existing: Key): boolean => {
+            const existingPID = existing.split(':')[0];
+            const childPID = child.split(':')[0];
+
             if (existing === child) {
                 return false;
             }
 
-            const existingPID = existing.split(':')[0];
             for (const predicate of predicates) {
                 const existingCID = predicate(existingPID);
                 if (existingCID > -1) {
@@ -150,6 +152,11 @@ export class RuleChecker implements IRuleChecker {
                     }
                 }
             }
+
+            if (existingPID === childPID) {
+                return false;
+            }
+
             return true;
         };
     }

@@ -185,17 +185,18 @@ const largeIced: Key = '9000:1:2';
 const drizzleKey: Key = '6000:1:0';
 const anotherDrizzleKey: Key = '6000:1:2';
 const sprinklesKey: Key = '7000:2';
-const anotherSprinleKey: Key = '7000:1';
+const anotherSprinkleKey: Key = '7000:1';
 
 const soyMilkKey: Key = '5000:3';
 const twoMilkKey: Key = '5000:1';
 const wholeMilkKey: Key = '5000:0';
 
 const whippedCreamKey: Key = '2000:2';
+const noWhippedCreamKey: Key = '2000:0';
 
 // The following two keys are not mutually exclusive with any others.
 const someOtherKey1: Key = '9999:1';
-const someOtherKey2: Key = '9999:2';
+const someOtherKey2: Key = '1111:2';
 
 const ruleChecker: IRuleChecker = new RuleChecker(SAMPLE_RULES, genericMap);
 
@@ -226,7 +227,7 @@ describe('RuleChecker', () => {
         it('Invalid children evaluate to false (4)', () => {
             // More sprinkles also don't belong in lattes
             assert.isFalse(
-                ruleChecker.isValidChild(latteHotKey, anotherSprinleKey)
+                ruleChecker.isValidChild(latteHotKey, anotherSprinkleKey)
             );
         });
 
@@ -240,7 +241,7 @@ describe('RuleChecker', () => {
         it('Invalid children evaluate to false (6)', () => {
             // More sprinkles cannot be in an iced latte
             assert.isFalse(
-                ruleChecker.isValidChild(latteIcedKey, anotherSprinleKey)
+                ruleChecker.isValidChild(latteIcedKey, anotherSprinkleKey)
             );
         });
 
@@ -289,6 +290,14 @@ describe('RuleChecker', () => {
             assert.isTrue(f(someOtherKey2));
             assert.isTrue(f(wholeMilkKey));
             assert.isTrue(f(twoMilkKey));
+        });
+
+        it('same pid', () => {
+            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
+                latteIcedKey,
+                whippedCreamKey
+            );
+            assert.isFalse(f(noWhippedCreamKey));
         });
     });
 
