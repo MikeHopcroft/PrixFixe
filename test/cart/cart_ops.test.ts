@@ -76,6 +76,20 @@ const smallCoffeeItem: ItemInstance = {
     children: [],
 };
 
+const whippedCreamItem: ItemInstance = {
+    uid: 6,
+    key: whippedCream.key,
+    quantity: 1,
+    children: [],
+};
+
+const noWhippedCreamItem: ItemInstance = {
+    uid: 6,
+    key: noWhippedCream.key,
+    quantity: 1,
+    children: [],
+};
+
 const attributeInfo = new AttributeInfo(
     smallWorldCatalog,
     smallWorldAttributes
@@ -138,40 +152,26 @@ describe('CartOps', () => {
         });
 
         it('Add to ItemInstance With Replacement (Same PID)', () => {
-            const whippedCreamItem: ItemInstance = {
-                uid: 6,
-                key: whippedCream.key,
-                quantity: 1,
-                children: [],
-            };
-
-            const noWhippedCreamItem: ItemInstance = {
-                uid: 6,
-                key: noWhippedCream.key,
-                quantity: 1,
-                children: [],
-            };
-
             let cart: Cart = { items: [] };
 
             const coffeeWithWhippedCream = ops.addToItem(
                 smallCoffeeItem,
                 whippedCreamItem
             );
+
+            cart = ops.addToCart(cart, coffeeWithWhippedCream);
+            assert.deepEqual(cart.items, [
+                { ...cart.items[0], children: [whippedCreamItem] },
+            ]);
+
             const coffeeWithoutWhippedCream = ops.addToItemWithReplacement(
                 coffeeWithWhippedCream,
                 noWhippedCreamItem
             );
 
-            cart = ops.addToCart(cart, coffeeWithWhippedCream);
-
+            cart = ops.replaceInCart(cart, coffeeWithoutWhippedCream);
             assert.deepEqual(cart.items, [
-                { ...cart.items[0], children: [whippedCreamItem] },
-            ]);
-
-            const cart2 = ops.replaceInCart(cart, coffeeWithoutWhippedCream);
-            assert.deepEqual(cart2.items, [
-                { ...cart2.items[0], children: [noWhippedCreamItem] },
+                { ...cart.items[0], children: [noWhippedCreamItem] },
             ]);
         });
     });
