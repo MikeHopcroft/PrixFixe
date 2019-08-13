@@ -1,6 +1,16 @@
+import * as style from 'ansi-styles';
 import { Cart, ItemInstance } from '../cart';
 import { ICatalog } from '../catalog';
+import { State } from '../processors';
 import { TestLineItem, TestOrder } from '../test_suite';
+
+export function displayState(catalog: ICatalog, state: State) {
+    const order: TestOrder = formatCart(state.cart, catalog);
+    const orderText = formatOrder(order);
+    console.log(`${style.yellow.open}${orderText}${style.yellow.open}`);
+    console.log();
+    console.log(`${style.reset.open}`);
+}
 
 export function formatCart(cart: Cart, catalog: ICatalog): TestOrder {
     const lines: TestLineItem[] = [];

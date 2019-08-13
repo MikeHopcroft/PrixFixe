@@ -7,9 +7,15 @@ import { Context } from 'vm';
 
 import { ICatalog } from '../catalog';
 import { createWorld, Processor, State } from '../processors';
-import { TestCase, TestOrder, TestSuite, YamlTestCase } from '../test_suite';
+import {
+    TestCase,
+    TestLineItem,
+    TestOrder,
+    TestSuite,
+    YamlTestCase,
+} from '../test_suite';
 
-import { formatCart, formatOrder } from './formatting';
+import { displayState } from './formatting';
 
 import {
     IReplExtension,
@@ -18,24 +24,62 @@ import {
 } from './interfaces';
 
 import { speechToTextFilter } from './speech_to_text_filter';
+import { ItemInstance } from '../cart';
+
+interface Turn {
+    input: string;
+    state: State;
+}
 
 class Session {
-    utterances: string[] = [];
-    yamlTestCases: YamlTestCase[] = [];
-    state: State = { cart: { items: [] } };
+    private undoStack: Turn[] = [];
+    private redoStack: Turn[] = [];
+
+    state(): State {
+        if (this.undoStack.length > 0) {
+            return this.undoStack[this.undoStack.length - 1].state;
+        } else {
+            return { cart: { items: [] } };
+        }
+    }
+
+    getTurns(): Turn[] {
+        return this.undoStack;
+    }
+
+    takeTurn(input: string, state: State) {
+        this.undoStack.push({ input, state });
+        this.redoStack = [];
+    }
+
+    undo(): boolean {
+        if (this.undoStack.length > 0) {
+            this.redoStack.push(this.undoStack.pop()!);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    redo(): boolean {
+        if (this.redoStack.length > 0) {
+            this.undoStack.push(this.redoStack.shift()!);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     copy(): Session {
         const session = new Session();
-        session.utterances = [...this.utterances];
-        session.yamlTestCases = [...this.yamlTestCases];
-        session.state = this.state;
+        session.undoStack = [...this.undoStack];
+        session.redoStack = [...this.redoStack];
         return session;
     }
 
     reset(): void {
-        this.utterances = [];
-        this.yamlTestCases = [];
-        this.state = { cart: { items: [] } };
+        this.undoStack = [];
+        this.redoStack = [];
     }
 }
 
@@ -78,7 +122,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
 
     // Configure YAML recording stack of Session objects.
     const stack: Session[] = [new Session()];
-    let recordMode = false;
+    // let recordMode = false;
 
     // Print the welcome message.
     console.log();
@@ -189,15 +233,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             if (stack.length > 1) {
                 stack.pop();
                 const session = stack[stack.length - 1];
-                const order: TestOrder = formatCart(
-                    session.state.cart,
-                    catalog
-                );
-                const orderText = formatOrder(order);
-                console.log(
-                    `${style.yellow.open}${orderText}${style.yellow.open}`
-                );
-                console.log();
+                displayState(catalog, session.state());
             } else {
                 console.log('Cannot pop - stack is already empty');
             }
@@ -212,15 +248,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                 stack.pop();
                 stack.push(stack[stack.length - 1].copy());
                 const session = stack[stack.length - 1];
-                const order: TestOrder = formatCart(
-                    session.state.cart,
-                    catalog
-                );
-                const orderText = formatOrder(order);
-                console.log(
-                    `${style.yellow.open}${orderText}${style.yellow.open}`
-                );
-                console.log();
+                displayState(catalog, session.state());
             } else {
                 console.log('Cannot restore - stack is already empty');
             }
@@ -229,12 +257,38 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
     });
 
     repl.defineCommand('record', {
-        help: 'Toggle YAML recording mode.',
+        help: 'DEPRECATED',
         action(text: string) {
-            recordMode = !recordMode;
-            console.log(`YAML record mode ${recordMode ? 'on' : 'off'}.`);
-            stack[stack.length - 1].reset();
-            console.log('Cart has been reset.');
+            console.log('The .record command is no longer required');
+            console.log('before using the .yaml command. It will be');
+            console.log('removed in a future build.');
+            console.log();
+            repl.displayPrompt();
+        },
+    });
+
+    repl.defineCommand('undo', {
+        help: 'Undo last utterance',
+        action(text: string) {
+            const session = stack[stack.length - 1];
+            if (session.undo()) {
+                displayState(catalog, session.state());
+            } else {
+                console.log('Nothing to undo.');
+            }
+            repl.displayPrompt();
+        },
+    });
+
+    repl.defineCommand('redo', {
+        help: 'Redo utterance after undo',
+        action(text: string) {
+            const session = stack[stack.length - 1];
+            if (session.redo()) {
+                displayState(catalog, session.state());
+            } else {
+                console.log('Nothing to redo.');
+            }
             repl.displayPrompt();
         },
     });
@@ -242,20 +296,19 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
     repl.defineCommand('yaml', {
         help: 'Display YAML test case for cart',
         action(text: string) {
-            const yamlTestCases = stack[stack.length - 1].yamlTestCases;
+            const session = stack[stack.length - 1];
+            const turns = session.getTurns();
 
-            if (!recordMode) {
-                console.log(
-                    'You must first enable YAML recording with the .record command.'
-                );
-            } else if (yamlTestCases.length > 0) {
-                const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
-                console.log(' ');
-                console.log('WARNING: test case expects short-order behavior.');
-                console.log('Be sure to manually verify.');
-                console.log(' ');
-                console.log(yamlText);
-            }
+            const yamlTestCases = cartYaml2(catalog, turns, 1, ['unverified']);
+            const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
+            console.log(' ');
+            console.log(`${style.red.open}`);
+            console.log('WARNING: test case expects short-order behavior.');
+            console.log('Be sure to manually verify.');
+            console.log(`${style.red.close}`);
+            console.log(' ');
+            console.log(yamlText);
+
             repl.displayPrompt();
         },
     });
@@ -317,34 +370,11 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                         console.log(`${style.red.close}`);
                     }
 
-                    // Need to build YAML test cases here because of the async await.
-                    // Build them proactively in case they are needed by the .yaml command.
-                    // TODO: This is o(n^2). Come up with a better approach, as this will
-                    // be problematic in the .load case.
-                    if (recordMode) {
-                        const session = stack[stack.length - 1];
-                        session.utterances.push(text);
-                        session.yamlTestCases = await cartYaml(
-                            processor,
-                            catalog,
-                            session.utterances,
-                            1,
-                            ['unverified']
-                        );
-                    }
-
                     const session = stack[stack.length - 1];
-                    session.state = await processor(text, session.state);
-                    const order: TestOrder = formatCart(
-                        session.state.cart,
-                        catalog
-                    );
-                    const orderText = formatOrder(order);
-                    console.log(
-                        `${style.yellow.open}${orderText}${style.yellow.open}`
-                    );
-                    console.log();
-                    console.log(`${style.reset.open}`);
+                    const state = await processor(text, session.state());
+                    session.takeTurn(text, state);
+
+                    displayState(catalog, state);
                 }
             }
 
@@ -354,6 +384,57 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
 
     function myWriter(text: string) {
         return text;
+    }
+}
+
+function cartYaml2(
+    catalog: ICatalog,
+    turns: Turn[],
+    priority: number,
+    suites: string[]
+): YamlTestCase[] {
+    const inputs: string[] = [];
+    const expected: TestOrder[] = [];
+    for (const turn of turns) {
+        inputs.push(turn.input);
+        expected.push(testOrderFromState(catalog, turn.state));
+    }
+
+    const testCase: YamlTestCase = {
+        priority,
+        suites: suites.join(' '),
+        comment: 'generated by repl2',
+        inputs,
+        expected,
+    };
+
+    return [testCase];
+}
+
+function testOrderFromState(catalog: ICatalog, state: State): TestOrder {
+    const lines: TestLineItem[] = [];
+    for (const item of state.cart.items) {
+        testOrderFromItem(catalog, lines, item, 0);
+    }
+    return {
+        lines,
+    };
+}
+
+function testOrderFromItem(
+    catalog: ICatalog,
+    lines: TestLineItem[],
+    item: ItemInstance,
+    indent: number
+): void {
+    lines.push({
+        indent,
+        quantity: item.quantity,
+        key: item.key,
+        name: catalog.getSpecific(item.key).name,
+    });
+    for (const child of item.children) {
+        testOrderFromItem(catalog, lines, item, indent + 1);
     }
 }
 
