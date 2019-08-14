@@ -1,4 +1,4 @@
-import { ErrorObject } from "ajv";
+import { ErrorObject } from 'ajv';
 
 /**
  * An interface for schema validation errors reported by AJV
@@ -8,8 +8,8 @@ interface YAMLValidationError extends TypeError {
 }
 
 interface YAMLValidationErrorConstructor {
-    new(message?: string, error?: ErrorObject[]): YAMLValidationError;
-    (message?: string,  error?: ErrorObject[] | null): YAMLValidationError;
+    new (message?: string, error?: ErrorObject[]): YAMLValidationError;
+    (message?: string, error?: ErrorObject[] | null): YAMLValidationError;
     readonly prototype: YAMLValidationError;
 }
 
