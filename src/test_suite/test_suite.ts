@@ -5,6 +5,7 @@ import * as yaml from 'js-yaml';
 import { ICatalog, Key, Catalog } from '../catalog';
 import { Cart, ItemInstance } from '../cart';
 import { Processor, State } from '../processors';
+import { YAMLValidationError } from '../utilities/interfaces';
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
 import * as jsontoxml from 'jsontoxml';
 
@@ -687,7 +688,7 @@ export class TestSuite {
                 'itemMapFromYamlString: yaml data does not conform to schema.';
             debug(message);
             debug(validator.errors);
-            throw TypeError(message);
+            throw YAMLValidationError(message, validator.errors);
         }
 
         const tests = yamlRoot.map((test, index) => {
