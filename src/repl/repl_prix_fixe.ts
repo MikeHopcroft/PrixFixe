@@ -12,6 +12,7 @@ import {
 } from './interfaces';
 
 import { World } from '../processors';
+import { ItemInstance } from '../cart';
 
 export class PrixFixeReplExtension implements IReplExtension {
     world: World;
@@ -60,7 +61,23 @@ export class PrixFixeReplExtension implements IReplExtension {
                     console.log(`${item.name} (${item.pid})`);
                     printAliases(world, pid);
                 } else {
-                    console.log(`Unknown item "${line}".`);
+                    console.log(`Unknown PID "${line}".`);
+                    console.log('Usage: .aliases <PID>');
+                }
+                repl.displayPrompt();
+            },
+        });
+
+        repl.defineCommand('specifics', {
+            help: 'Display list of legal specifics for a generic',
+            action: (line: string) => {
+                const pid = Number(line);
+                if (!isNaN(pid) && catalog.hasPID(pid)) {
+                    // This is a generic entity. Print out its specifics.
+                    printLegalSpecifics(world, pid);
+                } else {
+                    console.log(`Unknown PID "${line}".`);
+                    console.log('Usage: .specifics <PID>');
                 }
                 repl.displayPrompt();
             },
@@ -143,15 +160,9 @@ export function describeGeneric(world: World, pid: PID) {
             }
         }
 
-        console.log('  Specifics:');
-        for (const key of catalog.getSpecificsForGeneric(pid)) {
-            const defaultMark = item.defaultKey === key ? ' <== default' : '';
-            const name = catalog.getSpecific(key).name;
-            console.log(`    ${name} (${key})${defaultMark}`);
-        }
+        printLegalSpecifics(world, pid);
 
         const specific = catalog.getSpecific(item.defaultKey);
-
         console.log(`  Options for ${specific.name}:`);
         const lines: string[] = [];
         for (const childPID of world.ruleChecker.getValidChildren(
@@ -188,5 +199,16 @@ function printAliases(world: World, pid: PID) {
         for (const alias of aliases) {
             console.log(`    ${alias}`);
         }
+    }
+}
+
+function printLegalSpecifics(world: World, pid: PID) {
+    const catalog = world.catalog;
+    const item = catalog.getGeneric(pid);
+    console.log('  Specifics:');
+    for (const key of catalog.getSpecificsForGeneric(pid)) {
+        const defaultMark = item.defaultKey === key ? ' <== default' : '';
+        const name = catalog.getSpecific(key).name;
+        console.log(`    ${name} (${key})${defaultMark}`);
     }
 }

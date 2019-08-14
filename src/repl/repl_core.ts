@@ -7,13 +7,7 @@ import { Context } from 'vm';
 
 import { ICatalog } from '../catalog';
 import { createWorld, Processor, State } from '../processors';
-import {
-    TestCase,
-    TestLineItem,
-    TestOrder,
-    TestSuite,
-    YamlTestCase,
-} from '../test_suite';
+import { TestLineItem, TestOrder, YamlTestCase } from '../test_suite';
 
 import { displayState } from './formatting';
 
@@ -144,7 +138,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         prompt: '% ',
         input: process.stdin,
         output: process.stdout,
-        eval: processInputLine,
+        eval: processReplInput,
         writer: myWriter,
     });
 
@@ -202,10 +196,13 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
 
     repl.defineCommand('step', {
         help: 'Add a new step to a yaml test',
-        action(text: string) {
+        async action(text: string) {
             const session = stack[stack.length - 1];
-            steps.push({ input: text, state: session.state() });
-            displayState(catalog, session.state());
+            const state = session.state();
+            steps.push({ input: text, state });
+
+            await processInputLine(text);
+
             repl.displayPrompt();
         },
     });
@@ -311,6 +308,8 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         help: 'Clear shopping cart.',
         action(text: string) {
             stack[stack.length - 1].reset();
+            const session = stack[stack.length - 1];
+            updateSteps(session.state());
             console.log('Cart has been reset.');
             repl.displayPrompt();
         },
@@ -332,6 +331,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             if (stack.length > 1) {
                 stack.pop();
                 const session = stack[stack.length - 1];
+                updateSteps(session.state());
                 displayState(catalog, session.state());
             } else {
                 console.log('Cannot pop - stack is already empty');
@@ -347,21 +347,11 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                 stack.pop();
                 stack.push(stack[stack.length - 1].copy());
                 const session = stack[stack.length - 1];
+                updateSteps(session.state());
                 displayState(catalog, session.state());
             } else {
                 console.log('Cannot restore - stack is already empty');
             }
-            repl.displayPrompt();
-        },
-    });
-
-    repl.defineCommand('record', {
-        help: 'DEPRECATED',
-        action(text: string) {
-            console.log('The .record command is no longer required');
-            console.log('before using the .yaml command. It will be');
-            console.log('removed in a future build.');
-            console.log();
             repl.displayPrompt();
         },
     });
@@ -371,6 +361,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         action(text: string) {
             const session = stack[stack.length - 1];
             if (session.undo()) {
+                updateSteps(session.state());
                 displayState(catalog, session.state());
             } else {
                 console.log('Nothing to undo.');
@@ -384,10 +375,22 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         action(text: string) {
             const session = stack[stack.length - 1];
             if (session.redo()) {
+                updateSteps(session.state());
                 displayState(catalog, session.state());
             } else {
                 console.log('Nothing to redo.');
             }
+            repl.displayPrompt();
+        },
+    });
+
+    repl.defineCommand('try', {
+        help: 'Try out an utterance without changing the cart.',
+        async action(text: string) {
+            const session = stack[stack.length - 1];
+            await processInputLine(text);
+            session.undo();
+
             repl.displayPrompt();
         },
     });
@@ -418,7 +421,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         },
     });
 
-    async function processInputLine(
+    async function processReplInput(
         line: string,
         context: Context,
         filename: string,
@@ -429,7 +432,14 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
 
         if (line === '\n') {
             repl.close();
-        } else if (!processor) {
+        } else {
+            await processInputLine(line);
+            callback(null, '');
+        }
+    }
+
+    async function processInputLine(line: string) {
+        if (!processor) {
             console.log('Unable to process input text.');
             console.log('No processors available.');
             console.log('See the .processor command for more information.');
@@ -478,15 +488,20 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                     const session = stack[stack.length - 1];
                     const state = await processor(text, session.state());
                     session.takeTurn(text, state);
-                    if (steps.length > 0) {
-                        steps[steps.length - 1].state = state;
-                    }
+                    updateSteps(state);
+                    // if (steps.length > 0) {
+                    //     steps[steps.length - 1].state = state;
+                    // }
 
                     displayState(catalog, state);
                 }
             }
+        }
+    }
 
-            callback(null, '');
+    function updateSteps(state: State) {
+        if (steps.length > 0) {
+            steps[steps.length - 1].state = state;
         }
     }
 
