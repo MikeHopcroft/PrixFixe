@@ -53,6 +53,8 @@ export interface IRuleChecker {
     getValidChildren(parent: Key): Set<PID>;
 
     /**
+     * @deprecated Please use getIncrementalMutualExclusionPredicate
+     *
      * Given the key of a parent item (parent) and the key of a child item
      * (child) return a curried function that indicates whether another child
      * (existing) would violate mutual exclusivity.

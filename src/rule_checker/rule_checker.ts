@@ -98,6 +98,8 @@ export class RuleChecker implements IRuleChecker {
         return result;
     }
 
+    // @deprecated Please use getIncrementalMutualExclusionPredicate
+    //
     // Given the key of a parent item (parent) and the key of a child item
     // (child) return a curried function that indicates whether another child
     // (existing) would violate mutual exclusivity.
@@ -123,43 +125,9 @@ export class RuleChecker implements IRuleChecker {
         parent: Key,
         child: Key
     ): (existing: string) => boolean {
-        const predicates = this.tensorWalker(
-            parent,
-            this.mutualTensor
-        ) as MutualExclusionZone[];
-
-        const exclusionCIDs = new Set<CID>();
-        const childPID = AttributeInfo.pidFromKey(child).toString();
-        for (const predicate of predicates) {
-            const childCID = predicate(childPID);
-            if (childCID > -1) {
-                exclusionCIDs.add(childCID);
-            }
-        }
-
-        return (existing: Key): boolean => {
-            const existingPID = AttributeInfo.pidFromKey(existing).toString();
-            const childPID = AttributeInfo.pidFromKey(child).toString();
-
-            if (existing === child) {
-                return false;
-            }
-
-            if (existingPID === childPID) {
-                return false;
-            }
-
-            for (const predicate of predicates) {
-                const existingCID = predicate(existingPID);
-                if (existingCID > -1) {
-                    if (exclusionCIDs.has(existingCID)) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        };
+        const func = this.getIncrementalMutualExclusionPredicate(parent);
+        func(child);
+        return func;
     }
 
     // Returns a closure the helps check whether a set of child Keys violate

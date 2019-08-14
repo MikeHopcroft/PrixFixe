@@ -270,37 +270,6 @@ describe('RuleChecker', () => {
         });
     });
 
-    describe('getPairwiseMutualExclusionPredicate()', () => {
-        it('general', () => {
-            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
-                latteHotKey,
-                soyMilkKey
-            );
-            assert.isFalse(f(wholeMilkKey));
-            assert.isTrue(f(someOtherKey1));
-            assert.isFalse(f(twoMilkKey));
-        });
-
-        it('self exclusion', () => {
-            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
-                latteHotKey,
-                someOtherKey1
-            );
-            assert.isFalse(f(someOtherKey1));
-            assert.isTrue(f(someOtherKey2));
-            assert.isTrue(f(wholeMilkKey));
-            assert.isTrue(f(twoMilkKey));
-        });
-
-        it('same pid', () => {
-            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
-                latteIcedKey,
-                whippedCreamKey
-            );
-            assert.isFalse(f(noWhippedCreamKey));
-        });
-    });
-
     describe('getIncrementalMutualExclusionPredicate()', () => {
         it('general', () => {
             const f = ruleChecker.getIncrementalMutualExclusionPredicate(
