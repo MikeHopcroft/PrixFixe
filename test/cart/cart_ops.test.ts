@@ -84,7 +84,7 @@ const whippedCreamItem: ItemInstance = {
 };
 
 const noWhippedCreamItem: ItemInstance = {
-    uid: 6,
+    uid: 7,
     key: noWhippedCream.key,
     quantity: 1,
     children: [],
