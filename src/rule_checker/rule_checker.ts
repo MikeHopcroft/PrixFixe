@@ -1,3 +1,4 @@
+import { AttributeInfo } from '../attributes';
 import { CID, PID, Key, GenericTypedEntity } from '../catalog';
 
 import {
@@ -128,7 +129,7 @@ export class RuleChecker implements IRuleChecker {
         ) as MutualExclusionZone[];
 
         const exclusionCIDs = new Set<CID>();
-        const childPID = child.split(':')[0];
+        const childPID = AttributeInfo.pidFromKey(child).toString();
         for (const predicate of predicates) {
             const childCID = predicate(childPID);
             if (childCID > -1) {
@@ -137,8 +138,8 @@ export class RuleChecker implements IRuleChecker {
         }
 
         return (existing: Key): boolean => {
-            const existingPID = existing.split(':')[0];
-            const childPID = child.split(':')[0];
+            const existingPID = AttributeInfo.pidFromKey(existing).toString();
+            const childPID = AttributeInfo.pidFromKey(child).toString();
 
             if (existing === child) {
                 return false;
@@ -190,7 +191,7 @@ export class RuleChecker implements IRuleChecker {
 
             children.add(child);
 
-            const childPID = child.split(':')[0];
+            const childPID = AttributeInfo.pidFromKey(child).toString();
             const thisChildCIDs = new Set<CID>();
             for (const predicate of predicates) {
                 const childCID = predicate(childPID);
