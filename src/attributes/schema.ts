@@ -6,6 +6,7 @@ import {
     DimensionAndTensorDescription,
     AttributeDescription,
 } from './interfaces';
+import { YAMLValidationError } from '../utilities/interfaces';
 
 const debug = Debug('so:itemMapFromYamlString');
 
@@ -111,7 +112,7 @@ export function attributesFromYamlString(yamlText: string) {
             'attributesFromYamlString: yaml data does not conform to schema.';
         debug(message);
         debug(attributesValidator.errors);
-        throw TypeError(message);
+        throw YAMLValidationError(message, attributesValidator.errors);
     }
 
     return yamlRoot;

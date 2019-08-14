@@ -2,6 +2,7 @@ import * as AJV from 'ajv';
 import * as YAML from 'js-yaml';
 
 import { RuleConfig } from './interfaces';
+import { YAMLValidationError } from '../utilities/interfaces';
 
 // generated with:
 // typescript-json-schema tsconfig.json RuleConfig --required
@@ -109,7 +110,7 @@ export const validateRuleConfig = (ruleConfig: RuleConfig) => {
         const message = 'validateRuleConfig: Invalid `rules.yaml` config file.';
         console.error(message);
         console.error(ruleConfigValidator.errors);
-        throw TypeError(message);
+        throw YAMLValidationError(message, ruleConfigValidator.errors);
     }
 };
 

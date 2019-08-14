@@ -11,6 +11,7 @@ import {
     specificEntityFactory,
     SpecificTypedEntity,
 } from './interfaces';
+import { YAMLValidationError } from '../utilities/interfaces';
 
 const debug = Debug('pf:catalogFromYamlString');
 
@@ -96,7 +97,7 @@ export function catalogFromYamlString(yamlText: string, kind: symbol) {
             'catalogFromYamlString: yaml data does not conform to schema.';
         debug(message);
         debug(catalogValidator.errors);
-        throw TypeError(message);
+        throw YAMLValidationError(message, catalogValidator.errors);
     }
 
     const f1 = (entity: GenericEntity): GenericTypedEntity => {
