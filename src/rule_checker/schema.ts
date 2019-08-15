@@ -110,6 +110,8 @@ export const validateRuleConfig = (ruleConfig: RuleConfig) => {
         const message = 'validateRuleConfig: Invalid `rules.yaml` config file.';
         console.error(message);
         console.error(ruleConfigValidator.errors);
+        // TODO: look into errors object and see if we can return more
+        // specific error information
         throw YAMLValidationError(message, ruleConfigValidator.errors);
     }
 };
