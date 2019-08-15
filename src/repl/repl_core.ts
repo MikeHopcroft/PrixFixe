@@ -489,10 +489,6 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                     const state = await processor(text, session.state());
                     session.takeTurn(text, state);
                     updateSteps(state);
-                    // if (steps.length > 0) {
-                    //     steps[steps.length - 1].state = state;
-                    // }
-
                     displayState(catalog, state);
                 }
             }

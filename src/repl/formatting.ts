@@ -5,24 +5,24 @@ import { State } from '../processors';
 import { TestLineItem, TestOrder } from '../test_suite';
 
 export function displayState(catalog: ICatalog, state: State) {
-    const order: TestOrder = formatCart(state.cart, catalog);
+    const order: TestOrder = testOrderFromCart(state.cart, catalog);
     const orderText = formatOrder(order);
     console.log(`${style.yellow.open}${orderText}${style.yellow.open}`);
     console.log();
     console.log(`${style.reset.open}`);
 }
 
-export function formatCart(cart: Cart, catalog: ICatalog): TestOrder {
+export function testOrderFromCart(cart: Cart, catalog: ICatalog): TestOrder {
     const lines: TestLineItem[] = [];
 
     for (const item of cart.items) {
-        formatItem(catalog, lines, item, 0);
+        addTestLineItems(catalog, lines, item, 0);
     }
 
     return { lines };
 }
 
-function formatItem(
+function addTestLineItems(
     catalog: ICatalog,
     order: TestLineItem[],
     item: ItemInstance,
@@ -40,11 +40,11 @@ function formatItem(
     order.push({ indent, quantity, key, name });
 
     for (const child of item.children) {
-        formatItem(catalog, order, child, indent + 1);
+        addTestLineItems(catalog, order, child, indent + 1);
     }
 }
 
-export function formatOrder(order: TestOrder) {
+function formatOrder(order: TestOrder): string {
     return order.lines.map(formatLineItem).join('\n');
 }
 

@@ -3,8 +3,8 @@ import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
 import { ICatalog, Key, Catalog } from '../catalog';
-import { Cart, ItemInstance } from '../cart';
 import { Processor, State } from '../processors';
+import { testOrderFromCart } from '../repl';
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
 import * as jsontoxml from 'jsontoxml';
 
@@ -391,7 +391,7 @@ export class TestCase {
                 state = await processor(input, state);
 
                 // Convert the Cart to an Order
-                const observed = formatCart(state.cart, catalog);
+                const observed = testOrderFromCart(state.cart, catalog);
                 orders.push(observed);
 
                 if (
@@ -441,38 +441,6 @@ export class TestCase {
                 name: this.comment,
             },
         } as XmlNode;
-    }
-}
-
-function formatCart(cart: Cart, catalog: ICatalog): TestOrder {
-    const lines: TestLineItem[] = [];
-
-    for (const item of cart.items) {
-        formatItem(catalog, lines, item, 0);
-    }
-
-    return { lines };
-}
-
-function formatItem(
-    catalog: ICatalog,
-    order: TestLineItem[],
-    item: ItemInstance,
-    indent: number
-): void {
-    let name: string;
-    if (catalog.hasKey(item.key)) {
-        name = catalog.getSpecific(item.key).name;
-    } else {
-        name = `UNKNOWN(${item.key})`;
-    }
-    const quantity = item.quantity;
-    const key = item.key;
-
-    order.push({ indent, quantity, key, name });
-
-    for (const child of item.children) {
-        formatItem(catalog, order, child, indent + 1);
     }
 }
 
