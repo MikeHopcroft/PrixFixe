@@ -298,6 +298,23 @@ describe('RuleChecker', () => {
         });
     });
 
+    describe('getPairwiseMutualExclusionPredicate()', () => {
+        it('general', () => {
+            // tslint:disable-next-line: deprecation
+            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
+                latteHotKey,
+                wholeMilkKey
+            );
+
+            assert.isFalse(f(wholeMilkKey));
+            assert.isTrue(f(someOtherKey1));
+            assert.isFalse(f(soyMilkKey));
+            assert.isTrue(f(someOtherKey2));
+            assert.isFalse(f(twoMilkKey));
+            assert.isFalse(f(someOtherKey2));
+        });
+    });
+
     describe('Default quantity', () => {
         it('Fetches the correct default quantity for top level rules', () => {
             // Milks should all be one
