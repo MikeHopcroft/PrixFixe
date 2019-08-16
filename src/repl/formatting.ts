@@ -44,7 +44,7 @@ function addTestLineItems(
     }
 }
 
-function formatOrder(order: TestOrder): string {
+export function formatOrder(order: TestOrder): string {
     return order.lines.map(formatLineItem).join('\n');
 }
 

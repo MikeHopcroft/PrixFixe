@@ -5,6 +5,7 @@ import * as path from 'path';
 
 import { createWorld, Processor, World } from '../processors';
 
+import { createMarkdown } from './print_markdown';
 import { TestProcessors } from './test_processors';
 import { TestSuite } from './test_suite';
 
@@ -59,6 +60,7 @@ export async function testRunnerMain(
 
     const showAll = args['a'] === true;
     const brief = args['b'] === true;
+    const markdown = args['m'] === true;
 
     const skipIntermediate = args['x'] === true;
     if (skipIntermediate) {
@@ -173,7 +175,13 @@ export async function testRunnerMain(
             isomorphic,
             !skipIntermediate
         );
-        aggregator.print(showAll);
+
+        if (markdown) {
+            const md = createMarkdown(aggregator);
+            console.log(md);
+        } else {
+            aggregator.print(showAll);
+        }
 
         console.log('');
         console.log('');
@@ -213,6 +221,7 @@ function showUsage(processorFactory: TestProcessors) {
         '-a              Print results for all tests, passing and failing.'
     );
     console.log('-b              Just print utterances. Do not run tests.');
+    console.log('-m              Print out test run, formatted as markdown.');
     console.log('-i              Perform isomorphic tree comparison on carts.');
     console.log('-n <N>          Run only the Nth test.');
     // TODO: get default processor name from factory.
