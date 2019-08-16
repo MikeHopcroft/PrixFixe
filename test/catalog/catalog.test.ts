@@ -12,8 +12,9 @@ import {
     mediumCoffee,
     smallChocolateCone,
     smallVanillaCone,
-    wholeMilk,
     zeroMilk,
+    unknownPID,
+    unknownKey
 } from '../shared';
 
 const genericItems: GenericTypedEntity[] = [genericCone];
@@ -98,7 +99,7 @@ describe('Catalog', () => {
         });
         it('should return false if PID is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            assert.isFalse(catalog.hasPID(genericCoffeePID));
+            assert.isFalse(catalog.hasPID(unknownPID));
         });
     });
 
@@ -109,7 +110,7 @@ describe('Catalog', () => {
         });
         it('should throw a TypeError if PID is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            expect(catalog.getGeneric.bind(genericCoffeePID)).to.throw(
+            expect(catalog.getGeneric.bind(unknownPID)).to.throw(
                 TypeError
             );
         });
@@ -126,7 +127,7 @@ describe('Catalog', () => {
         it('should throw a TypeError if key is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
             expect(
-                catalog.getGenericForKey.bind(genericCoffee.defaultKey)
+                catalog.getGenericForKey.bind(unknownKey)
             ).to.throw(TypeError);
         });
     });
@@ -156,7 +157,7 @@ describe('Catalog', () => {
         });
         it('should return false if key is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            assert.isFalse(catalog.hasKey(genericMilk.defaultKey));
+            assert.isFalse(catalog.hasKey(unknownKey));
         });
     });
 
@@ -170,7 +171,7 @@ describe('Catalog', () => {
         });
         it('should throw a TypeError if key is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            expect(catalog.getSpecific.bind(genericCoffee.defaultKey)).to.throw(
+            expect(catalog.getSpecific.bind(unknownKey)).to.throw(
                 TypeError
             );
         });
@@ -186,7 +187,7 @@ describe('Catalog', () => {
         it('should throw a TypeError if PID is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
             expect(
-                catalog.getSpecificsForGeneric.bind(genericConePID)
+                catalog.getSpecificsForGeneric.bind(unknownPID)
             ).to.throw(TypeError);
         });
     });
