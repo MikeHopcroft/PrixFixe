@@ -14,7 +14,7 @@ import {
     smallVanillaCone,
     zeroMilk,
     unknownPID,
-    unknownKey
+    unknownKey,
 } from '../shared';
 
 const genericItems: GenericTypedEntity[] = [genericCone];
@@ -88,7 +88,7 @@ describe('Catalog', () => {
                 testSpecific.values()
             );
 
-            expect(catalog.merge.bind(testCatalog)).to.throw(TypeError);
+            expect(() => catalog.merge(testCatalog)).to.throw(TypeError);
         });
     });
 
@@ -110,9 +110,7 @@ describe('Catalog', () => {
         });
         it('should throw a TypeError if PID is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            expect(catalog.getGeneric.bind(unknownPID)).to.throw(
-                TypeError
-            );
+            expect(() => catalog.getGeneric(unknownPID)).to.throw(TypeError);
         });
     });
 
@@ -126,9 +124,9 @@ describe('Catalog', () => {
         });
         it('should throw a TypeError if key is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            expect(
-                catalog.getGenericForKey.bind(unknownKey)
-            ).to.throw(TypeError);
+            expect(() => catalog.getGenericForKey(unknownKey)).to.throw(
+                TypeError
+            );
         });
     });
 
@@ -143,10 +141,21 @@ describe('Catalog', () => {
 
     describe('genericEntities', () => {
         it('should return IterableIterator of generics in a catalog', () => {
+            // testCatalog contains products from the genericItems array
             const catalog = Catalog.fromCatalog(testCatalog);
-            for (const entity of catalog.genericEntities()) {
-                assert.equal(genericCone, entity);
+            const entities = catalog.genericEntities();
+            let entityCount = 0;
+
+            // This test is asserting that the entities returned from the genericEntities()
+            // function match what we have in our testCatalog. We are asserting that there is
+            // only 1 entity, as we know that testCatalog only contains one generic entity.
+            // And we are testing that the entities we find match the items we used to build the
+            // testCatalog (which comes from genericItems)
+            for (const item of Object.values(genericItems)) {
+                assert.equal(item, entities.next().value);
+                entityCount++;
             }
+            assert.equal(entityCount, 1);
         });
     });
 
@@ -171,9 +180,7 @@ describe('Catalog', () => {
         });
         it('should throw a TypeError if key is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            expect(catalog.getSpecific.bind(unknownKey)).to.throw(
-                TypeError
-            );
+            expect(() => catalog.getSpecific(unknownKey)).to.throw(TypeError);
         });
     });
 
@@ -186,18 +193,29 @@ describe('Catalog', () => {
         });
         it('should throw a TypeError if PID is not found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
-            expect(
-                catalog.getSpecificsForGeneric.bind(unknownPID)
-            ).to.throw(TypeError);
+            expect(() => catalog.getSpecificsForGeneric(unknownPID)).to.throw(
+                TypeError
+            );
         });
     });
 
     describe('specificEntities', () => {
         it('should return IterableIterator of specifics in a catalog', () => {
+            // testCatalog contains products from the specificItems array
             const catalog = Catalog.fromCatalog(testCatalog);
-            for (const entity of catalog.specificEntities()) {
-                assert.equal(smallVanillaCone, entity);
+            const entities = catalog.specificEntities();
+            let entityCount = 0;
+
+            // This test is asserting that the entities returned from the specificEntities()
+            // function match what we have in our testCatalog. We are asserting that there is
+            // only 1 entity, as we know that testCatalog only contains one specific entity.
+            // And we are testing that the entities we find match the items we used to build the
+            // testCatalog (which comes from specificItems)
+            for (const item of Object.values(specificItems)) {
+                assert.equal(item, entities.next().value);
+                entityCount++;
             }
+            assert.equal(entityCount, 1);
         });
     });
 });
