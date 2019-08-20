@@ -1,6 +1,7 @@
 import * as replServer from 'repl';
 
 import {
+    IRepl,
     IReplExtensionFactory,
     prixFixeReplExtensionFactory,
     ReplProcessor,
@@ -26,12 +27,12 @@ class NopReplExtension implements IReplExtension {
         };
     }
 
-    registerCommands(repl: replServer.REPLServer): void {
-        repl.defineCommand('hello', {
+    registerCommands(repl: IRepl): void {
+        repl.server.defineCommand('hello', {
             help: 'Say hello.',
             action(text: string) {
                 console.log(`Hello ${text}!`);
-                repl.displayPrompt();
+                repl.server.displayPrompt();
             },
         });
     }
