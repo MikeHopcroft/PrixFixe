@@ -4,8 +4,9 @@ import * as path from 'path';
 
 import { IReplExtensionFactory } from './interfaces';
 import { runRepl } from './repl_core';
+import { World } from '../processors';
 
-export function replMain(extensions: IReplExtensionFactory[]) {
+export function replMain(extensions: IReplExtensionFactory[], world?: World) {
     dotenv.config();
     const args = minimist(process.argv.slice());
 
@@ -26,7 +27,7 @@ export function replMain(extensions: IReplExtensionFactory[]) {
         return;
     }
 
-    runRepl(dataPath, extensions);
+    runRepl(dataPath, extensions, world);
 }
 
 function showUsage() {

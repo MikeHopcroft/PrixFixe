@@ -6,12 +6,13 @@ import * as replServer from 'repl';
 import { Context } from 'vm';
 
 import { ICatalog } from '../catalog';
-import { createWorld, Processor, State } from '../processors';
+import { createWorld, Processor, State, World } from '../processors';
 import { TestLineItem, TestOrder, YamlTestCase } from '../test_suite';
 
 import { displayState } from './formatting';
 
 import {
+    IRepl,
     IReplExtension,
     IReplExtensionFactory,
     ReplProcessor,
@@ -80,12 +81,15 @@ class Session {
 const maxHistorySteps = 1000;
 const historyFile = '.repl_history';
 
-export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
+export function runRepl(dataPath: string, factories: IReplExtensionFactory[], world?: World) {
     let debugMode = false;
     Debug.enable('tf-interactive,tf:*');
 
-    // Create the World.
-    const world = createWorld(dataPath);
+    // Create the world if an existing one is not provided
+    if(!world){
+        world = createWorld(dataPath);
+    }
+
     const catalog = world.catalog;
 
     // Incorporate REPL extensions.
@@ -134,13 +138,15 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
     console.log();
 
     // Start up the REPL.
-    const repl = replServer.start({
-        prompt: '% ',
-        input: process.stdin,
-        output: process.stdout,
-        eval: processReplInput,
-        writer: myWriter,
-    });
+    const repl: IRepl = {
+        server: replServer.start({
+            prompt: '% ',
+            input: process.stdin,
+            output: process.stdout,
+            eval: processReplInput,
+            writer: myWriter,
+        }),
+    };
 
     // Register commands from REPL extensions.
     for (const extension of extensions) {
@@ -162,7 +168,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
     // Register core commands.
     //
 
-    repl.on('exit', () => {
+    repl.server.on('exit', () => {
         // tslint:disable-next-line:no-any
         const historyItems = ((repl as any).history as string[]).reverse();
         const history = historyItems
@@ -173,16 +179,16 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         process.exit();
     });
 
-    repl.defineCommand('cart', {
+    repl.server.defineCommand('cart', {
         help: 'Display shopping cart.',
         action(text: string) {
             const session = stack[stack.length - 1];
             displayState(catalog, session.state());
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('newtest', {
+    repl.server.defineCommand('newtest', {
         help: 'Start authoring a new yaml test',
         action(text: string) {
             console.log('Creating new yaml test.');
@@ -190,11 +196,11 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             const session = stack[stack.length - 1];
             session.reset();
             steps = [];
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('step', {
+    repl.server.defineCommand('step', {
         help: 'Add a new step to a yaml test',
         async action(text: string) {
             const session = stack[stack.length - 1];
@@ -203,35 +209,35 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
 
             await processInputLine(text);
 
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('comment', {
+    repl.server.defineCommand('comment', {
         help: 'Set the current for the current yaml test',
         action(text: string) {
             comment = text;
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('priority', {
+    repl.server.defineCommand('priority', {
         help: 'Set the priority field for the current yaml test',
         action(text: string) {
             priority = Number(text);
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('suites', {
+    repl.server.defineCommand('suites', {
         help: 'Set the suites field for the current yaml test',
         action(text: string) {
             suites = text.split(/\s+/);
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('list', {
+    repl.server.defineCommand('list', {
         help: 'Display the steps in the current test',
         action(text: string) {
             console.log(`Priority: ${priority}`);
@@ -241,14 +247,14 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                 console.log(`Input: "${turn.input}"`);
                 displayState(catalog, turn.state);
             }
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('yaml', {
+    repl.server.defineCommand('yaml', {
         help: 'Print the yaml for the current test',
         action(text: string) {
-            repl.displayPrompt();
+            repl.server.displayPrompt();
 
             const yamlTestCases = cartYaml2(
                 catalog,
@@ -265,20 +271,20 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             console.log(`${style.red.close}`);
             console.log(' ');
             console.log(yamlText);
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('debug', {
+    repl.server.defineCommand('debug', {
         help: 'Toggle debug mode.',
         action(text: string) {
             debugMode = !debugMode;
             console.log(`Debug mode ${debugMode ? 'on' : 'off'}.`);
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('processor', {
+    repl.server.defineCommand('processor', {
         help: 'Switch processors',
         action(text: string) {
             const name = text.trim();
@@ -300,31 +306,31 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
                     console.log(`Cannot find processor ${name}.`);
                 }
             }
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('reset', {
+    repl.server.defineCommand('reset', {
         help: 'Clear shopping cart.',
         action(text: string) {
             stack[stack.length - 1].reset();
             const session = stack[stack.length - 1];
             updateSteps(session.state());
             console.log('Cart has been reset.');
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('push', {
+    repl.server.defineCommand('push', {
         help: 'Push shopping cart on the stack.',
         action(text: string) {
             stack.push(stack[stack.length - 1].copy());
             console.log('Cart has been pushed onto the stack.');
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('pop', {
+    repl.server.defineCommand('pop', {
         help: 'Pop shopping cart from the stack.',
         action(text: string) {
             console.log(`stack.length = ${stack.length}`);
@@ -336,11 +342,11 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             } else {
                 console.log('Cannot pop - stack is already empty');
             }
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('restore', {
+    repl.server.defineCommand('restore', {
         help: 'Restore cart to top of stack without popping.',
         action(text: string) {
             if (stack.length > 1) {
@@ -352,11 +358,11 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             } else {
                 console.log('Cannot restore - stack is already empty');
             }
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('undo', {
+    repl.server.defineCommand('undo', {
         help: 'Undo last utterance',
         action(text: string) {
             const session = stack[stack.length - 1];
@@ -366,11 +372,11 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             } else {
                 console.log('Nothing to undo.');
             }
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('redo', {
+    repl.server.defineCommand('redo', {
         help: 'Redo utterance after undo',
         action(text: string) {
             const session = stack[stack.length - 1];
@@ -380,22 +386,22 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             } else {
                 console.log('Nothing to redo.');
             }
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('try', {
+    repl.server.defineCommand('try', {
         help: 'Try out an utterance without changing the cart.',
         async action(text: string) {
             const session = stack[stack.length - 1];
             await processInputLine(text);
             session.undo();
 
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
-    repl.defineCommand('rawyaml', {
+    repl.server.defineCommand('rawyaml', {
         help: 'Display YAML test case for cart',
         action(text: string) {
             const session = stack[stack.length - 1];
@@ -417,7 +423,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             console.log(' ');
             console.log(yamlText);
 
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         },
     });
 
@@ -431,7 +437,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
         console.log();
 
         if (line === '\n') {
-            repl.close();
+            repl.server.close();
         } else {
             await processInputLine(line);
             callback(null, '');
@@ -443,7 +449,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
             console.log('Unable to process input text.');
             console.log('No processors available.');
             console.log('See the .processor command for more information.');
-            repl.displayPrompt();
+            repl.server.displayPrompt();
         } else {
             const lines = line.split(/[\n\r]/);
             if (lines[lines.length - 1].length === 0) {

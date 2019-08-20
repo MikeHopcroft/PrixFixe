@@ -33,7 +33,7 @@ export interface IReplExtension {
     // Main extensibility point for adding commands to the REPL.
     // Called during REPL startup. See Node.JS REPLServer documentation for
     // more information on registering REPL commands.
-    registerCommands(repl: replServer.REPLServer): void;
+    registerCommands(repl: IRepl): void;
 }
 
 // NOTE: disabling tslint rule locally because TSLint only offers the choice of
@@ -44,4 +44,9 @@ export interface IReplExtension {
 export interface IReplExtensionFactory {
     // Called during REPL initialization.
     create(world: World, dataPath: string): IReplExtension;
+}
+
+// tslint:disable-next-line:interface-name
+export interface IRepl {
+    server: replServer.REPLServer;
 }
