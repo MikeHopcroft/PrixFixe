@@ -1,12 +1,13 @@
 import * as AJV from 'ajv';
 import * as Debug from 'debug';
+import * as jsontoxml from 'jsontoxml';
 import * as yaml from 'js-yaml';
 
 import { ICatalog, Key, Catalog } from '../catalog';
 import { Processor, State } from '../processors';
 import { testOrderFromCart } from '../repl';
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
-import * as jsontoxml from 'jsontoxml';
+import { allSuites, SuitePredicate } from './suite_filter';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 
@@ -295,7 +296,9 @@ export class AggregatedResults {
             0.99,
             0.999,
         ]);
-        printStatistics('Latency', 'ms', summary);
+        if (summary) {
+            printStatistics('Latency', 'ms', summary);
+        }
     }
 
     rebase(): YamlTestCases {
@@ -709,7 +712,7 @@ export class TestSuite {
         // Create a TestSuite from the TestCases, and then run it to collect
         // the observed output.
         const suite = new TestSuite(tests);
-        const results = await suite.run(processor, catalog, undefined);
+        const results = await suite.run(processor, catalog, allSuites);
 
         // Generate a yamlTestCase from each Result, using the observed output
         // for the expected output.
@@ -720,11 +723,9 @@ export class TestSuite {
         this.tests = tests;
     }
 
-    *filteredTests(
-        suite: string | undefined = undefined
-    ): IterableIterator<TestCase> {
+    *filteredTests(suiteFilter: SuitePredicate): IterableIterator<TestCase> {
         for (const test of this.tests) {
-            if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
+            if (suiteFilter(test.suites)) {
                 yield test;
             }
         }
@@ -733,26 +734,22 @@ export class TestSuite {
     async run(
         processor: Processor,
         catalog: ICatalog,
-        suite: string | undefined = undefined,
+        suiteFilter: SuitePredicate,
         isomorphic = false,
         evaluateIntermediate = true
     ): Promise<AggregatedResults> {
         const aggregator = new AggregatedResults();
 
-        for (const test of this.tests) {
-            if ((suite && test.suites.indexOf(suite) > -1) || !suite) {
-                aggregator.recordResult(
-                    await test.run(
-                        processor,
-                        catalog,
-                        isomorphic,
-                        evaluateIntermediate
-                    )
-                );
-            }
+        for (const test of this.filteredTests(suiteFilter)) {
+            aggregator.recordResult(
+                await test.run(
+                    processor,
+                    catalog,
+                    isomorphic,
+                    evaluateIntermediate
+                )
+            );
         }
-
-        // aggregator.print(showPassedCases);
 
         return aggregator;
     }
