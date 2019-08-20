@@ -25,6 +25,7 @@ export class PeekableSequence<T> {
         }
     }
 
+    // Returns true if we're at the end of the stream (EOS)
     atEOS(): boolean {
         return this.current.done;
     }

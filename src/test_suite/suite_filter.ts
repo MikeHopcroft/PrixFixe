@@ -12,10 +12,22 @@ type SuitePredicate = (suites: string[]) => boolean;
 //   PARENTHESES: '(', ')'
 //
 // The SuitePredicate takes a single parameter that is an array of
-// TERMS, each of which is considered to have a true value. It returns
-// the truth value of the expression.
+// TERMS whose values are considered to be true. All other terms (those
+// that don't appear on the list) are considered to be false. The
+// SuitePredicate returns the truth value of the expression.
+//
+// So, for example, if the suites parameter of the SuitePredicate was
+//   ['a', 'b']
+// then the following expressions would evaluate to true:
+//   'a'
+//   'b'
+//   'a & b'
+// and the following expressions would evaluate to false:
+//   'x'
+//   '!a'
+//
 export function suiteFilter(text: string): SuitePredicate {
-    // Tokenzize the input string.
+    // Tokenize the input string.
     // The result should be an array of suite names, and symbols '(', ')', '&',
     // '|', and '!'.
     const re = new RegExp('s*([\\s+|\\&\\|\\!\\(\\)])');
