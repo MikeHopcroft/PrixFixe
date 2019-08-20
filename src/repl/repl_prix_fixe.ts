@@ -6,13 +6,13 @@ import { ICatalog, Key, MENUITEM, PID } from '../catalog';
 import { aliasesFromPattern, patternFromExpression } from '../utilities';
 
 import {
+    IRepl,
     IReplExtension,
     IReplExtensionFactory,
     ReplProcessor,
 } from './interfaces';
 
 import { World } from '../processors';
-import { ItemInstance } from '../cart';
 
 export class PrixFixeReplExtension implements IReplExtension {
     world: World;
@@ -25,11 +25,11 @@ export class PrixFixeReplExtension implements IReplExtension {
         return 'prix-fixe';
     }
 
-    registerCommands(repl: replServer.REPLServer): void {
+    registerCommands(repl: IRepl): void {
         const catalog = this.world.catalog;
         const world = this.world;
 
-        repl.defineCommand('menu', {
+        repl.server.defineCommand('menu', {
             help: 'Display menu',
             action: (line: string) => {
                 if (line.length === 0) {
@@ -47,11 +47,11 @@ export class PrixFixeReplExtension implements IReplExtension {
                 } else {
                     console.log(`Unknown item "${line}".`);
                 }
-                repl.displayPrompt();
+                repl.server.displayPrompt();
             },
         });
 
-        repl.defineCommand('aliases', {
+        repl.server.defineCommand('aliases', {
             help: 'Display aliases for a generic',
             action: (line: string) => {
                 const pid = Number(line);
@@ -64,11 +64,11 @@ export class PrixFixeReplExtension implements IReplExtension {
                     console.log(`Unknown PID "${line}".`);
                     console.log('Usage: .aliases <PID>');
                 }
-                repl.displayPrompt();
+                repl.server.displayPrompt();
             },
         });
 
-        repl.defineCommand('specifics', {
+        repl.server.defineCommand('specifics', {
             help: 'Display list of legal specifics for a generic',
             action: (line: string) => {
                 const pid = Number(line);
@@ -79,7 +79,7 @@ export class PrixFixeReplExtension implements IReplExtension {
                     console.log(`Unknown PID "${line}".`);
                     console.log('Usage: .specifics <PID>');
                 }
-                repl.displayPrompt();
+                repl.server.displayPrompt();
             },
         });
     }
