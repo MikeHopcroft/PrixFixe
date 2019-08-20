@@ -1,6 +1,9 @@
 import { PeekableSequence } from './peekable_sequence';
 
-type SuitePredicate = (suites: string[]) => boolean;
+export type SuitePredicate = (suites: string[]) => boolean;
+
+// A suite predicate that matches all suites.
+export const allSuites: SuitePredicate = (suites: string[]) => true;
 
 // Constructs a SuitePredicate from a a textual boolean expression
 // over suite names. The expression can be made up of
@@ -30,7 +33,7 @@ export function suiteFilter(text: string): SuitePredicate {
     // Tokenize the input string.
     // The result should be an array of suite names, and symbols '(', ')', '&',
     // '|', and '!'.
-    const re = new RegExp('s*([\\s+|\\&\\|\\!\\(\\)])');
+    const re = new RegExp('([\\s+|\\&\\|\\!\\(\\)])');
     const tokens = text
         .split(re)
         .map(x => x.trim())

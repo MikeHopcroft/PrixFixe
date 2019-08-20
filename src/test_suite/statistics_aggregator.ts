@@ -14,10 +14,12 @@ export class StatisticsAggregator {
         this.values.push(value);
     }
 
-    computeStatistics(percentileKeys: number[]): Statistics {
+    // Generate a Statictics object if one or more values have been recorded.
+    // Otherwise return null.
+    computeStatistics(percentileKeys: number[]): Statistics | null {
         if (this.values.length < 1) {
-            const message = 'computeStatistics: need at least one value.';
-            throw TypeError(message);
+            // There are no values on which to compute statistics.
+            return null;
         }
 
         const values = [...this.values].sort((a, b) => a - b);

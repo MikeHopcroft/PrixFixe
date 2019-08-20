@@ -8,6 +8,7 @@ import { createWorld, Processor, World } from '../processors';
 import { createMarkdown } from './print_markdown';
 import { TestProcessors } from './test_processors';
 import { TestSuite } from './test_suite';
+import { allSuites, suiteFilter } from './suite_filter';
 
 export async function testRunnerMain(
     title: string,
@@ -128,12 +129,15 @@ export async function testRunnerMain(
     //
     // Run the tests
     //
-    let suiteFilter = args['s'];
+    const suiteExpressionText = args['s'];
+    let suiteExpression = allSuites;
     if (runOneTest !== undefined) {
         console.log(`Running test number ${runOneTest}.`);
-        suiteFilter = undefined;
-    } else if (suiteFilter) {
-        console.log(`Running tests in suite: ${suiteFilter}`);
+    } else if (suiteExpressionText) {
+        console.log(
+            `Running tests in matching suite expression: ${suiteExpressionText}`
+        );
+        suiteExpression = suiteFilter(suiteExpressionText);
     } else {
         console.log('Running all tests.');
     }
@@ -163,7 +167,7 @@ export async function testRunnerMain(
     if (brief) {
         console.log(' ');
         console.log('Displaying test utterances without running.');
-        for (const test of suite.filteredTests(suiteFilter)) {
+        for (const test of suite.filteredTests(suiteExpression)) {
             console.log(`Test ${test.id}: ${test.comment}`);
             for (const line of test.inputs) {
                 console.log(`  ${line}`);
@@ -177,7 +181,7 @@ export async function testRunnerMain(
         const aggregator = await suite.run(
             processor,
             world.catalog,
-            suiteFilter,
+            suiteExpression,
             isomorphic,
             !skipIntermediate
         );
