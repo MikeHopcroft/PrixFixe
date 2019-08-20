@@ -81,12 +81,16 @@ class Session {
 const maxHistorySteps = 1000;
 const historyFile = '.repl_history';
 
-export function runRepl(dataPath: string, factories: IReplExtensionFactory[], world?: World) {
+export function runRepl(
+    dataPath: string,
+    factories: IReplExtensionFactory[],
+    world?: World
+) {
     let debugMode = false;
     Debug.enable('tf-interactive,tf:*');
 
     // Create the world if an existing one is not provided
-    if(!world){
+    if (!world) {
         world = createWorld(dataPath);
     }
 
