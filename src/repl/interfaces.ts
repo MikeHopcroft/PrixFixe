@@ -9,7 +9,7 @@ export interface ReplProcessor {
     name: string;
 
     // Friendly description will be printed by the REPL's .processor command
-    // with no arguemtns.
+    // with no arguments.
     description: string;
 
     // The processor.
@@ -48,5 +48,5 @@ export interface IReplExtensionFactory {
 
 // tslint:disable-next-line:interface-name
 export interface IRepl {
-    server: replServer.REPLServer;
+    server(): replServer.REPLServer;
 }

@@ -28,11 +28,11 @@ class NopReplExtension implements IReplExtension {
     }
 
     registerCommands(repl: IRepl): void {
-        repl.server.defineCommand('hello', {
+        repl.server().defineCommand('hello', {
             help: 'Say hello.',
             action(text: string) {
                 console.log(`Hello ${text}!`);
-                repl.server.displayPrompt();
+                repl.server().displayPrompt();
             },
         });
     }
