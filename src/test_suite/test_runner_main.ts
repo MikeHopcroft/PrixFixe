@@ -75,8 +75,14 @@ export async function testRunnerMain(
     }
 
     let runOneTest: number | undefined = undefined;
-    if (args['n']) {
-        runOneTest = Number(args['n']);
+    if (args['n'] !== undefined) {
+        const n = Number(args['n']);
+        if (!Number.isNaN(n)) {
+            runOneTest = Number(n);
+        } else {
+            const message = 'Expected test number after -n flag.';
+            fail(message);
+        }
     }
 
     //
