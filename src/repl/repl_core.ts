@@ -172,14 +172,15 @@ export function runRepl(
     // Register core commands.
     //
 
-    // TODO: investigate why this is breaking using the ramsay repl extension
     repl.server().on('exit', () => {
-        // tslint:disable-next-line:no-any
-        const historyItems = ((repl as any).history as string[]).reverse();
-        const history = historyItems
-            .slice(Math.max(historyItems.length - maxHistorySteps, 1))
-            .join('\n');
-        fs.writeFileSync(historyFile, history);
+        // tslint:disable:no-any
+        if((repl as any).history !== undefined){
+            const historyItems = ((repl as any).history as string[]).reverse();
+            const history = historyItems
+                .slice(Math.max(historyItems.length - maxHistorySteps, 1))
+                .join('\n');
+            fs.writeFileSync(historyFile, history);
+        }
         console.log('bye');
         process.exit();
     });
