@@ -174,13 +174,11 @@ export function runRepl(
 
     repl.server().on('exit', () => {
         // tslint:disable:no-any
-        if((repl as any).history !== undefined){
-            const historyItems = ((repl as any).history as string[]).reverse();
-            const history = historyItems
-                .slice(Math.max(historyItems.length - maxHistorySteps, 1))
-                .join('\n');
-            fs.writeFileSync(historyFile, history);
-        }
+        const historyItems = [...(repl.replServer as any).history].reverse();
+        const history = historyItems
+            .slice(Math.max(historyItems.length - maxHistorySteps, 1))
+            .join('\n');
+        fs.writeFileSync(historyFile, history);
         console.log('bye');
         process.exit();
     });
