@@ -165,7 +165,7 @@ export function runRepl(
             .reverse()
             .filter((line: string) => line.trim())
             // tslint:disable-next-line:no-any
-            .map((line: string) => (repl as any).history.push(line));
+            .map((line: string) => (repl.replServer as any).history.push(line));
     }
 
     //
