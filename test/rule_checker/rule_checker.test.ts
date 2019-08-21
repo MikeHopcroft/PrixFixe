@@ -300,23 +300,32 @@ describe('RuleChecker', () => {
 
     describe('getPairwiseMutualExclusionPredicate()', () => {
         it('general', () => {
-            // tslint:disable-next-line: deprecation
             const f = ruleChecker.getPairwiseMutualExclusionPredicate(
                 latteHotKey,
-                wholeMilkKey
+                soyMilkKey
             );
-
-            // We can't add whole milk because parent already has a milk.
             assert.isFalse(f(wholeMilkKey));
-
-            // We can add something that is not milk.
             assert.isTrue(f(someOtherKey1));
-
-            // We can't add soy milk because parent already has a milk.
-            assert.isFalse(f(soyMilkKey));
-
-            // We can't add two percent milk because parent already has a milk.
             assert.isFalse(f(twoMilkKey));
+        });
+
+        it('self exclusion', () => {
+            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
+                latteHotKey,
+                someOtherKey1
+            );
+            assert.isFalse(f(someOtherKey1));
+            assert.isTrue(f(someOtherKey2));
+            assert.isTrue(f(wholeMilkKey));
+            assert.isTrue(f(twoMilkKey));
+        });
+
+        it('same pid', () => {
+            const f = ruleChecker.getPairwiseMutualExclusionPredicate(
+                latteIcedKey,
+                whippedCreamKey
+            );
+            assert.isFalse(f(noWhippedCreamKey));
         });
     });
 
