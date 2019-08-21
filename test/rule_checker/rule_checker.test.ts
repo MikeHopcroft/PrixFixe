@@ -306,12 +306,17 @@ describe('RuleChecker', () => {
                 wholeMilkKey
             );
 
+            // We can't add whole milk because parent already has a milk.
             assert.isFalse(f(wholeMilkKey));
+
+            // We can add something that is not milk.
             assert.isTrue(f(someOtherKey1));
+
+            // We can't add soy milk because parent already has a milk.
             assert.isFalse(f(soyMilkKey));
-            assert.isTrue(f(someOtherKey2));
+
+            // We can't add two percent milk because parent already has a milk.
             assert.isFalse(f(twoMilkKey));
-            assert.isFalse(f(someOtherKey2));
         });
     });
 

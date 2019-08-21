@@ -63,21 +63,18 @@ export class CartOps implements ICartOps {
         child: ItemInstance
     ): ItemInstance {
         let inserted = false;
-        const f = this.ruleChecker.getIncrementalMutualExclusionPredicate(
-            parent.key
+        const f = this.ruleChecker.getPairwiseMutualExclusionPredicate(
+            parent.key,
+            child.key
         );
         const newChildren: ItemInstance[] = [];
         for (const c of parent.children) {
-            const existingPID = AttributeInfo.pidFromKey(c.key).toString();
-            const childPID = AttributeInfo.pidFromKey(child.key).toString();
-            if (existingPID !== childPID) {
-                if (f(c.key)) {
-                    newChildren.push(c);
-                } else {
-                    if (!inserted) {
-                        inserted = true;
-                        newChildren.push(child);
-                    }
+            if (f(c.key)) {
+                newChildren.push(c);
+            } else {
+                if (!inserted) {
+                    inserted = true;
+                    newChildren.push(child);
                 }
             }
         }
