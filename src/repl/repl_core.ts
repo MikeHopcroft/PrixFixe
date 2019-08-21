@@ -109,7 +109,7 @@ export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
     let processor: Processor | undefined = undefined;
     if (processors.length > 0) {
         processor = processors[0].processor;
-        console.log(`Current processor is ${processors[0].name}.`);
+        console.log(`Current processor is ${processors[0].description}.`);
     } else {
         console.log(`No processor registered.`);
     }
