@@ -106,7 +106,7 @@ function parseConjunction(input: PeekableSequence<string>): SuitePredicate {
 function parseUnary(input: PeekableSequence<string>): SuitePredicate {
     if (input.nextIs('!')) {
         input.get();
-        const unary = parseDisjunction(input);
+        const unary = parseUnary(input);
         return (suites: string[]) => !unary(suites);
     } else if (input.nextIs('(')) {
         input.get();

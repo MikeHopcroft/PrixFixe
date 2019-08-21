@@ -52,6 +52,15 @@ describe('suite_filter', () => {
         // Complex NEGATION
         assert.isTrue(suiteFilter('!(x & y)')(suites));
         assert.isFalse(suiteFilter('!(a | b)')(suites));
+
+        // Next line was a bug detected in v0.0.42.
+        assert.isFalse(suiteFilter('!a & !x')(suites));
+        assert.isTrue(suiteFilter('!x & !y')(suites));
+        assert.isFalse(suiteFilter('!a & !b')(suites));
+        assert.isFalse(suiteFilter('!x & !b')(suites));
+
+        assert.isTrue(suiteFilter('!!a')(suites));
+        assert.isFalse(suiteFilter('!!!a')(suites));
     });
 
     it('Operator precedence', () => {
