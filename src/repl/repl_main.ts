@@ -20,6 +20,11 @@ export function replMain(extensions: IReplExtensionFactory[], world?: World) {
         return;
     }
 
+    if (world) {
+        // If we have a world then we don't need a data path
+        dataPath = '';
+    }
+
     if (dataPath === undefined) {
         console.log(
             'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path'

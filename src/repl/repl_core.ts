@@ -172,6 +172,7 @@ export function runRepl(
     // Register core commands.
     //
 
+    // TODO: investigate why this is breaking using the ramsay repl extension
     repl.server().on('exit', () => {
         // tslint:disable-next-line:no-any
         const historyItems = ((repl as any).history as string[]).reverse();
