@@ -135,7 +135,7 @@ export function runRepl(
 
     // Print the welcome message.
     console.log();
-    console.log('Welcome to the ShortOrder REPL.');
+    console.log('Welcome to the PrixFixe REPL.');
     console.log('Type your order below.');
     console.log('A blank line exits.');
     console.log();
