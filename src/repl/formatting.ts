@@ -13,13 +13,13 @@ export function displayState(catalog: ICatalog, state: State) {
 }
 
 export function testOrderFromCart(cart: Cart, catalog: ICatalog): TestOrder {
-    const lines: TestLineItem[] = [];
+    const testCart: TestLineItem[] = [];
 
     for (const item of cart.items) {
-        addTestLineItems(catalog, lines, item, 0);
+        addTestLineItems(catalog, testCart, item, 0);
     }
 
-    return { lines };
+    return { cart: testCart };
 }
 
 function addTestLineItems(
@@ -45,7 +45,7 @@ function addTestLineItems(
 }
 
 export function formatOrder(order: TestOrder): string {
-    return order.lines.map(formatLineItem).join('\n');
+    return order.cart.map(formatLineItem).join('\n');
 }
 
 function formatLineItem(item: TestLineItem) {

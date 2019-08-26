@@ -6,17 +6,17 @@ export interface TestCounts {
     runCount: number;
 }
 
-export interface TestSteps {
+export interface TestStep {
     input: string;
     correctedSTT?: string;
     correctedScope?: string;
-    cart: TestOrder;
+    cart: TestLineItem[];
 }
 
 export interface YamlTestCase {
     suites: string;
     comment: string;
-    steps: TestSteps[];
+    steps: TestStep[];
 }
 
 export interface XmlNode {
@@ -36,5 +36,5 @@ export interface TestLineItem {
 
 // A simplified view of the Cart, suitable for test verification.
 export interface TestOrder {
-    readonly lines: TestLineItem[];
+    readonly cart: TestLineItem[];
 }

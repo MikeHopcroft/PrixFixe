@@ -11,11 +11,11 @@ export function createMarkdown(aggregator: AggregatedResults): string {
             lines.push(comment);
         }
         lines.push('~~~');
-        for (let i = 0; i < test.inputs.length; ++i) {
+        for (let i = 0; i < test.steps.length; ++i) {
             if (i > 0) {
                 lines.push('');
             }
-            lines.push(`% ${test.inputs[i]}`);
+            lines.push(`% ${test.steps[i]}`);
             lines.push(formatOrder(result.observed[i]));
         }
         lines.push('~~~');

@@ -169,8 +169,8 @@ export async function testRunnerMain(
         console.log('Displaying test utterances without running.');
         for (const test of suite.filteredTests(suiteExpression)) {
             console.log(`Test ${test.id}: ${test.comment}`);
-            for (const line of test.inputs) {
-                console.log(`  ${line}`);
+            for (const step of test.steps) {
+                console.log(`  ${step}`);
             }
             console.log(' ');
         }
