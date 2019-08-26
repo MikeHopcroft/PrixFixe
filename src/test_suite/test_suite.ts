@@ -10,17 +10,18 @@ import { YAMLValidationError } from '../utilities';
 
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
 import { allSuites, SuitePredicate } from './suite_filter';
+import {
+    TestLineItem,
+    TestCounts,
+    TestOrder,
+    XmlNode,
+    YamlTestCase,
+    TestStep,
+} from './interfaces';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 
-interface XmlNode {
-    name: string;
-    // tslint:disable-next-line: no-any
-    attrs: any;
-    children?: XmlNode[] | string;
-}
-
-export type SpeechToTextSimulator = (text: string) => string;
+export type SpeechToTextSimulator = (text: string) => TestStep;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -34,19 +35,6 @@ export type SpeechToTextSimulator = (text: string) => string;
 
 // String constant used to label tests that have been rebased.
 const UNVERIFIED = 'unverified';
-
-// Holds a single line of an TestOrder.
-export interface TestLineItem {
-    readonly indent: number;
-    readonly quantity: number;
-    readonly key: Key;
-    readonly name: string;
-}
-
-// A simplified view of the Cart, suitable for test verification.
-export interface TestOrder {
-    readonly lines: TestLineItem[];
-}
 
 // Holds the results of one TestCase run.
 export class Result {
@@ -92,11 +80,9 @@ export class Result {
         }
 
         return {
-            priority: Number(t.priority),
             suites: suites.join(' '),
             comment: t.comment,
-            inputs: t.inputs,
-            expected: this.observed,
+            steps: t.steps,
         };
     }
 
@@ -111,19 +97,20 @@ export class Result {
 
         if (this.exception) {
             stringValue += `  Exception message: "${this.exception}"\n`;
-            for (const [i, input] of this.test.inputs.entries()) {
-                stringValue += `  Utterance ${i}: "${input}"\n`;
+            for (const [i, text] of this.test.steps.entries()) {
+                stringValue += `  Utterance ${i}: "${text.input}"\n`;
             }
         } else {
-            const i = this.test.inputs;
+            const s = this.test.steps;
             const o = this.observed;
-            const e = this.test.expected;
-            const limit = Math.min(i.length, o.length, e.length);
 
-            for (let index = 0; index < limit; ++index) {
-                const input = this.test.inputs[index];
+            this.test.steps.forEach((step, index) => {
+                const e = step.cart;
+                const limit = Math.min(s.length, o.length);
+
+                const input = step.input;
                 const observed = this.observed[index];
-                const expected = this.test.expected[index];
+                const expected = step;
 
                 stringValue += `  Utterance ${index}: "${input}"\n`;
 
@@ -135,16 +122,7 @@ export class Result {
                 } else {
                     stringValue += getDifferencesText(observed, expected);
                 }
-            }
-
-            if (i.length !== e.length) {
-                stringValue += '\n';
-                stringValue +=
-                    '  ERROR: test has mismatched input and expected counts.\n';
-                stringValue += `     inputs.length = ${i.length}\n`;
-                stringValue += `     expected.length = ${e.length}\n`;
-                stringValue += '\n';
-            }
+            });
         }
         return stringValue;
     }
@@ -174,12 +152,6 @@ export class Result {
     }
 }
 
-// Stores aggregations related to test runs by suite or priority.
-export interface TestCounts {
-    passCount: number;
-    runCount: number;
-}
-
 export class AggregatedResults {
     priorities: { [priority: string]: TestCounts } = {};
     suites: { [suite: string]: TestCounts } = {};
@@ -202,16 +174,6 @@ export class AggregatedResults {
             if (passed) {
                 counts.passCount++;
             }
-        }
-
-        // Update pass/run counts for this test's priority.
-        if (!(test.priority in this.priorities)) {
-            this.priorities[test.priority] = { passCount: 0, runCount: 0 };
-        }
-        const counts = this.priorities[test.priority];
-        counts.runCount++;
-        if (passed) {
-            counts.passCount++;
         }
 
         this.results.push(result);
@@ -311,9 +273,9 @@ export class AggregatedResults {
     }
 }
 
-function getDifferencesText(observed: TestOrder, expected: TestOrder): string {
-    const o = observed.lines;
-    const e = expected.lines;
+function getDifferencesText(observed: TestOrder, expected: TestStep): string {
+    const o = observed.cart;
+    const e = expected.cart;
     const n = Math.max(o.length, e.length);
 
     let differencesText = '';
@@ -327,7 +289,7 @@ function getDifferencesText(observed: TestOrder, expected: TestOrder): string {
     return differencesText;
 }
 
-export function explainDifferences(observed: TestOrder, expected: TestOrder) {
+export function explainDifferences(observed: TestOrder, expected: TestStep) {
     console.log(getDifferencesText(observed, expected));
 }
 
@@ -345,36 +307,20 @@ function formatLine(line: TestLineItem) {
 ///////////////////////////////////////////////////////////////////////////////
 export class TestCase {
     id: number;
-    priority: string;
     suites: string[];
     comment: string;
-    inputs: string[];
-    expected: TestOrder[];
+    steps: TestStep[];
 
     constructor(
         id: number,
-        priority: string,
         suites: string[],
         comment: string,
-        inputs: string[],
-        expected: TestOrder[]
+        steps: TestStep[]
     ) {
         this.id = id;
-        this.priority = priority;
         this.suites = suites;
         this.comment = comment;
-        this.inputs = inputs;
-        this.expected = expected;
-
-        if (this.inputs.length !== this.expected.length) {
-            console.log(' ');
-            console.log(
-                `WARNING: test ${id} has mismatched input and expected counts.`
-            );
-            console.log(`  inputs.length = ${inputs.length}`);
-            console.log(`  expected.length = ${expected.length}`);
-            console.log(' ');
-        }
+        this.steps = steps;
     }
 
     async run(
@@ -394,9 +340,9 @@ export class TestCase {
         const start = (process.hrtime as any).bigint();
 
         try {
-            for (const [i, input] of this.inputs.entries()) {
+            for (const [i, step] of this.steps.entries()) {
                 // Run the parser
-                state = await processor(input, state);
+                state = await processor(step.input, state);
 
                 // Convert the Cart to an Order
                 const observed = testOrderFromCart(state.cart, catalog);
@@ -404,10 +350,10 @@ export class TestCase {
 
                 if (
                     succeeded &&
-                    (evaluateIntermediate || i === this.inputs.length - 1)
+                    (evaluateIntermediate || i === this.steps.length - 1)
                 ) {
                     // Compare observed Orders
-                    const expected = this.expected[i];
+                    const expected = this.steps[i];
                     succeeded = isomorphic
                         ? ordersAreEqualCanonical(observed, expected)
                         : ordersAreEqual(observed, expected);
@@ -425,12 +371,6 @@ export class TestCase {
         // TODO: figure out how to remove the type assertion to any.
         // tslint:disable-next-line:no-any
         const end = (process.hrtime as any).bigint();
-
-        // We can never succeed if the test is not constructed with the same
-        // number of inputs as outputs.
-        if (this.inputs.length !== this.expected.length) {
-            succeeded = false;
-        }
 
         return new Result(
             this,
@@ -452,14 +392,14 @@ export class TestCase {
     }
 }
 
-function ordersAreEqual(observed: TestOrder, expected: TestOrder): boolean {
-    if (observed.lines.length !== expected.lines.length) {
+function ordersAreEqual(observed: TestOrder, expected: TestStep): boolean {
+    if (observed.cart.length !== expected.cart.length) {
         return false;
     }
 
-    for (let i = 0; i < expected.lines.length; ++i) {
-        const o = observed.lines[i];
-        const e = expected.lines[i];
+    for (let i = 0; i < expected.cart.length; ++i) {
+        const o = observed.cart[i];
+        const e = expected.cart[i];
 
         if (
             o.indent !== e.indent ||
@@ -489,7 +429,7 @@ function canonicalize(order: TestOrder): string[] {
     let lastTopLevel = '';
     const canonical: string[] = [];
 
-    for (const line of order.lines) {
+    for (const line of order.cart) {
         if (line.indent === 0) {
             lastTopLevel = formatLineCanonical(String(topLevelCounter), line);
             ++topLevelCounter;
@@ -509,7 +449,7 @@ export function ordersAreEqualCanonical(
     expected: TestOrder,
     observed: TestOrder
 ) {
-    if (observed.lines.length !== expected.lines.length) {
+    if (observed.cart.length !== expected.cart.length) {
         return false;
     }
 
@@ -529,7 +469,7 @@ export function ordersAreEqualCanonical(
     return allok;
 }
 
-function getDifferencesTextCanonical(expected: TestOrder, observed: TestOrder) {
+function getDifferencesTextCanonical(expected: TestOrder, observed: TestStep) {
     const e = canonicalize(expected);
     const o = canonicalize(observed);
 
@@ -549,7 +489,7 @@ function getDifferencesTextCanonical(expected: TestOrder, observed: TestOrder) {
 
 export function explainDifferencesCanonical(
     expected: TestOrder,
-    observed: TestOrder
+    observed: TestStep
 ) {
     const differences = getDifferencesTextCanonical(expected, observed);
     console.log(differences.differencesText);
@@ -566,14 +506,6 @@ export function explainDifferencesCanonical(
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-export interface YamlTestCase {
-    priority: number;
-    suites: string;
-    comment: string;
-    inputs: string[];
-    expected: TestOrder[];
-}
-
 // Type definition for use by typescript-json-schema.
 export type YamlTestCases = YamlTestCase[];
 
@@ -585,9 +517,12 @@ export class TestSuite {
         const schemaForTestCases = {
             $schema: 'http://json-schema.org/draft-07/schema#',
             definitions: {
-                LineItem2: {
+                Cart: {
                     properties: {
                         indent: {
+                            type: 'number',
+                        },
+                        quantity: {
                             type: 'number',
                         },
                         key: {
@@ -596,56 +531,47 @@ export class TestSuite {
                         name: {
                             type: 'string',
                         },
-                        quantity: {
-                            type: 'number',
-                        },
                     },
                     required: ['indent', 'key', 'name', 'quantity'],
                     type: 'object',
                 },
-                Order: {
+                TestSteps: {
                     properties: {
-                        lines: {
+                        input: {
+                            type: 'string',
+                        },
+                        correctedSTT: {
+                            type: 'string',
+                        },
+                        correctedScope: {
+                            type: 'string',
+                        },
+                        cart: {
                             items: {
-                                $ref: '#/definitions/LineItem2',
+                                $ref: '#/definitions/Cart',
                             },
                             type: 'array',
                         },
                     },
-                    required: ['lines'],
+                    required: ['input', 'cart'],
                     type: 'object',
                 },
                 YamlTestCase: {
                     properties: {
-                        comment: {
-                            type: 'string',
-                        },
-                        expected: {
-                            items: {
-                                $ref: '#/definitions/Order',
-                            },
-                            type: 'array',
-                        },
-                        inputs: {
-                            items: {
-                                type: 'string',
-                            },
-                            type: 'array',
-                        },
-                        priority: {
-                            type: 'number',
-                        },
                         suites: {
                             type: 'string',
                         },
+                        comment: {
+                            type: 'string',
+                        },
+                        steps: {
+                            items: {
+                                $ref: '#/definitions/TestSteps',
+                            },
+                            type: 'array',
+                        },
                     },
-                    required: [
-                        'comment',
-                        'expected',
-                        'inputs',
-                        'priority',
-                        'suites',
-                    ],
+                    required: ['suites', 'comment', 'steps'],
                     type: 'object',
                 },
             },
@@ -670,11 +596,9 @@ export class TestSuite {
         const tests = yamlRoot.map((test, index) => {
             return new TestCase(
                 index,
-                test.priority.toString(),
                 test.suites.split(/\s+/),
                 test.comment,
-                test.inputs,
-                test.expected
+                test.steps
             );
         });
 
@@ -689,10 +613,9 @@ export class TestSuite {
         catalog: Catalog,
         speechToTextSimulator: SpeechToTextSimulator,
         lines: string[],
-        priority: number,
         suites: string[]
     ): Promise<YamlTestCase[]> {
-        const emptyOrder: TestOrder = { lines: [] };
+        const emptyOrder: TestOrder = { cart: [] };
 
         // Generate a test case for each input line.
         // Use speechToTextFilter to clean up each input line.
@@ -702,14 +625,9 @@ export class TestSuite {
             const line = rawLine.trim();
             if (line.length > 0) {
                 tests.push(
-                    new TestCase(
-                        counter++,
-                        priority.toString(),
-                        suites,
-                        '',
-                        [speechToTextSimulator(line)],
-                        [emptyOrder]
-                    )
+                    new TestCase(counter++, suites, '', [
+                        speechToTextSimulator(line),
+                    ])
                 );
             }
         }
