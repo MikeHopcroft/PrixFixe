@@ -245,7 +245,10 @@ export class AggregatedResults {
         }
 
         stringValue += 'Suites:\n';
-        for (const [suite, counts] of Object.entries(this.suites)) {
+        const suites = [...Object.entries(this.suites)].sort((a, b) =>
+            a[0].localeCompare(b[0])
+        );
+        for (const [suite, counts] of suites) {
             const rate = (counts.passCount / counts.runCount).toFixed(3);
             stringValue += `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
         }
