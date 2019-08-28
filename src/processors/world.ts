@@ -2,14 +2,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import {
-    DimensionAndTensorDescription,
     AttributeInfo,
     attributesFromYamlString,
     CartOps,
     Catalog,
     catalogFromYamlString,
+    cookbookFromYamlFile,
+    DimensionAndTensorDescription,
     ICartOps,
     ICatalog,
+    ICookbook,
     IRuleChecker,
     loadRuleConfig,
     MENUITEM,
@@ -22,25 +24,34 @@ export interface World {
     attributes: DimensionAndTensorDescription;
     cartOps: ICartOps;
     catalog: ICatalog;
+    cookbook: ICookbook;
     ruleChecker: IRuleChecker;
 }
 
 export function createWorld(dataPath: string): World {
     // TODO: should these be path.resolve?
+    const attributesFile = path.join(dataPath, 'attributes.yaml');
+    const cookbookFile = path.join(dataPath, 'cookbook.yaml');
     const productsFile = path.join(dataPath, 'products.yaml');
     const optionsFile = path.join(dataPath, 'options.yaml');
-    const attributesFile = path.join(dataPath, 'attributes.yaml');
     const rulesFile = path.join(dataPath, 'rules.yaml');
 
-    const world = setup(productsFile, optionsFile, attributesFile, rulesFile);
+    const world = setup(
+        attributesFile,
+        cookbookFile,
+        productsFile,
+        optionsFile,
+        rulesFile
+    );
 
     return world;
 }
 
 export function setup(
+    attributesFile: string,
+    cookbookFile: string,
     productsFile: string,
     optionsFile: string,
-    attributesFile: string,
     rulesFile: string
 ): World {
     // Load items from menu data.
@@ -61,6 +72,8 @@ export function setup(
     );
     const attributeInfo = new AttributeInfo(catalog, attributes);
 
+    const cookbook = cookbookFromYamlFile(cookbookFile);
+
     const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
     const ruleChecker: IRuleChecker = new RuleChecker(
         ruleConfig,
@@ -74,6 +87,7 @@ export function setup(
         attributes,
         cartOps: cart,
         catalog,
+        cookbook,
         ruleChecker,
     };
 }
