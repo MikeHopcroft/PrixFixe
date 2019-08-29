@@ -43,6 +43,4 @@ export interface ICookbook {
     optionRecipes(): IterableIterator<OptionRecipe>;
     findProductRecipe(rid: RID, parent: Key): ProductRecipe;
     findOptionRecipe(rid: RID, parent: Key): OptionRecipe;
-    createItemsFromProductRecipe(recipe: ProductRecipe): ItemInstance[];
-    createItemsFromOptionRecipe(recipe: OptionRecipe): ItemInstance[];
 }

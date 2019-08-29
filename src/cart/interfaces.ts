@@ -1,5 +1,6 @@
 import { AID } from '../attributes';
 import { Key, PID } from '../catalog';
+import { ProductRecipe, OptionRecipe } from '../cookbook';
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -254,4 +255,7 @@ export interface ICartOps {
      * @returnType the new ItemInstance with the updated PID.
      */
     changeItemPID(item: ItemInstance, newPID: PID): ItemInstance;
+
+    createItemsFromProductRecipe(recipe: ProductRecipe): ItemInstance[];
+    createItemsFromOptionRecipe(recipe: OptionRecipe): ItemInstance[];
 }

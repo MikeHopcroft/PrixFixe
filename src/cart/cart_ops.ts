@@ -1,5 +1,6 @@
 import { AID, AttributeInfo, TensorEntityBuilder } from '../attributes';
 import { Catalog, Key, PID } from '../catalog';
+import { ProductRecipe, OptionRecipe } from '../cookbook';
 
 import {
     Cart,
@@ -403,5 +404,40 @@ export class CartOps implements ICartOps {
         } else {
             return item;
         }
+    }
+
+    createItemsFromProductRecipe(recipe: ProductRecipe): ItemInstance[] {
+        const products: ItemInstance[] = [];
+        for (const product of recipe.products) {
+            const options: ItemInstance[] = [];
+            for (const option of product.options) {
+                options.push({
+                    uid: this.idGenerator.nextId(),
+                    key: option.key,
+                    quantity: option.quantity,
+                    children: [],
+                });
+            }
+            products.push({
+                uid: 1, // TODO: key generator
+                key: product.key,
+                quantity: product.quantity,
+                children: options,
+            });
+        }
+        return products;
+    }
+
+    createItemsFromOptionRecipe(recipe: OptionRecipe): ItemInstance[] {
+        const options: ItemInstance[] = [];
+        for (const option of recipe.options) {
+            options.push({
+                uid: this.idGenerator.nextId(),
+                key: option.key,
+                quantity: option.quantity,
+                children: [],
+            });
+        }
+        return options;
     }
 }
