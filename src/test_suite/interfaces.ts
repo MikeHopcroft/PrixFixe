@@ -38,3 +38,10 @@ export interface TestLineItem {
 export interface TestOrder {
     readonly cart: TestLineItem[];
 }
+
+export enum TextType {
+    None = 'DEFAULT',
+    Input = 'INPUT',
+    STT = 'CORRECTED STT',
+    Scoped = 'CORRECTED SCOPE',
+}
