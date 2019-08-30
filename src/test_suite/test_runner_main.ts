@@ -9,7 +9,7 @@ import { createMarkdown } from './print_markdown';
 import { TestProcessors } from './test_processors';
 import { TestSuite, getYamlInputText } from './test_suite';
 import { allSuites, suiteFilter } from './suite_filter';
-import { TextType } from './interfaces';
+import { CorrectionLevel } from './interfaces';
 
 export async function testRunnerMain(
     title: string,
@@ -64,26 +64,22 @@ export async function testRunnerMain(
     const brief = args['b'] === true;
     const markdown = args['m'] === true;
 
-    // Get the input type for the utterance we want to use for the test run
-    // from command line args. Map the value to its enum state.
-    let textType = args['t'];
-    if (textType) {
-        switch (textType.toLowerCase()) {
-            case 'scoped':
-                textType = TextType.Scoped;
-                break;
-            case 'stt':
-                textType = TextType.STT;
-                break;
-            case 'input':
-                textType = TextType.Input;
-                break;
-            default:
-                textType = TextType.None;
-                break;
-        }
+    const correctionLevelFlag = args['t'];
+    let correctionLevel = CorrectionLevel.Scoped;
+    const correctionLevelMap = new Map<string, CorrectionLevel>();
+    correctionLevelMap.set('raw', CorrectionLevel.Raw);
+    correctionLevelMap.set('stt', CorrectionLevel.STT);
+    correctionLevelMap.set('scoped', CorrectionLevel.Scoped);
+    if (correctionLevelFlag) {
+        correctionLevel =
+            correctionLevelMap.get(correctionLevelFlag.toLowerCase()) ||
+            CorrectionLevel.Scoped;
+        console.log(`Correction Level: ${correctionLevel}.`);
         console.log(
-            `Using ${textType} field for utterance input. (Default will use highest level of correction)`
+            `       This test will use the ${correctionLevel} field for each step in the yaml as the utterance text input.`
+        );
+        console.log(
+            `       The default will use the highest level of correction value provided in the yaml test file (run the help [-h] command to learn more).`
         );
     }
 
@@ -194,7 +190,7 @@ export async function testRunnerMain(
         for (const test of suite.filteredTests(suiteExpression)) {
             console.log(`Test ${test.id}: ${test.comment}`);
             for (const step of test.steps) {
-                const input = getYamlInputText(step, textType);
+                const input = getYamlInputText(step, correctionLevel);
                 console.log(`  ${input}`);
             }
             console.log(' ');
@@ -207,7 +203,7 @@ export async function testRunnerMain(
             processor,
             world.catalog,
             suiteExpression,
-            textType,
+            correctionLevel,
             isomorphic,
             !skipIntermediate
         );
@@ -285,10 +281,19 @@ function showUsage(processorFactory: TestProcessors) {
     console.log('-h|help|?              Show this message.');
     console.log('-s suite               Run tests in specified suite.');
     console.log(
-        '-t <input|stt|scoped>  Run tests using specified utterance field. INPUT | STT | SCOPED'
+        '-t <raw|stt|scoped>  Run tests using specified utterance field. RAW | STT | SCOPED'
     );
     console.log(
-        '                           The default will use the highest corrected value provided.'
+        '                           The default is SCOPED and will use the highest corrected value provided in the yaml.'
+    );
+    console.log(
+        '                           RAW: force it to run on the original input, even if there are corrected versions available'
+    );
+    console.log(
+        '                             STT: if there is correctedSTT available use that otherwise use input, even if there is correctedScope available'
+    );
+    console.log(
+        '                          SCOPED: if there is correctedScope available use it, other wise fall back to correctedSTT and then input'
     );
     console.log(' ');
 
