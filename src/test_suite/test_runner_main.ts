@@ -7,8 +7,9 @@ import { createWorld, Processor, World } from '../processors';
 
 import { createMarkdown } from './print_markdown';
 import { TestProcessors } from './test_processors';
-import { TestSuite } from './test_suite';
+import { TestSuite, getYamlInputText } from './test_suite';
 import { allSuites, suiteFilter } from './suite_filter';
+import { TextType } from './interfaces';
 
 export async function testRunnerMain(
     title: string,
@@ -62,6 +63,29 @@ export async function testRunnerMain(
     const showAll = args['a'] === true;
     const brief = args['b'] === true;
     const markdown = args['m'] === true;
+
+    // Get the input type for the utterance we want to use for the test run
+    // from command line args. Map the value to its enum state.
+    let textType = args['t'];
+    if (textType) {
+        switch (textType.toLowerCase()) {
+            case 'scoped':
+                textType = TextType.Scoped;
+                break;
+            case 'stt':
+                textType = TextType.STT;
+                break;
+            case 'input':
+                textType = TextType.Input;
+                break;
+            default:
+                textType = TextType.None;
+                break;
+        }
+        console.log(
+            `Using ${textType} field for utterance input. (Default will use highest level of correction)`
+        );
+    }
 
     const skipIntermediate = args['x'] === true;
     if (skipIntermediate) {
@@ -170,7 +194,8 @@ export async function testRunnerMain(
         for (const test of suite.filteredTests(suiteExpression)) {
             console.log(`Test ${test.id}: ${test.comment}`);
             for (const step of test.steps) {
-                console.log(`  ${step}`);
+                const input = getYamlInputText(step, textType);
+                console.log(`  ${input}`);
             }
             console.log(' ');
         }
@@ -182,6 +207,7 @@ export async function testRunnerMain(
             processor,
             world.catalog,
             suiteExpression,
+            textType,
             isomorphic,
             !skipIntermediate
         );
@@ -222,7 +248,7 @@ function showUsage(processorFactory: TestProcessors) {
     console.log('from an YAML input file.');
     console.log('');
     console.log(
-        `Usage: node ${program} <input> [-a] [-i] [-n=N] [-v=processor] [-s=suite] [-x] [-d datapath] [-h|help|?]`
+        `Usage: node ${program} <input> [-a] [-i] [-n=N] [-v=processor] [-s=suite] [-x] [-d datapath] [-h|help|?] [-t utterance field]`
     );
     console.log('');
     console.log('<input>         Path to a file of YAML test cases.');
@@ -239,21 +265,31 @@ function showUsage(processorFactory: TestProcessors) {
     console.log(
         '-v <processor>  Run the generated cases with the specified processor.'
     );
-    console.log(`                  (default is -v=${defaultProcessor}).`);
-    console.log('-x              Do not verify intermediate results.');
-    console.log('-d <datapath>   Path to prix-fixe data files.');
-    console.log('                    attributes.yaml');
-    console.log('                    intents.yaml');
-    console.log('                    options.yaml');
-    console.log('                    products.yaml');
-    console.log('                    quantifiers.yaml');
-    console.log('                    rules.yaml');
-    console.log('                    stopwords.yaml');
-    console.log('                    units.yaml');
-    console.log('                The -d flag overrides the value specified');
-    console.log('                in the PRIX_FIXE_DATA environment variable.');
-    console.log('-h|help|?       Show this message.');
-    console.log('-s suite        Run tests in specified suite.');
+    console.log(`                       (default is -v=${defaultProcessor}).`);
+    console.log('-x                     Do not verify intermediate results.');
+    console.log('-d <datapath>          Path to prix-fixe data files.');
+    console.log('                           attributes.yaml');
+    console.log('                           intents.yaml');
+    console.log('                           options.yaml');
+    console.log('                           products.yaml');
+    console.log('                           quantifiers.yaml');
+    console.log('                           rules.yaml');
+    console.log('                           stopwords.yaml');
+    console.log('                           units.yaml');
+    console.log(
+        '                       The -d flag overrides the value specified'
+    );
+    console.log(
+        '                       in the PRIX_FIXE_DATA environment variable.'
+    );
+    console.log('-h|help|?              Show this message.');
+    console.log('-s suite               Run tests in specified suite.');
+    console.log(
+        '-t <input|stt|scoped>  Run tests using specified utterance field. INPUT | STT | SCOPED'
+    );
+    console.log(
+        '                           The default will use the highest corrected value provided.'
+    );
     console.log(' ');
 
     if (processorFactory.count() > 0) {
