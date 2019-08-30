@@ -7,7 +7,7 @@ export interface TestCounts {
 }
 
 export interface TestStep {
-    input: string;
+    rawSTT: string;
     correctedSTT?: string;
     correctedScope?: string;
     cart: TestLineItem[];
@@ -39,9 +39,8 @@ export interface TestOrder {
     readonly cart: TestLineItem[];
 }
 
-export enum TextType {
-    None = 'DEFAULT',
-    Input = 'INPUT',
+export enum CorrectionLevel {
+    Raw = 'RAW STT',
     STT = 'CORRECTED STT',
     Scoped = 'CORRECTED SCOPE',
 }

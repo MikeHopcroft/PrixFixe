@@ -17,7 +17,7 @@ import {
     XmlNode,
     YamlTestCase,
     TestStep,
-    TextType,
+    CorrectionLevel,
 } from './interfaces';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
@@ -87,7 +87,7 @@ export class Result {
         };
     }
 
-    toString(isomorphic = false, textType = TextType.None) {
+    toString(isomorphic = false, correctionLevel = CorrectionLevel.Scoped) {
         let stringValue = '';
         const suites = this.test.suites.join(' ');
         const passFail = this.passed ? 'PASSED' : 'FAILED';
@@ -99,12 +99,12 @@ export class Result {
         if (this.exception) {
             stringValue += `  Exception message: "${this.exception}"\n`;
             for (const [index, step] of this.test.steps.entries()) {
-                const input = getYamlInputText(step, textType);
+                const input = getYamlInputText(step, correctionLevel);
                 stringValue += `  Utterance ${index}: "${input}"\n`;
             }
         } else {
             this.test.steps.forEach((step, index) => {
-                const input = getYamlInputText(step, textType);
+                const input = getYamlInputText(step, correctionLevel);
                 const observed = this.observed[index];
                 const expected = step;
 
@@ -125,7 +125,7 @@ export class Result {
 
     toJUnitXml(
         isomorphic = false,
-        textType: TextType = TextType.None
+        correctionLevel: CorrectionLevel = CorrectionLevel.Scoped
     ): XmlNode {
         const testCase = this.test.toJUnitXml();
 
@@ -136,7 +136,7 @@ export class Result {
             if (this.exception) {
                 failureMessage = this.exception;
             } else {
-                failureMessage = this.toString(isomorphic, textType);
+                failureMessage = this.toString(isomorphic, correctionLevel);
             }
 
             testCase.children.push({
@@ -158,7 +158,7 @@ export class AggregatedResults {
     passCount = 0;
     failCount = 0;
     statistics = new StatisticsAggregator();
-    textType: TextType = TextType.None;
+    correctionLevel: CorrectionLevel = CorrectionLevel.Scoped;
 
     recordResult(result: Result): void {
         const test = result.test;
@@ -201,7 +201,10 @@ export class AggregatedResults {
 
         for (const result of this.results) {
             if (!result.passed || showPassedCases) {
-                stringValue += result.toString(isomorphic, this.textType);
+                stringValue += result.toString(
+                    isomorphic,
+                    this.correctionLevel
+                );
                 stringValue += '\n';
             }
         }
@@ -245,7 +248,7 @@ export class AggregatedResults {
             },
             children: this.results
                 .filter(r => r.test.suites.includes(suite))
-                .map(r => r.toJUnitXml(false, this.textType)),
+                .map(r => r.toJUnitXml(false, this.correctionLevel)),
         }));
 
         return jsontoxml(output, {
@@ -326,7 +329,7 @@ export class TestCase {
     async run(
         processor: Processor,
         catalog: ICatalog,
-        textType: TextType,
+        correctionLevel: CorrectionLevel,
         isomorphic = false,
         evaluateIntermediate = true
     ): Promise<Result> {
@@ -343,7 +346,7 @@ export class TestCase {
         try {
             for (const [i, step] of this.steps.entries()) {
                 // Get input text based on scope
-                const input = getYamlInputText(step, textType);
+                const input = getYamlInputText(step, correctionLevel);
 
                 // Run the parser
                 state = await processor(input, state);
@@ -500,22 +503,22 @@ export function explainDifferencesCanonical(
     return differences.allok;
 }
 
-export function getYamlInputText(step: TestStep, textType: TextType): string {
+export function getYamlInputText(
+    step: TestStep,
+    correctionLevel: CorrectionLevel
+): string {
     let text: string;
-    switch (textType) {
-        case TextType.Input:
-            text = step.input;
+    switch (correctionLevel) {
+        case CorrectionLevel.Raw:
+            text = step.rawSTT;
             break;
-        case TextType.STT:
-            text = step.correctedSTT || 'Corrected STT value not provided.';
+        case CorrectionLevel.STT:
+            text = step.correctedSTT || step.rawSTT;
             break;
-        case TextType.Scoped:
-            text = step.correctedScope || 'Corrected Scope value not provided.';
-            break;
-        case TextType.None:
+        case CorrectionLevel.Scoped:
         default:
             // The default is to use the highest level of correction
-            text = step.correctedScope || step.correctedSTT || step.input;
+            text = step.correctedScope || step.correctedSTT || step.rawSTT;
             break;
     }
     return text;
@@ -562,7 +565,7 @@ export class TestSuite {
                 },
                 TestSteps: {
                     properties: {
-                        input: {
+                        rawSTT: {
                             type: 'string',
                         },
                         correctedSTT: {
@@ -578,7 +581,7 @@ export class TestSuite {
                             type: 'array',
                         },
                     },
-                    required: ['input', 'cart'],
+                    required: ['rawSTT', 'cart'],
                     type: 'object',
                 },
                 YamlTestCase: {
@@ -683,19 +686,19 @@ export class TestSuite {
         processor: Processor,
         catalog: ICatalog,
         suiteFilter: SuitePredicate,
-        textType: TextType = TextType.None,
+        correctionLevel: CorrectionLevel = CorrectionLevel.Scoped,
         isomorphic = false,
         evaluateIntermediate = true
     ): Promise<AggregatedResults> {
         const aggregator = new AggregatedResults();
-        aggregator.textType = textType;
+        aggregator.correctionLevel = correctionLevel;
 
         for (const test of this.filteredTests(suiteFilter)) {
             aggregator.recordResult(
                 await test.run(
                     processor,
                     catalog,
-                    textType,
+                    correctionLevel,
                     isomorphic,
                     evaluateIntermediate
                 )
