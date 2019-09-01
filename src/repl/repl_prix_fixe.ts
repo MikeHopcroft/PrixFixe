@@ -29,7 +29,7 @@ export class PrixFixeReplExtension implements IReplExtension {
         const catalog = this.world.catalog;
         const world = this.world;
 
-        repl.server().defineCommand('menu', {
+        repl.getReplServer().defineCommand('menu', {
             help: 'Display menu',
             action: (line: string) => {
                 if (line.length === 0) {
@@ -47,11 +47,11 @@ export class PrixFixeReplExtension implements IReplExtension {
                 } else {
                     console.log(`Unknown item "${line}".`);
                 }
-                repl.server().displayPrompt();
+                repl.getReplServer().displayPrompt();
             },
         });
 
-        repl.server().defineCommand('aliases', {
+        repl.getReplServer().defineCommand('aliases', {
             help: 'Display aliases for a generic',
             action: (line: string) => {
                 const pid = Number(line);
@@ -64,11 +64,11 @@ export class PrixFixeReplExtension implements IReplExtension {
                     console.log(`Unknown PID "${line}".`);
                     console.log('Usage: .aliases <PID>');
                 }
-                repl.server().displayPrompt();
+                repl.getReplServer().displayPrompt();
             },
         });
 
-        repl.server().defineCommand('specifics', {
+        repl.getReplServer().defineCommand('specifics', {
             help: 'Display list of legal specifics for a generic',
             action: (line: string) => {
                 const pid = Number(line);
@@ -79,7 +79,7 @@ export class PrixFixeReplExtension implements IReplExtension {
                     console.log(`Unknown PID "${line}".`);
                     console.log('Usage: .specifics <PID>');
                 }
-                repl.server().displayPrompt();
+                repl.getReplServer().displayPrompt();
             },
         });
     }

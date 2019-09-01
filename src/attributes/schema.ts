@@ -6,6 +6,7 @@ import {
     DimensionAndTensorDescription,
     AttributeDescription,
 } from './interfaces';
+
 import { YAMLValidationError } from '../utilities/interfaces';
 
 const debug = Debug('so:itemMapFromYamlString');

@@ -1,6 +1,6 @@
 import * as replServer from 'repl';
 
-import { Processor, World } from '../processors';
+import { Processor, State, World } from '../processors';
 
 export interface ReplProcessor {
     // Name used two switch processors vis the REPL's .processor command.
@@ -48,5 +48,6 @@ export interface IReplExtensionFactory {
 
 // tslint:disable-next-line:interface-name
 export interface IRepl {
-    server(): replServer.REPLServer;
+    getReplServer(): replServer.REPLServer;
+    getState(): State;
 }

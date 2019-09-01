@@ -3,7 +3,7 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 
 import { IReplExtensionFactory } from './interfaces';
-import { runRepl } from './repl_core';
+import { runRepl } from './repl_core2';
 import { World } from '../processors';
 
 export function replMain(extensions: IReplExtensionFactory[], world?: World) {
