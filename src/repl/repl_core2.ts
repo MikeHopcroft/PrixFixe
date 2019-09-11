@@ -180,7 +180,7 @@ class ReplCore implements IRepl {
             // tslint:disable:no-any
             const historyItems = [...(repl as any).history].reverse();
             const history = historyItems
-                .slice(Math.max(historyItems.length - maxHistorySteps, 1))
+                .slice(Math.max(historyItems.length - maxHistorySteps, 0))
                 .join('\n');
             fs.writeFileSync(historyFile, history);
             console.log('bye');
