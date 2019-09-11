@@ -1,4 +1,5 @@
 import * as AJV from 'ajv';
+import * as betterAjvErrors from 'better-ajv-errors';
 import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
@@ -7,7 +8,7 @@ import {
     AttributeDescription,
 } from './interfaces';
 
-import { YAMLValidationError } from '../utilities/interfaces';
+import { YAMLValidationError } from '../utilities/';
 
 const debug = Debug('so:itemMapFromYamlString');
 
@@ -113,7 +114,13 @@ export function attributesFromYamlString(yamlText: string) {
             'attributesFromYamlString: yaml data does not conform to schema.';
         debug(message);
         debug(attributesValidator.errors);
-        throw YAMLValidationError(message, attributesValidator.errors);
+        const output = betterAjvErrors(
+            attributeSchema,
+            yamlRoot,
+            attributesValidator.errors,
+            { format: 'cli', indent: 1 }
+        );
+        throw new YAMLValidationError(message, output || []);
     }
 
     return yamlRoot;

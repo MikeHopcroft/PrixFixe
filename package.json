@@ -88,6 +88,7 @@
     "@types/js-yaml": "^3.12.1",
     "ajv": "^6.10.0",
     "ansi-styles": "^4.0.0",
+    "better-ajv-errors": "^0.6.5",
     "command-line-usage": "^6.0.2",
     "debug": "^4.1.1",
     "dotenv": "^8.0.0",
