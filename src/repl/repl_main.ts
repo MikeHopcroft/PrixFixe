@@ -15,6 +15,11 @@ export function replMain(extensions: IReplExtensionFactory[], world?: World) {
         dataPath = args.d;
     }
 
+    if (world) {
+        // If a world is provided, we don't need a datapath
+        dataPath = 'world provided';
+    }
+
     if (args.h || args.help || args['?']) {
         showUsage();
         return;
