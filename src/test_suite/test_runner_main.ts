@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import * as commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
 import * as dotenv from 'dotenv';
@@ -16,7 +15,6 @@ import { AggregatedResults, TestSuite, getYamlInputText } from './test_suite';
 import { allSuites, suiteFilter } from './suite_filter';
 import { CorrectionLevel } from './interfaces';
 
-let defaultProcessor;
 export async function testRunnerMain(
     title: string,
     processorFactory: TestProcessors,
@@ -35,22 +33,7 @@ export async function testRunnerMain(
     // flag value might cause an early fail that would prevent showing the
     // help message.
     if (args.h || args.help || args['?']) {
-        console.log(commandLineUsage(usage));
-        defaultProcessor = processorFactory.getDefault().name;
-        if (processorFactory.count() > 0) {
-            console.log('Available Processors:');
-            for (const processor of processorFactory.processors()) {
-                console.log(
-                    `  "-v=${processor.name}": ${processor.description}`
-                );
-                // TODO: list expected data files for each processor.
-            }
-        } else {
-            console.log('No Processors available.');
-            console.log(
-                'The supplied ProcessorFactory has no ProcessorDescriptions'
-            );
-        }
+        showUsage(processorFactory);
         process.exit(0);
     }
 
@@ -249,7 +232,7 @@ export async function testRunnerMain(
     if (brief) {
         console.log(' ');
         console.log('Displaying test utterances without running.');
-        testSuites.forEach(suite => {
+        for(const suite of testSuites){
             for (const test of suite.filteredTests(suiteExpression)) {
                 console.log(`Test ${test.id}: ${test.comment}`);
                 for (const step of test.steps) {
@@ -258,7 +241,7 @@ export async function testRunnerMain(
                 }
                 console.log(' ');
             }
-        });
+        }
         console.log('Tests not run.');
         console.log('Exiting with failing return code.');
         process.exit(1);
@@ -309,103 +292,105 @@ export async function testRunnerMain(
             `OVERALL RESULTS: ${allResults.passCount}/${allResults.results.length}`
         );
         console.log(
-            chalk`${allResults.results.length.toString()} tests run; {yellow.bold ${testPassRate.toString()}%} pass rate.`
+            `${allResults.results.length.toString()} tests run; ${testPassRate.toString()}% pass rate.`
         );
         console.log('============================');
         process.exit(0);
     }
 }
 
-const usage: Section[] = [
-    {
-        header: 'Test Runner',
-        content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
-    },
-    {
-        header: 'Options',
-        optionList: [
-            {
-                name: 'f',
-                alias: 'f',
-                typeLabel: '{underline filePath}',
-                description: 'YAML test file to run.',
-            },
-            {
-                name: 'p',
-                alias: 'p',
-                typeLabel: '{underline directoryPath}',
-                description:
-                    'Directory to inspect and run all YAML files (non-recursive by default). Mutually exclusive with {bold -f}',
-            },
-            {
-                name: 'r',
-                alias: 'r',
-                description:
-                    'When doing a directory scan, recurse through child directories',
-                type: Boolean,
-            },
-            {
-                name: 's',
-                alias: 's',
-                typeLabel: '{underline suiteFilter}',
-                description: 'Suites (specified in test YAML) to run',
-            },
-            {
-                name: 's',
-                alias: 'i',
-                type: Boolean,
-                description:
-                    'Perform isomorphic tree comparison on carts. Relaxes cart matching to allow for items to be out of order.',
-            },
-            {
-                name: 'a',
-                alias: 'a',
-                type: Boolean,
-                description:
-                    'Print results for all tests, passing and failing.',
-            },
-            {
-                name: 'b',
-                alias: 'b',
-                type: Boolean,
-                description: 'Just print utterances. Do not run tests.',
-            },
-            {
-                name: 'm',
-                alias: 'm',
-                type: Boolean,
-                description: 'Print out test run, formatted as markdown.',
-            },
-            {
-                name: 'v',
-                alias: 'v',
-                typeLabel: '{underline processor}',
-                description: `Run the generated cases with the specified processor\n(default is -v=${defaultProcessor}).`,
-            },
-            {
-                name: 'n',
-                alias: 'n',
-                typeLabel: '{underline N}',
-                description: 'Run only the Nth test.',
-            },
-            {
-                name: 'x',
-                alias: 'x',
-                type: Boolean,
-                description:
-                    'Validate final cart state only, do not verify intermediate results.',
-            },
-            {
-                name: 'generate',
-                alias: 'g',
-                typeLabel: '{underline outputFilePath}',
-                description:
-                    'Output file to save generated cart results. Not compatible with {bold -p}',
-            },
-            {
-                name: 'd',
-                alias: 'd',
-                description: `Path to prix-fixe data files.\n
+function showUsage(processorFactory: TestProcessors) {
+    const defaultProcessor = processorFactory.getDefault().name;
+    const usage: Section[] = [
+        {
+            header: 'Test Runner',
+            content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
+        },
+        {
+            header: 'Options',
+            optionList: [
+                {
+                    name: 'f',
+                    alias: 'f',
+                    typeLabel: '{underline filePath}',
+                    description: 'YAML test file to run.',
+                },
+                {
+                    name: 'p',
+                    alias: 'p',
+                    typeLabel: '{underline directoryPath}',
+                    description:
+                        'Directory to inspect and run all YAML files (non-recursive by default). Mutually exclusive with {bold -f}',
+                },
+                {
+                    name: 'r',
+                    alias: 'r',
+                    description:
+                        'When doing a directory scan, recurse through child directories',
+                    type: Boolean,
+                },
+                {
+                    name: 's',
+                    alias: 's',
+                    typeLabel: '{underline suiteFilter}',
+                    description: 'Suites (specified in test YAML) to run',
+                },
+                {
+                    name: 's',
+                    alias: 'i',
+                    type: Boolean,
+                    description:
+                        'Perform isomorphic tree comparison on carts. Relaxes cart matching to allow for items to be out of order.',
+                },
+                {
+                    name: 'a',
+                    alias: 'a',
+                    type: Boolean,
+                    description:
+                        'Print results for all tests, passing and failing.',
+                },
+                {
+                    name: 'b',
+                    alias: 'b',
+                    type: Boolean,
+                    description: 'Just print utterances. Do not run tests.',
+                },
+                {
+                    name: 'm',
+                    alias: 'm',
+                    type: Boolean,
+                    description: 'Print out test run, formatted as markdown.',
+                },
+                {
+                    name: 'v',
+                    alias: 'v',
+                    typeLabel: '{underline processor}',
+                    description: `Run the generated cases with the specified processor\n(default is -v=${defaultProcessor}).`,
+                },
+                {
+                    name: 'n',
+                    alias: 'n',
+                    typeLabel: '{underline N}',
+                    description: 'Run only the Nth test.',
+                },
+                {
+                    name: 'x',
+                    alias: 'x',
+                    type: Boolean,
+                    description:
+                        'Validate final cart state only, do not verify intermediate results.',
+                },
+                {
+                    name: 'generate',
+                    alias: 'g',
+                    typeLabel: '{underline outputFilePath}',
+                    description:
+                        'Output file to save generated cart results. Not compatible with {bold -p}',
+                },
+                {
+                    name: 'd',
+                    alias: 'd',
+                    description: `Path to prix-fixe data files.\n
                 - attributes.yaml
                 - intents.yaml
                 - options.yaml
@@ -415,20 +400,38 @@ const usage: Section[] = [
                 - stopwords.yaml
                 - units.yaml\n
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
-                type: Boolean,
-            },
-            {
-                name: 't',
-                alias: 't',
-                typeLabel: '{underline < raw | stt | scoped >}',
-                description: `Run tests using specified utterance field. The default is SCOPED and will use the highest corrected value provided in the yaml.\n
+                    type: Boolean,
+                },
+                {
+                    name: 't',
+                    alias: 't',
+                    typeLabel: '{underline < raw | stt | scoped >}',
+                    description: `Run tests using specified utterance field. The default is SCOPED and will use the highest corrected value provided in the yaml.\n
                 {bold RAW}: force it to run on the original input, even if there are corrected versions available\n
                 {bold STT}: if there is correctedSTT available use that otherwise use input, even if there is correctedScope available\n
                 {bold SCOPED}: if there is correctedScope available use it, other wise fall back to correctedSTT and then input`,
-            },
-        ],
-    },
-];
+                },
+            ],
+        },
+    ];
+
+    console.log(commandLineUsage(usage));
+
+    if (processorFactory.count() > 0) {
+        console.log('Available Processors:');
+        for (const processor of processorFactory.processors()) {
+            console.log(
+                `  "-v=${processor.name}": ${processor.description}`
+            );
+            // TODO: list expected data files for each processor.
+        }
+    } else {
+        console.log('No Processors available.');
+        console.log(
+            'The supplied ProcessorFactory has no ProcessorDescriptions'
+        );
+    }
+}
 
 function fail(message: string) {
     console.log(' ');
