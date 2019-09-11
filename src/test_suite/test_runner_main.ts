@@ -41,6 +41,10 @@ export async function testRunnerMain(
     if (args.d) {
         dataPath = args.d;
     }
+    if (world) {
+        // If a world is provided, we don't need a datapath
+        dataPath = 'world provided';
+    }
     if (dataPath === undefined) {
         const message =
             'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
