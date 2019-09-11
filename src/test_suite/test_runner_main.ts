@@ -1,11 +1,11 @@
-import chalk from "chalk";
-import * as commandLineUsage from "command-line-usage";
-import { Section } from "command-line-usage";
+import chalk from 'chalk';
+import * as commandLineUsage from 'command-line-usage';
+import { Section } from 'command-line-usage';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import * as minimist from 'minimist';
 import * as path from 'path';
-import * as recursiveReaddir from "recursive-readdir";
+import * as recursiveReaddir from 'recursive-readdir';
 
 import { createWorld, Processor, World } from '../processors';
 
@@ -39,7 +39,9 @@ export async function testRunnerMain(
         if (processorFactory.count() > 0) {
             console.log('Available Processors:');
             for (const processor of processorFactory.processors()) {
-                console.log(`  "-v=${processor.name}": ${processor.description}`);
+                console.log(
+                    `  "-v=${processor.name}": ${processor.description}`
+                );
                 // TODO: list expected data files for each processor.
             }
         } else {
@@ -78,7 +80,7 @@ export async function testRunnerMain(
     const recursive = args['r'] === true;
     if (dir) {
         console.log(`test dir = ${dir}`);
-        const testDirectory = path.resolve(cwd, dir).replace(/\"+$/, "");
+        const testDirectory = path.resolve(cwd, dir).replace(/\"+$/, '');
 
         let files;
         if (recursive) {
@@ -89,10 +91,13 @@ export async function testRunnerMain(
         } else {
             files = fs.readdirSync(testDirectory);
         }
-        testFiles = files.filter((f) => f.endsWith("yaml")).map((f) => path.resolve(testDirectory, f));
+        testFiles = files
+            .filter(f => f.endsWith('yaml'))
+            .map(f => path.resolve(testDirectory, f));
     } else {
         if (!testFile) {
-            const message = 'Expected YAML input file or directory on command line.';
+            const message =
+                'Expected YAML input file or directory on command line.';
             fail(message);
         }
         const testFileFullPath = path.resolve(cwd, testFile);
@@ -198,7 +203,6 @@ export async function testRunnerMain(
         console.log('Running all tests.');
     }
 
-
     const testSuites: TestSuite[] = [];
     const allResults = new AggregatedResults();
 
@@ -232,7 +236,7 @@ export async function testRunnerMain(
     if (brief) {
         console.log(' ');
         console.log('Displaying test utterances without running.');
-        testSuites.forEach((suite) => {
+        testSuites.forEach(suite => {
             for (const test of suite.filteredTests(suiteExpression)) {
                 console.log(`Test ${test.id}: ${test.comment}`);
                 for (const step of test.steps) {
@@ -258,116 +262,124 @@ export async function testRunnerMain(
 
             // If there are no results, explicitly call that out
             if (suiteResults.results.length === 0) {
-                console.log(chalk`{yellow No test results. Possibly filtered out by specified run criteria.}`);
                 continue;
             }
-            else {
-                console.log("---------------------------");
-                if (markdown) {
-                    const md = createMarkdown(suiteResults);
-                    console.log(md);
-                } else {
-                    suiteResults.print(showAll);
-                }
-                console.log("---------------------------");
 
-                console.log('');
-                console.log('');
-
-                suiteResults.results.forEach((r) => allResults.recordResult(r));
+            console.log('---------------------------');
+            if (markdown) {
+                const md = createMarkdown(suiteResults);
+                console.log(md);
+            } else {
+                suiteResults.print(showAll);
             }
+            console.log('---------------------------');
 
+            console.log('');
+            console.log('');
 
+            suiteResults.results.forEach(r => allResults.recordResult(r));
         }
 
-        const testPassRate = allResults.passCount / (allResults.passCount + allResults.failCount) * 100;
+        const testPassRate =
+            (allResults.passCount /
+                (allResults.passCount + allResults.failCount)) *
+            100;
 
         console.log();
-        console.log("============================");
-        console.log(`OVERALL RESULTS: ${allResults.passCount}/${allResults.results.length}`);
-        console.log(chalk`${allResults.results.length.toString()} tests run; {yellow.bold ${testPassRate.toString()}%} pass rate.`);
-        console.log("============================");
+        console.log('============================');
+        console.log(
+            `OVERALL RESULTS: ${allResults.passCount}/${allResults.results.length}`
+        );
+        console.log(
+            chalk`${allResults.results.length.toString()} tests run; {yellow.bold ${testPassRate.toString()}%} pass rate.`
+        );
+        console.log('============================');
         process.exit(0);
     }
 }
 
 const usage: Section[] = [
     {
-        header: "Test Runner",
+        header: 'Test Runner',
         content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
     },
     {
-        header: "Options",
+        header: 'Options',
         optionList: [
             {
-                name: "f",
-                alias: "f",
-                typeLabel: "{underline filePath}",
-                description: "YAML test file to run.",
+                name: 'f',
+                alias: 'f',
+                typeLabel: '{underline filePath}',
+                description: 'YAML test file to run.',
             },
             {
-                name: "p",
-                alias: "p",
-                typeLabel: "{underline directoryPath}",
-                description: "Directory to inspect and run all YAML files (non-recursive by default). Mutually exclusive with {bold -f}",
+                name: 'p',
+                alias: 'p',
+                typeLabel: '{underline directoryPath}',
+                description:
+                    'Directory to inspect and run all YAML files (non-recursive by default). Mutually exclusive with {bold -f}',
             },
             {
-                name: "r",
-                alias: "r",
-                description: "When doing a directory scan, recurse through child directories",
+                name: 'r',
+                alias: 'r',
+                description:
+                    'When doing a directory scan, recurse through child directories',
                 type: Boolean,
             },
             {
-                name: "s",
-                alias: "s",
-                typeLabel: "{underline suiteFilter}",
-                description: "Suites (specified in test YAML) to run",
+                name: 's',
+                alias: 's',
+                typeLabel: '{underline suiteFilter}',
+                description: 'Suites (specified in test YAML) to run',
             },
             {
-                name: "s",
-                alias: "i",
+                name: 's',
+                alias: 'i',
                 type: Boolean,
-                description: "Perform isomorphic tree comparison on carts. Relaxes cart matching to allow for items to be out of order.",
+                description:
+                    'Perform isomorphic tree comparison on carts. Relaxes cart matching to allow for items to be out of order.',
             },
             {
-                name: "a",
-                alias: "a",
+                name: 'a',
+                alias: 'a',
                 type: Boolean,
-                description: "Print results for all tests, passing and failing.",
+                description:
+                    'Print results for all tests, passing and failing.',
             },
             {
-                name: "b",
-                alias: "b",
+                name: 'b',
+                alias: 'b',
                 type: Boolean,
-                description: "Just print utterances. Do not run tests.",
+                description: 'Just print utterances. Do not run tests.',
             },
             {
-                name: "m",
-                alias: "m",
+                name: 'm',
+                alias: 'm',
                 type: Boolean,
-                description: "Print out test run, formatted as markdown.",
+                description: 'Print out test run, formatted as markdown.',
             },
             {
-                name: "v",
-                alias: "v",
-                typeLabel: "{underline processor}",
+                name: 'v',
+                alias: 'v',
+                typeLabel: '{underline processor}',
                 description: `Run the generated cases with the specified processor\n(default is -v=${defaultProcessor}).`,
             },
             {
-                name: "n",
-                alias: "n",
-                typeLabel: "{underline N}",
-                description: "Run only the Nth test.",
+                name: 'n',
+                alias: 'n',
+                typeLabel: '{underline N}',
+                description: 'Run only the Nth test.',
             },
             {
-                name: "x",
-                alias: "x",
+                name: 'x',
+                alias: 'x',
                 type: Boolean,
-                description: "Validate final cart state only, do not verify intermediate results.",
+                description:
+                    'Validate final cart state only, do not verify intermediate results.',
             },
             {
-                name: "d",
-                alias: "d",
+                name: 'd',
+                alias: 'd',
                 description: `Path to prix-fixe data files.\n
                 - attributes.yaml
                 - intents.yaml
@@ -381,9 +393,9 @@ const usage: Section[] = [
                 type: Boolean,
             },
             {
-                name: "t",
-                alias: "t",
-                typeLabel: "{underline < raw | stt | scoped >}",
+                name: 't',
+                alias: 't',
+                typeLabel: '{underline < raw | stt | scoped >}',
                 description: `Run tests using specified utterance field. The default is SCOPED and will use the highest corrected value provided in the yaml.\n
                 {bold RAW}: force it to run on the original input, even if there are corrected versions available\n
                 {bold STT}: if there is correctedSTT available use that otherwise use input, even if there is correctedScope available\n
