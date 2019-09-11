@@ -3,6 +3,7 @@ import * as commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
+import { safeDump } from 'js-yaml';
 import * as minimist from 'minimist';
 import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
@@ -103,6 +104,18 @@ export async function testRunnerMain(
         const testFileFullPath = path.resolve(cwd, testFile);
         testFiles = [testFileFullPath];
         console.log(`test file = ${testFile}`);
+    }
+
+    const generate = args['g'];
+    let generateExpected = '';
+    if (generate) {
+        if (testFiles.length > 1) {
+            console.warn(
+                'Generating expected carts for utterances is only supported with a single test file. Skipping...'
+            );
+        } else {
+            generateExpected = path.resolve(cwd, generate);
+        }
     }
 
     const correctionLevelFlag = args['t'];
@@ -260,7 +273,7 @@ export async function testRunnerMain(
                 !skipIntermediate
             );
 
-            // If there are no results, explicitly call that out
+            // If there are no results, skip
             if (suiteResults.results.length === 0) {
                 continue;
             }
@@ -278,6 +291,11 @@ export async function testRunnerMain(
             console.log('');
 
             suiteResults.results.forEach(r => allResults.recordResult(r));
+
+            if (generate) {
+                const newResults = suiteResults.rebase();
+                await fs.writeFileSync(generateExpected, safeDump(newResults));
+            }
         }
 
         const testPassRate =
@@ -376,6 +394,13 @@ const usage: Section[] = [
                 type: Boolean,
                 description:
                     'Validate final cart state only, do not verify intermediate results.',
+            },
+            {
+                name: 'generate',
+                alias: 'g',
+                typeLabel: '{underline outputFilePath}',
+                description:
+                    'Output file to save generated cart results. Not compatible with {bold -p}',
             },
             {
                 name: 'd',
