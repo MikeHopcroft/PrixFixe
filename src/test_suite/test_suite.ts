@@ -1,4 +1,5 @@
 import * as AJV from 'ajv';
+import * as betterAjvErrors from 'better-ajv-errors';
 import * as Debug from 'debug';
 import * as jsontoxml from 'jsontoxml';
 import * as yaml from 'js-yaml';
@@ -609,16 +610,21 @@ export class TestSuite {
             type: 'array',
         };
 
-        const ajv = new AJV();
+        const ajv = new AJV({ jsonPointers: true });
         const validator = ajv.compile(schemaForTestCases);
         const yamlRoot = yaml.safeLoad(yamlText) as YamlTestCase[];
 
         if (!validator(yamlRoot)) {
-            const message =
-                'itemMapFromYamlString: yaml data does not conform to schema.';
+            const message = 'yaml data does not conform to schema.';
             debug(message);
             debug(validator.errors);
-            throw YAMLValidationError(message, validator.errors);
+            const output = betterAjvErrors(
+                schemaForTestCases,
+                yamlRoot,
+                validator.errors,
+                { format: 'cli', indent: 1 }
+            );
+            throw new YAMLValidationError(message, output || []);
         }
 
         const tests = yamlRoot.map((test, index) => {

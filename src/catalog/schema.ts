@@ -1,4 +1,5 @@
 import * as AJV from 'ajv';
+import * as betterAjvErrors from 'better-ajv-errors';
 import * as Debug from 'debug';
 import * as yaml from 'js-yaml';
 
@@ -11,7 +12,7 @@ import {
     specificEntityFactory,
     SpecificTypedEntity,
 } from './interfaces';
-import { YAMLValidationError } from '../utilities/interfaces';
+import { YAMLValidationError } from '../utilities';
 
 const debug = Debug('pf:catalogFromYamlString');
 
@@ -97,7 +98,13 @@ export function catalogFromYamlString(yamlText: string, kind: symbol) {
             'catalogFromYamlString: yaml data does not conform to schema.';
         debug(message);
         debug(catalogValidator.errors);
-        throw YAMLValidationError(message, catalogValidator.errors);
+        const output = betterAjvErrors(
+            catalogSchema,
+            yamlRoot,
+            catalogValidator.errors,
+            { format: 'cli', indent: 1 }
+        );
+        throw new YAMLValidationError(message, output || []);
     }
 
     const f1 = (entity: GenericEntity): GenericTypedEntity => {

@@ -1,8 +1,9 @@
 import * as AJV from 'ajv';
+import * as betterAjvErrors from 'better-ajv-errors';
 import * as YAML from 'js-yaml';
 
 import { RuleConfig } from './interfaces';
-import { YAMLValidationError } from '../utilities/interfaces';
+import { YAMLValidationError } from '../utilities';
 
 // generated with:
 // typescript-json-schema tsconfig.json RuleConfig --required
@@ -110,9 +111,13 @@ export const validateRuleConfig = (ruleConfig: RuleConfig) => {
         const message = 'validateRuleConfig: Invalid `rules.yaml` config file.';
         console.error(message);
         console.error(ruleConfigValidator.errors);
-        // TODO: look into errors object and see if we can return more
-        // specific error information
-        throw YAMLValidationError(message, ruleConfigValidator.errors);
+        const output = betterAjvErrors(
+            ruleConfigSchema,
+            ruleConfig,
+            ruleConfigValidator.errors,
+            { format: 'cli', indent: 1 }
+        );
+        throw new YAMLValidationError(message, output || []);
     }
 };
 
