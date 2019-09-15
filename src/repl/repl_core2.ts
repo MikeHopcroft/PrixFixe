@@ -164,13 +164,13 @@ class ReplCore implements IRepl {
         // Load REPL history from file.
         if (fs.existsSync(historyFile)) {
             fs.readFileSync(historyFile)
-            .toString()
-            // Split on \n (linux) or \r\n (windows)
-            .split(/(\\n|\\r\\n)/)
-            .reverse()
-            .filter((line: string) => line.trim())
-            // tslint:disable-next-line:no-any
-            .map((line: string) => (repl as any).history.push(line));
+                .toString()
+                // Split on \n (linux) or \r\n (windows)
+                .split(/(\\n|\\r\\n)/)
+                .reverse()
+                .filter((line: string) => line.trim())
+                // tslint:disable-next-line:no-any
+                .map((line: string) => (repl as any).history.push(line));
         }
 
         //

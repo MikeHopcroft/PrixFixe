@@ -236,7 +236,7 @@ export async function testRunnerMain(
     if (brief) {
         console.log(' ');
         console.log('Displaying test utterances without running.');
-        for(const suite of testSuites){
+        for (const suite of testSuites) {
             for (const test of suite.filteredTests(suiteExpression)) {
                 console.log(`Test ${test.id}: ${test.comment}`);
                 for (const step of test.steps) {
@@ -424,9 +424,7 @@ function showUsage(processorFactory: TestProcessors) {
     if (processorFactory.count() > 0) {
         console.log('Available Processors:');
         for (const processor of processorFactory.processors()) {
-            console.log(
-                `  "-v=${processor.name}": ${processor.description}`
-            );
+            console.log(`  "-v=${processor.name}": ${processor.description}`);
             // TODO: list expected data files for each processor.
         }
     } else {
