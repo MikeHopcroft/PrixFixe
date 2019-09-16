@@ -96,6 +96,7 @@ export async function testRunnerMain(
     }
 
     const generate = args['g'];
+    const outputPath = args['o'];
 
     const correctionLevelFlag = args['c'] || 'scoped';
     const correctionLevel = getCorrectionLevel(correctionLevelFlag);
@@ -270,6 +271,12 @@ export async function testRunnerMain(
             const newResults = results.rebase();
             await fs.writeFileSync(outfile, safeDump(newResults));
         }
+
+        if (outputPath) {
+            console.log(`Writing results to '${outputPath}'`);
+            fs.writeFileSync(path.resolve(outputPath), results.toJUnitXml());
+        }
+
         return succeed(true);
     }
 }
@@ -362,7 +369,13 @@ function showUsage(processorFactory: TestProcessors) {
                     alias: 'g',
                     typeLabel: '{underline outputFilePath}',
                     description:
-                        'Output file to save generated cart results. Not compatible with {bold -p}',
+                        'Output file to save generated cart results. Not compatible with directories, single file only.',
+                },
+                {
+                    name: 'output',
+                    alias: 'o',
+                    typeLabel: '{underline outputFilePath}',
+                    description: 'Path to output results in JUnit format',
                 },
                 {
                     name: 'd',
