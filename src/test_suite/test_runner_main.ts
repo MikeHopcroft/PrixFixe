@@ -22,8 +22,7 @@ import {
 
 export async function testRunnerMain(
     title: string,
-    processorFactory: TestProcessors,
-    world: World | undefined = undefined
+    processorFactory: TestProcessors
 ) {
     dotenv.config();
 
@@ -43,10 +42,6 @@ export async function testRunnerMain(
     let dataPath = process.env.PRIX_FIXE_DATA;
     if (args.d) {
         dataPath = args.d;
-    }
-    if (world) {
-        // If a world is provided, we don't need a datapath
-        dataPath = 'world provided';
     }
     if (dataPath === undefined) {
         const message =
@@ -135,16 +130,15 @@ export async function testRunnerMain(
     //
     // Set up short-order processor
     //
-    if (!world) {
-        try {
-            world = createWorld(dataPath);
-        } catch (err) {
-            if (err.code === 'ENOENT' || err.code === 'EISDIR') {
-                const message = `Create world failed: cannot open "${err.path}"`;
-                return fail(message);
-            } else {
-                throw err;
-            }
+    let world: World;
+    try {
+        world = createWorld(dataPath);
+    } catch (err) {
+        if (err.code === 'ENOENT' || err.code === 'EISDIR') {
+            const message = `Create world failed: cannot open "${err.path}"`;
+            return fail(message);
+        } else {
+            throw err;
         }
     }
 

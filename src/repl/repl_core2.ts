@@ -87,17 +87,12 @@ class ReplCore implements IRepl {
 
     constructor(
         dataPath: string,
-        factories: IReplExtensionFactory[],
-        world?: World
+        factories: IReplExtensionFactory[]
     ) {
         let debugMode = false;
         Debug.enable('tf-interactive,tf:*');
 
-        // Create the world if an existing one is not provided
-        if (!world) {
-            world = createWorld(dataPath);
-        }
-
+        const world = createWorld(dataPath);
         const catalog = world.catalog;
 
         // Incorporate REPL extensions.
@@ -570,8 +565,7 @@ function testOrderFromItem(
 
 export function runRepl(
     dataPath: string,
-    factories: IReplExtensionFactory[],
-    world?: World
+    factories: IReplExtensionFactory[]
 ) {
-    const repl = new ReplCore(dataPath, factories, world);
+    const repl = new ReplCore(dataPath, factories);
 }

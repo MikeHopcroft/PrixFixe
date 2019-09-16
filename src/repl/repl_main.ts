@@ -4,20 +4,14 @@ import * as path from 'path';
 
 import { IReplExtensionFactory } from './interfaces';
 import { runRepl } from './repl_core2';
-import { World } from '../processors';
 
-export function replMain(extensions: IReplExtensionFactory[], world?: World) {
+export function replMain(extensions: IReplExtensionFactory[]) {
     dotenv.config();
     const args = minimist(process.argv.slice());
 
     let dataPath = process.env.PRIX_FIXE_DATA;
     if (args.d) {
         dataPath = args.d;
-    }
-
-    if (world) {
-        // If a world is provided, we don't need a datapath
-        dataPath = 'world provided';
     }
 
     if (args.h || args.help || args['?']) {
@@ -32,7 +26,7 @@ export function replMain(extensions: IReplExtensionFactory[], world?: World) {
         return;
     }
 
-    runRepl(dataPath, extensions, world);
+    runRepl(dataPath, extensions);
 }
 
 function showUsage() {
