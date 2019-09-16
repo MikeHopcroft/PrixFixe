@@ -39,8 +39,11 @@ export interface TestOrder {
     readonly cart: TestLineItem[];
 }
 
+// DESIGN NOTE: WARNING: must keep the correctionLevelToField array
+// from test_suite.ts in sync with the values in CorrectionLevel.
+// Also must keep getCorrectionLevel() in sync.
 export enum CorrectionLevel {
-    Raw = 'RAW STT',
-    STT = 'CORRECTED STT',
-    Scoped = 'CORRECTED SCOPE',
+    Raw,
+    STT,
+    Scoped,
 }

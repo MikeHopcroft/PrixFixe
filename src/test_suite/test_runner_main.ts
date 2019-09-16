@@ -10,10 +10,15 @@ import * as recursiveReaddir from 'recursive-readdir';
 import { createWorld, Processor, World } from '../processors';
 
 import { createMarkdown } from './print_markdown';
-import { TestProcessors } from './test_processors';
-import { AggregatedResults, TestSuite, getYamlInputText } from './test_suite';
 import { allSuites, suiteFilter } from './suite_filter';
-import { CorrectionLevel } from './interfaces';
+import { TestProcessors } from './test_processors';
+import {
+    TestCase,
+    TestSuite,
+    getYamlInputText,
+    getCorrectLevelFields,
+    getCorrectionLevel,
+} from './test_suite';
 
 export async function testRunnerMain(
     title: string,
@@ -21,8 +26,6 @@ export async function testRunnerMain(
     world: World | undefined = undefined
 ) {
     dotenv.config();
-    let testFiles: string[];
-    const cwd = process.cwd();
 
     console.log(`${title} test runner`);
     console.log(new Date().toLocaleString());
@@ -48,12 +51,7 @@ export async function testRunnerMain(
     if (dataPath === undefined) {
         const message =
             'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
-        fail(message);
-
-        // NOTE: fail() terminates the program. The unreachable return
-        // statement allows type system to know dataPath as string instead of
-        // string | undefined.
-        return;
+        return fail(message);
     }
     console.log(`data path = ${dataPath}`);
 
@@ -63,66 +61,53 @@ export async function testRunnerMain(
     const brief = args['b'] === true;
     const markdown = args['m'] === true;
 
-    const testFile = args['f'];
-    const dir = args['p'];
     const recursive = args['r'] === true;
-    if (dir) {
-        console.log(`test dir = ${dir}`);
-        const testDirectory = path.resolve(cwd, dir).replace(/\"+$/, '');
+
+    if (args._.length === 0) {
+        const message =
+            'Expected YAML input file or directory on command line.';
+        return fail(message);
+    } else if (args._.length > 1) {
+        const message = 'Found extra arguments on command line.';
+        return fail(message);
+    }
+
+    let testFiles: string[];
+    const cwd = process.cwd();
+    const input = path.resolve(cwd, args._[0]);
+    if (fs.lstatSync(input).isDirectory()) {
+        console.log(`test dir = ${input}`);
 
         let files;
         if (recursive) {
-            files = await recursiveReaddir(testDirectory);
-
-            // NOTE: we sort here because want to always process the files in a consistent order and recursiveReaddir does not promise any consistency
-            files = files.sort();
+            files = await recursiveReaddir(input);
         } else {
-            files = fs.readdirSync(testDirectory);
+            files = fs.readdirSync(input);
         }
+
         testFiles = files
+            .sort()
             .filter(f => f.endsWith('yaml'))
-            .map(f => path.resolve(testDirectory, f));
+            .map(f => path.resolve(input, f));
     } else {
-        if (!testFile) {
-            const message =
-                'Expected YAML input file or directory on command line.';
-            fail(message);
-        }
-        const testFileFullPath = path.resolve(cwd, testFile);
-        testFiles = [testFileFullPath];
-        console.log(`test file = ${testFile}`);
+        // Assume that input is a YAML test file.
+        testFiles = [input];
+        console.log(`test file = ${input}`);
     }
 
     const generate = args['g'];
-    let generateExpected = '';
-    if (generate) {
-        if (testFiles.length > 1) {
-            console.warn(
-                'Generating expected carts for utterances is only supported with a single test file. Skipping...'
-            );
-        } else {
-            generateExpected = path.resolve(cwd, generate);
-        }
-    }
 
-    const correctionLevelFlag = args['t'];
-    let correctionLevel = CorrectionLevel.Scoped;
-    const correctionLevelMap = new Map<string, CorrectionLevel>();
-    correctionLevelMap.set('raw', CorrectionLevel.Raw);
-    correctionLevelMap.set('stt', CorrectionLevel.STT);
-    correctionLevelMap.set('scoped', CorrectionLevel.Scoped);
-    if (correctionLevelFlag) {
-        correctionLevel =
-            correctionLevelMap.get(correctionLevelFlag.toLowerCase()) ||
-            CorrectionLevel.Scoped;
-        console.log(`Correction Level: ${correctionLevel}.`);
-        console.log(
-            `       This test will use the ${correctionLevel} field for each step in the yaml as the utterance text input.`
-        );
-        console.log(
-            `       The default will use the highest level of correction value provided in the yaml test file (run the help [-h] command to learn more).`
-        );
+    const correctionLevelFlag = args['c'] || 'scoped';
+    const correctionLevel = getCorrectionLevel(correctionLevelFlag);
+    if (correctionLevel === undefined) {
+        const message = `Unsupported correction level "${correctionLevelFlag}"`;
+        return fail(message);
     }
+    console.log(`Correction Level: ${correctionLevelFlag}.`);
+    const fields = getCorrectLevelFields(correctionLevel).join(' ');
+    console.log(
+        `  Tests will use the rightmost available field from [${fields}]`
+    );
 
     const skipIntermediate = args['x'] === true;
     if (skipIntermediate) {
@@ -143,7 +128,7 @@ export async function testRunnerMain(
             runOneTest = Number(n);
         } else {
             const message = 'Expected test number after -n flag.';
-            fail(message);
+            return fail(message);
         }
     }
 
@@ -156,9 +141,7 @@ export async function testRunnerMain(
         } catch (err) {
             if (err.code === 'ENOENT' || err.code === 'EISDIR') {
                 const message = `Create world failed: cannot open "${err.path}"`;
-                fail(message);
-                // Unreachable code for type assertion.
-                world = undefined!;
+                return fail(message);
             } else {
                 throw err;
             }
@@ -167,15 +150,14 @@ export async function testRunnerMain(
 
     if (processorFactory.count() === 0) {
         const message = `ProcessorFactory must contain at least one ProcessorDescription.`;
-        fail(message);
-        return;
+        return fail(message);
     }
 
     let processor: Processor;
     if (verify) {
         if (!processorFactory.has(verify)) {
             const message = `Unknown processor v=${verify}`;
-            fail(message);
+            return fail(message);
         }
         processor = processorFactory.create(verify, world, dataPath);
         console.log(`processor = ${verify}`);
@@ -196,136 +178,122 @@ export async function testRunnerMain(
         console.log(`Running test number ${runOneTest}.`);
     } else if (suiteExpressionText) {
         console.log(
-            `Running tests in matching suite expression: ${suiteExpressionText}`
+            `Running tests matching suite expression: ${suiteExpressionText}`
         );
         suiteExpression = suiteFilter(suiteExpressionText);
     } else {
         console.log('Running all tests.');
     }
 
-    const testSuites: TestSuite[] = [];
-    const allResults = new AggregatedResults();
+    //
+    // Combine all test files into a single suite.
+    //
 
+    // First get all TestCases into a single array.
+    const tests: TestCase[] = [];
     for (const testFile of testFiles) {
-        let suite: TestSuite;
         try {
-            suite = TestSuite.fromYamlString(fs.readFileSync(testFile, 'utf8'));
+            console.log(`Reading ${testFile}`);
+            const yaml = fs.readFileSync(testFile, 'utf8');
+            const suite = TestSuite.fromYamlString(yaml);
+            tests.push(...suite.tests);
         } catch (err) {
             if (err.code === 'ENOENT' || err.code === 'EISDIR') {
                 const message = `Cannot open test file "${err.path}"`;
-                fail(message);
-                // Unreachable code exists for type assertion.
-                suite = undefined!;
+                return fail(message);
             } else {
                 throw err;
             }
         }
+    }
 
-        if (runOneTest !== undefined) {
-            if (runOneTest >= 0 && runOneTest < suite.tests.length) {
-                suite = new TestSuite([suite.tests[runOneTest]]);
-            } else {
-                const message = `Invalid test number ${runOneTest}`;
-                fail(message);
-            }
+    // Renumber the TestCases
+    for (const [index, test] of tests.entries()) {
+        test.id = index;
+    }
+
+    // Construct a TestSuite with all of the TestCases.
+    let suite = new TestSuite(tests);
+
+    // Handle the scenario where the user wants to run the nth TestCase.
+    if (runOneTest !== undefined) {
+        if (runOneTest >= 0 && runOneTest < suite.tests.length) {
+            suite = new TestSuite([suite.tests[runOneTest]]);
+        } else {
+            const message = `Invalid test number ${runOneTest}`;
+            return fail(message);
         }
-
-        testSuites.push(suite);
     }
 
     if (brief) {
+        // In brief mode, don't actually run the tests.
+        // Just display the input text.
         console.log(' ');
         console.log('Displaying test utterances without running.');
-        for (const suite of testSuites) {
-            for (const test of suite.filteredTests(suiteExpression)) {
-                console.log(`Test ${test.id}: ${test.comment}`);
-                for (const step of test.steps) {
-                    const input = getYamlInputText(step, correctionLevel);
-                    console.log(`  ${input}`);
-                }
-                console.log(' ');
+        for (const test of suite.filteredTests(suiteExpression)) {
+            console.log(`Test ${test.id}: ${test.comment}`);
+            for (const step of test.steps) {
+                const input = getYamlInputText(step, correctionLevel);
+                console.log(`  ${input}`);
             }
+            console.log(' ');
         }
         console.log('Tests not run.');
         console.log('Exiting with failing return code.');
-        process.exit(1);
+        return succeed(false);
     } else {
-        for (let i = 0; i < testSuites.length; i++) {
-            const suiteResults = await testSuites[i].run(
-                processor,
-                world.catalog,
-                suiteExpression,
-                correctionLevel,
-                isomorphic,
-                !skipIntermediate
-            );
+        // Otherwise, run the tests.
+        const results = await suite.run(
+            processor,
+            world.catalog,
+            suiteExpression,
+            correctionLevel,
+            isomorphic,
+            !skipIntermediate
+        );
 
-            // If there are no results, skip
-            if (suiteResults.results.length === 0) {
-                continue;
-            }
-
-            console.log('---------------------------');
-            if (markdown) {
-                const md = createMarkdown(suiteResults);
-                console.log(md);
-            } else {
-                suiteResults.print(showAll);
-            }
-            console.log('---------------------------');
-
-            console.log('');
-            console.log('');
-
-            suiteResults.results.forEach(r => allResults.recordResult(r));
-
-            if (generate) {
-                const newResults = suiteResults.rebase();
-                await fs.writeFileSync(generateExpected, safeDump(newResults));
-            }
+        console.log('---------------------------');
+        if (markdown) {
+            const md = createMarkdown(results);
+            console.log(md);
+        } else {
+            results.print(showAll);
         }
+        console.log('---------------------------');
 
-        const testPassRate =
-            (allResults.passCount /
-                (allResults.passCount + allResults.failCount)) *
-            100;
+        console.log('');
+        console.log('');
 
-        console.log();
-        console.log('============================');
-        console.log(
-            `OVERALL RESULTS: ${allResults.passCount}/${allResults.results.length}`
-        );
-        console.log(
-            `${allResults.results.length.toString()} tests run; ${testPassRate.toString()}% pass rate.`
-        );
-        console.log('============================');
-        process.exit(0);
+        if (generate) {
+            const outfile = path.resolve(cwd, generate);
+            console.log(`Rebasing test cases to ${outfile}.`);
+            const newResults = results.rebase();
+            await fs.writeFileSync(outfile, safeDump(newResults));
+        }
+        return succeed(true);
     }
 }
 
 function showUsage(processorFactory: TestProcessors) {
     const defaultProcessor = processorFactory.getDefault().name;
+    const program = path.basename(process.argv[1]);
+
     const usage: Section[] = [
         {
             header: 'Test Runner',
             content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
         },
         {
+            header: 'Usage',
+            content: [
+                `node ${program} <file|directory> [...options]`,
+                '',
+                `Where <file> is the name of a single YAML test file and <directory> is a directory of YAML test files.`,
+            ],
+        },
+        {
             header: 'Options',
             optionList: [
-                {
-                    name: 'f',
-                    alias: 'f',
-                    typeLabel: '{underline filePath}',
-                    description: 'YAML test file to run.',
-                },
-                {
-                    name: 'p',
-                    alias: 'p',
-                    typeLabel: '{underline directoryPath}',
-                    description:
-                        'Directory to inspect and run all YAML files (non-recursive by default). Mutually exclusive with {bold -f}',
-                },
                 {
                     name: 'r',
                     alias: 'r',
@@ -337,7 +305,10 @@ function showUsage(processorFactory: TestProcessors) {
                     name: 's',
                     alias: 's',
                     typeLabel: '{underline suiteFilter}',
-                    description: 'Suites (specified in test YAML) to run',
+                    description:
+                        'Boolean expression of suites to run.' +
+                        'Can use suite names, !, &, |, and parentheses.' +
+                        'Note that the -n flag overrides the -s flag.',
                 },
                 {
                     name: 's',
@@ -375,7 +346,9 @@ function showUsage(processorFactory: TestProcessors) {
                     name: 'n',
                     alias: 'n',
                     typeLabel: '{underline N}',
-                    description: 'Run only the Nth test.',
+                    description:
+                        'Run only the Nth test.' +
+                        'Note that the -n flag overrides the -s flag.',
                 },
                 {
                     name: 'x',
@@ -407,13 +380,19 @@ function showUsage(processorFactory: TestProcessors) {
                     type: Boolean,
                 },
                 {
-                    name: 't',
-                    alias: 't',
+                    name: 'c',
+                    alias: 'c',
                     typeLabel: '{underline < raw | stt | scoped >}',
                     description: `Run tests using specified utterance field. The default is SCOPED and will use the highest corrected value provided in the yaml.\n
                 {bold RAW}: force it to run on the original input, even if there are corrected versions available\n
                 {bold STT}: if there is correctedSTT available use that otherwise use input, even if there is correctedScope available\n
                 {bold SCOPED}: if there is correctedScope available use it, other wise fall back to correctedSTT and then input`,
+                },
+                {
+                    name: 't',
+                    alias: 't',
+                    typeLabel: '{underline <snowball | metaphone | hybrid >}',
+                    description: 'Reserved for short-order term model.',
                 },
             ],
         },
@@ -443,4 +422,12 @@ function fail(message: string) {
     console.log('Aborting');
     console.log(' ');
     process.exit(1);
+}
+
+function succeed(succeeded: boolean) {
+    if (succeeded) {
+        process.exit(0);
+    } else {
+        process.exit(1);
+    }
 }

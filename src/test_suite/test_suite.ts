@@ -23,7 +23,7 @@ import {
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 
-export type SpeechToTextSimulator = (text: string) => TestStep;
+export type SpeechToTextSimulator = (text: string) => string;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -153,7 +153,6 @@ export class Result {
 }
 
 export class AggregatedResults {
-    priorities: { [priority: string]: TestCounts } = {};
     suites: { [suite: string]: TestCounts } = {};
     results: Result[] = [];
     passCount = 0;
@@ -217,13 +216,6 @@ export class AggregatedResults {
         for (const [suite, counts] of suites) {
             const rate = (counts.passCount / counts.runCount).toFixed(3);
             stringValue += `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
-        }
-        stringValue += '\n';
-
-        stringValue += 'Priorities:\n';
-        for (const [priority, counts] of Object.entries(this.priorities)) {
-            const rate = (counts.passCount / counts.runCount).toFixed(3);
-            stringValue += `  ${priority}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
         }
         stringValue += '\n';
 
@@ -525,6 +517,28 @@ export function getYamlInputText(
     return text;
 }
 
+const correctionLevelToField: string[] = [
+    'rawSTT',
+    'correctedSTT',
+    'correctedScope',
+];
+
+export function getCorrectLevelFields(level: CorrectionLevel) {
+    return correctionLevelToField.slice(0, level + 1);
+}
+
+export function getCorrectionLevel(level: string): CorrectionLevel | undefined {
+    if (level === 'raw') {
+        return CorrectionLevel.Raw;
+    } else if (level === 'stt') {
+        return CorrectionLevel.STT;
+    } else if (level === 'scoped') {
+        return CorrectionLevel.Scoped;
+    } else {
+        return undefined;
+    }
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 //
 // TestSuite
@@ -644,13 +658,12 @@ export class TestSuite {
     // observed output as the expected output.
     static async fromInputLines(
         processor: Processor,
-        catalog: Catalog,
+        catalog: ICatalog,
         speechToTextSimulator: SpeechToTextSimulator,
         lines: string[],
-        suites: string[]
+        suites: string[],
+        comment: string
     ): Promise<YamlTestCase[]> {
-        const emptyOrder: TestOrder = { cart: [] };
-
         // Generate a test case for each input line.
         // Use speechToTextFilter to clean up each input line.
         let counter = 0;
@@ -658,11 +671,11 @@ export class TestSuite {
         for (const rawLine of lines) {
             const line = rawLine.trim();
             if (line.length > 0) {
-                tests.push(
-                    new TestCase(counter++, suites, '', [
-                        speechToTextSimulator(line),
-                    ])
-                );
+                const step: TestStep = {
+                    rawSTT: speechToTextSimulator(line),
+                    cart: [],
+                };
+                tests.push(new TestCase(counter++, suites, comment, [step]));
             }
         }
 
