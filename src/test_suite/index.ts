@@ -6,3 +6,4 @@ export * from './suite_filter';
 export * from './test_processors';
 export * from './test_runner_main';
 export * from './test_suite';
+export * from './test_verifier';

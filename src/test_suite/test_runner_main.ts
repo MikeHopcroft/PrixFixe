@@ -20,6 +20,8 @@ import {
     getCorrectionLevel,
 } from './test_suite';
 
+import { verifyTestSuite } from './test_verifier';
+
 export async function testRunnerMain(
     title: string,
     processorFactory: TestProcessors,
@@ -132,6 +134,8 @@ export async function testRunnerMain(
         }
     }
 
+    const fixup = args['f'];
+
     //
     // Set up short-order processor
     //
@@ -196,6 +200,7 @@ export async function testRunnerMain(
             console.log(`Reading ${testFile}`);
             const yaml = fs.readFileSync(testFile, 'utf8');
             const suite = TestSuite.fromYamlString(yaml);
+            verifyTestSuite(suite, world.catalog, world.ruleChecker);
             tests.push(...suite.tests);
         } catch (err) {
             if (err.code === 'ENOENT' || err.code === 'EISDIR') {
@@ -241,6 +246,8 @@ export async function testRunnerMain(
         console.log('Tests not run.');
         console.log('Exiting with failing return code.');
         return succeed(false);
+    } else if (fixup) {
+        console.log('Fixup completed.');
     } else {
         // Otherwise, run the tests.
         const results = await suite.run(
@@ -393,6 +400,11 @@ function showUsage(processorFactory: TestProcessors) {
                     alias: 't',
                     typeLabel: '{underline <snowball | metaphone | hybrid >}',
                     description: 'Reserved for short-order term model.',
+                },
+                {
+                    name: 'f',
+                    alias: 'f',
+                    description: 'Attempt to fix rules errors.',
                 },
             ],
         },
