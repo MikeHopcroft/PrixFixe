@@ -166,7 +166,7 @@ class ReplCore implements IRepl {
             fs.readFileSync(historyFile)
                 .toString()
                 // Split on \n (linux) or \r\n (windows)
-                .split(/(\\n|\\r\\n)/)
+                .split(/\n|\r|\r\n|\n\r/g)
                 .reverse()
                 .filter((line: string) => line.trim())
                 // tslint:disable-next-line:no-any

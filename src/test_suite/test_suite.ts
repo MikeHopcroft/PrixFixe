@@ -4,7 +4,7 @@ import * as Debug from 'debug';
 import * as jsontoxml from 'jsontoxml';
 import * as yaml from 'js-yaml';
 
-import { ICatalog, Key, Catalog } from '../catalog';
+import { ICatalog } from '../catalog';
 import { Processor, State } from '../processors';
 import { testOrderFromCart } from '../repl';
 import { YAMLValidationError } from '../utilities';
@@ -221,6 +221,9 @@ export class AggregatedResults {
 
         const rate = (this.passCount / this.results.length).toFixed(3);
         stringValue += `Overall: ${this.passCount}/${this.results.length} (${rate})\n`;
+        stringValue += '\n';
+
+        stringValue += `Failed: ${this.failCount}\n`;
 
         return stringValue;
     }
