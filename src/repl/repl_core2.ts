@@ -85,10 +85,7 @@ class ReplCore implements IRepl {
     repl: replServer.REPLServer;
     stack: Session[];
 
-    constructor(
-        dataPath: string,
-        factories: IReplExtensionFactory[]
-    ) {
+    constructor(dataPath: string, factories: IReplExtensionFactory[]) {
         let debugMode = false;
         Debug.enable('tf-interactive,tf:*');
 
@@ -563,9 +560,6 @@ function testOrderFromItem(
     }
 }
 
-export function runRepl(
-    dataPath: string,
-    factories: IReplExtensionFactory[]
-) {
+export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
     const repl = new ReplCore(dataPath, factories);
 }
