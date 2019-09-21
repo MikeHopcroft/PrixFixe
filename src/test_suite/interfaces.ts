@@ -34,6 +34,7 @@ export interface TestLineItem {
     readonly name: string;
 }
 
+// TODO: HAs TestOrder been deprecated?
 // A simplified view of the Cart, suitable for test verification.
 export interface TestOrder {
     readonly cart: TestLineItem[];

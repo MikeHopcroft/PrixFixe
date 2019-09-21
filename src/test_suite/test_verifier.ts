@@ -69,15 +69,22 @@ function verifyTestStep(
 
             currentLine++;
 
+            // TODO: check for incorrect name - fixup if possible
+            // TODO: check for mutual exclusion
             // if (!f(child.key)) {
             if (!rules.isValidChild(parent.key, child.key)) {
                 errorCount++;
                 console.log(
+                    // TODO: print out more information here, like the name of the
+                    // parent and child.
                     `${errorCount}: "${child.key}" cannot be a child of "${parent.key}"`
                 );
 
                 fixedSomething = true;
-                lines.push(child); // TODO: make the fix here.
+
+                // TODO: make the fix here.
+                // TODO: mark suites with invalid if fix cannot be made
+                lines.push(child);
             } else {
                 lines.push(child);
             }
