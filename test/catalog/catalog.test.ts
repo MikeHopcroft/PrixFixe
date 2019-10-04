@@ -178,7 +178,7 @@ describe('Catalog', () => {
                 smallVanillaCone.key
             );
         });
-        it('should throw on ', () => {
+        it('should throw on invalid SKU', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
 
             expect(() => catalog.getKeyForSku(123987456)).to.throw(TypeError);
