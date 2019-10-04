@@ -5,6 +5,7 @@ import {
     ICatalog,
     Key,
     PID,
+    SKU,
     SpecificTypedEntity,
 } from './interfaces';
 
@@ -12,6 +13,7 @@ export class Catalog implements ICatalog {
     private mapGeneric = new Map<PID, GenericTypedEntity>();
     private mapSpecific = new Map<Key, SpecificTypedEntity>();
     private pidToKeys = new Map<PID, Key[]>();
+    private skuToKey = new Map<SKU, Key>();
 
     static fromEntities(
         genericItems: IterableIterator<GenericTypedEntity>,
@@ -71,6 +73,15 @@ export class Catalog implements ICatalog {
             } else {
                 keys.push(item.key);
             }
+
+            if (this.skuToKey.has(item.sku)) {
+                throw TypeError(
+                    `Catalog: encountered duplicate sku ${item.sku}.`
+                );
+            }
+
+            // Add SKU to key mapping
+            this.skuToKey.set(item.sku, item.key);
         }
     }
 
@@ -105,6 +116,14 @@ export class Catalog implements ICatalog {
 
     hasKey(key: Key): boolean {
         return this.mapSpecific.has(key);
+    }
+
+    getKeyForSku(sku: SKU): Key {
+        const key = this.skuToKey.get(sku);
+        if (!key) {
+            throw TypeError(`Catalog.get(): cannot find sku=${sku}`);
+        }
+        return key;
     }
 
     getSpecific(key: Key): SpecificTypedEntity {
