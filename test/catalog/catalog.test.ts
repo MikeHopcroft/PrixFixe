@@ -170,6 +170,21 @@ describe('Catalog', () => {
         });
     });
 
+    describe('getKeyForSku', () => {
+        it('should return a key for the right SKU', () => {
+            const catalog = Catalog.fromCatalog(testCatalog);
+            assert.equal(
+                catalog.getKeyForSku(smallVanillaCone.sku),
+                smallVanillaCone.key
+            );
+        });
+        it('should throw on ', () => {
+            const catalog = Catalog.fromCatalog(testCatalog);
+
+            expect(() => catalog.getKeyForSku(123987456)).to.throw(TypeError);
+        });
+    });
+
     describe('getSpecific', () => {
         it('should return SpecificTypedEntity if key is found', () => {
             const catalog = Catalog.fromCatalog(testCatalog);
