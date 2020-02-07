@@ -1,6 +1,8 @@
 import { ItemInstance } from "../cart";
 import { AID, AttributeInfo } from "../attributes";
 
+import { Edit, EditOp, IRepairs } from './levenshtein';
+import { ICatalog } from "../catalog";
 
 export interface LogicalItem {
     quantity: number;
@@ -24,11 +26,83 @@ export function perfectScore(
     throw 0;
 }
 
-class Cost {
+class Cost implements IRepairs<string, ItemInstance> {
     private attributeInfo: AttributeInfo;
+    private catalog: ICatalog;
 
-    constructor(attributeInfo: AttributeInfo) {
+    constructor(
+        attributeInfo: AttributeInfo,
+        catalog: ICatalog
+    ) {
         this.attributeInfo = attributeInfo;
+        this.catalog = catalog;
+    }
+
+    delete(item: ItemInstance): Edit<string> {
+        return {
+            op: EditOp.DELETE_A,
+            cost: 1,
+            steps: [`delete ${item.quantity} item(${item.key})`],
+        };
+    }
+
+    insert(item: ItemInstance): Edit<string> {
+        const steps: string[] = [];
+        let cost = 0;
+
+        // Inserting the generic item's default form.
+        cost += 1;
+        steps.push(`insert generic item(${item.key}`);
+
+        // Non-standard quantity
+        if (item.quantity > 1) {
+            // 1 if quantity greater than 1
+            cost += 1;
+            steps.push(`make quantity ${item.quantity}`);
+        }
+
+        //
+        // Non-standard attributes.
+        //
+        const itemAttribs = this.attributeInfo.getAttributes(item.key);
+
+        const generic = this.catalog.getGenericForKey(item.key);
+        const defaultItem = this.catalog.getSpecific(generic.defaultKey);
+        const defaultAttribs = this.attributeInfo.getAttributes(item.key);
+
+        for (let i = 0; i < itemAttribs.length; ++i) {
+            if (itemAttribs[i] !== defaultAttribs[i]) {
+                // 1 for non-standard attribute
+                cost += 1;
+                steps.push(`non-standard attribute(${itemAttribs[i]})`);
+            }
+        }
+
+        //
+        // Cost of adding children.
+        //
+        for (const child of item.children) {
+            const edit = this.insert(child);
+            cost += edit.cost;
+            for (const step of edit.steps) {
+                steps.push(`  ` + step);
+            }
+        }
+
+        return {
+            op: EditOp.DELETE_A,
+            cost: 1,
+            steps: [`delete ${item.quantity} item(${item.key})`],
+        };
+    }
+
+    repair(existing: ItemInstance, expected: ItemInstance): Edit<string> {
+        // TODO: implement
+        return {
+            op: EditOp.REPAIR_A,
+            cost: 1000,
+            steps: [`repair item(${existing.key})`],
+        };
     }
 
     repairItem(
