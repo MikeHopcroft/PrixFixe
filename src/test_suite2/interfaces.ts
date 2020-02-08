@@ -3,7 +3,7 @@
 
 export interface LogicalItem {
     quantity: number;
-    name: string;       // TODO: should we retain this field?
+    name: string; // TODO: should we retain this field?
     sku: string;
     children: LogicalItem[];
 }
@@ -16,4 +16,3 @@ export interface LogicalCartScore {
     score: number;
     explanation: string;
 }
-

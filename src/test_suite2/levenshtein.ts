@@ -1,47 +1,45 @@
 /******************************************************************************
- * 
+ *
  * Levenshtein repair distance.
- * 
+ *
  * Computing minimum edits to transform sequence A into sequence B.
- * 
+ *
  * Given sequences a and b, compute the minimum Levenshtein distance match
  * between b and a prefix of a.
- * 
+ *
  * This algorithm is intended to be used to evaluate potential partial matches
  * between catalog items and a longer phrases. Consider the following examples:
- * 
+ *
  *   a: "The Pontiac Trans Am parked in the driveway"
  *   b: "The Pontiac" matches at positon 0 with edit distance 0.
  *   b: "Pontiac" matches at postion 1 with edit distance 1.
  *   b: "Pontiac Trans Am" matches at position 1 with edit distance 1.
  *   b: "Pontiac parked in the driveway" matches at position 1 with d=3.
- * 
+ *
  * The algorithm can be applied to sequences represented as character string
  * and arrays. In the case of array-based sequences, one can pass an equality
  * predicate. The equality predicate is useful when performing pattern
  * matching against sequences of tokens. As an example:
- * 
+ *
  *   a: [PURCHASE] [QUANTITY(5)] [ITEM(27)] [CONJUNCTION] [ITEM(43)]
  *   b: [PURCHASE] [QUANTITY(*)] [ITEM(*)]
- * 
+ *
  * matches at position 0 with d=1, when using an equality predicate where
  * [QUANTITY(*)] is equal to any QUANTITY and ITEM(*) is equal to any ITEM.
- * 
+ *
  ******************************************************************************/
 
-
 export interface DiffResults<S, T> {
-    cost: number;           // The Levenshtein edit distance for this match.
+    cost: number; // The Levenshtein edit distance for this match.
     edits: Array<Edit<S>>;
 }
 
-
 // Types of edits used in dynamic programming algorithm.
 export enum EditOp {
-    NONE,       // First position in sequence. No preceding edits.
-    INSERT_A,   // Insert one item into sequence A at this point. (move up)
-    DELETE_A,   // Delete one item from sequence A at this point. (move right)
-    REPAIR_A,     // Repair an item from sequence A to match an item from B. (move diagonal up/right)
+    NONE, // First position in sequence. No preceding edits.
+    INSERT_A, // Insert one item into sequence A at this point. (move up)
+    DELETE_A, // Delete one item from sequence A at this point. (move right)
+    REPAIR_A, // Repair an item from sequence A to match an item from B. (move diagonal up/right)
 }
 
 // TODO: consider renaming levenshtein.ts to repair.ts.
@@ -59,35 +57,9 @@ const nop: Edit<any> = {
     steps: [],
 };
 
-
 // Vertices corresepond to cells in the dynamic programming matrix.
-// class Vertex {
-//     edit: EditOp;     // The Edit on the best known path into this vertex.
-//     cost: number;   // The cost of the best known path through this vertex.
-
-//     constructor(cost: number) {
-//         this.edit = EditOp.NONE;
-//         this.cost = cost;
-//     }
-
-//     // Compares a proposed path with the best known path through this vertex.
-//     // Updates vertex with new path if it corresponds to a lower edit distance.
-//     update(edit: EditOp, cost: number) {
-//         if (this.edit === EditOp.NONE) {
-//             // This is the first path considered, so it's the best we've seen
-//             // so far, so take it.
-//             this.cost = cost;
-//             this.edit = edit;
-//         }
-//         else if (cost < this.cost) {
-//             // This path is better than the best seen so far, so take it.
-//             this.cost = cost;
-//             this.edit = edit;
-//         }
-//     }
-// }
 class Vertex<S> {
-    edit: Edit<S>;  // The Edit on the best known path into this vertex.
+    edit: Edit<S>; // The Edit on the best known path into this vertex.
     cost: number;
 
     constructor(edit: Edit<S>, previousCost: number) {
@@ -98,19 +70,12 @@ class Vertex<S> {
     // Compares a proposed path with the best known path through this vertex.
     // Updates vertex with new path if it corresponds to a lower edit distance.
     update(edit: Edit<S>, previousCost: number) {
-        this.edit = edit;
-        this.cost = previousCost + edit.cost;
-        // if (this.edit.op === EditOp.NONE) {
-        //     // This is the first path considered, so it's the best we've seen
-        //     // so far, so take it.
-        //     this.edit = edit;
-        //     this.cost = previousCost + edit.cost;
-        // }
-        // else if (edit.cost < this.edit.cost) {
-        //     // This path is better than the best seen so far, so take it.
-        //     this.edit = edit;
-        //     this.cost = previousCost + edit.cost;
-        // }
+        const newCost = previousCost + edit.cost;
+        if (newCost < this.cost) {
+            // {
+            this.edit = edit;
+            this.cost = newCost;
+        }
     }
 }
 
@@ -166,11 +131,7 @@ class DiffMatrix<S, T> {
         edits: [],
     };
 
-    constructor(
-        costs: IRepairs<S, T>,
-        a: T[],
-        b: T[]
-    ) {
+    constructor(costs: IRepairs<S, T>, a: T[], b: T[]) {
         this.edits = costs;
         this.a = a;
         this.b = b;
@@ -179,7 +140,6 @@ class DiffMatrix<S, T> {
         this.findBestPath();
         this.tracePath();
     }
-
 
     // Initialize the dynamic programming matrix with a vertex at each cell.
     // Initialize delete path for sequence `a` (row 0) and sequence `b`
@@ -198,12 +158,11 @@ class DiffMatrix<S, T> {
                     row[i] = new Vertex(edit, row[i - 1].cost);
                 }
                 this.matrix[j] = row;
-            }
-            else {
+            } else {
                 const edit = this.edits.insert(this.b[j - 1]);
                 row[0] = new Vertex(edit, this.matrix[j - 1][0].cost);
                 for (let i = 1; i <= aLen; ++i) {
-                    row[i] = new Vertex(nop, 0);
+                    row[i] = new Vertex(nop, Infinity);
                 }
                 this.matrix[j] = row;
             }
@@ -234,14 +193,15 @@ class DiffMatrix<S, T> {
                 // Insert into A
                 this.matrix[j][i].update(
                     this.edits.insert(b),
-                    this.matrix[j - 1][i].cost);
+                    this.matrix[j - 1][i].cost
+                );
                 // this.matrix[j][i].update(
                 //     EditOp.INSERT_A, this.matrix[j - 1][i].cost + this.costs.insertCost(b));
 
                 // Repair A
                 this.matrix[j][i].update(
                     this.edits.repair(a, b),
-                    this.matrix[j - 1][i - 1].cost 
+                    this.matrix[j - 1][i - 1].cost
                 );
                 // this.matrix[j][i].update(
                 //     EditOp.REPAIR_A,
@@ -262,15 +222,19 @@ class DiffMatrix<S, T> {
 
         // TODO: build up list of edits here.
         while (current.edit.op !== EditOp.NONE) {
-            edits.unshift(current.edit);
             switch (current.edit.op) {
                 case EditOp.DELETE_A:
+                    edits.unshift(current.edit);
                     ai--;
                     break;
                 case EditOp.INSERT_A:
+                    edits.unshift(current.edit);
                     bi--;
                     break;
                 case EditOp.REPAIR_A:
+                    if (current.edit.cost > 0) {
+                        edits.unshift(current.edit);
+                    }
                     ai--;
                     bi--;
                     break;
