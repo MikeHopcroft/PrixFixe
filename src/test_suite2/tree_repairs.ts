@@ -2,13 +2,7 @@ import { AttributeInfo } from '../attributes';
 import { Cart, ItemInstance } from '../cart';
 import { ICatalog } from '../catalog';
 
-import {
-    DiffResults,
-    Edit,
-    EditOp,
-    IRepairs,
-    treeDiff,
-} from './tree_diff';
+import { DiffResults, Edit, EditOp, IRepairs, treeDiff } from './tree_diff';
 
 export class TreeRepairs implements IRepairs<string, ItemInstance> {
     private attributeInfo: AttributeInfo;
@@ -124,11 +118,7 @@ export class TreeRepairs implements IRepairs<string, ItemInstance> {
             }
 
             // Repair children
-            const result = treeDiff(
-                this,
-                observed.children,
-                expected.children
-            );
+            const result = treeDiff(this, observed.children, expected.children);
             cost += result.cost;
             for (const edit of result.edits) {
                 for (const step of edit.steps) {

@@ -9,7 +9,7 @@
  *
  * This algorithm is intended to be used to score shopping carts, by reporting
  * the number of edits to convert an observed cart to an expected cart.
- * 
+ *
  * Edit cost assumptions
  *   1. any subtree can be deleted in its entirety is a single edit.
  *   2. adding a single instance of specific item that is its generic's default
@@ -160,10 +160,7 @@ class TreeDiff<S, T> {
                 );
 
                 // Insert into A
-                v.update(
-                    this.edits.insert(b),
-                    this.matrix[j - 1][i].cost
-                );
+                v.update(this.edits.insert(b), this.matrix[j - 1][i].cost);
 
                 // Repair A
                 v.update(

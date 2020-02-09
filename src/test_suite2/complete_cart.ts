@@ -1,6 +1,9 @@
-import { LogicalCart, LogicalItem } from "./interfaces";
+import { LogicalCart, LogicalItem } from './interfaces';
 
-export function cartIsComplete(observed: LogicalCart, expected: LogicalCart): boolean {
+export function cartIsComplete(
+    observed: LogicalCart,
+    expected: LogicalCart
+): boolean {
     const o = canonicalCartLines(observed);
     const e = canonicalCartLines(expected);
 
@@ -28,7 +31,10 @@ function canonicalCartLines(cart: LogicalCart): string[] {
     return lines;
 }
 
-function *itemLines(prefix: string, item: LogicalItem): IterableIterator<string> {
+function* itemLines(
+    prefix: string,
+    item: LogicalItem
+): IterableIterator<string> {
     const current = `${prefix}/${item.quantity}:${item.sku}`;
     yield current;
     for (const child of item.children) {

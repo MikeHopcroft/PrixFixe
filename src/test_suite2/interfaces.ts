@@ -36,8 +36,11 @@ export interface LogicalCase<STEP> {
 }
 
 export type LogicalTestCase = LogicalCase<LogicalTestStep>;
-export type LogicalValidationCaseTurnByTurn = LogicalCase<LogicalValidationStep>;
-export interface LogicalValidationCaseCompleteOrder extends LogicalCase<LogicalTestStep> {
+export type LogicalValidationCaseTurnByTurn = LogicalCase<
+    LogicalValidationStep
+>;
+export interface LogicalValidationCaseCompleteOrder
+    extends LogicalCase<LogicalTestStep> {
     cart: LogicalCart;
 }
 
@@ -49,7 +52,7 @@ export interface LogicalMeasures {
         steps: string[];
     };
 }
- 
+
 export interface LogicalTestSuite {
     tests: LogicalTestCase[];
 }
