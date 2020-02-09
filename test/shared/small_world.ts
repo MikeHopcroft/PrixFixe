@@ -67,10 +67,23 @@ export const genericMilk: GenericTypedEntity = {
     kind: MENUITEM,
 };
 
+export const genericWhippedPID = 2000;
+export const whippedCID: CID = 600;
+export const genericWhipped: GenericTypedEntity = {
+    pid: genericWhippedPID,
+    cid: whippedCID,
+    name: 'whip',
+    aliases: ['whip', 'whipped cream'],
+    defaultKey: '2000:1',
+    tensor: 3,
+    kind: OPTION,
+};
+
 export const genericItems: GenericTypedEntity[] = [
     genericCone,
     genericCoffee,
     genericMilk,
+    genericWhipped,
 ];
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -148,6 +161,34 @@ export const caffeines: AttributeDescription[] = [
     },
 ];
 
+export const quantityNo: AID = 8;
+export const quantityLight: AID = 9;
+export const quantityRegular: AID = 10;
+export const quantityExtra: AID = 11;
+
+export const quantities: AttributeDescription[] = [
+    {
+        aid: quantityNo,
+        name: 'no',
+        aliases: ['no', 'without'],
+    },
+    {
+        aid: quantityLight,
+        name: 'light',
+        aliases: ['light'],
+    },
+    {
+        aid: quantityRegular,
+        name: 'regular',
+        aliases: ['regular'],
+    },
+    {
+        aid: quantityExtra,
+        name: 'extra',
+        aliases: ['extra'],
+    },
+];
+
 // export const milkWhole: AID = 8;
 // export const milkTwo: AID = 9;
 // export const milkZero: AID = 10;
@@ -175,6 +216,7 @@ export const size: DID = 0;
 export const flavor: DID = 1;
 export const temperature: DID = 2;
 export const caffeine: DID = 3;
+export const quantity: DID = 4;
 
 export const sizeDimensionDescription: DimensionDescription = {
     did: size,
@@ -200,6 +242,12 @@ export const caffieneDimensionDescription: DimensionDescription = {
     attributes: caffeines,
 };
 
+export const quantityDimensionDescription: DimensionDescription = {
+    did: quantity,
+    name: 'quantity',
+    attributes: quantities,
+};
+
 export const softServeTensorDescription: TensorDescription = {
     tid: 1,
     name: 'soft serve',
@@ -210,6 +258,12 @@ export const coffeeTensorDescription: TensorDescription = {
     tid: 2,
     name: 'coffee',
     dimensions: [size, temperature, caffeine],
+};
+
+export const toppingTensorDescription: TensorDescription = {
+    tid: 3,
+    name: 'topping',
+    dimensions: [quantity],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -233,6 +287,11 @@ export const caffeineDimension = new Dimension(
     'caffeines',
     caffeines.values()
 );
+export const quantityDimension = new Dimension(
+    quantity,
+    'quantities',
+    quantities.values()
+);
 
 export const softServeDimensions = [sizeDimension, flavorDimension];
 export const coffeeDimensions = [
@@ -240,6 +299,7 @@ export const coffeeDimensions = [
     temperatureDimension,
     caffeineDimension,
 ];
+export const toppingDimensions = [quantityDimension];
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -257,8 +317,13 @@ export const smallWorldAttributes: DimensionAndTensorDescription = {
         flavorDimensionDescription,
         temperatureDimensionDescription,
         caffieneDimensionDescription,
+        quantityDimensionDescription,
     ],
-    tensors: [softServeTensorDescription, coffeeTensorDescription],
+    tensors: [
+        softServeTensorDescription,
+        coffeeTensorDescription,
+        toppingTensorDescription,
+    ],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -383,17 +448,24 @@ export const soyMilk: SpecificTypedEntity = {
     kind: OPTION,
 };
 
-export const whippedCream: SpecificTypedEntity = {
-    sku: 2002,
-    name: 'with whipped cream',
-    key: '2000:2',
-    kind: OPTION,
-};
-
 export const noWhippedCream: SpecificTypedEntity = {
     sku: 2000,
     name: 'with no whipped cream',
     key: '2000:0',
+    kind: OPTION,
+};
+
+export const lightWhippedCream: SpecificTypedEntity = {
+    sku: 2001,
+    name: 'with light whipped cream',
+    key: '2000:1',
+    kind: OPTION,
+};
+
+export const whippedCream: SpecificTypedEntity = {
+    sku: 2002,
+    name: 'with whipped cream',
+    key: '2000:2',
     kind: OPTION,
 };
 
@@ -414,8 +486,9 @@ export const specificItems: SpecificTypedEntity[] = [
     twoMilk,
     zeroMilk,
     soyMilk,
-    whippedCream,
     noWhippedCream,
+    lightWhippedCream,
+    whippedCream,
 ];
 
 ///////////////////////////////////////////////////////////////////////////////

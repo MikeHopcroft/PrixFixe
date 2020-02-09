@@ -124,14 +124,16 @@ export class Cost implements IRepairs<string, ItemInstance> {
             }
 
             // Repair children
-            const edit = levenshtein(
+            const result = levenshtein(
                 this,
                 observed.children,
                 expected.children
             );
-            cost += edit.cost;
-            for (const step of edit.edits) {
-                steps.push(`  ` + step);
+            cost += result.cost;
+            for (const edit of result.edits) {
+                for (const step of edit.steps) {
+                    steps.push(`  ` + step);
+                }
             }
         }
 
