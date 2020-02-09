@@ -370,9 +370,7 @@ describe('Repair', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: [
-                    '  id(4): delete item(5000:0)',
-                ],
+                steps: ['  id(4): delete item(5000:0)'],
             },
         ];
 
@@ -398,9 +396,7 @@ describe('Repair', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: [
-                    '  id(5): delete item(2000:2)',
-                ],
+                steps: ['  id(5): delete item(2000:2)'],
             },
         ];
 
@@ -461,7 +457,7 @@ describe('Repair', () => {
                         },
                         {
                             uid: idGenerator.nextId(),
-                            key: noWhippedCream.key,    // CHANGED ATTRIBUTE
+                            key: noWhippedCream.key, // CHANGED ATTRIBUTE
                             quantity: 1,
                             children: [],
                         },
@@ -475,14 +471,12 @@ describe('Repair', () => {
                 },
             ],
         };
-        
+
         const expectedEdits: Array<Edit<string>> = [
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: [
-                    '  id(5): change attribute 10 to 8',
-                ],
+                steps: ['  id(5): change attribute 10 to 8'],
             },
         ];
 
@@ -506,7 +500,7 @@ describe('Repair', () => {
                         {
                             uid: idGenerator.nextId(),
                             key: wholeMilk.key,
-                            quantity: 5,    // CHANGED QUANTITY
+                            quantity: 5, // CHANGED QUANTITY
                             children: [],
                         },
                         {
@@ -525,14 +519,12 @@ describe('Repair', () => {
                 },
             ],
         };
-        
+
         const expectedEdits: Array<Edit<string>> = [
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: [
-                    '  id(4): change quantity to 5',
-                ],
+                steps: ['  id(4): change quantity to 5'],
             },
         ];
 
