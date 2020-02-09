@@ -1,31 +1,22 @@
+// TODO: update comment
+// TODO: rename to treeDiff?
+
 /******************************************************************************
  *
- * Levenshtein repair distance.
+ * Tree repair distance.
  *
- * Computing minimum edits to transform sequence A into sequence B.
+ * Computes the shortest sequence of edits to transform tree A into tree B.
  *
- * Given sequences a and b, compute the minimum Levenshtein distance match
- * between b and a prefix of a.
- *
- * This algorithm is intended to be used to evaluate potential partial matches
- * between catalog items and a longer phrases. Consider the following examples:
- *
- *   a: "The Pontiac Trans Am parked in the driveway"
- *   b: "The Pontiac" matches at positon 0 with edit distance 0.
- *   b: "Pontiac" matches at postion 1 with edit distance 1.
- *   b: "Pontiac Trans Am" matches at position 1 with edit distance 1.
- *   b: "Pontiac parked in the driveway" matches at position 1 with d=3.
- *
- * The algorithm can be applied to sequences represented as character string
- * and arrays. In the case of array-based sequences, one can pass an equality
- * predicate. The equality predicate is useful when performing pattern
- * matching against sequences of tokens. As an example:
- *
- *   a: [PURCHASE] [QUANTITY(5)] [ITEM(27)] [CONJUNCTION] [ITEM(43)]
- *   b: [PURCHASE] [QUANTITY(*)] [ITEM(*)]
- *
- * matches at position 0 with d=1, when using an equality predicate where
- * [QUANTITY(*)] is equal to any QUANTITY and ITEM(*) is equal to any ITEM.
+ * This algorithm is intended to be used to score shopping carts, by reporting
+ * the number of edits to convert an observed cart to an expected cart.
+ * 
+ * Edit cost assumptions
+ *   1. any subtree can be deleted in its entirety is a single edit.
+ *   2. adding a single instance of specific item that is its generic's default
+ *      form is a single edit. This applies to top-level products, and their
+ *      children.
+ *   3. changing an attribute value is a single edit.
+ *   4. changing a quantity is a single edit.
  *
  ******************************************************************************/
 
@@ -57,6 +48,21 @@ const nop: Edit<any> = {
     steps: [],
 };
 
+// tslint:disable-next-line:interface-name
+export interface IRepairs<S, T> {
+    // Returns an Edit<S> that gives the cost and sequence of steps required
+    // to delete a specified item.
+    delete(item: T): Edit<S>;
+
+    // Returns an Edit<S> that gives the cost and sequence of steps required
+    // to insert a specified item.
+    insert(item: T): Edit<S>;
+
+    // Returns an Edit<S> that gives the cost and sequence of steps required
+    // to convert the observed item to the expected item.
+    repair(observed: T, expected: T): Edit<S>;
+}
+
 // Vertices corresepond to cells in the dynamic programming matrix.
 class Vertex<S> {
     edit: Edit<S>; // The Edit on the best known path into this vertex.
@@ -79,40 +85,7 @@ class Vertex<S> {
     }
 }
 
-// tslint:disable-next-line:interface-name
-export interface IRepairs<S, T> {
-    delete(item: T): Edit<S>;
-    insert(item: T): Edit<S>;
-    repair(existing: T, expected: T): Edit<S>;
-}
-
-class DefaultCosts<T> implements IRepairs<string, T> {
-    delete(item: T): Edit<string> {
-        return {
-            op: EditOp.DELETE_A,
-            cost: 1,
-            steps: ['delete'],
-        };
-    }
-
-    insert(item: T): Edit<string> {
-        return {
-            op: EditOp.INSERT_A,
-            cost: 1,
-            steps: ['insert'],
-        };
-    }
-
-    repair(existing: T, expected: T): Edit<string> {
-        return {
-            op: EditOp.REPAIR_A,
-            cost: 1,
-            steps: ['repair'],
-        };
-    }
-}
-
-class DiffMatrix<S, T> {
+class TreeDiff<S, T> {
     edits: IRepairs<S, T>;
 
     // The observed sequence.
@@ -136,15 +109,16 @@ class DiffMatrix<S, T> {
         this.a = a;
         this.b = b;
 
-        this.initializeMatrix();
-        this.findBestPath();
+        this.initializeFirstRowAndColumn();
+        this.forwardPropagate();
         this.tracePath();
     }
 
-    // Initialize the dynamic programming matrix with a vertex at each cell.
-    // Initialize delete path for sequence `a` (row 0) and sequence `b`
-    // (column 0).
-    private initializeMatrix(): void {
+    // Initialize the first row and column of the dynamic programming matrix.
+    // Cells in the first row and column differ from the other cells, in that
+    // they are only reachable from one neighbor (previous), instead of three
+    // (left, below, below-left).
+    private initializeFirstRowAndColumn(): void {
         const aLen = this.a.length;
         const bLen = this.b.length;
 
@@ -152,26 +126,25 @@ class DiffMatrix<S, T> {
         for (let j = 0; j <= bLen; ++j) {
             const row = new Array(aLen + 1);
             if (j === 0) {
+                // Initialize first row.
                 row[0] = new Vertex(nop, 0);
                 for (let i = 1; i <= aLen; ++i) {
+                    // Path comes from the cell to the left.
                     const edit = this.edits.delete(this.a[i - 1]);
                     row[i] = new Vertex(edit, row[i - 1].cost);
                 }
                 this.matrix[j] = row;
             } else {
+                // Initialize first column. Path comes from below.
                 const edit = this.edits.insert(this.b[j - 1]);
                 row[0] = new Vertex(edit, this.matrix[j - 1][0].cost);
-                for (let i = 1; i <= aLen; ++i) {
-                    row[i] = new Vertex(nop, Infinity);
-                }
                 this.matrix[j] = row;
             }
         }
     }
 
-    // Dynamic programming algorithm fills in best edits and corresponding
-    // Levenshtein distances at each vertex.
-    private findBestPath(): void {
+    // Dynamic programming algorithm fills in best edits and associated costs.
+    private forwardPropagate(): void {
         const aLen = this.a.length;
         const bLen = this.b.length;
 
@@ -181,32 +154,24 @@ class DiffMatrix<S, T> {
                 const b = this.b[j - 1];
 
                 // Delete from A
-                this.matrix[j][i].update(
+                const v = new Vertex(
                     this.edits.delete(a),
                     this.matrix[j][i - 1].cost
                 );
-                // this.matrix[j][i].update(
-                //     EditOp.DELETE_A,
-                //     this.matrix[j][i - 1].cost + this.costs.deleteCost(a)
-                // );
 
                 // Insert into A
-                this.matrix[j][i].update(
+                v.update(
                     this.edits.insert(b),
                     this.matrix[j - 1][i].cost
                 );
-                // this.matrix[j][i].update(
-                //     EditOp.INSERT_A, this.matrix[j - 1][i].cost + this.costs.insertCost(b));
 
                 // Repair A
-                this.matrix[j][i].update(
+                v.update(
                     this.edits.repair(a, b),
                     this.matrix[j - 1][i - 1].cost
                 );
-                // this.matrix[j][i].update(
-                //     EditOp.REPAIR_A,
-                //     this.matrix[j - 1][i - 1].cost + this.costs.repairCost(a, b)
-                // );
+
+                this.matrix[j][i] = v;
             }
         }
     }
@@ -254,12 +219,12 @@ class DiffMatrix<S, T> {
     }
 }
 
-// Generic sequence diff.
-export function levenshtein<S, T>(
+// TODO: consider returning something other than DiffResults.
+export function treeDiff<S, T>(
     costs: IRepairs<S, T>,
     observed: T[],
     expected: T[]
 ): DiffResults<S, T> {
-    const d = new DiffMatrix<S, T>(costs, observed, expected);
+    const d = new TreeDiff<S, T>(costs, observed, expected);
     return d.result;
 }

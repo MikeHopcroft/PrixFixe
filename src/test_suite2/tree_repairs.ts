@@ -7,10 +7,10 @@ import {
     Edit,
     EditOp,
     IRepairs,
-    levenshtein,
-} from './levenshtein';
+    treeDiff,
+} from './tree_diff';
 
-export class Cost implements IRepairs<string, ItemInstance> {
+export class TreeRepairs implements IRepairs<string, ItemInstance> {
     private attributeInfo: AttributeInfo;
     private catalog: ICatalog;
 
@@ -23,7 +23,7 @@ export class Cost implements IRepairs<string, ItemInstance> {
         observed: Cart,
         expected: Cart
     ): DiffResults<string, ItemInstance> {
-        return levenshtein(this, observed.items, expected.items);
+        return treeDiff(this, observed.items, expected.items);
     }
 
     delete(item: ItemInstance): Edit<string> {
@@ -124,7 +124,7 @@ export class Cost implements IRepairs<string, ItemInstance> {
             }
 
             // Repair children
-            const result = levenshtein(
+            const result = treeDiff(
                 this,
                 observed.children,
                 expected.children

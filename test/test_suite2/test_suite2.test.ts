@@ -3,7 +3,7 @@ import 'mocha';
 
 import { AttributeInfo } from '../../src/attributes';
 import { Cart, ItemInstance } from '../../src/cart';
-import { Cost, Edit, EditOp } from '../../src/test_suite2';
+import { TreeRepairs, Edit, EditOp } from '../../src/test_suite2';
 import { IDGenerator } from '../../src/utilities';
 
 import {
@@ -26,7 +26,7 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const cost = new Cost(attributeInfo, smallWorldCatalog);
+const cost = new TreeRepairs(attributeInfo, smallWorldCatalog);
 
 const idGenerator = new IDGenerator();
 

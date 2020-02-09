@@ -1,4 +1,4 @@
 export * from './interfaces';
-export * from './levenshtein';
 export * from './logical_cart';
-export * from './test_suite2';
+export * from './tree_diff';
+export * from './tree_repairs';

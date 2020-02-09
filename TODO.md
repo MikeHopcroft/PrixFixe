@@ -1,4 +1,14 @@
 
+* New
+  * Unit tests for cartIsComplete()
+  * itemInstanceFromLogialItem()
+  * Remove idGenerator from unit test
+  * Converter from legacy TestSuite to LogicalTestSuite
+  * LogicalValidationSuite filter by suite, id, remove answers
+  * LogicalValidationSuite grading/comparison/explanation function
+  * Some provision for recording crashes/timeouts
+  * YAML file schema
+  * YAML files loader and validator
 * TestStep
   * Replace TestLineItem.key field with sku
   * Replace rawSTT, correctedSTT, and correctedScope with input
@@ -20,3 +30,4 @@
   * key <==> sku conversion method
   * SKUCart and SKUItemInstance and SKUProcessor
   * SimpleCart, SimpleItem, SimpleProcessor
+
