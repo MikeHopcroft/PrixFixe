@@ -26,7 +26,7 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const cost = new TreeRepairs(attributeInfo, smallWorldCatalog);
+const repairs = new TreeRepairs(attributeInfo, smallWorldCatalog);
 
 const idGenerator = new IDGenerator();
 
@@ -87,7 +87,7 @@ const cart3: Cart = {
     ],
 };
 
-describe('Repair', () => {
+describe('Repair cart', () => {
     it(`add default specific`, () => {
         const observed = cart0;
         const expected: Cart = {
@@ -109,7 +109,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -149,7 +149,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 5);
         assert.deepEqual(result.edits, expectedEdits);
@@ -169,7 +169,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -187,7 +187,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -210,7 +210,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
@@ -229,7 +229,7 @@ describe('Repair', () => {
             ],
         };
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
         assert.equal(result.cost, 0);
     });
 
@@ -254,7 +254,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -281,7 +281,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -311,7 +311,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
@@ -348,7 +348,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
@@ -374,7 +374,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -400,7 +400,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -432,7 +432,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
@@ -480,7 +480,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
@@ -528,7 +528,7 @@ describe('Repair', () => {
             },
         ];
 
-        const result = cost.repairCart(observed, expected);
+        const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 1);
         assert.deepEqual(result.edits, expectedEdits);
