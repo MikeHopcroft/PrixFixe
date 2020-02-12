@@ -53,14 +53,21 @@ export interface LogicalMeasures {
     };
 }
 
-export interface LogicalTestSuite {
-    tests: LogicalTestCase[];
+export interface LogicalSuite<CASE> {
+    tests: CASE[];
 }
 
-export interface LogicalValidationSuiteTurnByTurn {
-    tests: LogicalValidationCaseTurnByTurn[];
-}
+export type LogicalTestSuite = 
+    LogicalSuite<LogicalTestCase>;
+export type LogicalValidationSuiteTurnByTurn = 
+    LogicalSuite<LogicalValidationCaseTurnByTurn>;
+export type LogicalValidationSuiteCompleteOrder = 
+    LogicalSuite<LogicalValidationCaseCompleteOrder>;
 
-export interface LogicalValidationSuiteCompleteOrder {
-    tests: LogicalValidationCaseCompleteOrder[];
-}
+// export interface LogicalValidationSuiteTurnByTurn {
+//     tests: LogicalValidationCaseTurnByTurn[];
+// }
+
+// export interface LogicalValidationSuiteCompleteOrder {
+//     tests: LogicalValidationCaseCompleteOrder[];
+// }
