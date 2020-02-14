@@ -1,4 +1,4 @@
-import { SuitePredicate } from "../test_suite/suite_filter";
+import { SuitePredicate } from '../test_suite/suite_filter';
 
 import {
     CombinedTurn,
@@ -8,16 +8,12 @@ import {
     Step,
     TextTurn,
     ValidationStep,
-} from "./interfaces";
+} from './interfaces';
 
-export function filterSuite<
-    SUITE extends GenericSuite<STEP>,
-    STEP
->(
+export function filterSuite<SUITE extends GenericSuite<STEP>, STEP>(
     suite: SUITE,
     suiteFilter: SuitePredicate
-): GenericSuite<STEP>
-{
+): GenericSuite<STEP> {
     const tests: Array<GenericCase<STEP>> = [];
     for (const test of suite.tests) {
         const suites = test.suites.split(',').map(x => x.trim());
@@ -50,8 +46,7 @@ export type StepConverter<
     TURN2
 > = (step: STEP1) => STEP2;
 
-export type TurnConverter<TURN1, TURN2> =
-    (turn: TURN1) => TURN2;
+export type TurnConverter<TURN1, TURN2> = (turn: TURN1) => TURN2;
 
 export function convertSuite2<
     SUITE extends GenericSuite<STEP1>,
@@ -64,13 +59,13 @@ export function convertSuite2<
     stepConverter: StepConverter<ValidationStep<TURN1>, TURN1, STEP2, TURN1>,
     turnConverter: TurnConverter<TURN1, TURN2>
 ): GenericSuite<Step<TURN2>> {
-    const tests = suite.tests.map( (test) => {
+    const tests = suite.tests.map(test => {
         // const f = (step: ValidationStep<TURN1>): Step<TURN1> => {
         //     const { ['cart']: _, ...filtered } = step;
         //     return { ...filtered } ;
         // };
 
-        const steps = test.steps.map( (step) => {
+        const steps = test.steps.map(step => {
             const { ['cart']: _, ...s } = step;
             const s1 = stepConverter(step);
             // const s1 = f(step);
@@ -82,7 +77,7 @@ export function convertSuite2<
             // const x: STEP3 = {...s, turns: t};
         });
 
-        return {...test, steps};
+        return { ...test, steps };
     });
 
     return { tests };
@@ -99,25 +94,23 @@ function go2<SUITE>(suite: GenericSuite<ValidationStep<CombinedTurn>>) {
     // const y = convertSuite(suite, cartRemover(removeTranscription));
 }
 
-
-
 export function cartRemover<TURN1, TURN2>(
     converter: TurnConverter<TURN1, TURN2>
 ): StepConverter<ValidationStep<TURN1>, TURN1, Step<TURN2>, TURN2> {
     return (step: ValidationStep<TURN1>): Step<TURN2> => {
         const turns: TURN2[] = step.turns.map(converter);
         const { ['cart']: _, ...filtered } = step;
-        return { ...filtered, turns} ;
+        return { ...filtered, turns };
     };
 }
 
 export function removeTranscription(turn: CombinedTurn): SpokenTurn {
-    const {['transcription']: _, ...filtered} = turn;
+    const { ['transcription']: _, ...filtered } = turn;
     return filtered;
 }
 
 export function removeAudio(turn: CombinedTurn): TextTurn {
-    const {['audio']: _, ...filtered} = turn;
+    const { ['audio']: _, ...filtered } = turn;
     return filtered;
 }
 
@@ -132,9 +125,9 @@ export function convertSuite<
     converter: StepConverter<STEP1, TURN1, STEP2, TURN2>
 ): GenericSuite<STEP2> {
     return {
-        tests: suite.tests.map( (test) => {
+        tests: suite.tests.map(test => {
             const steps = test.steps.map(converter);
-            return {...test, steps};
+            return { ...test, steps };
         }),
     };
 }
@@ -160,8 +153,8 @@ function go<SUITE>(suite: GenericSuite<ValidationStep<CombinedTurn>>) {
 export function removeCart<TURN>(
     testCase: GenericCase<ValidationStep<TURN>>
 ): GenericCase<Step<TURN>> {
-    const steps = testCase.steps.map( step => {
-        const {['cart']: _, ...filtered} = step;
+    const steps = testCase.steps.map(step => {
+        const { ['cart']: _, ...filtered } = step;
         return filtered;
     });
     return { ...testCase, steps };
@@ -170,13 +163,13 @@ export function removeCart<TURN>(
 export function removeCartAndTranscription(
     testCase: GenericCase<ValidationStep<CombinedTurn>>
 ): GenericCase<Step<SpokenTurn>> {
-    const steps = testCase.steps.map( step => {
-        const turns = step.turns.map( turn => {
-            const {['transcription']: _, ...filtered} = turn;
+    const steps = testCase.steps.map(step => {
+        const turns = step.turns.map(turn => {
+            const { ['transcription']: _, ...filtered } = turn;
             return filtered;
         });
         const { ['cart']: _, ...filtered } = step;
-        return { ...filtered, turns} ;
+        return { ...filtered, turns };
     });
     return { ...testCase, steps };
 }
@@ -184,13 +177,13 @@ export function removeCartAndTranscription(
 export function removeCartAndAudio(
     testCase: GenericCase<ValidationStep<CombinedTurn>>
 ): GenericCase<Step<TextTurn>> {
-    const steps = testCase.steps.map( step => {
-        const turns = step.turns.map( turn => {
-            const {['audio']: _, ...filtered} = turn;
+    const steps = testCase.steps.map(step => {
+        const turns = step.turns.map(turn => {
+            const { ['audio']: _, ...filtered } = turn;
             return filtered;
         });
         const { ['cart']: _, ...filtered } = step;
-        return { ...filtered, turns} ;
+        return { ...filtered, turns };
     });
     return { ...testCase, steps };
 }

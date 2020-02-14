@@ -58,14 +58,11 @@ export interface GenericSuite<STEP> {
     tests: Array<GenericCase<STEP>>;
 }
 
-export type LogicalTestSuite<TURN> =
-    GenericSuite<Step<TURN>>;
-export type LogicalValidationSuite<TURN> =
-    GenericSuite<ValidationStep<TURN>>;
-export type LogicalScoredSuite<TURN> =
-    GenericSuite<ScoredStep<TURN>>;
+export type LogicalTestSuite<TURN> = GenericSuite<Step<TURN>>;
+export type LogicalValidationSuite<TURN> = GenericSuite<ValidationStep<TURN>>;
+export type LogicalScoredSuite<TURN> = GenericSuite<ScoredStep<TURN>>;
 
-export type AnySuite<TURN> = 
-    LogicalTestSuite<TURN> |
-    LogicalValidationSuite<TURN> |
-    LogicalScoredSuite<TURN>;
+export type AnySuite<TURN> =
+    | LogicalTestSuite<TURN>
+    | LogicalValidationSuite<TURN>
+    | LogicalScoredSuite<TURN>;
