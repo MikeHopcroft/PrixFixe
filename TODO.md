@@ -1,14 +1,14 @@
 
 * New
-  * Unit tests for cartIsComplete()
+  * YAML file schema
+  * YAML files loader and validator
+  * LogicalValidationSuite filter by suite, id, remove answers
+  * LogicalValidationSuite grading/comparison/explanation function
   * itemInstanceFromLogialItem()
   * Remove idGenerator from unit test
   * Converter from legacy TestSuite to LogicalTestSuite
-  * LogicalValidationSuite filter by suite, id, remove answers
-  * LogicalValidationSuite grading/comparison/explanation function
   * Some provision for recording crashes/timeouts
-  * YAML file schema
-  * YAML files loader and validator
+  * x Unit tests for cartIsComplete()
 * TestStep
   * Replace TestLineItem.key field with sku
   * Replace rawSTT, correctedSTT, and correctedScope with input

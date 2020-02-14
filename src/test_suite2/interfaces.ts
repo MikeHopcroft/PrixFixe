@@ -9,24 +9,43 @@ export interface LogicalCart {
     items: LogicalItem[];
 }
 
-export interface LogicalInput {
-    input: string;
+export interface TurnBase {
+    speaker: string;
 }
 
-export interface LogicalExpected {
-    // TODO: should cart be optional, or should the type system
-    // reflect the difference between interim carts and final carts.
-    cart?: LogicalCart;
+export interface TurnTranscription {
+    transcription: string;
 }
 
-export type LogicalTestStep = LogicalInput;
-export type LogicalValidationStep = LogicalInput & LogicalExpected;
-// export interface LogicalTestStep {
-//     input: string;
-//     cart?: LogicalCart;
-// }
+export interface TurnAudio {
+    audio: string;
+}
 
-export interface LogicalCase<STEP> {
+export type SpokenTurn = TurnBase & TurnAudio;
+export type TextTurn = TurnBase & TurnTranscription;
+export type CombinedTurn = TurnBase & TurnAudio & TurnTranscription;
+
+export interface Expected {
+    cart: LogicalCart;
+}
+
+export interface Measures {
+    perfect: boolean;
+    complete: boolean;
+    repairs?: {
+        cost: number;
+        steps: string[];
+    };
+}
+
+export interface Step<TURN> {
+    turns: TURN[];
+}
+
+export type ValidationStep<TURN> = Step<TURN> & Expected;
+export type ScoredStep<TURN> = ValidationStep<TURN> & Measures;
+
+export interface GenericCase<STEP> {
     // TODO: consider retaining id? Provided by loader, not YAML.
     id: number;
     // TODO: consider string or string[]. Difference between YAML and object.
@@ -35,39 +54,18 @@ export interface LogicalCase<STEP> {
     steps: STEP[];
 }
 
-export type LogicalTestCase = LogicalCase<LogicalTestStep>;
-export type LogicalValidationCaseTurnByTurn = LogicalCase<
-    LogicalValidationStep
->;
-export interface LogicalValidationCaseCompleteOrder
-    extends LogicalCase<LogicalTestStep> {
-    cart: LogicalCart;
+export interface GenericSuite<STEP> {
+    tests: Array<GenericCase<STEP>>;
 }
 
-export interface LogicalMeasures {
-    perfect: boolean;
-    complete: boolean;
-    repairs: {
-        cost: number;
-        steps: string[];
-    };
-}
+export type LogicalTestSuite<TURN> =
+    GenericSuite<Step<TURN>>;
+export type LogicalValidationSuite<TURN> =
+    GenericSuite<ValidationStep<TURN>>;
+export type LogicalScoredSuite<TURN> =
+    GenericSuite<ScoredStep<TURN>>;
 
-export interface LogicalSuite<CASE> {
-    tests: CASE[];
-}
-
-export type LogicalTestSuite = 
-    LogicalSuite<LogicalTestCase>;
-export type LogicalValidationSuiteTurnByTurn = 
-    LogicalSuite<LogicalValidationCaseTurnByTurn>;
-export type LogicalValidationSuiteCompleteOrder = 
-    LogicalSuite<LogicalValidationCaseCompleteOrder>;
-
-// export interface LogicalValidationSuiteTurnByTurn {
-//     tests: LogicalValidationCaseTurnByTurn[];
-// }
-
-// export interface LogicalValidationSuiteCompleteOrder {
-//     tests: LogicalValidationCaseCompleteOrder[];
-// }
+export type AnySuite<TURN> = 
+    LogicalTestSuite<TURN> |
+    LogicalValidationSuite<TURN> |
+    LogicalScoredSuite<TURN>;
