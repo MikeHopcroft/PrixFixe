@@ -6,8 +6,8 @@ import {
     LogicalValidationSuite,
     LogicalScoredSuite,
     ScoredStep,
-    ValidationStep
-} from "./interfaces";
+    ValidationStep,
+} from './interfaces';
 
 import { cartIsComplete } from './complete_cart';
 import { cartFromlogicalCart } from './logical_cart';
@@ -30,7 +30,7 @@ export class SuiteScorer {
             const message = `test count mismatch`;
             throw new TypeError(message);
         }
-        
+
         const tests: Array<GenericCase<ScoredStep<TURN>>> = [];
         for (const [i, o] of observed.tests.entries()) {
             const e = expected.tests[i];

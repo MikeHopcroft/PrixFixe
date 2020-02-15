@@ -1,4 +1,4 @@
-import { LogicalScoredSuite } from "./interfaces";
+import { LogicalScoredSuite } from './interfaces';
 
 export interface AggregatedMeasures {
     totalSteps: number;

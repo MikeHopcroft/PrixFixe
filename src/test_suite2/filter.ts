@@ -61,7 +61,7 @@ export function filterSuite<SUITE extends GenericSuite<STEP>, STEP>(
     suite: SUITE,
     suiteFilter: SuitePredicate
 ): GenericSuite<STEP> {
-    const tests = suite.tests.filter( (test) => {
+    const tests = suite.tests.filter(test => {
         const suites = test.suites.split(',').map(x => x.trim());
         return suiteFilter(suites);
     });
