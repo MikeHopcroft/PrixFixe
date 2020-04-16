@@ -94,7 +94,7 @@ function convertLegacyTestSuiteFile()
         return fail(message);
     }
 
-    const suite = convertLegacyTestSuite(legacySuite);
+    const suite = convertLegacyTestSuite(legacySuite, world.catalog);
 
     const yamlTextOut = yaml.safeDump(suite);
     fs.writeFileSync(outFile, yamlTextOut, 'utf8');
@@ -143,38 +143,52 @@ function showUsage() {
     console.log(commandLineUsage(usage));
 }
 
-function convertLegacyTestSuite(legacySuite: LegacySuite): Array<GenericCase<ValidationStep<TextTurn>>> {
+function convertLegacyTestSuite(
+    legacySuite: LegacySuite,
+    catalog: ICatalog
+): Array<GenericCase<ValidationStep<TextTurn>>> {
+    const convertLegacyCase = (
+        legacy: LegacyCase,
+        id: number
+    ): GenericCase<ValidationStep<TextTurn>> => {
+        const steps: Array<ValidationStep<TextTurn>> = [];
+        for (let i = 0; i < legacy.inputs.length; ++i) {
+            const cart: LogicalCart = convertLegacyCart(
+                legacy.expected[i].lines,
+                catalog
+            );
+            steps.push({
+                turns: [{
+                    speaker: 'employee',
+                    transcription: legacy.inputs[i],
+                }],
+                cart,
+            });
+        }
+    
+        return {
+            id,
+            suites: legacy.suites,
+            comment: legacy.comment,
+            steps,
+        };
+    };
+    
     return legacySuite.map(convertLegacyCase);
 }
 
-function convertLegacyCase(legacy: LegacyCase, id: number): GenericCase<ValidationStep<TextTurn>> {
-    const steps: Array<ValidationStep<TextTurn>> = [];
-    for (let i = 0; i < legacy.inputs.length; ++i) {
-        const cart: LogicalCart = convertLegacyCart(legacy.expected[i].lines);
-        steps.push({
-            turns: [{
-                speaker: 'employee',
-                transcription: legacy.inputs[i],
-            }],
-            cart,
-        });
-    }
-
-    return {
-        id,
-        suites: legacy.suites,
-        comment: legacy.comment,
-        steps,
-    };
-}
-
-function convertLegacyCart(legacyItems: TestLineItem[]): LogicalCart {
+function convertLegacyCart(
+    legacyItems: TestLineItem[],
+    catalog: ICatalog
+): LogicalCart {
     const items: LogicalItem[] = [];
     for (const legacyItem of legacyItems) {
+        const specificItem = catalog.getSpecific(legacyItem.key);
+
         const item: LogicalItem = {
             quantity: legacyItem.quantity,
             name: legacyItem.name,
-            sku: legacyItem.key,
+            sku: specificItem.sku.toString(),
             children: [],
         };
         if (legacyItem.indent === 0) {
@@ -211,4 +225,3 @@ function go() {
 }
 
 go();
-
