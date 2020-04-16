@@ -1,6 +1,6 @@
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
-import * as assert from 'assert';
+
 import { TestLineItem, YamlTestCase } from '../src';
 
 // const args = new Map();
