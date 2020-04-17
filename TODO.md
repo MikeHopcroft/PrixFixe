@@ -13,7 +13,9 @@
   * x YAML files loader and validator - add to filter-suite and legacy-converter
   * >>>>>> Error formatting code
   * >>>>>> Evaluate
+    * Put aggregate measures into output suite.
     * Mode that doesn't require World to be loaded
+    * Should not crash if suite references unknown SKU
     * Repair cost explanation function
     * Remove idGenerator from unit test - why?
     * x itemInstanceFromLogicalItem()

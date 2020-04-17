@@ -7,14 +7,17 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 
 import { ICatalog } from '../catalog';
-import { createWorld, World } from '../processors';
+import { createWorld } from '../processors';
 
 import { TestLineItem } from '../test_suite';
 
 import {
+    fail,
     GenericCase,
+    handleError,
     LogicalCart,
     LogicalItem,
+    succeed,
     TextTurn,
     ValidationStep,
     writeYAML
@@ -32,7 +35,7 @@ interface LegacyCase {
 
 type LegacySuite = LegacyCase[];
 
-function convertLegacyTestSuiteFile()
+function main()
 {
     dotenv.config();
 
@@ -60,46 +63,29 @@ function convertLegacyTestSuiteFile()
         return fail(message);
     }
 
+    try {
+        convertLegacyTestSuiteFile(inFile, outFile, dataPath);
+    } catch (e) {
+        handleError(e);
+    }
+}
+
+function convertLegacyTestSuiteFile(inFile: string, outFile: string, dataPath: string) {
     console.log('Converting');
     console.log(`  from legacy test suite: ${inFile}`);
     console.log(`  to output file: ${outFile}`);
     console.log(`With data path = ${dataPath}`);
     console.log('');
 
-    let world: World;
-    try {
-        world = createWorld(dataPath);
-    } catch (err) {
-        if (err.code === 'ENOENT' || err.code === 'EISDIR') {
-            const message = `Error: create world failed: cannot open "${err.path}"`;
-            return fail(message);
-        } else {
-            throw err;
-        }
-    }
+    // Load the world, which provides the ICatalog.
+    const world = createWorld(dataPath);
 
     // Load the legacy test suite.
     console.log(`Reading legacy suite from ${inFile}`);
-    let yamlTextIn: string;
-    try {
-        yamlTextIn = fs.readFileSync(inFile, 'utf8');
-    } catch (err) {
-        if (err.code === 'ENOENT' || err.code === 'EISDIR') {
-            const message = `Error: cannot open ${inFile}`;
-            return fail(message);
-        } else {
-            throw err;
-        }
-    }
+    const yamlTextIn = fs.readFileSync(inFile, 'utf8');
+    const legacySuite = yaml.safeLoad(yamlTextIn) as LegacySuite;
 
-    let legacySuite: LegacySuite;
-    try {
-        legacySuite = yaml.safeLoad(yamlTextIn) as LegacySuite;
-    } catch (err) {
-        const message = `Error: invalid yaml in ${inFile}`;
-        return fail(message);
-    }
-
+    // Perform the conversion to GenericCase<ValidationStep<TextTurn>>[]
     const suite = convertLegacyTestSuite(legacySuite, world.catalog);
 
     console.log(`Writing converted suite to ${outFile}`);
@@ -214,27 +200,4 @@ function convertLegacyCart(
     return { items };
 }
 
-function fail(message: string) {
-    console.log(' ');
-    console.log(message);
-    console.log(' ');
-    console.log('Use the -h flag for help.');
-    console.log(' ');
-    console.log('Aborting');
-    console.log(' ');
-    process.exit(1);
-}
-
-function succeed(succeeded: boolean) {
-    if (succeeded) {
-        process.exit(0);
-    } else {
-        process.exit(1);
-    }
-}
-
-function go() {
-    convertLegacyTestSuiteFile();
-}
-
-go();
+main();

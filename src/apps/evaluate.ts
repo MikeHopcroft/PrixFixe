@@ -8,12 +8,15 @@ import { createWorld, World } from '../processors';
 
 import {
     aggregateMeasures,
+    fail,
+    handleError,
     loadLogicalValidationSuite,
+    succeed,
     SuiteScorer,
     writeYAML
 } from "../test_suite2";
 
-function convertLegacyTestSuiteFile()
+function main()
 {
     dotenv.config();
 
@@ -42,6 +45,19 @@ function convertLegacyTestSuiteFile()
         return fail(message);
     }
 
+    try {
+        evaluate(expectedFile, observedFile, scoredFile, dataPath);
+    } catch (e) {
+        handleError(e);
+    }
+}
+
+function evaluate(
+    expectedFile: string,
+    observedFile: string,
+    scoredFile: string,
+    dataPath: string
+) {
     console.log('Comparing');
     console.log(`  expected validation suite: ${expectedFile}`);
     console.log(`  observed validation suite: ${observedFile}`);
@@ -49,17 +65,8 @@ function convertLegacyTestSuiteFile()
     console.log(`With data path = ${dataPath}`);
     console.log(' ');
 
-    let world: World;
-    try {
-        world = createWorld(dataPath);
-    } catch (err) {
-        if (err.code === 'ENOENT' || err.code === 'EISDIR') {
-            const message = `Error: create world failed: cannot open "${err.path}"`;
-            return fail(message);
-        } else {
-            throw err;
-        }
-    }
+    // Load the world, which provides the AttributeInfo and ICatalog.
+    const world = createWorld(dataPath);
 
     // Load the expected validation suite.
     const expectedSuite = loadLogicalValidationSuite(expectedFile);
@@ -153,27 +160,4 @@ function showUsage() {
     console.log(commandLineUsage(usage));
 }
 
-function fail(message: string) {
-    console.log(' ');
-    console.log(message);
-    console.log(' ');
-    console.log('Use the -h flag for help.');
-    console.log(' ');
-    console.log('Aborting');
-    console.log(' ');
-    process.exit(1);
-}
-
-function succeed(succeeded: boolean) {
-    if (succeeded) {
-        process.exit(0);
-    } else {
-        process.exit(1);
-    }
-}
-
-function go() {
-    convertLegacyTestSuiteFile();
-}
-
-go();
+main();
