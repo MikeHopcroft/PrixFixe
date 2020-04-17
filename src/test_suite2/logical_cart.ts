@@ -48,17 +48,14 @@ function itemInstanceFromLogicalItem(
     item: LogicalItem,
     catalog: ICatalog
 ): ItemInstance {
-    // TODO: implement - need new API from catalog
-    // TODO: need uid generator
-    throw 0;
-    // const specific = catalog.getSpecificFromSKU(item.sku);
+    const specific = catalog.getSpecificFromSKU(item.sku);
 
-    // return {
-    //     uid: idGenerator.nextId(),
-    //     quantity: item.quantity,
-    //     key: specific.key,
-    //     children: item.children.map(
-    //         child => itemInstanceFromLogicalItem(child, catalog)
-    //     ),
-    // };
+    return {
+        uid: idGenerator.nextId(),
+        quantity: item.quantity,
+        key: specific.key,
+        children: item.children.map(
+            child => itemInstanceFromLogicalItem(child, catalog)
+        ),
+    };
 }

@@ -15,6 +15,7 @@ import {
     removeAudio,
     removeCart,
     removeTranscription,
+    writeYAML,
 } from "../test_suite2";
 
 function filterTestSuiteFile()
@@ -75,9 +76,7 @@ function filterTestSuiteFile()
     }
 
     console.log(`Writing filtered suite to ${outFile}`);
-    const yamlTextOut = yaml.safeDump(outputSuite);
-    // console.log(yaml.safeDump(yamlTextOut));
-    fs.writeFileSync(outFile, yamlTextOut, 'utf8');
+    writeYAML(outFile, outputSuite);
 
     console.log('Filtering complete');
     return succeed(true);

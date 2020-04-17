@@ -39,12 +39,16 @@ export interface Measures {
     };
 }
 
+export interface MeasuresField {
+    measures: Measures;
+}
+
 export interface Step<TURN> {
     turns: TURN[];
 }
 
 export type ValidationStep<TURN> = Step<TURN> & Expected;
-export type ScoredStep<TURN> = ValidationStep<TURN> & Measures;
+export type ScoredStep<TURN> = ValidationStep<TURN> & MeasuresField;
 
 export interface GenericCase<STEP> {
     // TODO: consider retaining id? Provided by loader, not YAML.

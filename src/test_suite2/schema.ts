@@ -1,5 +1,7 @@
 import * as AJV from 'ajv';
 import * as betterAjvErrors from 'better-ajv-errors';
+import * as fs from 'fs';
+import * as yaml from 'js-yaml';
 
 import { YAMLValidationError } from '../utilities';
 
@@ -12,6 +14,50 @@ import {
     LogicalValidationSuite
 } from './interfaces';
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Loaders
+//
+///////////////////////////////////////////////////////////////////////////////
+export function loadLogicalScoredSuite<TURN extends AnyTurn>(
+    filename: string
+): LogicalScoredSuite<TURN> {
+    const yamlTextIn = fs.readFileSync(filename, 'utf8');
+    const root = { tests: yaml.safeLoad(yamlTextIn) };
+    return logicalScoredSuite<TURN>(root);
+}
+
+export function loadLogicalTestSuite<TURN extends AnyTurn>(
+    filename: string
+): LogicalTestSuite<TURN> {
+    const yamlTextIn = fs.readFileSync(filename, 'utf8');
+    const root = { tests: yaml.safeLoad(yamlTextIn) };
+    return logicalTestSuite<TURN>(root);
+}
+
+export function loadLogicalValidationSuite<TURN extends AnyTurn>(
+    filename: string
+): LogicalValidationSuite<TURN> {
+    const yamlTextIn = fs.readFileSync(filename, 'utf8');
+    const root = { tests: yaml.safeLoad(yamlTextIn) };
+    return logicalValidationSuite<TURN>(root);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Writer
+//
+///////////////////////////////////////////////////////////////////////////////
+export function writeYAML<T>(filename: string, root: T) {
+    const yamlTextOut = yaml.safeDump(root);
+    fs.writeFileSync(filename, yamlTextOut, 'utf8');
+}
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Validators
+//
+///////////////////////////////////////////////////////////////////////////////
 export function logicalScoredSuite<TURN extends AnyTurn>(
     // tslint:disable-next-line:no-any
     root: any

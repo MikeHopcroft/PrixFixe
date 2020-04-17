@@ -16,7 +16,8 @@ import {
     LogicalCart,
     LogicalItem,
     TextTurn,
-    ValidationStep
+    ValidationStep,
+    writeYAML
 } from "../test_suite2";
 
 interface LegacyCase {
@@ -102,8 +103,7 @@ function convertLegacyTestSuiteFile()
     const suite = convertLegacyTestSuite(legacySuite, world.catalog);
 
     console.log(`Writing converted suite to ${outFile}`);
-    const yamlTextOut = yaml.safeDump(suite);
-    fs.writeFileSync(outFile, yamlTextOut, 'utf8');
+    writeYAML(outFile, suite);
 
     console.log('Conversion complete');
     return succeed(true);

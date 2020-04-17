@@ -80,9 +80,11 @@ export class SuiteScorer {
 
         return {
             ...observed,
-            perfect: repairs.cost === 0,
-            complete,
-            repairs,
+            measures: {
+                perfect: repairs.cost === 0,
+                complete,
+                repairs,
+            },
         };
     }
 }

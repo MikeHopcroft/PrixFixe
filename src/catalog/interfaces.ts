@@ -156,6 +156,8 @@ export interface ICatalog {
 
     getSpecific(key: Key): SpecificTypedEntity;
 
+    getSpecificFromSKU(sku: string): SpecificTypedEntity;
+
     getSpecificsForGeneric(pid: PID): IterableIterator<Key>;
 
     specificEntities(): IterableIterator<SpecificTypedEntity>;

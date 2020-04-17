@@ -17,15 +17,16 @@ export function aggregateMeasures<TURN>(
 
     for (const test of suite.tests) {
         for (const step of test.steps) {
+            const measures = step.measures;
             ++totalSteps;
-            if (step.perfect) {
+            if (measures.perfect) {
                 ++perfectSteps;
             }
-            if (step.complete) {
+            if (measures.complete) {
                 ++completeSteps;
             }
-            if (step.repairs) {
-                totalRepairs += step.repairs.cost;
+            if (measures.repairs) {
+                totalRepairs += measures.repairs.cost;
             }
         }
     }

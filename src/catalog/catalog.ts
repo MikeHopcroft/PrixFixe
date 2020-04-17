@@ -134,6 +134,16 @@ export class Catalog implements ICatalog {
         return item;
     }
 
+    getSpecificFromSKU(sku: string): SpecificTypedEntity {
+        const key = this.skuToKey.get(Number(sku));
+        if (key) {
+            return this.getSpecific(key);
+        } else {
+            const message = `Catalog.getSpecificFromSKU: unknown sku ${sku}.`;
+            throw TypeError(message);
+        }
+    }
+
     getSpecificsForGeneric(pid: PID): IterableIterator<Key> {
         if (this.pidToKeys.has(pid)) {
             return this.pidToKeys.get(pid)!.values();
