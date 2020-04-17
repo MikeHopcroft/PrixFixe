@@ -1,4 +1,4 @@
-import { SuitePredicate } from '../test_suite/suite_filter';
+import { SuitePredicate, suiteFilter } from '../test_suite/suite_filter';
 
 import {
     CombinedTurn,
@@ -26,10 +26,12 @@ export function convertSuite<
     TURN2
 >(
     suite: SUITE,
+    suiteFilter: SuitePredicate,
     stepConverter: StepConverter<ValidationStep<TURN1>, TURN1, STEP2, TURN1>,
     turnConverter: TurnConverter<TURN1, TURN2>
 ): GenericSuite<Step<TURN2>> {
-    const tests = suite.tests.map(test => {
+    const s = suite.tests.filter(test => suiteFilter(test.suites.split(/\s+/)));
+    const tests = s.map(test => {
         const steps = test.steps.map(step => {
             const s = stepConverter(step);
             const turns = s.turns.map(turnConverter);
@@ -81,9 +83,4 @@ export function filterSuite<SUITE extends GenericSuite<STEP>, STEP>(
     return {
         tests,
     };
-}
-
-function go<SUITE>(suite: GenericSuite<ValidationStep<CombinedTurn>>) {
-    const x = convertSuite(suite, removeCart, removeAudio);
-    const y = convertSuite(suite, removeCart, removeTranscription);
 }

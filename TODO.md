@@ -1,29 +1,30 @@
 
 * New
+  * GenericSuite should have tests field. Legacy converter returns array
   * Top
     * npm audit fixes
     * GenericCase and GenericNumberedCase - what are ids for?
     * x Generate JSON schema
     * Review: in convertSuite: STEP2 extends Step<TURN1> vs. STEP2 extends Step<TURN2>
   * x YAML file schema
-  * >>>>>> REVIEW: GenericSuite should have tests field. Legacy converter returns array
   * REVIEW definition of AnySuite<TURN extends TurnBase & Partial<CombinedTurn>>
     * Does type contraint need Partial<>?
   * Rename YAMLValidationError to SchemaValidationError
   * x YAML files loader and validator - add to filter-suite and legacy-converter
-  * >>>>>> Error display code
+  * >>>>>> Error formatting code
   * >>>>>> Evaluate
     * Mode that doesn't require World to be loaded
-    * x itemInstanceFromLogicalItem()
+    * Repair cost explanation function
     * Remove idGenerator from unit test - why?
+    * x itemInstanceFromLogicalItem()
+    * x LogicalValidationSuite grading/comparison
   * LogicalValidationSuite filter
-    * suite
-    * id
+    * x suite
+    * x id - decided not to filter by number
     * x remove carts
     * x remove audio
     * x remove transcription
     * README.md instructions
-  * LogicalValidationSuite grading/comparison/explanation function
   * Converter from legacy TestSuite to LogicalTestSuite
     * x File names from command line
     * x Success or failure message

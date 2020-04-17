@@ -51,9 +51,7 @@ export type ValidationStep<TURN> = Step<TURN> & Expected;
 export type ScoredStep<TURN> = ValidationStep<TURN> & MeasuresField;
 
 export interface GenericCase<STEP> {
-    // TODO: consider retaining id? Provided by loader, not YAML.
     id: number;
-    // TODO: consider string or string[]. Difference between YAML and object.
     suites: string;
     comment: string;
     steps: STEP[];

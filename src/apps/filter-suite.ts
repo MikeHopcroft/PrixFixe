@@ -6,6 +6,8 @@ import * as yaml from 'js-yaml';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
+import { allSuites, suiteFilter } from '../test_suite/suite_filter';
+
 import {
     CombinedTurn,
     convertSuite,
@@ -59,6 +61,16 @@ function filterTestSuiteFile()
         return fail(message);
     }
 
+
+    const suiteExpressionText = args['s'];
+    let suiteExpression = allSuites;
+    if (suiteExpressionText) {
+        console.log(
+            `Keeping tests matching suite expression: ${suiteExpressionText}`
+        );
+        suiteExpression = suiteFilter(suiteExpressionText);
+    }
+
     const cartFilter = args.c ? removeCart : keepCart;
     if (args.c) {
         console.log('Removing cart field from each Step.');
@@ -67,12 +79,12 @@ function filterTestSuiteFile()
     let outputSuite;
     if (args.t) {
         console.log('Removing transcript field from each Turn');
-        outputSuite = convertSuite(inputSuite, cartFilter, removeTranscription);
+        outputSuite = convertSuite(inputSuite, suiteExpression, cartFilter, removeTranscription);
     } else if (args.a) {
         console.log('Removing audio field from each Turn');
-        outputSuite = convertSuite(inputSuite, cartFilter, removeAudio);
+        outputSuite = convertSuite(inputSuite, suiteExpression, cartFilter, removeAudio);
     } else {
-        outputSuite = convertSuite(inputSuite, cartFilter, keepAudio);
+        outputSuite = convertSuite(inputSuite, suiteExpression, cartFilter, keepAudio);
     }
 
     console.log(`Writing filtered suite to ${outFile}`);
@@ -88,12 +100,12 @@ function showUsage() {
     const usage: Section[] = [
         {
             header: 'Test suite filter',
-            content: `This utility filters carts, transcriptions, audio, and test cases from a test suite.`,
+            content: `This utility filters carts, transcriptions, audio, and entire test cases from a supplied test suite.`,
         },
         {
             header: 'Usage',
             content: [
-                `node ${program} <input file> <filtered file> [...options]`,
+                `node ${program} <input file> <output file> [...options]`,
             ],
         },
         {
@@ -115,6 +127,20 @@ function showUsage() {
                     name: 't',
                     alias: 't',
                     description: 'Remove the transcription field from each turn.',
+                    type: Boolean,
+                },
+                {
+                    name: 's',
+                    alias: 's',
+                    typeLabel: '{underline suiteFilter}',
+                    description:
+                        'Boolean expression of suites to retain.' +
+                        'Can use suite names, !, &, |, and parentheses.',
+                },
+                {
+                    name: 'help',
+                    alias: 'h',
+                    description: 'Print help message',
                     type: Boolean,
                 },
             ],

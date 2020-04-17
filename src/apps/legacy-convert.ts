@@ -142,6 +142,12 @@ function showUsage() {
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
                     type: Boolean,
                 },
+                {
+                    name: 'help',
+                    alias: 'h',
+                    description: 'Print help message',
+                    type: Boolean,
+                },
             ],
         },
     ];

@@ -96,12 +96,29 @@ function showUsage() {
     const usage: Section[] = [
         {
             header: 'Suite evaluation tool',
-            content: `This utility ...`,
+            content: `This utility computes perfect cart, complete cart, and repair cost metrics.`,
         },
         {
             header: 'Usage',
             content: [
                 `node ${program} <expected file> <observed file > <output file> [...options]`,
+            ],
+        },
+        {
+            header: 'Required Parameters',
+            content: [
+                {
+                    name: '<expected file>',
+                    summary: 'Path to a LogicalValidationSuite file with the expected carts.',
+                },
+                {
+                    name: '<observed file>',
+                    summary: 'Path to a LogicalValidationSuite file with the observed carts.',
+                },
+                {
+                    name: '<output file>',
+                    summary: 'Path where the LogicalScoredSuite file will be written. This file is made by adding a measures field to each step in the observed suite.',
+                },
             ],
         },
         {
@@ -121,6 +138,12 @@ function showUsage() {
                 - stopwords.yaml
                 - units.yaml\n
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
+                    type: Boolean,
+                },
+                {
+                    name: 'help',
+                    alias: 'h',
+                    description: 'Print help message',
                     type: Boolean,
                 },
             ],
