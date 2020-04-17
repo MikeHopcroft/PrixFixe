@@ -1,6 +1,6 @@
 
 * New
-  * GenericSuite should have tests field. Legacy converter returns array
+  * x GenericSuite should have tests field. Legacy converter returns array
   * Top
     * npm audit fixes
     * GenericCase and GenericNumberedCase - what are ids for?
@@ -10,10 +10,11 @@
   * REVIEW definition of AnySuite<TURN extends TurnBase & Partial<CombinedTurn>>
     * Does type contraint need Partial<>?
   * Rename YAMLValidationError to SchemaValidationError
+  * YAMLValidationError should not print details - error handler should do this.
   * x YAML files loader and validator - add to filter-suite and legacy-converter
-  * >>>>>> Error formatting code
+  * x Error formatting code
   * >>>>>> Evaluate
-    * Put aggregate measures into output suite.
+    * x Put aggregate measures into output suite.
     * Mode that doesn't require World to be loaded
     * Should not crash if suite references unknown SKU
     * Repair cost explanation function

@@ -14,6 +14,7 @@ import { TestLineItem } from '../test_suite';
 import {
     fail,
     GenericCase,
+    GenericSuite,
     handleError,
     LogicalCart,
     LogicalItem,
@@ -144,7 +145,7 @@ function showUsage() {
 function convertLegacyTestSuite(
     legacySuite: LegacySuite,
     catalog: ICatalog
-): Array<GenericCase<ValidationStep<TextTurn>>> {
+): GenericSuite<ValidationStep<TextTurn>> {
     const convertLegacyCase = (
         legacy: LegacyCase,
         id: number
@@ -172,7 +173,8 @@ function convertLegacyTestSuite(
         };
     };
     
-    return legacySuite.map(convertLegacyCase);
+    const tests = legacySuite.map(convertLegacyCase);
+    return { tests };
 }
 
 function convertLegacyCart(

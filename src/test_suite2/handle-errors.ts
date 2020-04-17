@@ -1,12 +1,14 @@
 // tslint:disable-next-line:no-any
 export function handleError(e: any) {
-    console.log('************* Error ****************');
-    console.log(JSON.stringify(e, null, 4).slice(0,5000));
+    // console.log('************* Error ****************');
+    // console.log(JSON.stringify(e, null, 4).slice(0,5000));
 
     let message: string;
 
     if (e.name === 'YAMLException') {
         message = `invalid YAML - ${e.reason}`;
+    } else if (e.name === 'YAML Validation Error') {
+        message = `YAML does not conform to schema`;
     } else {
         switch (e.code) {
             case 'ENOENT':
@@ -20,7 +22,7 @@ export function handleError(e: any) {
         }
     }
 
-    console.log(`ErrorErrorError: ${message}`);
+    console.log(`Error: ${message}`);
     succeed(false);
 }
 

@@ -23,7 +23,7 @@ export function loadLogicalScoredSuite<TURN extends AnyTurn>(
     filename: string
 ): LogicalScoredSuite<TURN> {
     const yamlTextIn = fs.readFileSync(filename, 'utf8');
-    const root = { tests: yaml.safeLoad(yamlTextIn) };
+    const root = yaml.safeLoad(yamlTextIn);
     return logicalScoredSuite<TURN>(root);
 }
 
@@ -31,7 +31,7 @@ export function loadLogicalTestSuite<TURN extends AnyTurn>(
     filename: string
 ): LogicalTestSuite<TURN> {
     const yamlTextIn = fs.readFileSync(filename, 'utf8');
-    const root = { tests: yaml.safeLoad(yamlTextIn) };
+    const root = yaml.safeLoad(yamlTextIn);
     return logicalTestSuite<TURN>(root);
 }
 
@@ -39,7 +39,7 @@ export function loadLogicalValidationSuite<TURN extends AnyTurn>(
     filename: string
 ): LogicalValidationSuite<TURN> {
     const yamlTextIn = fs.readFileSync(filename, 'utf8');
-    const root = { tests: yaml.safeLoad(yamlTextIn) };
+    const root = yaml.safeLoad(yamlTextIn);
     return logicalValidationSuite<TURN>(root);
 }
 
@@ -104,7 +104,6 @@ function validate<TURN extends AnyTurn, SUITE extends GenericSuite<Step<TURN>>>(
             ajv.errors,
             { format: 'cli', indent: 1 }
         );
-        console.log('hello');
         throw new YAMLValidationError(message, output || []);
     }
 
