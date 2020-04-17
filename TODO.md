@@ -2,21 +2,34 @@
 * New
   * Top
     * GenericCase and GenericNumberedCase - what are ids for?
-    * Generate JSON schema
-    * Review: in convertSuite: STEP2 extends Step<TURN1> vs STEP2 extends Step<TURN2>
-  * YAML file schema
+    * x Generate JSON schema
+    * Review: in convertSuite: STEP2 extends Step<TURN1> vs. STEP2 extends Step<TURN2>
+  * x YAML file schema
+  * REVIEW: GenericSuite should have tests field. Legacy converter returns array
+  * REVIEW definition of AnySuite<TURN extends TurnBase & Partial<CombinedTurn>>
+    * Does type contraint need Partial<>?
+  * Mode that doesn't require World to be loaded
+  * Rename YAMLValidationError to SchemaValidationError
   * YAML files loader and validator
-  * LogicalValidationSuite filter by suite, id, remove answers
+  * LogicalValidationSuite filter
+    * suite
+    * id
+    * x remove carts
+    * x remove audio
+    * x remove transcription
+    * README.md instructions
   * LogicalValidationSuite grading/comparison/explanation function
-  * itemInstanceFromLogialItem()
+  * ? itemInstanceFromLogialItem()
   * Remove idGenerator from unit test - why?
   * Converter from legacy TestSuite to LogicalTestSuite
     * x File names from command line
     * x Success or failure message
     * x Usage message
     * x Try/catch and report sensible errors.
-    * Convert keys to skus
-    * Commit converted roadmap file
+    * x Convert keys to skus
+    * x Commit converted roadmap file
+    * x Fixup name field.
+    * README.md instructions
   * src/apps/README.md
   * Some provision for recording crashes/timeouts
   * x Unit tests for cartIsComplete()

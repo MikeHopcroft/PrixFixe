@@ -1,9 +1,9 @@
 import * as commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
 import * as dotenv from 'dotenv';
-import * as minimist from 'minimist';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
+import * as minimist from 'minimist';
 import * as path from 'path';
 
 import { ICatalog } from '../catalog';
@@ -37,9 +37,13 @@ function convertLegacyTestSuiteFile()
 
     const args = minimist(process.argv.slice(2));
 
-    if (args._.length !== 2) {
+    if (args.h || args.help) {
         showUsage();
-        succeed(false);
+        return succeed(false);
+    }
+
+    if (args._.length !== 2) {
+        return fail('Error: expected command line two parameters.');
     }
 
     const inFile = args._[0];
@@ -74,6 +78,7 @@ function convertLegacyTestSuiteFile()
     }
 
     // Load the legacy test suite.
+    console.log(`Reading legacy suite from ${inFile}`);
     let yamlTextIn: string;
     try {
         yamlTextIn = fs.readFileSync(inFile, 'utf8');
@@ -96,6 +101,7 @@ function convertLegacyTestSuiteFile()
 
     const suite = convertLegacyTestSuite(legacySuite, world.catalog);
 
+    console.log(`Writing converted suite to ${outFile}`);
     const yamlTextOut = yaml.safeDump(suite);
     fs.writeFileSync(outFile, yamlTextOut, 'utf8');
 
@@ -187,7 +193,8 @@ function convertLegacyCart(
 
         const item: LogicalItem = {
             quantity: legacyItem.quantity,
-            name: legacyItem.name,
+            // Use name from menu instead of legacyItem.
+            name: specificItem.name,
             sku: specificItem.sku.toString(),
             children: [],
         };

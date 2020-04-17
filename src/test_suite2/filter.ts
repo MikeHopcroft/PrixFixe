@@ -42,9 +42,13 @@ export function convertSuite<
     return { tests };
 }
 
-function removeCart2<TURN>(v: ValidationStep<TURN>): Step<TURN> {
+export function removeCart<TURN>(v: ValidationStep<TURN>): Step<TURN> {
     const { ['cart']: _, ...step } = v;
     return step;
+}
+
+export function keepCart<TURN>(v: ValidationStep<TURN>): Step<TURN> {
+    return v;
 }
 
 export function removeTranscription(turn: CombinedTurn): SpokenTurn {
@@ -52,9 +56,17 @@ export function removeTranscription(turn: CombinedTurn): SpokenTurn {
     return filtered;
 }
 
+export function keepTranscription(turn: CombinedTurn): CombinedTurn {
+    return turn;
+}
+
 export function removeAudio(turn: CombinedTurn): TextTurn {
     const { ['audio']: _, ...filtered } = turn;
     return filtered;
+}
+
+export function keepAudio(turn: CombinedTurn): CombinedTurn {
+    return turn;
 }
 
 export function filterSuite<SUITE extends GenericSuite<STEP>, STEP>(
@@ -72,6 +84,6 @@ export function filterSuite<SUITE extends GenericSuite<STEP>, STEP>(
 }
 
 function go<SUITE>(suite: GenericSuite<ValidationStep<CombinedTurn>>) {
-    const x = convertSuite(suite, removeCart2, removeAudio);
-    const y = convertSuite(suite, removeCart2, removeTranscription);
+    const x = convertSuite(suite, removeCart, removeAudio);
+    const y = convertSuite(suite, removeCart, removeTranscription);
 }

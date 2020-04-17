@@ -24,6 +24,7 @@ export interface TurnAudio {
 export type SpokenTurn = TurnBase & TurnAudio;
 export type TextTurn = TurnBase & TurnTranscription;
 export type CombinedTurn = TurnBase & TurnAudio & TurnTranscription;
+export type AnyTurn = CombinedTurn | SpokenTurn | TextTurn;
 
 export interface Expected {
     cart: LogicalCart;
@@ -62,7 +63,18 @@ export type LogicalTestSuite<TURN> = GenericSuite<Step<TURN>>;
 export type LogicalValidationSuite<TURN> = GenericSuite<ValidationStep<TURN>>;
 export type LogicalScoredSuite<TURN> = GenericSuite<ScoredStep<TURN>>;
 
-export type AnySuite<TURN> =
+// DESIGN NOTE: the type constraint that incorporates Partial<CombinedTurn>
+// exists to guide the schema generation to include most of the CombinedTurn
+// fields as optional.
+export type AnySuite<TURN extends TurnBase & Partial<CombinedTurn>> =
     | LogicalTestSuite<TURN>
     | LogicalValidationSuite<TURN>
     | LogicalScoredSuite<TURN>;
+
+// DESIGN NOTE: this version won't include TURN fields `audio` and
+// `transcription`.
+// export type AnySuite<TURN extends AnyTurn> =
+//     | LogicalTestSuite<TURN>
+//     | LogicalValidationSuite<TURN>
+//     | LogicalScoredSuite<TURN>;
+

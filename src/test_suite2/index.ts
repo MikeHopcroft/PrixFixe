@@ -5,5 +5,6 @@ export * from './interfaces';
 export * from './logical_cart';
 export * from './tree_diff';
 export * from './scoring';
+export * from './schema';
 export * from './tree_diff';
 export * from './tree_repairs';
