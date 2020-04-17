@@ -4,16 +4,16 @@ import * as dotenv from 'dotenv';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
-import { createWorld, World } from '../processors';
+import { createWorld } from '../processors';
 
 import {
-    aggregateMeasures,
     fail,
     handleError,
     loadLogicalValidationSuite,
+    printAggregateMeasures,
     succeed,
     SuiteScorer,
-    writeYAML
+    writeYAML,
 } from "../test_suite2";
 
 function main()
@@ -82,19 +82,9 @@ function evaluate(
     console.log('');
 
     // Print out summary.
-    const measures = aggregateMeasures(scoredSuite);
-    console.log(`total steps: ${measures.totalSteps}`);
-    formatFraction('perfect carts', measures.perfectSteps, measures.totalSteps);
-    formatFraction('complete carts', measures.completeSteps, measures.totalSteps);
-    console.log(`total repairs: ${measures.totalRepairs}`);
-    console.log(`repairs/step: ${(measures.totalRepairs/measures.totalSteps).toFixed(2)}`);
+    printAggregateMeasures(scoredSuite.measures);
 
     return succeed(true);
-}
-
-function formatFraction(name: string, n: number, d: number) {
-    const percent = (n/d*100).toFixed(1);
-    console.log(`${name}: ${n}/${d} (${percent}%)`);
 }
 
 function showUsage() {

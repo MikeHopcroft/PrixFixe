@@ -43,6 +43,18 @@ export interface MeasuresField {
     measures: Measures;
 }
 
+export interface AggregatedMeasures {
+    totalTests: number;
+    totalSteps: number;
+    perfectSteps: number;
+    completeSteps: number;
+    totalRepairs: number;
+}
+
+export interface AggregatedMeasuresField {
+    measures: AggregatedMeasures;
+}
+
 export interface Step<TURN> {
     turns: TURN[];
 }
@@ -62,8 +74,10 @@ export interface GenericSuite<STEP> {
 }
 
 export type LogicalTestSuite<TURN> = GenericSuite<Step<TURN>>;
-export type LogicalValidationSuite<TURN> = GenericSuite<ValidationStep<TURN>>;
-export type LogicalScoredSuite<TURN> = GenericSuite<ScoredStep<TURN>>;
+export type LogicalValidationSuite<TURN> =
+    GenericSuite<ValidationStep<TURN>>;
+export type LogicalScoredSuite<TURN> = 
+    GenericSuite<ScoredStep<TURN>> & AggregatedMeasuresField;
 
 // DESIGN NOTE: the type constraint that incorporates Partial<CombinedTurn>
 // exists to guide the schema generation to include most of the CombinedTurn

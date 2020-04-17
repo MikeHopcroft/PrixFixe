@@ -9,6 +9,7 @@ import {
     ValidationStep,
 } from './interfaces';
 
+import { aggregateMeasures } from './aggregate';
 import { cartIsComplete } from './complete_cart';
 import { cartFromlogicalCart } from './logical_cart';
 import { TreeRepairs } from './tree_repairs';
@@ -37,7 +38,9 @@ export class SuiteScorer {
             tests.push(this.scoreOneCase(o, e));
         }
 
-        return { ...observed, tests };
+        const measures = aggregateMeasures(tests);
+
+        return { ...observed, tests, measures };
     }
 
     private scoreOneCase<TURN>(

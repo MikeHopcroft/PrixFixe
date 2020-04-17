@@ -1,21 +1,16 @@
-import { LogicalScoredSuite } from './interfaces';
-
-export interface AggregatedMeasures {
-    totalSteps: number;
-    perfectSteps: number;
-    completeSteps: number;
-    totalRepairs: number;
-}
+import { AggregatedMeasures, GenericCase, ScoredStep } from './interfaces';
 
 export function aggregateMeasures<TURN>(
-    suite: LogicalScoredSuite<TURN>
+    tests: Array<GenericCase<ScoredStep<TURN>>>
 ): AggregatedMeasures {
+    let totalTests = 0;
     let totalSteps = 0;
     let perfectSteps = 0;
     let completeSteps = 0;
     let totalRepairs = 0;
 
-    for (const test of suite.tests) {
+    for (const test of tests) {
+        ++totalTests;
         for (const step of test.steps) {
             const measures = step.measures;
             ++totalSteps;
@@ -32,9 +27,24 @@ export function aggregateMeasures<TURN>(
     }
 
     return {
+        totalTests,
         totalSteps,
         perfectSteps,
         completeSteps,
         totalRepairs,
     };
+}
+
+export function printAggregateMeasures(measures: AggregatedMeasures) {
+    console.log(`total test cases: ${measures.totalTests}`);
+    console.log(`total steps: ${measures.totalSteps}`);
+    formatFraction('perfect carts', measures.perfectSteps, measures.totalSteps);
+    formatFraction('complete carts', measures.completeSteps, measures.totalSteps);
+    console.log(`total repairs: ${measures.totalRepairs}`);
+    console.log(`repairs/step: ${(measures.totalRepairs/measures.totalSteps).toFixed(2)}`);
+}
+
+function formatFraction(name: string, n: number, d: number) {
+    const percent = (n/d*100).toFixed(1);
+    console.log(`${name}: ${n}/${d} (${percent}%)`);
 }
