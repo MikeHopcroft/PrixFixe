@@ -74,10 +74,9 @@ export interface GenericSuite<STEP> {
 }
 
 export type LogicalTestSuite<TURN> = GenericSuite<Step<TURN>>;
-export type LogicalValidationSuite<TURN> =
-    GenericSuite<ValidationStep<TURN>>;
-export type LogicalScoredSuite<TURN> = 
-    GenericSuite<ScoredStep<TURN>> & AggregatedMeasuresField;
+export type LogicalValidationSuite<TURN> = GenericSuite<ValidationStep<TURN>>;
+export type LogicalScoredSuite<TURN> = GenericSuite<ScoredStep<TURN>> &
+    AggregatedMeasuresField;
 
 // DESIGN NOTE: the type constraint that incorporates Partial<CombinedTurn>
 // exists to guide the schema generation to include most of the CombinedTurn
@@ -93,4 +92,3 @@ export type AnySuite<TURN extends TurnBase & Partial<CombinedTurn>> =
 //     | LogicalTestSuite<TURN>
 //     | LogicalValidationSuite<TURN>
 //     | LogicalScoredSuite<TURN>;
-

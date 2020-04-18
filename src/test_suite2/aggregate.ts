@@ -39,12 +39,20 @@ export function printAggregateMeasures(measures: AggregatedMeasures) {
     console.log(`total test cases: ${measures.totalTests}`);
     console.log(`total steps: ${measures.totalSteps}`);
     formatFraction('perfect carts', measures.perfectSteps, measures.totalSteps);
-    formatFraction('complete carts', measures.completeSteps, measures.totalSteps);
+    formatFraction(
+        'complete carts',
+        measures.completeSteps,
+        measures.totalSteps
+    );
     console.log(`total repairs: ${measures.totalRepairs}`);
-    console.log(`repairs/step: ${(measures.totalRepairs/measures.totalSteps).toFixed(2)}`);
+    console.log(
+        `repairs/step: ${(measures.totalRepairs / measures.totalSteps).toFixed(
+            2
+        )}`
+    );
 }
 
 function formatFraction(name: string, n: number, d: number) {
-    const percent = (n/d*100).toFixed(1);
+    const percent = ((n / d) * 100).toFixed(1);
     console.log(`${name}: ${n}/${d} (${percent}%)`);
 }

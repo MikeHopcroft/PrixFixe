@@ -21,8 +21,8 @@ import {
     succeed,
     TextTurn,
     ValidationStep,
-    writeYAML
-} from "../test_suite2";
+    writeYAML,
+} from '../test_suite2';
 
 interface LegacyCase {
     priority: number;
@@ -30,14 +30,13 @@ interface LegacyCase {
     comment: string;
     inputs: string[];
     expected: Array<{
-        lines: TestLineItem[],
+        lines: TestLineItem[];
     }>;
 }
 
 type LegacySuite = LegacyCase[];
 
-function main()
-{
+function main() {
     dotenv.config();
 
     const args = minimist(process.argv.slice(2));
@@ -71,7 +70,11 @@ function main()
     }
 }
 
-function convertLegacyTestSuiteFile(inFile: string, outFile: string, dataPath: string) {
+function convertLegacyTestSuiteFile(
+    inFile: string,
+    outFile: string,
+    dataPath: string
+) {
     console.log('Converting');
     console.log(`  from legacy test suite: ${inFile}`);
     console.log(`  to output file: ${outFile}`);
@@ -157,14 +160,16 @@ function convertLegacyTestSuite(
                 catalog
             );
             steps.push({
-                turns: [{
-                    speaker: 'employee',
-                    transcription: legacy.inputs[i],
-                }],
+                turns: [
+                    {
+                        speaker: 'employee',
+                        transcription: legacy.inputs[i],
+                    },
+                ],
                 cart,
             });
         }
-    
+
         return {
             id,
             suites: legacy.suites,
@@ -172,7 +177,7 @@ function convertLegacyTestSuite(
             steps,
         };
     };
-    
+
     const tests = legacySuite.map(convertLegacyCase);
     return { tests };
 }

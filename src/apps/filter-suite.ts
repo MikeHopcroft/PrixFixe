@@ -19,10 +19,9 @@ import {
     removeTranscription,
     succeed,
     writeYAML,
-} from "../test_suite2";
+} from '../test_suite2';
 
-function main()
-{
+function main() {
     dotenv.config();
 
     const args = minimist(process.argv.slice(2));
@@ -127,7 +126,8 @@ function showUsage() {
                 {
                     name: 't',
                     alias: 't',
-                    description: 'Remove the transcription field from each turn.',
+                    description:
+                        'Remove the transcription field from each turn.',
                     type: Boolean,
                 },
                 {

@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { LogicalCart, cartIsComplete } from '../../src/test_suite2';
+import { LogicalCart, cartIsPerfect } from '../../src/test_suite2';
 
 import {
     product1a,
@@ -16,30 +16,30 @@ import {
     cart1,
 } from './shared';
 
-describe('Complete Cart', () => {
+describe('Perfect Cart', () => {
     it(`empty carts`, () => {
         const cart1: LogicalCart = { items: [] };
         const cart2: LogicalCart = { items: [] };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isTrue(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isTrue(perfect);
     });
 
     it(`identical carts`, () => {
         const cart2 = cart1;
 
-        const complete = cartIsComplete(cart1, cart1);
-        assert.isTrue(complete);
+        const perfect = cartIsPerfect(cart1, cart1);
+        assert.isTrue(perfect);
     });
 
-    it(`reordered products complete carts`, () => {
+    it(`reordered products`, () => {
         const cart2: LogicalCart = { items: [product3a, product2a, product1a] };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isTrue(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
-    it(`reordered options complete carts`, () => {
+    it(`reordered options`, () => {
         const cart2: LogicalCart = {
             items: [
                 product1b, // Differs from product1a in option order
@@ -48,15 +48,15 @@ describe('Complete Cart', () => {
             ],
         };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isTrue(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
     it(`different set of products`, () => {
         const cart2: LogicalCart = { items: [product2a, product3a] };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isFalse(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
     it(`different product quanities`, () => {
@@ -68,8 +68,8 @@ describe('Complete Cart', () => {
             ],
         };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isFalse(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
     it(`different product skus`, () => {
@@ -81,8 +81,8 @@ describe('Complete Cart', () => {
             ],
         };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isFalse(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
     it(`different set of options`, () => {
@@ -94,8 +94,8 @@ describe('Complete Cart', () => {
             ],
         };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isFalse(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
     it(`different option quantities`, () => {
@@ -107,8 +107,8 @@ describe('Complete Cart', () => {
             ],
         };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isFalse(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 
     it(`different option skus`, () => {
@@ -120,7 +120,7 @@ describe('Complete Cart', () => {
             ],
         };
 
-        const complete = cartIsComplete(cart1, cart2);
-        assert.isFalse(complete);
+        const perfect = cartIsPerfect(cart1, cart2);
+        assert.isFalse(perfect);
     });
 });

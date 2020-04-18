@@ -54,8 +54,8 @@ function itemInstanceFromLogicalItem(
         uid: idGenerator.nextId(),
         quantity: item.quantity,
         key: specific.key,
-        children: item.children.map(
-            child => itemInstanceFromLogicalItem(child, catalog)
+        children: item.children.map(child =>
+            itemInstanceFromLogicalItem(child, catalog)
         ),
     };
 }

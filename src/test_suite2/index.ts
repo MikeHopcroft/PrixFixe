@@ -4,6 +4,7 @@ export * from './filter';
 export * from './handle-errors';
 export * from './interfaces';
 export * from './logical_cart';
+export * from './perfect_cart';
 export * from './tree_diff';
 export * from './scoring';
 export * from './schema';

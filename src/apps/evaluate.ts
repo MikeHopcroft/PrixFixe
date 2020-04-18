@@ -14,10 +14,9 @@ import {
     succeed,
     SuiteScorer,
     writeYAML,
-} from "../test_suite2";
+} from '../test_suite2';
 
-function main()
-{
+function main() {
     dotenv.config();
 
     const args = minimist(process.argv.slice(2));
@@ -106,15 +105,18 @@ function showUsage() {
             content: [
                 {
                     name: '<expected file>',
-                    summary: 'Path to a LogicalValidationSuite file with the expected carts.',
+                    summary:
+                        'Path to a LogicalValidationSuite file with the expected carts.',
                 },
                 {
                     name: '<observed file>',
-                    summary: 'Path to a LogicalValidationSuite file with the observed carts.',
+                    summary:
+                        'Path to a LogicalValidationSuite file with the observed carts.',
                 },
                 {
                     name: '<output file>',
-                    summary: 'Path where the LogicalScoredSuite file will be written. This file is made by adding a measures field to each step in the observed suite.',
+                    summary:
+                        'Path where the LogicalScoredSuite file will be written. This file is made by adding a measures field to each step in the observed suite.',
                 },
             ],
         },

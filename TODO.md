@@ -1,21 +1,26 @@
 
 * New
+  * REVIEW: in convertSuite: STEP2 extends Step<TURN1> vs. STEP2 extends Step<TURN2>
+  * REVIEW definition of AnySuite<TURN extends TurnBase & Partial<CombinedTurn>>
+    * Does type contraint need Partial<>?
+  * Rename YAMLValidationError to SchemaValidationError
+  * YAMLValidationError should not print details - error handler should do this.
   * x GenericSuite should have tests field. Legacy converter returns array
   * Top
     * npm audit fixes
     * GenericCase and GenericNumberedCase - what are ids for?
     * x Generate JSON schema
-    * Review: in convertSuite: STEP2 extends Step<TURN1> vs. STEP2 extends Step<TURN2>
   * x YAML file schema
-  * REVIEW definition of AnySuite<TURN extends TurnBase & Partial<CombinedTurn>>
-    * Does type contraint need Partial<>?
-  * Rename YAMLValidationError to SchemaValidationError
-  * YAMLValidationError should not print details - error handler should do this.
   * x YAML files loader and validator - add to filter-suite and legacy-converter
   * x Error formatting code
   * >>>>>> Evaluate
     * x Put aggregate measures into output suite.
     * Mode that doesn't require World to be loaded
+      * cartFromlogicalCart() and itemInstanceFromLogicalItem() take getKeyFromSKU() function.
+      * TreeRepairs should not be an IRepairs - just need repairCart() function
+      * scoreSuite() should be parameterized by scoreOneStep().
+        * One version uses catalog and attributeInfo and gives repairs
+        * >>>>>> Other version uses new cartIsPerfect() function
     * Should not crash if suite references unknown SKU
     * Repair cost explanation function
     * Remove idGenerator from unit test - why?
