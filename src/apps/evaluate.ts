@@ -15,7 +15,7 @@ import {
     printAggregateMeasures,
     RepairFunction,
     succeed,
-    SuiteScorer,
+    scoreSuite,
     writeYAML,
 } from '../test_suite2';
 
@@ -81,6 +81,7 @@ function evaluate(
     const observedSuite = loadLogicalValidationSuite(observedFile);
 
     let repairs: RepairFunction;
+    let notes: string;
 
     if (dataPath) {
         // Load the world, which provides the AttributeInfo and ICatalog.
@@ -89,12 +90,18 @@ function evaluate(
             world.attributeInfo,
             world.catalog
         );
+        notes = 'Menu-based repairs';
     } else {
         repairs = createSimpleRepairFunction();
+        notes = 'Simple repairs';
     }
 
-    const scorer = new SuiteScorer(repairs);
-    const scoredSuite = scorer.scoreSuite(observedSuite, expectedSuite);
+    const scoredSuite = scoreSuite(
+        observedSuite,
+        expectedSuite,
+        repairs,
+        notes
+    );
 
     console.log(`Writing scored suite to ${scoredFile}`);
     writeYAML(scoredFile, scoredSuite);
@@ -148,7 +155,7 @@ function showUsage() {
                 {
                     name: 'datapath',
                     alias: 'd',
-                    description: `Path to prix-fixe data files.\n
+                    description: `Path to prix-fixe data files used for menu-based repairs.\n
                 - attributes.yaml
                 - cookbook.yaml
                 - intents.yaml
@@ -164,7 +171,10 @@ function showUsage() {
                 {
                     name: 'x',
                     alias: 'x',
-                    description: `Use simple repair cost scoring that doesn't require menu files.`,
+                    description:
+                        `Use simple repair cost scoring that doesn't require menu files.\n` +
+                        'The -d option and PRIX_FIXE_DATA_PATH are not required when using -x.',
+                    type: Boolean,
                 },
                 {
                     name: 'help',

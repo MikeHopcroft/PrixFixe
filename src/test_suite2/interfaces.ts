@@ -44,6 +44,7 @@ export interface MeasuresField {
 }
 
 export interface AggregatedMeasures {
+    notes: string;
     totalTests: number;
     totalSteps: number;
     perfectSteps: number;

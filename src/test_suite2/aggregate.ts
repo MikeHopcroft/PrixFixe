@@ -1,7 +1,8 @@
 import { AggregatedMeasures, GenericCase, ScoredStep } from './interfaces';
 
 export function aggregateMeasures<TURN>(
-    tests: Array<GenericCase<ScoredStep<TURN>>>
+    tests: Array<GenericCase<ScoredStep<TURN>>>,
+    notes: string
 ): AggregatedMeasures {
     let totalTests = 0;
     let totalSteps = 0;
@@ -27,6 +28,7 @@ export function aggregateMeasures<TURN>(
     }
 
     return {
+        notes,
         totalTests,
         totalSteps,
         perfectSteps,
@@ -36,6 +38,7 @@ export function aggregateMeasures<TURN>(
 }
 
 export function printAggregateMeasures(measures: AggregatedMeasures) {
+    console.log(`repair algorithm: ${measures.notes}`);
     console.log(`total test cases: ${measures.totalTests}`);
     console.log(`total steps: ${measures.totalSteps}`);
     formatFraction('perfect carts', measures.perfectSteps, measures.totalSteps);
