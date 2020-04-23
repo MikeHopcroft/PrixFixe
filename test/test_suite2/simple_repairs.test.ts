@@ -3,7 +3,13 @@ import 'mocha';
 
 import { AttributeInfo } from '../../src/attributes';
 import { Cart } from '../../src/cart';
-import { Edit, EditOp, LogicalCart, LogicalItem, TreeRepairs2 } from '../../src/test_suite2';
+import {
+    Edit,
+    EditOp,
+    LogicalCart,
+    LogicalItem,
+    SimpleRepairs,
+} from '../../src/test_suite2';
 import { IDGenerator } from '../../src/utilities';
 
 import {
@@ -26,7 +32,7 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const repairs = new TreeRepairs2();
+const repairs = new SimpleRepairs();
 
 const idGenerator = new IDGenerator();
 
@@ -93,7 +99,7 @@ const cart3: LogicalCart = {
     ],
 };
 
-describe('Repair logical cart', () => {
+describe('Simple Repairs (logical cart)', () => {
     it(`add default specific`, () => {
         const observed = cart0;
         const expected: LogicalCart = {
@@ -308,7 +314,7 @@ describe('Repair logical cart', () => {
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
     });
-    
+
     it(`add option`, () => {
         const observed = cart0;
         const expected: LogicalCart = {
@@ -419,10 +425,7 @@ describe('Repair logical cart', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 2,
-                steps: [
-                    '  delete item(5000:0)',
-                    '  delete item(2000:2)',
-                ],
+                steps: ['  delete item(5000:0)', '  delete item(2000:2)'],
             },
         ];
 
@@ -494,7 +497,6 @@ describe('Repair logical cart', () => {
         assert.deepEqual(result.edits, expectedEdits);
     });
 
-    
     it(`repair option quantity`, () => {
         const observed = cart3;
         const expected: LogicalCart = {

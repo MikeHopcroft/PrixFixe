@@ -2,15 +2,16 @@ import { AttributeInfo } from '../attributes';
 import { ICatalog } from '../catalog';
 import { LogicalCart } from './interfaces';
 import { cartFromlogicalCart } from './logical_cart';
+import { MenuBasedRepairs } from './menu_based_repairs';
 import { RepairFunction } from './scoring';
+import { SimpleRepairs } from './simple_repairs';
 import { DiffResults } from './tree_diff';
-import { TreeRepairs } from './tree_repairs';
-import { TreeRepairs2 } from './tree_repairs2';
 
 export function createMenuBasedRepairFunction(
-    attributeInfo: AttributeInfo, catalog: ICatalog
+    attributeInfo: AttributeInfo,
+    catalog: ICatalog
 ): RepairFunction {
-    const repairs = new TreeRepairs(attributeInfo, catalog);
+    const repairs = new MenuBasedRepairs(attributeInfo, catalog);
     return (
         observed: LogicalCart,
         expected: LogicalCart
@@ -22,7 +23,7 @@ export function createMenuBasedRepairFunction(
 }
 
 export function createSimpleRepairFunction(): RepairFunction {
-    const repairs = new TreeRepairs2();
+    const repairs = new SimpleRepairs();
     return (
         observed: LogicalCart,
         expected: LogicalCart

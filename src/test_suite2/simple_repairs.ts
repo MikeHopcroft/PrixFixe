@@ -1,12 +1,8 @@
-import {
-    LogicalCart,
-    LogicalItem
-} from './interfaces';
-
+import { LogicalCart, LogicalItem } from './interfaces';
 
 import { DiffResults, Edit, EditOp, IRepairs, treeDiff } from './tree_diff';
 
-export class TreeRepairs2 implements IRepairs<string, LogicalItem> {
+export class SimpleRepairs implements IRepairs<string, LogicalItem> {
     repairCart(
         observed: LogicalCart,
         expected: LogicalCart

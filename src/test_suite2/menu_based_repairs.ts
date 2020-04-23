@@ -4,7 +4,7 @@ import { ICatalog } from '../catalog';
 
 import { DiffResults, Edit, EditOp, IRepairs, treeDiff } from './tree_diff';
 
-export class TreeRepairs implements IRepairs<string, ItemInstance> {
+export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
     private attributeInfo: AttributeInfo;
     private catalog: ICatalog;
 
@@ -13,10 +13,7 @@ export class TreeRepairs implements IRepairs<string, ItemInstance> {
         this.catalog = catalog;
     }
 
-    repairCart(
-        observed: Cart,
-        expected: Cart
-    ): DiffResults<string> {
+    repairCart(observed: Cart, expected: Cart): DiffResults<string> {
         return treeDiff(this, observed.items, expected.items);
     }
 

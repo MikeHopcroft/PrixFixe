@@ -3,7 +3,7 @@ import 'mocha';
 
 import { AttributeInfo } from '../../src/attributes';
 import { Cart } from '../../src/cart';
-import { Edit, EditOp, TreeRepairs } from '../../src/test_suite2';
+import { Edit, EditOp, MenuBasedRepairs } from '../../src/test_suite2';
 import { IDGenerator } from '../../src/utilities';
 
 import {
@@ -26,7 +26,7 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const repairs = new TreeRepairs(attributeInfo, smallWorldCatalog);
+const repairs = new MenuBasedRepairs(attributeInfo, smallWorldCatalog);
 
 const idGenerator = new IDGenerator();
 
@@ -87,7 +87,7 @@ const cart3: Cart = {
     ],
 };
 
-describe('Repair cart', () => {
+describe('Menu-based Repairs (Cart)', () => {
     it(`add default specific`, () => {
         const observed = cart0;
         const expected: Cart = {

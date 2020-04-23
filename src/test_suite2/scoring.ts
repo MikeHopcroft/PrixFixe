@@ -11,8 +11,10 @@ import { aggregateMeasures } from './aggregate';
 import { cartIsComplete } from './complete_cart';
 import { DiffResults } from './tree_diff';
 
-export type RepairFunction = 
-    (observed: LogicalCart, expected: LogicalCart) => DiffResults<string>;
+export type RepairFunction = (
+    observed: LogicalCart,
+    expected: LogicalCart
+) => DiffResults<string>;
 
 export class SuiteScorer {
     private repairs: RepairFunction;

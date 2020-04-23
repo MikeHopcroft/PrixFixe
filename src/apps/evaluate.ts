@@ -38,7 +38,7 @@ function main() {
     const scoredFile = args._[2];
 
     let dataPath: string | undefined;
-    
+
     if (!args.x) {
         dataPath = process.env.PRIX_FIXE_DATA;
         if (args.d) {
@@ -76,7 +76,6 @@ function evaluate(
     }
     console.log(' ');
 
-
     // Load the expected validation suite.
     const expectedSuite = loadLogicalValidationSuite(expectedFile);
     const observedSuite = loadLogicalValidationSuite(observedFile);
@@ -86,7 +85,10 @@ function evaluate(
     if (dataPath) {
         // Load the world, which provides the AttributeInfo and ICatalog.
         const world = createWorld(dataPath);
-        repairs = createMenuBasedRepairFunction(world.attributeInfo, world.catalog);
+        repairs = createMenuBasedRepairFunction(
+            world.attributeInfo,
+            world.catalog
+        );
     } else {
         repairs = createSimpleRepairFunction();
     }
