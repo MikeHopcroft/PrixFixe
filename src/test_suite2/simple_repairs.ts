@@ -14,7 +14,7 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
         return {
             op: EditOp.DELETE_A,
             cost: 1,
-            steps: [`delete item(${item.sku})`],
+            steps: [`delete sku(${item.sku}): ${item.name}`],
         };
     }
 
@@ -24,13 +24,13 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
 
         // Inserting the generic item's default form.
         cost += 1;
-        steps.push(`insert default item(${item.sku})`);
+        steps.push(`insert sku(${item.sku}): ${item.name}`);
 
         // Non-standard quantity
         if (item.quantity > 1) {
             // 1 if quantity greater than 1
             cost += 1;
-            steps.push(`id(${item.sku}): make quantity ${item.quantity}`);
+            steps.push(`sku(${item.sku}): make quantity ${item.quantity}`);
         }
 
         //

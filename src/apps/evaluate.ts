@@ -18,6 +18,7 @@ import {
     scoreSuite,
     writeYAML,
 } from '../test_suite2';
+import { verifyTestSuite, TestSuite } from '../test_suite';
 
 function main() {
     dotenv.config();
@@ -52,7 +53,13 @@ function main() {
     }
 
     try {
-        evaluate(expectedFile, observedFile, scoredFile, dataPath);
+        evaluate(
+            expectedFile,
+            observedFile,
+            scoredFile,
+            dataPath,
+            args.v === true
+        );
     } catch (e) {
         handleError(e);
     }
@@ -62,7 +69,8 @@ function evaluate(
     expectedFile: string,
     observedFile: string,
     scoredFile: string,
-    dataPath: string | undefined
+    dataPath: string | undefined,
+    verbose: boolean
 ) {
     console.log('Comparing');
     console.log(`  expected validation suite: ${expectedFile}`);
@@ -102,6 +110,24 @@ function evaluate(
         repairs,
         notes
     );
+
+    if (verbose) {
+        for (const test of scoredSuite.tests) {
+            console.log(`${test.id}: ${test.comment}`);
+            for (const [index, step] of test.steps.entries()) {
+                const { perfect, complete, repairs } = step.measures;
+                console.log(
+                    `  step ${index}: perfect: ${perfect}, complete: ${complete}, repairs: ${
+                        repairs!.cost
+                    }`
+                );
+                for (const edit of repairs!.steps) {
+                    console.log(`    ${edit}`);
+                }
+            }
+            console.log(' ');
+        }
+    }
 
     console.log(`Writing scored suite to ${scoredFile}`);
     writeYAML(scoredFile, scoredSuite);

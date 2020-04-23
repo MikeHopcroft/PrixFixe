@@ -28,8 +28,8 @@ export interface DiffResults<S> {
 // Types of edits used in dynamic programming algorithm.
 export enum EditOp {
     NONE, // First position in sequence. No preceding edits.
-    INSERT_A, // Insert one item into sequence A at this point. (move up)
     DELETE_A, // Delete one item from sequence A at this point. (move right)
+    INSERT_A, // Insert one item into sequence A at this point. (move up)
     REPAIR_A, // Repair an item from sequence A to match an item from B. (move diagonal up/right)
 }
 

@@ -118,7 +118,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.INSERT_A,
                 cost: 1,
-                steps: ['insert default item(9000:0:0:0)'],
+                steps: ['insert sku(9000:0:0:0): '],
             },
         ];
 
@@ -155,11 +155,9 @@ describe('Simple Repairs (logical cart)', () => {
                 op: EditOp.INSERT_A,
                 cost: 3,
                 steps: [
-                    'insert default item(9000:0:1:1)',
-                    'id(9000:0:1:1): make quantity 2',
-                    // 'id(9000): non-standard attribute(5)',
-                    // 'id(9000): non-standard attribute(7)',
-                    '  insert default item(5000:1)',
+                    'insert sku(9000:0:1:1): ',
+                    'sku(9000:0:1:1): make quantity 2',
+                    '  insert sku(5000:1): ',
                 ],
             },
         ];
@@ -180,7 +178,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['delete item(9000:0:0:0)'],
+                steps: ['delete sku(9000:0:0:0): '],
             },
         ];
 
@@ -198,7 +196,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['delete item(8000:1:1)'],
+                steps: ['delete sku(8000:1:1): '],
             },
         ];
 
@@ -216,12 +214,12 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['delete item(9000:0:0:0)'],
+                steps: ['delete sku(9000:0:0:0): '],
             },
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['delete item(8000:1:1)'],
+                steps: ['delete sku(8000:1:1): '],
             },
         ];
 
@@ -300,12 +298,12 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.INSERT_A,
                 cost: 1,
-                steps: ['insert default item(9000:0:0:1)'],
+                steps: ['insert sku(9000:0:0:1): '],
             },
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['delete item(9000:0:0:0)'],
+                steps: ['delete sku(9000:0:0:0): '],
             },
         ];
 
@@ -341,10 +339,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.INSERT_A,
                 cost: 2,
-                steps: [
-                    'insert default item(9000:0:0:0)',
-                    '  insert default item(5000:1)',
-                ],
+                steps: ['insert sku(9000:0:0:0): ', '  insert sku(5000:1): '],
             },
         ];
 
@@ -370,7 +365,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  delete item(5000:0)'],
+                steps: ['  delete sku(5000:0): '],
             },
         ];
 
@@ -396,7 +391,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  delete item(2000:2)'],
+                steps: ['  delete sku(2000:2): '],
             },
         ];
 
@@ -425,7 +420,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 2,
-                steps: ['  delete item(5000:0)', '  delete item(2000:2)'],
+                steps: ['  delete sku(5000:0): ', '  delete sku(2000:2): '],
             },
         ];
 
@@ -483,8 +478,8 @@ describe('Simple Repairs (logical cart)', () => {
                 cost: 2,
                 steps: [
                     // TODO: ISSUE# 121. Should delete before inserting.
-                    '  insert default item(2000:0)',
-                    '  delete item(2000:2)',
+                    '  insert sku(2000:0): ',
+                    '  delete sku(2000:2): ',
                 ],
             },
         ];
