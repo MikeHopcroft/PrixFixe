@@ -7,10 +7,13 @@ import * as path from 'path';
 import { createWorld } from '../processors';
 
 import {
+    createMenuBasedRepairFunction,
+    createSimpleRepairFunction,
     fail,
     handleError,
     loadLogicalValidationSuite,
     printAggregateMeasures,
+    RepairFunction,
     succeed,
     SuiteScorer,
     writeYAML,
@@ -34,14 +37,18 @@ function main() {
     const observedFile = args._[1];
     const scoredFile = args._[2];
 
-    let dataPath = process.env.PRIX_FIXE_DATA;
-    if (args.d) {
-        dataPath = args.d;
-    }
-    if (dataPath === undefined) {
-        const message =
-            'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
-        return fail(message);
+    let dataPath: string | undefined;
+    
+    if (!args.x) {
+        dataPath = process.env.PRIX_FIXE_DATA;
+        if (args.d) {
+            dataPath = args.d;
+        }
+        if (dataPath === undefined) {
+            const message =
+                'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
+            return fail(message);
+        }
     }
 
     try {
@@ -55,23 +62,36 @@ function evaluate(
     expectedFile: string,
     observedFile: string,
     scoredFile: string,
-    dataPath: string
+    dataPath: string | undefined
 ) {
     console.log('Comparing');
     console.log(`  expected validation suite: ${expectedFile}`);
     console.log(`  observed validation suite: ${observedFile}`);
     console.log(' ');
-    console.log(`With data path = ${dataPath}`);
+
+    if (dataPath) {
+        console.log(`Computing repair cost with menu files from ${dataPath}.`);
+    } else {
+        console.log(`Using simple repair costs that don't require menu files.`);
+    }
     console.log(' ');
 
-    // Load the world, which provides the AttributeInfo and ICatalog.
-    const world = createWorld(dataPath);
 
     // Load the expected validation suite.
     const expectedSuite = loadLogicalValidationSuite(expectedFile);
     const observedSuite = loadLogicalValidationSuite(observedFile);
 
-    const scorer = new SuiteScorer(world.attributeInfo, world.catalog);
+    let repairs: RepairFunction;
+
+    if (dataPath) {
+        // Load the world, which provides the AttributeInfo and ICatalog.
+        const world = createWorld(dataPath);
+        repairs = createMenuBasedRepairFunction(world.attributeInfo, world.catalog);
+    } else {
+        repairs = createSimpleRepairFunction();
+    }
+
+    const scorer = new SuiteScorer(repairs);
     const scoredSuite = scorer.scoreSuite(observedSuite, expectedSuite);
 
     console.log(`Writing scored suite to ${scoredFile}`);
@@ -124,7 +144,7 @@ function showUsage() {
             header: 'Options',
             optionList: [
                 {
-                    name: 'd',
+                    name: 'datapath',
                     alias: 'd',
                     description: `Path to prix-fixe data files.\n
                 - attributes.yaml
@@ -138,6 +158,11 @@ function showUsage() {
                 - units.yaml\n
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
                     type: Boolean,
+                },
+                {
+                    name: 'x',
+                    alias: 'x',
+                    description: `Use simple repair cost scoring that doesn't require menu files.`,
                 },
                 {
                     name: 'help',

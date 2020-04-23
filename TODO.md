@@ -1,5 +1,24 @@
 
 * New
+  * Simple repair cost field
+  * Sample expected and observed files
+  * Explain repair cost for specific id
+    * Better item description
+    * Better change description (e.g. map attribute names)
+  * ScoredValidationSuite should record the repairFunction used.
+  * Consider converting SuiteScorer class to function
+  * Better name for TreeRepairs2 (and TreeRepairs)
+  * Terminal color should be reset after errors. Repro with YAML syntax error, like "sku: 4" instead of "sku: '4'"
+  * Refactor repair code
+    * x DiffResults should be parameterized by one type not two
+    * TreeRepairs class should just be an IRepairs.
+      * Rename to POSRepairs
+      * Remove repairCart() method
+    * Make TreeRepairs.repairCart() into standalone function that takes an IRepairs, along with two carts to compare
+    * Create EditDistanceRepairs class
+    * Plumb menu code option through application
+    * SuiteScorer takes an IRepairs and a cartFromLogicalCart() method - this can be wrapped into the repairs method.
+    * Code should not crash for SKUs not in the menu
   * REVIEW: in convertSuite: STEP2 extends Step<TURN1> vs. STEP2 extends Step<TURN2>
   * REVIEW definition of AnySuite<TURN extends TurnBase & Partial<CombinedTurn>>
     * Does type contraint need Partial<>?

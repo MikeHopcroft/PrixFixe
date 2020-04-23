@@ -3,7 +3,7 @@ import 'mocha';
 
 import { AttributeInfo } from '../../src/attributes';
 import { Cart } from '../../src/cart';
-import { Edit, EditOp, TreeRepairs } from '../../src/test_suite2';
+import { Edit, EditOp, LogicalCart, LogicalItem, TreeRepairs2 } from '../../src/test_suite2';
 import { IDGenerator } from '../../src/utilities';
 
 import {
@@ -26,75 +26,82 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const repairs = new TreeRepairs(attributeInfo, smallWorldCatalog);
+const repairs = new TreeRepairs2();
 
 const idGenerator = new IDGenerator();
 
-const cart0: Cart = { items: [] };
+const cart0: LogicalCart = { items: [] };
 
-const cart1: Cart = {
+const cart1: LogicalCart = {
     items: [
         {
-            uid: idGenerator.nextId(),
-            key: smallCoffee.key,
+            // uid: idGenerator.nextId(),
+            name: '',
+            sku: smallCoffee.key,
             quantity: 1,
             children: [],
         },
     ],
 };
 
-const cart2: Cart = {
+const cart2: LogicalCart = {
     items: [
         cart1.items[0],
         {
-            uid: idGenerator.nextId(),
-            key: mediumChocolateCone.key,
+            // uid: idGenerator.nextId(),
+            name: '',
+            sku: mediumChocolateCone.key,
             quantity: 2,
             children: [],
         },
     ],
 };
 
-const cart3: Cart = {
+const cart3: LogicalCart = {
     items: [
         {
-            uid: idGenerator.nextId(),
-            key: smallCoffee.key,
+            //uid: idGenerator.nextId(),
+            name: '',
+            sku: smallCoffee.key,
             // NOTE: quanity === 2 for "remove both options"
             // See note below.
             quantity: 2,
             children: [
                 {
-                    uid: idGenerator.nextId(),
-                    key: wholeMilk.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: wholeMilk.key,
                     quantity: 1,
                     children: [],
                 },
                 {
-                    uid: idGenerator.nextId(),
-                    key: whippedCream.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: whippedCream.key,
                     quantity: 1,
                     children: [],
                 },
             ],
         },
         {
-            uid: idGenerator.nextId(),
-            key: mediumChocolateCone.key,
+            // uid: idGenerator.nextId(),
+            name: '',
+            sku: mediumChocolateCone.key,
             quantity: 2,
             children: [],
         },
     ],
 };
 
-describe('Repair cart', () => {
+describe('Repair logical cart', () => {
     it(`add default specific`, () => {
         const observed = cart0;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: 9999,
-                    key: smallCoffee.key,
+                    // uid: 9999,
+                    name: '',
+                    sku: smallCoffee.key,
                     quantity: 1,
                     children: [],
                 },
@@ -105,7 +112,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.INSERT_A,
                 cost: 1,
-                steps: ['id(9999): insert default item(9000:0:0:0)'],
+                steps: ['insert default item(9000:0:0:0)'],
             },
         ];
 
@@ -117,16 +124,18 @@ describe('Repair cart', () => {
 
     it(`add non-default specific`, () => {
         const observed = cart0;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: 9000,
-                    key: smallIcedDecafCoffee.key,
+                    // uid: 9000,
+                    name: '',
+                    sku: smallIcedDecafCoffee.key,
                     quantity: 2,
                     children: [
                         {
-                            uid: 9001,
-                            key: twoMilk.key,
+                            // uid: 9001,
+                            name: '',
+                            sku: twoMilk.key,
                             quantity: 1,
                             children: [],
                         },
@@ -138,26 +147,26 @@ describe('Repair cart', () => {
         const expectedEdits: Array<Edit<string>> = [
             {
                 op: EditOp.INSERT_A,
-                cost: 5,
+                cost: 3,
                 steps: [
-                    'id(9000): insert default item(9000:0:1:1)',
-                    'id(9000): make quantity 2',
-                    'id(9000): non-standard attribute(5)',
-                    'id(9000): non-standard attribute(7)',
-                    '  id(9001): insert default item(5000:1)',
+                    'insert default item(9000:0:1:1)',
+                    'id(9000:0:1:1): make quantity 2',
+                    // 'id(9000): non-standard attribute(5)',
+                    // 'id(9000): non-standard attribute(7)',
+                    '  insert default item(5000:1)',
                 ],
             },
         ];
 
         const result = repairs.repairCart(observed, expected);
 
-        assert.equal(result.cost, 5);
+        assert.equal(result.cost, 3);
         assert.deepEqual(result.edits, expectedEdits);
     });
 
     it(`remove first item`, () => {
         const observed = cart2;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [cart2.items[1]],
         };
 
@@ -165,7 +174,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(1): delete item(9000:0:0:0)'],
+                steps: ['delete item(9000:0:0:0)'],
             },
         ];
 
@@ -183,7 +192,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(2): delete item(8000:1:1)'],
+                steps: ['delete item(8000:1:1)'],
             },
         ];
 
@@ -201,12 +210,12 @@ describe('Repair cart', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(1): delete item(9000:0:0:0)'],
+                steps: ['delete item(9000:0:0:0)'],
             },
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(2): delete item(8000:1:1)'],
+                steps: ['delete item(8000:1:1)'],
             },
         ];
 
@@ -218,11 +227,12 @@ describe('Repair cart', () => {
 
     it(`identical items`, () => {
         const observed = cart1;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: idGenerator.nextId(),
-                    key: smallCoffee.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: smallCoffee.key,
                     quantity: 1,
                     children: [],
                 },
@@ -235,11 +245,12 @@ describe('Repair cart', () => {
 
     it(`repair quantity`, () => {
         const observed = cart1;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: idGenerator.nextId(),
-                    key: smallCoffee.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: smallCoffee.key,
                     quantity: 2,
                     children: [],
                 },
@@ -250,7 +261,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['id(1): change quantity to 2'],
+                steps: ['id(9000:0:0:0): change quantity to 2'],
             },
         ];
 
@@ -260,13 +271,19 @@ describe('Repair cart', () => {
         assert.deepEqual(result.edits, expectedEdits);
     });
 
-    it(`repair one attribute`, () => {
+    // This test is new for tree_repairs2. It has no analog in the unit tests
+    // for tree_repairs. Replacement for
+    //   repair cart/
+    //     repair one attribute
+    //     repair two attributes
+    it(`repair product sku mismath`, () => {
         const observed = cart1;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: idGenerator.nextId(),
-                    key: smallDecafCoffee.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: smallDecafCoffee.key,
                     quantity: 1,
                     children: [],
                 },
@@ -275,39 +292,14 @@ describe('Repair cart', () => {
 
         const expectedEdits: Array<Edit<string>> = [
             {
-                op: EditOp.REPAIR_A,
+                op: EditOp.INSERT_A,
                 cost: 1,
-                steps: ['id(1): change attribute 6 to 7'],
+                steps: ['insert default item(9000:0:0:1)'],
             },
-        ];
-
-        const result = repairs.repairCart(observed, expected);
-
-        assert.equal(result.cost, 1);
-        assert.deepEqual(result.edits, expectedEdits);
-    });
-
-    it(`repair two attributes`, () => {
-        const observed = cart1;
-        const expected: Cart = {
-            items: [
-                {
-                    uid: idGenerator.nextId(),
-                    key: mediumDecafCoffee.key,
-                    quantity: 1,
-                    children: [],
-                },
-            ],
-        };
-
-        const expectedEdits: Array<Edit<string>> = [
             {
-                op: EditOp.REPAIR_A,
-                cost: 2,
-                steps: [
-                    'id(1): change attribute 0 to 1',
-                    'id(1): change attribute 6 to 7',
-                ],
+                op: EditOp.DELETE_A,
+                cost: 1,
+                steps: ['delete item(9000:0:0:0)'],
             },
         ];
 
@@ -316,19 +308,21 @@ describe('Repair cart', () => {
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
     });
-
+    
     it(`add option`, () => {
         const observed = cart0;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: 1,
-                    key: smallCoffee.key,
+                    // uid: 1,
+                    name: '',
+                    sku: smallCoffee.key,
                     quantity: 1,
                     children: [
                         {
-                            uid: 9001,
-                            key: twoMilk.key,
+                            // uid: 9001,
+                            name: '',
+                            sku: twoMilk.key,
                             quantity: 1,
                             children: [],
                         },
@@ -342,8 +336,8 @@ describe('Repair cart', () => {
                 op: EditOp.INSERT_A,
                 cost: 2,
                 steps: [
-                    'id(1): insert default item(9000:0:0:0)',
-                    '  id(9001): insert default item(5000:1)',
+                    'insert default item(9000:0:0:0)',
+                    '  insert default item(5000:1)',
                 ],
             },
         ];
@@ -356,7 +350,7 @@ describe('Repair cart', () => {
 
     it(`remove first option`, () => {
         const observed = cart3;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
                     ...cart3.items[0],
@@ -370,7 +364,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(4): delete item(5000:0)'],
+                steps: ['  delete item(5000:0)'],
             },
         ];
 
@@ -382,7 +376,7 @@ describe('Repair cart', () => {
 
     it(`remove second option`, () => {
         const observed = cart3;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
                     ...cart3.items[0],
@@ -396,7 +390,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(5): delete item(2000:2)'],
+                steps: ['  delete item(2000:2)'],
             },
         ];
 
@@ -408,7 +402,7 @@ describe('Repair cart', () => {
 
     it(`remove both options`, () => {
         const observed = cart3;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
                     ...cart3.items[0],
@@ -426,8 +420,8 @@ describe('Repair cart', () => {
                 op: EditOp.REPAIR_A,
                 cost: 2,
                 steps: [
-                    '  id(4): delete item(5000:0)',
-                    '  id(5): delete item(2000:2)',
+                    '  delete item(5000:0)',
+                    '  delete item(2000:2)',
                 ],
             },
         ];
@@ -438,34 +432,42 @@ describe('Repair cart', () => {
         assert.deepEqual(result.edits, expectedEdits);
     });
 
-    it(`repair option attributes`, () => {
+    // This test is new for tree_repairs2. It has no analog in the unit tests
+    // for tree_repairs. Replacement for
+    //   repair logical cart/
+    //     repair option attributes
+    it(`repair option sku mismath`, () => {
         const observed = cart3;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: idGenerator.nextId(),
-                    key: smallCoffee.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: smallCoffee.key,
                     // NOTE: quanity === 2 for "remove both options"
                     // See note below.
                     quantity: 2,
                     children: [
                         {
-                            uid: idGenerator.nextId(),
-                            key: wholeMilk.key,
+                            // uid: idGenerator.nextId(),
+                            name: '',
+                            sku: wholeMilk.key,
                             quantity: 1,
                             children: [],
                         },
                         {
-                            uid: idGenerator.nextId(),
-                            key: noWhippedCream.key, // CHANGED ATTRIBUTE
+                            // uid: idGenerator.nextId(),
+                            name: '',
+                            sku: noWhippedCream.key, // CHANGED ATTRIBUTE
                             quantity: 1,
                             children: [],
                         },
                     ],
                 },
                 {
-                    uid: idGenerator.nextId(),
-                    key: mediumChocolateCone.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: mediumChocolateCone.key,
                     quantity: 2,
                     children: [],
                 },
@@ -475,45 +477,56 @@ describe('Repair cart', () => {
         const expectedEdits: Array<Edit<string>> = [
             {
                 op: EditOp.REPAIR_A,
-                cost: 1,
-                steps: ['  id(5): change attribute 10 to 8'],
+                cost: 2,
+                steps: [
+                    // TODO: ISSUE# 121. Should delete before inserting.
+                    '  insert default item(2000:0)',
+                    '  delete item(2000:2)',
+                ],
             },
         ];
 
         const result = repairs.repairCart(observed, expected);
 
-        assert.equal(result.cost, 1);
+        console.log(JSON.stringify(result, null, 4));
+
+        assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
     });
 
+    
     it(`repair option quantity`, () => {
         const observed = cart3;
-        const expected: Cart = {
+        const expected: LogicalCart = {
             items: [
                 {
-                    uid: idGenerator.nextId(),
-                    key: smallCoffee.key,
+                    //uid: idGenerator.nextId(),
+                    name: '',
+                    sku: smallCoffee.key,
                     // NOTE: quanity === 2 for "remove both options"
                     // See note below.
                     quantity: 2,
                     children: [
                         {
-                            uid: idGenerator.nextId(),
-                            key: wholeMilk.key,
+                            // uid: idGenerator.nextId(),
+                            name: '',
+                            sku: wholeMilk.key,
                             quantity: 5, // CHANGED QUANTITY
                             children: [],
                         },
                         {
-                            uid: idGenerator.nextId(),
-                            key: whippedCream.key,
+                            // uid: idGenerator.nextId(),
+                            name: '',
+                            sku: whippedCream.key,
                             quantity: 1,
                             children: [],
                         },
                     ],
                 },
                 {
-                    uid: idGenerator.nextId(),
-                    key: mediumChocolateCone.key,
+                    // uid: idGenerator.nextId(),
+                    name: '',
+                    sku: mediumChocolateCone.key,
                     quantity: 2,
                     children: [],
                 },
@@ -524,7 +537,7 @@ describe('Repair cart', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(4): change quantity to 5'],
+                steps: ['  id(5000:0): change quantity to 5'],
             },
         ];
 

@@ -16,7 +16,7 @@ export class TreeRepairs implements IRepairs<string, ItemInstance> {
     repairCart(
         observed: Cart,
         expected: Cart
-    ): DiffResults<string, ItemInstance> {
+    ): DiffResults<string> {
         return treeDiff(this, observed.items, expected.items);
     }
 

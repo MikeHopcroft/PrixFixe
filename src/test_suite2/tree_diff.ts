@@ -20,7 +20,7 @@
  *
  ******************************************************************************/
 
-export interface DiffResults<S, T> {
+export interface DiffResults<S> {
     cost: number; // The Levenshtein edit distance for this match.
     edits: Array<Edit<S>>;
 }
@@ -99,7 +99,7 @@ class TreeDiff<S, T> {
 
     // Best sequence match and Levenshtein distance will be stored here once
     // the constructor exits.
-    result: DiffResults<S, T> = {
+    result: DiffResults<S> = {
         cost: 0,
         edits: [],
     };
@@ -221,7 +221,7 @@ export function treeDiff<S, T>(
     costs: IRepairs<S, T>,
     observed: T[],
     expected: T[]
-): DiffResults<S, T> {
+): DiffResults<S> {
     const d = new TreeDiff<S, T>(costs, observed, expected);
     return d.result;
 }

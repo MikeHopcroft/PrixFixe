@@ -1,26 +1,24 @@
-import { AttributeInfo } from '../attributes';
-import { ICatalog } from '../catalog';
-
 import {
     GenericCase,
     LogicalValidationSuite,
     LogicalScoredSuite,
     ScoredStep,
     ValidationStep,
+    LogicalCart,
 } from './interfaces';
 
 import { aggregateMeasures } from './aggregate';
 import { cartIsComplete } from './complete_cart';
-import { cartFromlogicalCart } from './logical_cart';
-import { TreeRepairs } from './tree_repairs';
+import { DiffResults } from './tree_diff';
+
+export type RepairFunction = 
+    (observed: LogicalCart, expected: LogicalCart) => DiffResults<string>;
 
 export class SuiteScorer {
-    private catalog: ICatalog;
-    private repairs: TreeRepairs;
+    private repairs: RepairFunction;
 
-    constructor(attributeInfo: AttributeInfo, catalog: ICatalog) {
-        this.catalog = catalog;
-        this.repairs = new TreeRepairs(attributeInfo, catalog);
+    constructor(repairs: RepairFunction) {
+        this.repairs = repairs;
     }
 
     scoreSuite<TURN>(
@@ -65,9 +63,7 @@ export class SuiteScorer {
         observed: ValidationStep<TURN>,
         expected: ValidationStep<TURN>
     ): ScoredStep<TURN> {
-        const o = cartFromlogicalCart(observed.cart, this.catalog);
-        const e = cartFromlogicalCart(expected.cart, this.catalog);
-        const results = this.repairs.repairCart(o, e);
+        const results = this.repairs(observed.cart, expected.cart);
 
         const repairs = {
             cost: results.cost,
