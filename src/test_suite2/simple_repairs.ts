@@ -69,7 +69,7 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
                 // TODO: need to indicate whose quantity is changed.
                 // This applies to all steps.
                 steps.push(
-                    `id(${observed.sku}): change quantity to ${expected.quantity}`
+                    `sku(${observed.sku}): change quantity to ${expected.quantity}`
                 );
             }
 

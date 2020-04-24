@@ -1,4 +1,5 @@
 import { AttributeInfo } from '../attributes';
+import { cartSort } from './cart_sort';
 import { ICatalog } from '../catalog';
 import { LogicalCart } from './interfaces';
 import { cartFromlogicalCart } from './logical_cart';
@@ -16,8 +17,8 @@ export function createMenuBasedRepairFunction(
         observed: LogicalCart,
         expected: LogicalCart
     ): DiffResults<string> => {
-        const o = cartFromlogicalCart(observed, catalog);
-        const e = cartFromlogicalCart(expected, catalog);
+        const o = cartFromlogicalCart(cartSort(observed), catalog);
+        const e = cartFromlogicalCart(cartSort(expected), catalog);
         return repairs.repairCart(o, e);
     };
 }
@@ -28,7 +29,7 @@ export function createSimpleRepairFunction(): RepairFunction {
         observed: LogicalCart,
         expected: LogicalCart
     ): DiffResults<string> => {
-        return repairs.repairCart(observed, expected);
+        return repairs.repairCart(cartSort(observed), cartSort(expected));
     };
 }
 

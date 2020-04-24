@@ -1,5 +1,7 @@
 
 * New
+  * Repair algorithm should repair to complete, not perfect
+  * Repair algorithm should favor delete/insert over insert/delete
   * Simple repair cost field
   * Sample expected and observed files
   * Explain repair cost for specific id

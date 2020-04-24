@@ -1,4 +1,5 @@
 export * from './aggregate';
+export * from './cart_sort';
 export * from './complete_cart';
 export * from './filter';
 export * from './handle-errors';

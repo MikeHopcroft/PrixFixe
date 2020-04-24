@@ -41,7 +41,6 @@ const cart0: LogicalCart = { items: [] };
 const cart1: LogicalCart = {
     items: [
         {
-            // uid: idGenerator.nextId(),
             name: '',
             sku: smallCoffee.key,
             quantity: 1,
@@ -54,7 +53,6 @@ const cart2: LogicalCart = {
     items: [
         cart1.items[0],
         {
-            // uid: idGenerator.nextId(),
             name: '',
             sku: mediumChocolateCone.key,
             quantity: 2,
@@ -66,7 +64,6 @@ const cart2: LogicalCart = {
 const cart3: LogicalCart = {
     items: [
         {
-            //uid: idGenerator.nextId(),
             name: '',
             sku: smallCoffee.key,
             // NOTE: quanity === 2 for "remove both options"
@@ -74,14 +71,12 @@ const cart3: LogicalCart = {
             quantity: 2,
             children: [
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: wholeMilk.key,
                     quantity: 1,
                     children: [],
                 },
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: whippedCream.key,
                     quantity: 1,
@@ -90,7 +85,6 @@ const cart3: LogicalCart = {
             ],
         },
         {
-            // uid: idGenerator.nextId(),
             name: '',
             sku: mediumChocolateCone.key,
             quantity: 2,
@@ -105,7 +99,6 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: 9999,
                     name: '',
                     sku: smallCoffee.key,
                     quantity: 1,
@@ -133,13 +126,11 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: 9000,
                     name: '',
                     sku: smallIcedDecafCoffee.key,
                     quantity: 2,
                     children: [
                         {
-                            // uid: 9001,
                             name: '',
                             sku: twoMilk.key,
                             quantity: 1,
@@ -234,7 +225,6 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: smallCoffee.key,
                     quantity: 1,
@@ -252,7 +242,6 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: smallCoffee.key,
                     quantity: 2,
@@ -265,7 +254,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['id(9000:0:0:0): change quantity to 2'],
+                steps: ['sku(9000:0:0:0): change quantity to 2'],
             },
         ];
 
@@ -285,7 +274,6 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: smallDecafCoffee.key,
                     quantity: 1,
@@ -318,13 +306,11 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: 1,
                     name: '',
                     sku: smallCoffee.key,
                     quantity: 1,
                     children: [
                         {
-                            // uid: 9001,
                             name: '',
                             sku: twoMilk.key,
                             quantity: 1,
@@ -439,7 +425,6 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: smallCoffee.key,
                     // NOTE: quanity === 2 for "remove both options"
@@ -447,14 +432,12 @@ describe('Simple Repairs (logical cart)', () => {
                     quantity: 2,
                     children: [
                         {
-                            // uid: idGenerator.nextId(),
                             name: '',
                             sku: wholeMilk.key,
                             quantity: 1,
                             children: [],
                         },
                         {
-                            // uid: idGenerator.nextId(),
                             name: '',
                             sku: noWhippedCream.key, // CHANGED ATTRIBUTE
                             quantity: 1,
@@ -463,7 +446,6 @@ describe('Simple Repairs (logical cart)', () => {
                     ],
                 },
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: mediumChocolateCone.key,
                     quantity: 2,
@@ -497,7 +479,6 @@ describe('Simple Repairs (logical cart)', () => {
         const expected: LogicalCart = {
             items: [
                 {
-                    //uid: idGenerator.nextId(),
                     name: '',
                     sku: smallCoffee.key,
                     // NOTE: quanity === 2 for "remove both options"
@@ -505,14 +486,12 @@ describe('Simple Repairs (logical cart)', () => {
                     quantity: 2,
                     children: [
                         {
-                            // uid: idGenerator.nextId(),
                             name: '',
                             sku: wholeMilk.key,
                             quantity: 5, // CHANGED QUANTITY
                             children: [],
                         },
                         {
-                            // uid: idGenerator.nextId(),
                             name: '',
                             sku: whippedCream.key,
                             quantity: 1,
@@ -521,7 +500,6 @@ describe('Simple Repairs (logical cart)', () => {
                     ],
                 },
                 {
-                    // uid: idGenerator.nextId(),
                     name: '',
                     sku: mediumChocolateCone.key,
                     quantity: 2,
@@ -534,7 +512,7 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(5000:0): change quantity to 5'],
+                steps: ['  sku(5000:0): change quantity to 5'],
             },
         ];
 
