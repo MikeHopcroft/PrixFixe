@@ -2,23 +2,34 @@ import { AttributeInfo } from '../attributes';
 import { Cart, ItemInstance } from '../cart';
 import { ICatalog } from '../catalog';
 
-import { DiffResults, Edit, EditOp, IRepairs, treeDiff } from './tree_diff';
-import { setupMaster } from 'cluster';
+import {
+    DiffResults,
+    Edit,
+    EditOp,
+    IRepairs,
+    TreeDiffFunction,
+} from './tree_diff';
 
 export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
     private attributeInfo: AttributeInfo;
     private catalog: ICatalog;
+    private treeDiff: TreeDiffFunction<string, ItemInstance>;
 
-    constructor(attributeInfo: AttributeInfo, catalog: ICatalog) {
+    constructor(
+        attributeInfo: AttributeInfo,
+        catalog: ICatalog,
+        treeDiff: TreeDiffFunction<string, ItemInstance>
+    ) {
         this.attributeInfo = attributeInfo;
         this.catalog = catalog;
+        this.treeDiff = treeDiff;
     }
 
     repairCart(observed: Cart, expected: Cart): DiffResults<string> {
         // Fixup cost to equal the number of steps.
         // This removed the small decrease in cost used to favor delete before
         // insert.
-        const diff = treeDiff(this, observed.items, expected.items);
+        const diff = this.treeDiff(this, observed.items, expected.items);
         let cost = 0;
         for (const edit of diff.edits) {
             edit.cost = edit.steps.length;
@@ -136,7 +147,11 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
             }
 
             // Repair children
-            const result = treeDiff(this, observed.children, expected.children);
+            const result = this.treeDiff(
+                this,
+                observed.children,
+                expected.children
+            );
             cost += result.cost;
             for (const edit of result.edits) {
                 for (const step of edit.steps) {

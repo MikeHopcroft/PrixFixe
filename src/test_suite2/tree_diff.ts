@@ -63,6 +63,12 @@ export interface IRepairs<S, T> {
     repair(observed: T, expected: T): Edit<S>;
 }
 
+export type TreeDiffFunction<S, T> = (
+    costs: IRepairs<S, T>,
+    observed: T[],
+    expected: T[]
+) => DiffResults<S>;
+
 // Vertices corresepond to cells in the dynamic programming matrix.
 class Vertex<S> {
     edit: Edit<S>; // The Edit on the best known path into this vertex.

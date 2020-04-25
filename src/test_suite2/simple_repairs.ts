@@ -1,8 +1,20 @@
 import { LogicalCart, LogicalItem } from './interfaces';
 
-import { DiffResults, Edit, EditOp, IRepairs, treeDiff } from './tree_diff';
+import {
+    DiffResults,
+    Edit,
+    EditOp,
+    IRepairs,
+    TreeDiffFunction,
+} from './tree_diff';
 
 export class SimpleRepairs implements IRepairs<string, LogicalItem> {
+    private treeDiff: TreeDiffFunction<string, LogicalItem>;
+
+    constructor(treeDiff: TreeDiffFunction<string, LogicalItem>) {
+        this.treeDiff = treeDiff;
+    }
+
     repairCart(
         observed: LogicalCart,
         expected: LogicalCart
@@ -10,7 +22,7 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
         // Fixup cost to equal the number of steps.
         // This removed the small decrease in cost used to favor delete before
         // insert.
-        const diff = treeDiff(this, observed.items, expected.items);
+        const diff = this.treeDiff(this, observed.items, expected.items);
         let cost = 0;
         for (const edit of diff.edits) {
             edit.cost = edit.steps.length;
@@ -100,7 +112,11 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
             //
 
             // Repair children
-            const result = treeDiff(this, observed.children, expected.children);
+            const result = this.treeDiff(
+                this,
+                observed.children,
+                expected.children
+            );
             cost += result.cost;
             for (const edit of result.edits) {
                 for (const step of edit.steps) {

@@ -2,14 +2,15 @@ import { assert } from 'chai';
 import 'mocha';
 
 import { AttributeInfo } from '../../src/attributes';
-import { Cart } from '../../src/cart';
+
 import {
     Edit,
     EditOp,
     LogicalCart,
-    LogicalItem,
     SimpleRepairs,
+    treeDiff,
 } from '../../src/test_suite2';
+
 import { IDGenerator } from '../../src/utilities';
 
 import {
@@ -32,7 +33,7 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const repairs = new SimpleRepairs();
+const repairs = new SimpleRepairs(treeDiff);
 
 const idGenerator = new IDGenerator();
 

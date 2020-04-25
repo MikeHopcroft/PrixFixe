@@ -3,7 +3,12 @@ import 'mocha';
 
 import { AttributeInfo } from '../../src/attributes';
 import { Cart } from '../../src/cart';
-import { Edit, EditOp, MenuBasedRepairs } from '../../src/test_suite2';
+import {
+    Edit,
+    EditOp,
+    MenuBasedRepairs,
+    treeDiff,
+} from '../../src/test_suite2';
 import { IDGenerator } from '../../src/utilities';
 
 import {
@@ -27,7 +32,11 @@ const attributeInfo = new AttributeInfo(
     smallWorldAttributes
 );
 
-const repairs = new MenuBasedRepairs(attributeInfo, smallWorldCatalog);
+const repairs = new MenuBasedRepairs(
+    attributeInfo,
+    smallWorldCatalog,
+    treeDiff
+);
 
 const idGenerator = new IDGenerator();
 
