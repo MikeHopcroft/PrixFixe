@@ -3,6 +3,7 @@ import { Cart, ItemInstance } from '../cart';
 import { ICatalog } from '../catalog';
 
 import { DiffResults, Edit, EditOp, IRepairs, treeDiff } from './tree_diff';
+import { setupMaster } from 'cluster';
 
 export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
     private attributeInfo: AttributeInfo;
@@ -14,7 +15,16 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
     }
 
     repairCart(observed: Cart, expected: Cart): DiffResults<string> {
-        return treeDiff(this, observed.items, expected.items);
+        // Fixup cost to equal the number of steps.
+        // This removed the small decrease in cost used to favor delete before
+        // insert.
+        const diff = treeDiff(this, observed.items, expected.items);
+        let cost = 0;
+        for (const edit of diff.edits) {
+            edit.cost = edit.steps.length;
+            cost += edit.cost;
+        }
+        return { ...diff, cost };
     }
 
     delete(item: ItemInstance): Edit<string> {
@@ -86,7 +96,18 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
         const observedPID = AttributeInfo.pidFromKey(observed.key);
         const expectedPID = AttributeInfo.pidFromKey(expected.key);
         if (observedPID !== expectedPID) {
-            cost = Infinity;
+            // This case used to just set cost to Infinity.
+            // Changed code to do a delete, followed by an insert
+            // with the score slightly diminished so that the system
+            // prefers delete-before insert. This is important for
+            // working with options that cannot coexist.
+            const deleteResults = this.delete(observed);
+            steps.push(...deleteResults.steps);
+            cost = deleteResults.cost;
+            const insertResults = this.insert(expected);
+            steps.push(...insertResults.steps);
+            cost += insertResults.cost;
+            cost -= 0.001;
         } else {
             // Repair quantity
             if (observed.quantity !== expected.quantity) {

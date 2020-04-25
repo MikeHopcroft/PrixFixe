@@ -8,6 +8,10 @@ import { RepairFunction } from './scoring';
 import { SimpleRepairs } from './simple_repairs';
 import { DiffResults } from './tree_diff';
 
+// function cartSort(cart: LogicalCart) {
+//     return cart;
+// }
+
 export function createMenuBasedRepairFunction(
     attributeInfo: AttributeInfo,
     catalog: ICatalog

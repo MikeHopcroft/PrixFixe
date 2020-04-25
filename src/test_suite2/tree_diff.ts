@@ -78,7 +78,6 @@ class Vertex<S> {
     update(edit: Edit<S>, previousCost: number) {
         const newCost = previousCost + edit.cost;
         if (newCost < this.cost) {
-            // {
             this.edit = edit;
             this.cost = newCost;
         }

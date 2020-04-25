@@ -8,6 +8,7 @@ import { IDGenerator } from '../../src/utilities';
 
 import {
     mediumChocolateCone,
+    mediumCoffee,
     mediumDecafCoffee,
     noWhippedCream,
     smallCoffee,
@@ -152,6 +153,64 @@ describe('Menu-based Repairs (Cart)', () => {
         const result = repairs.repairCart(observed, expected);
 
         assert.equal(result.cost, 5);
+        assert.deepEqual(result.edits, expectedEdits);
+    });
+
+    it(`repair non-default specific`, () => {
+        const observed: Cart = {
+            items: [
+                {
+                    uid: 9000,
+                    key: mediumChocolateCone.key,
+                    quantity: 2,
+                    children: [
+                        {
+                            uid: 9001,
+                            key: twoMilk.key,
+                            quantity: 1,
+                            children: [],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const expected: Cart = {
+            items: [
+                {
+                    uid: 9000,
+                    key: smallIcedDecafCoffee.key,
+                    quantity: 2,
+                    children: [
+                        {
+                            uid: 9001,
+                            key: twoMilk.key,
+                            quantity: 1,
+                            children: [],
+                        },
+                    ],
+                },
+            ],
+        };
+
+        const expectedEdits: Array<Edit<string>> = [
+            {
+                op: EditOp.REPAIR_A,
+                cost: 6,
+                steps: [
+                    'id(9000): delete item(8000:1:1)',
+                    'id(9000): insert default item(9000:0:1:1)',
+                    'id(9000): make quantity 2',
+                    'id(9000): non-standard attribute(5)',
+                    'id(9000): non-standard attribute(7)',
+                    '  id(9001): insert default item(5000:1)',
+                ],
+            },
+        ];
+
+        const result = repairs.repairCart(observed, expected);
+
+        assert.equal(result.cost, 6);
         assert.deepEqual(result.edits, expectedEdits);
     });
 

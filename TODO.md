@@ -1,7 +1,10 @@
 
 * New
-  * Repair algorithm should repair to complete, not perfect
-  * Repair algorithm should favor delete/insert over insert/delete
+  * . Repair algorithm should repair to complete, not perfect
+    * Attempted implemention in commit 3cfc4ab3
+    * Doesn't work because canonicalization won't necessarily put related items in close proximity.
+    * Really want an algorithm based on a bipartite matching
+  * x Repair algorithm should favor delete/insert over insert/delete
   * Simple repair cost field
   * Sample expected and observed files
   * Explain repair cost for specific id

@@ -284,14 +284,9 @@ describe('Simple Repairs (logical cart)', () => {
 
         const expectedEdits: Array<Edit<string>> = [
             {
-                op: EditOp.INSERT_A,
-                cost: 1,
-                steps: ['insert sku(9000:0:0:1): '],
-            },
-            {
-                op: EditOp.DELETE_A,
-                cost: 1,
-                steps: ['delete sku(9000:0:0:0): '],
+                op: EditOp.REPAIR_A,
+                cost: 2,
+                steps: ['delete sku(9000:0:0:0): ', 'insert sku(9000:0:0:1): '],
             },
         ];
 
@@ -458,17 +453,11 @@ describe('Simple Repairs (logical cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 2,
-                steps: [
-                    // TODO: ISSUE# 121. Should delete before inserting.
-                    '  insert sku(2000:0): ',
-                    '  delete sku(2000:2): ',
-                ],
+                steps: ['  delete sku(2000:2): ', '  insert sku(2000:0): '],
             },
         ];
 
         const result = repairs.repairCart(observed, expected);
-
-        console.log(JSON.stringify(result, null, 4));
 
         assert.equal(result.cost, 2);
         assert.deepEqual(result.edits, expectedEdits);
