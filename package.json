@@ -95,6 +95,7 @@
     "js-yaml": "^3.13.1",
     "jsontoxml": "^1.0.1",
     "minimist": "^1.2.0",
+    "munkres-js": "^1.2.2",
     "number-to-words": "^1.2.4",
     "recursive-readdir": "^2.2.2"
   },

@@ -1,4 +1,5 @@
 import { AttributeInfo } from '../attributes';
+import { bipartiteMatchingDiff } from './bipartite_matching_diff';
 import { cartSort } from './cart_sort';
 import { ICatalog } from '../catalog';
 import { LogicalCart } from './interfaces';
@@ -16,7 +17,11 @@ export function createMenuBasedRepairFunction(
     attributeInfo: AttributeInfo,
     catalog: ICatalog
 ): RepairFunction {
-    const repairs = new MenuBasedRepairs(attributeInfo, catalog, treeDiff);
+    const repairs = new MenuBasedRepairs(
+        attributeInfo,
+        catalog,
+        bipartiteMatchingDiff
+    );
     return (
         observed: LogicalCart,
         expected: LogicalCart
@@ -28,7 +33,7 @@ export function createMenuBasedRepairFunction(
 }
 
 export function createSimpleRepairFunction(): RepairFunction {
-    const repairs = new SimpleRepairs(treeDiff);
+    const repairs = new SimpleRepairs(bipartiteMatchingDiff);
     return (
         observed: LogicalCart,
         expected: LogicalCart

@@ -4,6 +4,7 @@ import 'mocha';
 import { AttributeInfo } from '../../src/attributes';
 import { Cart } from '../../src/cart';
 import {
+    bipartiteMatchingDiff,
     Edit,
     EditOp,
     MenuBasedRepairs,
@@ -35,7 +36,8 @@ const attributeInfo = new AttributeInfo(
 const repairs = new MenuBasedRepairs(
     attributeInfo,
     smallWorldCatalog,
-    treeDiff
+    bipartiteMatchingDiff
+    // treeDiff
 );
 
 const idGenerator = new IDGenerator();

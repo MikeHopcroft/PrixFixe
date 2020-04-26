@@ -47,6 +47,11 @@ export function printAggregateMeasures(measures: AggregatedMeasures) {
         measures.completeSteps,
         measures.totalSteps
     );
+    formatFraction(
+        'repaired carts',
+        measures.totalSteps - measures.perfectSteps - measures.completeSteps,
+        measures.totalSteps
+    );
     console.log(`total repairs: ${measures.totalRepairs}`);
     console.log(
         `repairs/step: ${(measures.totalRepairs / measures.totalSteps).toFixed(

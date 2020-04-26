@@ -1,4 +1,5 @@
 export * from './aggregate';
+export * from './bipartite_matching_diff';
 export * from './cart_sort';
 export * from './complete_cart';
 export * from './filter';
