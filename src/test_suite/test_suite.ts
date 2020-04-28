@@ -9,8 +9,6 @@ import { Processor, State } from '../processors';
 import { testOrderFromCart } from '../repl';
 import { YAMLValidationError } from '../utilities';
 
-import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
-import { allSuites, SuitePredicate } from './suite_filter';
 import {
     TestLineItem,
     TestCounts,
@@ -20,6 +18,9 @@ import {
     TestStep,
     CorrectionLevel,
 } from './interfaces';
+
+import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
+import { allSuites, SuitePredicate } from './suite_predicate';
 
 const debug = Debug('prix-fixe:TestSuite.fromYamlString');
 

@@ -10,7 +10,7 @@ import * as recursiveReaddir from 'recursive-readdir';
 import { createWorld, Processor, World } from '../processors';
 
 import { createMarkdown } from './print_markdown';
-import { allSuites, suiteFilter } from './suite_filter';
+import { allSuites, suitePredicate } from './suite_predicate';
 import { TestProcessors } from './test_processors';
 
 import {
@@ -180,7 +180,7 @@ export async function testRunnerMain(
         console.log(
             `Running tests matching suite expression: ${suiteExpressionText}`
         );
-        suiteExpression = suiteFilter(suiteExpressionText);
+        suiteExpression = suitePredicate(suiteExpressionText);
     } else {
         console.log('Running all tests.');
     }

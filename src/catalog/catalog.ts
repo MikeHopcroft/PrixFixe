@@ -93,6 +93,10 @@ export class Catalog implements ICatalog {
         return this.mapGeneric.has(pid);
     }
 
+    hasSKU(sku: SKU): boolean {
+        return this.skuToKey.has(sku);
+    }
+
     getGeneric(pid: PID): GenericTypedEntity {
         const item = this.mapGeneric.get(pid);
         if (!item) {

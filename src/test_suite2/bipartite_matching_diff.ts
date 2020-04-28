@@ -4,7 +4,6 @@ const munkres: (
     a: number[][]
 ) => Array<[number, number]> = require('munkres-js');
 
-
 export function bipartiteMatchingDiff<S, T>(
     repairs: IRepairs<S, T>,
     a: T[],

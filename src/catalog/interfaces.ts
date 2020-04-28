@@ -19,6 +19,7 @@ export type PID = number;
  * specific product such as `small strawberry` `milkshake` or `large decaf iced
  * coffee` will have its own unique SKU.
  */
+// TODO: SKU should be string. Issue #122.
 export type SKU = number;
 
 /**
@@ -143,6 +144,8 @@ export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
 // tslint:disable-next-line:interface-name
 export interface ICatalog {
     hasPID(pid: PID): boolean;
+
+    hasSKU(sku: SKU): boolean;
 
     getGeneric(pid: PID): GenericTypedEntity;
 

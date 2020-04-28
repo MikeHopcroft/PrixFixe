@@ -29,7 +29,7 @@ export const allSuites: SuitePredicate = (suites: string[]) => true;
 //   'x'
 //   '!a'
 //
-export function suiteFilter(text: string): SuitePredicate {
+export function suitePredicate(text: string): SuitePredicate {
     // Tokenize the input string.
     // The result should be an array of suite names, and symbols '(', ')', '&',
     // '|', and '!'.

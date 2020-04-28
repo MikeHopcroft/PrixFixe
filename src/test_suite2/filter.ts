@@ -1,13 +1,18 @@
-import { SuitePredicate, suiteFilter } from '../test_suite/suite_filter';
+import { SuitePredicate } from '../test_suite/suite_predicate';
 
 import {
     CombinedTurn,
+    GenericCase,
     GenericSuite,
     SpokenTurn,
     Step,
     TextTurn,
     ValidationStep,
 } from './interfaces';
+
+export type TestCasePredicate<STEP extends ValidationStep<TURN>, TURN> = (
+    test: GenericCase<STEP>
+) => boolean;
 
 export type StepConverter<
     STEP1 extends ValidationStep<TURN1>,
@@ -26,11 +31,12 @@ export function convertSuite<
     TURN2
 >(
     suite: SUITE,
-    suiteFilter: SuitePredicate,
+    testCasePredicate: TestCasePredicate<STEP1, TURN1>,
     stepConverter: StepConverter<ValidationStep<TURN1>, TURN1, STEP2, TURN1>,
     turnConverter: TurnConverter<TURN1, TURN2>
 ): GenericSuite<Step<TURN2>> {
-    const s = suite.tests.filter(test => suiteFilter(test.suites.split(/\s+/)));
+    // const s = suite.tests.filter(test => suiteFilter(test.suites.split(/\s+/)));
+    const s = suite.tests.filter(testCasePredicate);
     const tests = s.map(test => {
         const steps = test.steps.map(step => {
             const s = stepConverter(step);
@@ -42,6 +48,12 @@ export function convertSuite<
     });
 
     return { tests };
+}
+
+export function allCases<STEP extends ValidationStep<TURN>, TURN>(
+    test: GenericCase<STEP>
+) {
+    return true;
 }
 
 export function removeCart<TURN>(v: ValidationStep<TURN>): Step<TURN> {
@@ -71,16 +83,8 @@ export function keepAudio(turn: CombinedTurn): CombinedTurn {
     return turn;
 }
 
-export function filterSuite<SUITE extends GenericSuite<STEP>, STEP>(
-    suite: SUITE,
-    suiteFilter: SuitePredicate
-): GenericSuite<STEP> {
-    const tests = suite.tests.filter(test => {
-        const suites = test.suites.split(',').map(x => x.trim());
-        return suiteFilter(suites);
-    });
-
-    return {
-        tests,
-    };
+export function suitePredicateFilter<STEP extends ValidationStep<TURN>, TURN>(
+    p: SuitePredicate
+): TestCasePredicate<STEP, TURN> {
+    return test => p(test.suites.split(/\s+/));
 }

@@ -14,11 +14,10 @@ import {
     loadLogicalValidationSuite,
     printAggregateMeasures,
     RepairFunction,
-    succeed,
     scoreSuite,
+    succeed,
     writeYAML,
 } from '../test_suite2';
-import { verifyTestSuite, TestSuite } from '../test_suite';
 
 function main() {
     dotenv.config();

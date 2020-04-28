@@ -4,9 +4,10 @@ import * as dotenv from 'dotenv';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
-import { allSuites, suiteFilter } from '../test_suite/suite_filter';
+import { suitePredicate } from '../test_suite/suite_predicate';
 
 import {
+    allCases,
     CombinedTurn,
     convertSuite,
     fail,
@@ -18,6 +19,7 @@ import {
     removeCart,
     removeTranscription,
     succeed,
+    suitePredicateFilter,
     writeYAML,
 } from '../test_suite2';
 
@@ -44,12 +46,14 @@ function main() {
         const inputSuite = loadLogicalValidationSuite<CombinedTurn>(inFile);
 
         const suiteExpressionText = args['s'];
-        let suiteExpression = allSuites;
+        let suiteExpression = allCases;
         if (suiteExpressionText) {
             console.log(
                 `Keeping tests matching suite expression: ${suiteExpressionText}`
             );
-            suiteExpression = suiteFilter(suiteExpressionText);
+            suiteExpression = suitePredicateFilter(
+                suitePredicate(suiteExpressionText)
+            );
         }
 
         let stepConverter = keepCart;
