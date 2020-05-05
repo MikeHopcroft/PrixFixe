@@ -3,6 +3,7 @@ import * as t from 'io-ts';
 export type AID = number;
 export type DID = number;
 export type Key = string;
+// export type PID = number;
 export type TID = number;
 
 export const WILDCARD = '*';
@@ -38,7 +39,7 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Group
+// Groups
 //
 ///////////////////////////////////////////////////////////////////////////////
 const itemSpecType = t.type({
@@ -68,6 +69,28 @@ const groupSpecType = t.intersection([
     }),
 ]);
 export type GroupSpec = t.TypeOf<typeof groupSpecType>;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// Rules
+//
+///////////////////////////////////////////////////////////////////////////////
+
+const parentChildRuleType = t.type({
+    parents: t.array(t.string),
+    children: t.array(t.string),
+});
+
+const exclusiveRuleType = t.type({
+    parents: t.array(t.string),
+    exclusive: t.array(t.string),
+});
+
+const anyRuleType = t.union([
+    parentChildRuleType,
+    exclusiveRuleType,
+]);
+export type AnyRule = t.TypeOf<typeof anyRuleType>;
 
 // ///////////////////////////////////////////////////////////////////////////////
 // //
@@ -123,6 +146,7 @@ export const catalogSpecType = t.type({
     dimensions: t.array(dimensionSpecType),
     tensors: t.array(tensorSpecType),
     catalog: t.array(groupSpecType),
+    rules: t.array(anyRuleType),
 });
 export type CatalogSpec = t.TypeOf<typeof catalogSpecType>;
 

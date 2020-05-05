@@ -1,4 +1,5 @@
 import { IIndex, IndexedDimension } from './attributes';
+import { PID } from '../catalog';
 import { InvalidParameterError } from './errors';
 import { DID, FormSpec, GroupSpec, Key, TID, WILDCARD } from "./types";
 
@@ -55,12 +56,12 @@ export function processGroups(
     groups: GroupSpec[],
     tensors: IIndex<TID, TensorDescription>,
     dimensions: IIndex<DID, IndexedDimension>
-): Map<string, string[]> {
+): Map<string, PID[]> {
     const generics: GenericTypedEntity[] = [];
     const specifics: SpecificTypedEntity[] = [];
     const pids = new IdGenerator();
     const skus = new IdGenerator(10000);
-    const tagsToKeys = new Map<string, string[]>();
+    const tagsToPIDs = new Map<string, PID[]>();
     // let pid = 0;
 
     for (const g of groups) {
@@ -105,6 +106,17 @@ export function processGroups(
             };
             generics.push(generic);
 
+            // TODO: index by tag here
+            // TODO: ensure all tags are unique
+            for (const tag of tags) {
+                const s = tagsToPIDs.get(tag);
+                if (s) {
+                    s.push(pid);
+                } else {
+                    tagsToPIDs.set(tag, [pid]);
+                }
+            }
+
             // Create specifics
             for (const f of forms) {
                 const key = generic.pid + ':' + f;
@@ -120,16 +132,16 @@ export function processGroups(
                 };
                 specifics.push(specific);
 
-                // TODO: index by tag here
-                // TODO: ensure all tags are unique
-                for (const tag of tags) {
-                    const s = tagsToKeys.get(tag);
-                    if (s) {
-                        s.push(key);
-                    } else {
-                        tagsToKeys.set(tag, [key]);
-                    }
-                }
+                // // TODO: index by tag here
+                // // TODO: ensure all tags are unique
+                // for (const tag of tags) {
+                //     const s = tagsToPIDs.get(tag);
+                //     if (s) {
+                //         s.push(key);
+                //     } else {
+                //         tagsToPIDs.set(tag, [key]);
+                //     }
+                // }
             }
             skus.gap();
             // for each form
@@ -140,12 +152,12 @@ export function processGroups(
 
         console.log(JSON.stringify(generics, null, 4));
         console.log(JSON.stringify(specifics, null, 4));
-        for (const [k, v] of tagsToKeys.entries()) {
+        for (const [k, v] of tagsToPIDs.entries()) {
             console.log(`${k}: ${v}`);
         }
     }
 
-    return tagsToKeys;
+    return tagsToPIDs;
 }
 
 export function processForms(ops: FormSpec[], td: DimensionDescription[]) {

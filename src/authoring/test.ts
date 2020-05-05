@@ -4,21 +4,32 @@ import * as fs from 'fs';
 import { DimensionAndTensorDescription } from '../attributes';
 
 import { processDimensions, processTensors} from './attributes';
-import { processGroups, test } from './products';
-import { catalogSpecType, DimensionSpec, TensorSpec, GroupSpec } from './types';
+import { processGroups } from './products';
+import { processRules } from './rules';
+
+import {
+    AnyRule,
+    catalogSpecType,
+    DimensionSpec,
+    TensorSpec,
+    GroupSpec
+} from './types';
+
 import { validate } from './validate';
 
 export function build(
     ds: DimensionSpec[],
     ts: TensorSpec[],
-    gs: GroupSpec[]
+    gs: GroupSpec[],
+    rs: AnyRule[]
 ): DimensionAndTensorDescription {
     const dimensions = processDimensions(ds);
     const tensors = processTensors(dimensions, ts);
 
     // test(tensors, dimensions, 'latte_drinks', ['hot', 'small']);
     // test(tensors, dimensions, 'latte_drinks', ['*', '*']);
-    processGroups(gs, tensors, dimensions);
+    const tagsToPIDs = processGroups(gs, tensors, dimensions);
+    const rules = processRules(tagsToPIDs, rs);
 
     return {
         dimensions: [...dimensions.values()].map(d => d.dimension),
@@ -33,7 +44,7 @@ function go(filename: string) {
     // console.log('=====================================');
 
     const spec = validate(catalogSpecType, root);
-    const x = build(spec.dimensions, spec.tensors, spec.catalog);
+    const x = build(spec.dimensions, spec.tensors, spec.catalog, spec.rules);
 
     // console.log(JSON.stringify(x, null, 4));
 }
