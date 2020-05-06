@@ -1,5 +1,6 @@
 # TODO List
 
+* Investigate keys for null tensor
 * Verify that defaultForm is one of the generated forms
 * x Better validation errors
   * x https://github.com/gcanti/io-ts/blob/master/Type.md#error-reporters

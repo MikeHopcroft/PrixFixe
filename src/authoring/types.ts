@@ -3,7 +3,6 @@ import * as t from 'io-ts';
 export type AID = number;
 export type DID = number;
 export type Key = string;
-// export type PID = number;
 export type TID = number;
 
 export const WILDCARD = '*';
@@ -39,30 +38,7 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// TagGroups
-//
-///////////////////////////////////////////////////////////////////////////////
-// interface TagGroupSpecType {
-//     members: TagGroupSpecType | TensorGroupSpec;
-//     tag?: string;
-// }
-
-// const tagGroupSpecType: t.Type<TagGroupSpecType> = t.recursion(
-//     'tagGroupSpecType',
-//     () => t.intersection([
-//         t.type({
-//             members: t.union([tagGroupSpecType, tensorGroupSpecType]),
-//         }),
-//         t.partial({
-//             tags: t.array(t.string),
-//         }),
-//     ])        
-// );
-// export type TagGroupSpec = t.TypeOf<typeof tagGroupSpecType>;
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// TensorGroups
+// Groups
 //
 ///////////////////////////////////////////////////////////////////////////////
 const itemSpecType = t.type({
@@ -79,17 +55,6 @@ const excludeFormType = t.type({
 });
 const formSpecType = t.union([includeFormType, excludeFormType]);
 export type FormSpec = t.TypeOf<typeof formSpecType>;
-
-// interface GroupNodeType {
-//     items: Array<ItemSpec | GroupNodeType>,
-// }
-
-// const groupNodeType: t.Type<GroupNodeType> = t.recursion(
-//     'groupNodeType',
-//     () => t.type({
-//         items: t.array(t.union([groupNodeType, itemSpecType])),
-//     })
-// );
 
 interface GroupSpecType {
     items: Array<ItemSpec | GroupSpecType>;
@@ -114,30 +79,6 @@ const groupSpecType: t.Type<GroupSpecType> = t.recursion(
     ])
 );
 export type GroupSpec = t.TypeOf<typeof groupSpecType>;
-
-// const tensorGroupSpecType = t.intersection([
-//     t.type({
-//         tensor: t.string,
-//         default: t.array(t.string),
-//         items: t.array(itemSpecType),
-//         forms: t.array(formSpecType),
-//     }),
-//     t.partial({
-//         tags: t.array(t.string),
-//     }),
-// ]);
-// export type TensorGroupSpec = t.TypeOf<typeof tensorGroupSpecType>;
-
-///////////////////////////////////////////////////////////////////////////////
-//
-// AnyGroup
-//
-///////////////////////////////////////////////////////////////////////////////
-// const anyGroupSpecType = t.union([
-//     tagGroupSpecType,
-//     tensorGroupSpecType,
-// ]);
-// export type AnyGroup = t.TypeOf<typeof anyGroupSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
