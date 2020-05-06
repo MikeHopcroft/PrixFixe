@@ -1,8 +1,4 @@
-import {
-    TensorDescription,
-    DimensionDescription
-} from "../attributes";
-
+import { DimensionDescription, TensorDescription } from "../attributes";
 import { GenericTypedEntity, SpecificTypedEntity, MENUITEM } from '../catalog';
 
 import { IIndex, IndexedDimension } from './attributes';
@@ -23,28 +19,11 @@ import {
 import { IdGenerator } from './utilities';
 
 
-// Generate SKUs
-// Generate names for specifics
-
-// AttributeInfo constructor
-// nameToTensor map and function
-// (tensor, dimension index, attribute_name) => position
-
-// enumerate forms: wildcard or named attribute
-
-// for each group
-// expand forms
-// for each item
-// apply template
-// expand specifics
-//   some solution for overriding generated specifics with hand-authored
-//   e.g. to supply custom/non-generated SKU, custom/non-generated name
-// update tagToSpecifics
-
-// build rules
-// legal child
-// mutual exclusion
-
+///////////////////////////////////////////////////////////////////////////////
+//
+// Context
+//
+///////////////////////////////////////////////////////////////////////////////
 class Context {
     tensor: TensorDescription;
     dimensions: DimensionDescription[];
@@ -143,6 +122,11 @@ class Context {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// GroupBuilder
+//
+///////////////////////////////////////////////////////////////////////////////
 export class GroupBuilder {
     readonly generics: GenericTypedEntity[] = [];
     readonly specifics: SpecificTypedEntity[] = [];
@@ -191,6 +175,11 @@ export class GroupBuilder {
     }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// processGroups(), processItem()
+//
+///////////////////////////////////////////////////////////////////////////////
 export function processGroups(
     builder: GroupBuilder,
     groups: GroupSpec[]
@@ -260,6 +249,11 @@ function processItem(
     builder.skus.gap();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Helper functions
+//
+///////////////////////////////////////////////////////////////////////////////
 function* generateForms(
     dimensions: DimensionDescription[],
     pattern: string[]

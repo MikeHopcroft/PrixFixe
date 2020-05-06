@@ -1,5 +1,9 @@
 # TODO List
 
+* Update error formatting for new groupSpecType
+* Where do pid gaps go?
+* some solution for overriding generated specifics with hand-authored
+    * e.g. to supply custom/non-generated SKU, custom/non-generated name
 * Investigate keys for null tensor
 * Verify that defaultForm is one of the generated forms
 * x Better validation errors
