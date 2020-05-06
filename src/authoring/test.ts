@@ -22,26 +22,40 @@ export function build(
     ts: TensorSpec[],
     gs: GroupSpec[],
     rs: AnyRule[]
-): DimensionAndTensorDescription {
+): void {
     const dimensions = processDimensions(ds);
     const tensors = processTensors(dimensions, ts);
 
     const builder = new GroupBuilder(dimensions, tensors);
-    const tagsToPIDs = processGroups(builder, gs);
+    processGroups(builder, gs);
 
-    const rules = processRules(tagsToPIDs, rs);
+    const rules = processRules(builder.tagsToPIDs, rs);
 
-    return {
-        dimensions: [...dimensions.values()].map(d => d.dimension),
-        tensors: [...tensors.values()],
-    };
+    console.log(' ');
+    console.log('=== Generics ===');
+    console.log(JSON.stringify(builder.generics, null, 4));
+
+    console.log(' ');
+    console.log('=== Specifics ===');
+    console.log(JSON.stringify(builder.specifics, null, 4));
+
+    console.log(' ');
+    console.log('=== tagsToPIDs ===');
+    for (const [k, v] of builder.tagsToPIDs.entries()) {
+        console.log(`${k}: ${v}`);
+    }
+
+    // return {
+    //     dimensions: [...dimensions.values()].map(d => d.dimension),
+    //     tensors: [...tensors.values()],
+    // };
 }
 
 function go(filename: string) {
     const root = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
     const spec = validate(catalogSpecType, root);
 
-    const x = build(spec.dimensions, spec.tensors, spec.catalog, spec.rules);
+    build(spec.dimensions, spec.tensors, spec.catalog, spec.rules);
 
     // console.log(JSON.stringify(x, null, 4));
 }

@@ -41,10 +41,15 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 // Groups
 //
 ///////////////////////////////////////////////////////////////////////////////
-const itemSpecType = t.type({
-    name: t.string,
-    aliases: t.array(t.string),
-});
+const itemSpecType = t.intersection([
+    t.type({
+        name: t.string,
+        aliases: t.array(t.string),
+    }),
+    t.partial({
+        tags: t.array(t.string),
+    }),
+]);
 export type ItemSpec = t.TypeOf<typeof itemSpecType>;
 
 const includeFormType = t.type({
@@ -58,9 +63,9 @@ export type FormSpec = t.TypeOf<typeof formSpecType>;
 
 interface GroupSpecType {
     items: Array<ItemSpec | GroupSpecType>;
-    tensor: string;
-    default: string[];
-    forms: FormSpec[];
+    tensor?: string;
+    default?: string[];
+    forms?: FormSpec[];
     tags?: string[];
 }
 
@@ -69,11 +74,11 @@ const groupSpecType: t.Type<GroupSpecType> = t.recursion(
     () => t.intersection([
         t.type({
             items: t.array(t.union([groupSpecType, itemSpecType])),
+        }),
+        t.partial({
             tensor: t.string,
             default: t.array(t.string),
             forms: t.array(formSpecType),
-        }),
-        t.partial({
             tags: t.array(t.string),
         }),
     ])

@@ -83,7 +83,7 @@ class Context {
 
         if (tensor === undefined) {
             // Tensor remains the same, so just copy over the current context.
-            context = { ...this};
+            context = Object.create(this);
 
             // Modify the forms to generate, if specified.
             if (forms !== undefined) {
@@ -170,18 +170,13 @@ export class GroupBuilder {
         return this.context[this.context.length - 1];
     }
 
-    push(
-        tensor?: string,
-        forms?: FormSpec[],
-        defaultForm?: string[],
-        tags?: string[]
-    ) {
+    push(group: GroupSpec) {
         const c = this.getContext().extend(
             this,
-            tensor,
-            forms,
-            defaultForm,
-            tags
+            group.tensor,
+            group.forms,
+            group.default,
+            group.tags
         );
         this.context.push(c);
     }
@@ -197,27 +192,24 @@ export class GroupBuilder {
 
 export function processGroups(
     builder: GroupBuilder,
-    groups: GroupSpec[]
-): Map<string, PID[]> {
-    for (const g of groups) {
-        builder.push(g.tensor, g.forms, g.default, g.tags);
-        for (const item of g.items) {
-            if ('items' in item) {
-                break;
+    groups: Array<GroupSpec | ItemSpec>
+): void {
+    for (const group of groups) {
+        if ('items' in group) {
+            builder.push(group);
+            processGroups(builder, group.items);
+            builder.pop();
+        } else {
+            if ('tags' in group) {
+                // builder.push(group);
+                processItem(builder, group);
+                // builder.pop();
             } else {
-                processItem(builder, item);
+                processItem(builder, group);
             }
         }
-        builder.pop();
     }
     builder.pids.gap();
-
-    console.log(JSON.stringify(builder.generics, null, 4));
-    console.log(JSON.stringify(builder.specifics, null, 4));
-    for (const [k, v] of builder.tagsToPIDs.entries()) {
-        console.log(`${k}: ${v}`);
-    }
-    return builder.tagsToPIDs;
 }
 
 function processItem(
