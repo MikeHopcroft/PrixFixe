@@ -11,6 +11,7 @@ import { InvalidParameterError } from './errors';
 
 import {
     DID,
+    ContextSpec,
     FormSpec,
     GroupSpec,
     Key,
@@ -170,7 +171,7 @@ export class GroupBuilder {
         return this.context[this.context.length - 1];
     }
 
-    push(group: GroupSpec) {
+    push(group: ContextSpec) {
         const c = this.getContext().extend(
             this,
             group.tensor,
@@ -192,7 +193,7 @@ export class GroupBuilder {
 
 export function processGroups(
     builder: GroupBuilder,
-    groups: Array<GroupSpec | ItemSpec>
+    groups: GroupSpec[]
 ): void {
     for (const group of groups) {
         if ('items' in group) {
@@ -200,10 +201,10 @@ export function processGroups(
             processGroups(builder, group.items);
             builder.pop();
         } else {
-            if ('tags' in group) {
-                // builder.push(group);
+            if (group.default || group.forms || group.tags || group.tensor) {
+                builder.push(group);
                 processItem(builder, group);
-                // builder.pop();
+                builder.pop();
             } else {
                 processItem(builder, group);
             }
@@ -295,15 +296,19 @@ function keyFromAttributes(d: DimensionDescription[], attributes: string[]) {
 }
 
 function namePrefixFromForm(d: DimensionDescription[], form: string) {
-    const parts = form.split(':').map(x => Number(x));
-    const names: string[] = [];
-    for (const [i, part] of parts.entries()) {
-        const a = d[i].attributes[part];
-        if (!a.hidden) {
-            names.push(a.name);
+    if (d.length > 0) {
+        const parts = form.split(':').map(x => Number(x));
+        const names: string[] = [];
+        for (const [i, part] of parts.entries()) {
+            const a = d[i].attributes[part];
+            if (!a.hidden) {
+                names.push(a.name);
+            }
         }
+        return names;
+    } else {
+        return '';
     }
-    return names;
 }
 
 function positionFromName(d: DimensionDescription, name: string) {

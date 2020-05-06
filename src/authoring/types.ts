@@ -41,17 +41,6 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 // Groups
 //
 ///////////////////////////////////////////////////////////////////////////////
-const itemSpecType = t.intersection([
-    t.type({
-        name: t.string,
-        aliases: t.array(t.string),
-    }),
-    t.partial({
-        tags: t.array(t.string),
-    }),
-]);
-export type ItemSpec = t.TypeOf<typeof itemSpecType>;
-
 const includeFormType = t.type({
     include: t.array(t.string),
 });
@@ -61,28 +50,74 @@ const excludeFormType = t.type({
 const formSpecType = t.union([includeFormType, excludeFormType]);
 export type FormSpec = t.TypeOf<typeof formSpecType>;
 
-interface GroupSpecType {
-    items: Array<ItemSpec | GroupSpecType>;
-    tensor?: string;
-    default?: string[];
-    forms?: FormSpec[];
-    tags?: string[];
-}
+const contextSpecType = t.partial({
+    tensor: t.string,
+    default: t.array(t.string),
+    forms: t.array(formSpecType),
+    tags: t.array(t.string),
+});
+export type ContextSpec = t.TypeOf<typeof contextSpecType>;
+
+// const itemSpecType = t.intersection([
+//     t.type({
+//         name: t.string,
+//         aliases: t.array(t.string),
+//     }),
+//     contextSpecType,
+// ]);
+const itemSpecType = t.type({
+    name: t.string,
+    aliases: t.array(t.string),
+});
+export type ItemSpec = t.TypeOf<typeof itemSpecType>;
+
+// interface GroupSpecType {
+//     items: Array<ItemSpec | GroupSpecType>;
+//     tensor?: string;
+//     default?: string[];
+//     forms?: FormSpec[];
+//     tags?: string[];
+// }
+
+type GroupSpecType = ContextSpec & ( {items: GroupSpecType[]} | ItemSpec);
 
 const groupSpecType: t.Type<GroupSpecType> = t.recursion(
     'groupSpecType',
     () => t.intersection([
-        t.type({
-            items: t.array(t.union([groupSpecType, itemSpecType])),
-        }),
-        t.partial({
-            tensor: t.string,
-            default: t.array(t.string),
-            forms: t.array(formSpecType),
-            tags: t.array(t.string),
-        }),
+        contextSpecType,
+        t.union([
+            t.type({
+                items: t.array(groupSpecType),
+            }),
+            itemSpecType,    
+        ]),
+        // t.partial({
+        //     tensor: t.string,
+        //     default: t.array(t.string),
+        //     forms: t.array(formSpecType),
+        //     tags: t.array(t.string),
+        // }),
     ])
 );
+
+// const groupSpecType: t.Type<GroupSpecType> = t.recursion(
+//     'groupSpecType',
+//     () => t.intersection([
+//         t.union([
+//             t.type({
+//                 items: t.array(t.union([groupSpecType, itemSpecType])),
+//             }),
+//             itemSpecType,    
+//         ]),
+//         contextSpecType,
+//         // t.partial({
+//         //     tensor: t.string,
+//         //     default: t.array(t.string),
+//         //     forms: t.array(formSpecType),
+//         //     tags: t.array(t.string),
+//         // }),
+//     ])
+// );
 export type GroupSpec = t.TypeOf<typeof groupSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
