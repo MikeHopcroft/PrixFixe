@@ -39,7 +39,30 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Groups
+// TagGroups
+//
+///////////////////////////////////////////////////////////////////////////////
+// interface TagGroupSpecType {
+//     members: TagGroupSpecType | TensorGroupSpec;
+//     tag?: string;
+// }
+
+// const tagGroupSpecType: t.Type<TagGroupSpecType> = t.recursion(
+//     'tagGroupSpecType',
+//     () => t.intersection([
+//         t.type({
+//             members: t.union([tagGroupSpecType, tensorGroupSpecType]),
+//         }),
+//         t.partial({
+//             tags: t.array(t.string),
+//         }),
+//     ])        
+// );
+// export type TagGroupSpec = t.TypeOf<typeof tagGroupSpecType>;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// TensorGroups
 //
 ///////////////////////////////////////////////////////////////////////////////
 const itemSpecType = t.type({
@@ -57,25 +80,70 @@ const excludeFormType = t.type({
 const formSpecType = t.union([includeFormType, excludeFormType]);
 export type FormSpec = t.TypeOf<typeof formSpecType>;
 
-const groupSpecType = t.intersection([
-    t.type({
-        tensor: t.string,
-        default: t.array(t.string),
-        items: t.array(itemSpecType),
-        forms: t.array(formSpecType),
-    }),
-    t.partial({
-        tags: t.array(t.string),
-    }),
-]);
+// interface GroupNodeType {
+//     items: Array<ItemSpec | GroupNodeType>,
+// }
+
+// const groupNodeType: t.Type<GroupNodeType> = t.recursion(
+//     'groupNodeType',
+//     () => t.type({
+//         items: t.array(t.union([groupNodeType, itemSpecType])),
+//     })
+// );
+
+interface GroupSpecType {
+    items: Array<ItemSpec | GroupSpecType>;
+    tensor: string;
+    default: string[];
+    forms: FormSpec[];
+    tags?: string[];
+}
+
+const groupSpecType: t.Type<GroupSpecType> = t.recursion(
+    'groupSpecType',
+    () => t.intersection([
+        t.type({
+            items: t.array(t.union([groupSpecType, itemSpecType])),
+            tensor: t.string,
+            default: t.array(t.string),
+            forms: t.array(formSpecType),
+        }),
+        t.partial({
+            tags: t.array(t.string),
+        }),
+    ])
+);
 export type GroupSpec = t.TypeOf<typeof groupSpecType>;
+
+// const tensorGroupSpecType = t.intersection([
+//     t.type({
+//         tensor: t.string,
+//         default: t.array(t.string),
+//         items: t.array(itemSpecType),
+//         forms: t.array(formSpecType),
+//     }),
+//     t.partial({
+//         tags: t.array(t.string),
+//     }),
+// ]);
+// export type TensorGroupSpec = t.TypeOf<typeof tensorGroupSpecType>;
+
+///////////////////////////////////////////////////////////////////////////////
+//
+// AnyGroup
+//
+///////////////////////////////////////////////////////////////////////////////
+// const anyGroupSpecType = t.union([
+//     tagGroupSpecType,
+//     tensorGroupSpecType,
+// ]);
+// export type AnyGroup = t.TypeOf<typeof anyGroupSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Rules
 //
 ///////////////////////////////////////////////////////////////////////////////
-
 const parentChildRuleType = t.type({
     parents: t.array(t.string),
     children: t.array(t.string),
@@ -91,51 +159,6 @@ const anyRuleType = t.union([
     exclusiveRuleType,
 ]);
 export type AnyRule = t.TypeOf<typeof anyRuleType>;
-
-// ///////////////////////////////////////////////////////////////////////////////
-// //
-// // Forms
-// //
-// ///////////////////////////////////////////////////////////////////////////////
-// const formType = t.array(t.string);
-// const includeFormType = t.type({
-//     include: formType,
-// });
-// const excludeFormType = t.type({
-//     exclude: formType,
-// });
-// const formSetType = t.array(t.union([includeFormType, excludeFormType]));
-
-// ///////////////////////////////////////////////////////////////////////////////
-// //
-// // Generic Entities
-// //
-// ///////////////////////////////////////////////////////////////////////////////
-// const genericEntityType = t.type({
-//     // pid: t.number,
-//     name: t.string,
-//     tags: t.string,
-//     tensor: t.string,
-//     forms: formSetType,
-//     default: formType,
-//     aliases: t.array(t.string),
-// });
-
-// export type GenericEntity = t.TypeOf<typeof genericEntityType>;
-
-
-// ///////////////////////////////////////////////////////////////////////////////
-// //
-// // Specific Entities
-// //
-// ///////////////////////////////////////////////////////////////////////////////
-// const specificEntityType = t.type({
-//     // name: t.string,
-//     // tags: t.string,
-//     // key: t.string,
-//     form: formType,
-//     sku: t.string,
-// });
 
 ///////////////////////////////////////////////////////////////////////////////
 //

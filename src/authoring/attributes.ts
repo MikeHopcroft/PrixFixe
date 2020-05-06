@@ -169,9 +169,14 @@ export function processTensors(
 ): IIndex<TID, TensorDescription> {
     let tid = 0;
 
+    const none: TensorSpec = {
+        name: 'none',
+        dimensions: [],
+    };
+
     const tensors: IIndex<TID, TensorDescription> = new Index(
         'tensors',
-        ts,
+        [none, ...ts],
         (t: TensorSpec) => {
             const tensorDimensions = new Set<DimensionDescription>();
             for (const name of t.dimensions) {

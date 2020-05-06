@@ -4,18 +4,21 @@ import * as fs from 'fs';
 import { DimensionAndTensorDescription } from '../attributes';
 
 import { processDimensions, processTensors} from './attributes';
-import { processGroups } from './products';
+import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
 
 import {
+    // AnyGroup,
     AnyRule,
     catalogSpecType,
     DimensionSpec,
+    GroupSpec,
     TensorSpec,
-    GroupSpec
+    // TensorGroupSpec
 } from './types';
 
 import { validate } from './validate';
+import { dim } from 'ansi-styles';
 
 export function build(
     ds: DimensionSpec[],
@@ -28,7 +31,10 @@ export function build(
 
     // test(tensors, dimensions, 'latte_drinks', ['hot', 'small']);
     // test(tensors, dimensions, 'latte_drinks', ['*', '*']);
-    const tagsToPIDs = processGroups(gs, tensors, dimensions);
+    const builder = new GroupBuilder(dimensions, tensors);
+    const tagsToPIDs = processGroups(builder, gs);
+
+    // const tagsToPIDs = processGroups(gs, tensors, dimensions);
     const rules = processRules(tagsToPIDs, rs);
 
     return {
