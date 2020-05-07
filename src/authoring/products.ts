@@ -1,5 +1,13 @@
 import { DimensionDescription, TensorDescription } from "../attributes";
-import { GenericTypedEntity, SpecificTypedEntity, MENUITEM } from '../catalog';
+
+import {
+    GenericTypedEntity,
+    SpecificTypedEntity,
+    MENUITEM,
+    OPTION,
+    GenericEntity,
+    genericEntityFactory
+} from '../catalog';
 
 import { IIndex, IndexedDimension } from './attributes';
 import { PID } from '../catalog';
@@ -13,7 +21,8 @@ import {
     Key,
     TID,
     WILDCARD,
-    ItemSpec
+    ItemSpec,
+    ItemType,
 } from "./types";
 
 import { IdGenerator } from './utilities';
@@ -30,6 +39,7 @@ class Context {
     forms = new Set<Key>();
     defaultForm: string;
     tags = new Set<string>();
+    type = ItemType.PRODUCT;
 
     constructor(
         builder: GroupBuilder,
@@ -42,6 +52,7 @@ class Context {
             x => builder.dimensions.getById(x).dimension
         );
 
+        // TODO: REVIEW falsey values.
         const f = forms || [{ include: this.tensor.dimensions.map(x => '*') }];
         this.mergeForms(f, this.dimensions);
 
@@ -57,7 +68,8 @@ class Context {
         tensor?: string,
         forms?: FormSpec[],
         defaultForm?: string[],
-        tags?: string[]
+        tags?: string[],
+        type?: ItemType
     ): Context {
         let context: Context;
 
@@ -94,6 +106,10 @@ class Context {
             for (const tag of tags) {
                 context.tags.add(tag);
             }
+        }
+
+        if (type !== undefined) {
+            context.type = type;
         }
 
         return context;
@@ -161,7 +177,8 @@ export class GroupBuilder {
             group.tensor,
             group.forms,
             group.default,
-            group.tags
+            group.tags,
+            group.type
         );
         this.context.push(c);
     }
@@ -190,6 +207,7 @@ export function processGroups(
             processGroups(builder, group.items);
             builder.pop();
         } else {
+            // TODO: REVIEW: [] is not false. Are the semantics below correct?
             if (group.default || group.forms || group.tags || group.tensor) {
                 builder.push(group);
                 processItem(builder, group);
@@ -209,10 +227,10 @@ function processItem(
     const context = builder.getContext();
 
     // Create generic
+    const kind = context.type === ItemType.PRODUCT ? MENUITEM : OPTION;
     const pid = builder.pids.next();
     const defaultKey = [pid, context.defaultForm].join(':');
-    const generic: GenericTypedEntity = {
-        kind: MENUITEM,
+    const entity: GenericEntity = {
         name: item.name,
         pid,
         cid: 0,
@@ -220,6 +238,7 @@ function processItem(
         tensor: context.tensor.tid,
         defaultKey,
     };
+    const generic = genericEntityFactory(entity, kind);
     builder.generics.push(generic);
 
     // Index generic PIDs by tag

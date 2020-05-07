@@ -1,11 +1,16 @@
 # TODO List
 
+* Issue with falsey values (if (form || ...))
+* .products and .options command for REPL
+* x Understand importance of ENTITY vs OPTION
+  * x Implement in builder, processGroups()
+* Verify that defaultForm is one of the generated forms
+* Larger menu
+* Roadmap.yaml
+* Consistent tab spacing.
 * Update error formatting for new groupSpecType
 * Where do pid gaps go?
-* some solution for overriding generated specifics with hand-authored
-    * e.g. to supply custom/non-generated SKU, custom/non-generated name
 * Investigate keys for null tensor
-* Verify that defaultForm is one of the generated forms
 * x Better validation errors
   * x https://github.com/gcanti/io-ts/blob/master/Type.md#error-reporters
   * x https://www.npmjs.com/package/io-ts-reporters
@@ -14,10 +19,12 @@
   * Test suite migration tool - perhaps using item name
   * Test suite rebasing
 * Tags
-  * Hierarchical
+  * x Hierarchical
   * Include
   * Exclude
-* Per-SKU overrides
+* Per-SKU overrides for specifics
+  * some solution for overriding generated specifics with hand-authored
+  * e.g. to supply custom/non-generated SKU, custom/non-generated name
 * Modify REPL to generate new test suite format
   * New structure
   * SKU based, instead of Keys

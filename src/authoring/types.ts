@@ -41,6 +41,27 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 // Groups
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+// createEnum() from https://github.com/gcanti/io-ts/issues/67
+// tslint:disable-next-line:no-any
+const createEnum = <E>(e: any, name: string): t.Type<E> => {
+    // tslint:disable-next-line:no-any
+    const keys: any = {};
+    Object.keys(e).forEach(k => {
+      keys[e[k]] = null;
+    });
+    // tslint:disable-next-line:no-any
+    return t.keyof(keys, name) as any;
+  };
+  
+export enum ItemType {
+    PRODUCT = 'product',
+    OPTION = 'option',
+}
+
+// tslint:disable-next-line:variable-name
+const ItemTypeType = createEnum<ItemType>(ItemType, 'ItemType');
+  
 const includeFormType = t.type({
     include: t.array(t.string),
 });
@@ -55,6 +76,7 @@ const contextSpecType = t.partial({
     default: t.array(t.string),
     forms: t.array(formSpecType),
     tags: t.array(t.string),
+    type: ItemTypeType,
 });
 export type ContextSpec = t.TypeOf<typeof contextSpecType>;
 
