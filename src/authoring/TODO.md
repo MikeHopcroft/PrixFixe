@@ -2,12 +2,12 @@
 
 * Issue with falsey values (if (form || ...))
 * REPL
-  * Consider printing SKUs in cart display
+  * x Consider printing SKUs in cart display
   * x Generate new test suite format
     * x New structure
     * x SKU based, instead of Keys
   * x .products and .options command for REPL
-  * Show exclusion sets in REPL
+  * x Show exclusion sets in REPL
 * x Understand importance of ENTITY vs OPTION
   * x Implement in builder, processGroups()
 * Verify that defaultForm is one of the generated forms

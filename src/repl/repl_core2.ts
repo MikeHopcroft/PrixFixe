@@ -296,7 +296,7 @@ class ReplCore implements IRepl {
             help: 'Set the comment for the current yaml test',
             action(text: string) {
                 testCase.setCommment(text);
-                console.log(`comment set to "${text}"`);
+                console.log(`Comment set to "${text}"`);
                 repl.displayPrompt();
             },
         });
@@ -305,7 +305,7 @@ class ReplCore implements IRepl {
             help: 'Set the speaker for the current yaml test',
             action(text: string) {
                 testCase.setSpeaker(text);
-                console.log(`speaker set to "${text}"`);
+                console.log(`Speaker set to "${text}"`);
                 repl.displayPrompt();
             },
         });
@@ -314,7 +314,7 @@ class ReplCore implements IRepl {
             help: 'Set the suites field for the current yaml test',
             action(text: string) {
                 testCase.setSuites(text.split(/\s+/));
-                console.log(`suites set to "${text}"`);
+                console.log(`Suites set to "${text}"`);
                 repl.displayPrompt();
             },
         });

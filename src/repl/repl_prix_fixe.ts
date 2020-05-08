@@ -84,6 +84,21 @@ export class PrixFixeReplExtension implements IReplExtension {
                 repl.getReplServer().displayPrompt();
             },
         });
+
+        repl.getReplServer().defineCommand('exclusions', {
+            help: 'Display exclusion sets for a generic',
+            action: (line: string) => {
+                const pid = Number(line);
+                if (!isNaN(pid) && catalog.hasPID(pid)) {
+                    // This is a generic entity. Print out its specifics.
+                    printExlusionSets(world, pid);
+                } else {
+                    console.log(`Unknown PID "${line}".`);
+                    console.log('Usage: .exclusions <PID>');
+                }
+                repl.getReplServer().displayPrompt();
+            },
+        });
     }
 
     createProcessor(): ReplProcessor | null {
@@ -163,8 +178,6 @@ export function describeGeneric(world: World, pid: PID) {
         for (const dimension of tensor.dimensions) {
             console.log(`    ${dimension.name}`);
             for (const [index, attribute] of dimension.attributes.entries()) {
-                // const aliases = attribute.aliases.map(x => `"${x}"`).join(', ');
-                // console.log(`      ${attribute.name} (${attribute.aid}) - ${aliases}`);
                 console.log(`      ${attribute.name} (${index})`);
                 const aliases: string[] = [];
                 for (const alias of attribute.aliases) {
@@ -197,6 +210,8 @@ export function describeGeneric(world: World, pid: PID) {
         for (const line of lines) {
             console.log(`    ${line}`);
         }
+
+        printExlusionSets(world, pid);
     }
 }
 
@@ -231,7 +246,18 @@ function printLegalSpecifics(world: World, pid: PID) {
         const s = catalog.getSpecific(key);
         const name = s.name;
         const sku = s.sku;
-        // const name = catalog.getSpecific(key).name;
         console.log(`    ${name} (${key}, ${sku})${defaultMark}`);
+    }
+}
+
+function printExlusionSets(world: World, pid: PID) {
+    const catalog = world.catalog;
+    const rules = world.ruleChecker;
+    for (const [i, group] of rules.getExclusionGroups(pid).entries()) {
+        console.log(`  Exclusion Set ${i}`);
+        for (const p of group.values()) {
+            const item = catalog.getGeneric(p);
+            console.log(`    ${item.name} (${item.pid})`);
+        }
     }
 }

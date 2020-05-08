@@ -207,5 +207,8 @@ class RuleChecker2 implements IRuleChecker {
         throw new Error("Method not implemented.");
     }
 
-    
+    getExclusionGroups(pid: PID): Array<Set<PID>> {
+        const groups = this.exclusion.get(pid);
+        return groups || [];
+    }
 }

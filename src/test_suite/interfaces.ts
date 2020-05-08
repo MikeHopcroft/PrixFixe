@@ -32,6 +32,7 @@ export interface TestLineItem {
     readonly quantity: number;
     readonly key: Key;
     readonly name: string;
+    readonly sku?: string;
 }
 
 // TODO: HAs TestOrder been deprecated?

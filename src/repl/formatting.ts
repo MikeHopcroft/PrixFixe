@@ -29,15 +29,18 @@ function addTestLineItems(
     indent: number
 ): void {
     let name: string;
+    let sku: string | undefined;
     if (catalog.hasKey(item.key)) {
-        name = catalog.getSpecific(item.key).name;
+        const specific = catalog.getSpecific(item.key);
+        name = specific.name;
+        sku = specific.sku.toString();
     } else {
         name = `UNKNOWN(${item.key})`;
     }
     const quantity = item.quantity;
     const key = item.key;
 
-    order.push({ indent, quantity, key, name });
+    order.push({ indent, quantity, key, name, sku });
 
     for (const child of item.children) {
         addTestLineItems(catalog, order, child, indent + 1);
@@ -58,7 +61,8 @@ function formatLineItem(item: TestLineItem) {
 
     const totalWidth = 50;
     const middleWidth = Math.max(0, totalWidth - left.length - right.length);
-    const middle = leftJustify(item.name + ' ', middleWidth);
+    const middle = leftJustify(`${item.name} (${item.sku})`, middleWidth);
+    // const middle = leftJustify(item.name + ' ', middleWidth);
 
     return `${left}${middle}${right}`;
 }

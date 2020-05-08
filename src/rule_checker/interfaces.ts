@@ -113,4 +113,12 @@ export interface IRuleChecker {
      * with drink as parent and lemons as child, then return false.
      */
     isValidQuantity(parent: Key, child: Key, qty: number): boolean;
+
+    /**
+     * Gets the exclusion groups associated with a generic PID.
+     * 
+     * @param pid
+     * 
+     */
+    getExclusionGroups(pid: PID): Array<Set<PID>>;
 }

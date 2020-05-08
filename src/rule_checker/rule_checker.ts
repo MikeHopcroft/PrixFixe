@@ -17,6 +17,7 @@ import {
 
 import { IRuleChecker, RuleConfig, QuantityInformation } from './interfaces';
 import { QuantityMap, QuantityTensor, quantityTensorFactory } from './quantity';
+import { Type } from 'js-yaml';
 
 type Predicate = ValidChildPredicate | MutualExclusionZone | QuantityMap;
 type Tensor = ValidChildTensor | ExclusionTensor | QuantityTensor;
@@ -283,4 +284,10 @@ export class RuleChecker implements IRuleChecker {
 
         return false;
     };
+
+    
+    getExclusionGroups(pid: PID): Array<Set<PID>> {
+        // NOTE: this feature is not implemented for RuleChecker.
+        return [];
+    }
 }
