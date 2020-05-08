@@ -2,6 +2,7 @@
 
 * Issue with falsey values (if (form || ...))
 * REPL
+  * Consider printing SKUs in cart display
   * x Generate new test suite format
     * x New structure
     * x SKU based, instead of Keys
