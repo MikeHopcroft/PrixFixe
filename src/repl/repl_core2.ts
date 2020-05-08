@@ -5,9 +5,18 @@ import * as yaml from 'js-yaml';
 import * as replServer from 'repl';
 import { Context } from 'vm';
 
+import { createWorld2 } from '../authoring/world';
 import { ICatalog } from '../catalog';
-import { createWorld, Processor, State, World } from '../processors';
+import { createWorld, Processor, State } from '../processors';
+
 import { TestLineItem, TestOrder, TestStep, YamlTestCase } from '../test_suite';
+import {
+    GenericCase,
+    logicalCartFromCart,
+    TextTurn,
+    ValidationStep,
+    LogicalValidationSuite,
+} from '../test_suite2';
 
 import { ItemInstance } from '../cart';
 import { displayState } from './formatting';
@@ -78,6 +87,112 @@ class Session {
     }
 }
 
+class TestBuilder {
+    private readonly catalog: ICatalog;
+    private steps: Turn[] = [];
+    private comment = '';
+    private suites: string[] = [];
+    private speaker: string;
+
+    constructor(catalog: ICatalog) {
+        this.catalog = catalog;
+        this.speaker = "speaker";
+    }
+
+    getComment() {
+        return this.comment;
+    }
+
+    setCommment(comment: string) {
+        this.comment = comment;
+    }
+
+    setSpeaker(speaker: string) {
+        this.speaker = speaker;
+    }
+
+    getSuites() {
+        return this.suites;
+    }
+
+    setSuites(suites: string[]) {
+        this.suites = suites;
+    }
+
+    addStep(input: string, state: State) {
+        this.steps.push({input, state});
+    }
+
+    clearSteps() {
+        this.steps = [];
+    }
+
+    getSteps() {
+        return this.steps;
+    }
+
+    updateStep(state: State) {
+        if (this.steps.length > 0) {
+            this.steps[this.steps.length - 1].state = state;
+        }
+    }    
+
+    cartYaml2(): LogicalValidationSuite<TextTurn> {
+        const tests: Array<GenericCase<ValidationStep<TextTurn>>> = [];
+        // const turns: Array<TextTurn> = [];
+        const steps: Array<ValidationStep<TextTurn>> = [];
+        for (const step of this.steps) {
+            const cart = logicalCartFromCart(step.state.cart, this.catalog);
+            const turns = [{
+                speaker: this.speaker,
+                transcription: step.input,
+            }];
+            steps.push({turns, cart});
+            // const steps: Array<ValidationStep<TextTurn>> = [{
+            //     turns: [{
+            //         speaker: this.speaker,
+            //         transcription: step.input,
+            //     }],
+            //     cart,
+            // }];
+
+            // tests.push({
+            //     id,
+            //     suites: this.suites.join(' '),
+            //     comment: this.comment,
+            //     steps,
+            // });
+        }
+
+        return {
+            tests: [
+                {
+                    id: 0,
+                    suites: this.suites.join(' '),
+                    comment: this.comment,
+                    steps,
+                },
+            ],
+        };
+    }
+
+    cartYaml3(): YamlTestCase[] {
+        const steps: TestStep[] = [];
+        for (const turn of this.steps) {
+            const cart = testOrderFromState(this.catalog, turn.state);
+            steps.push({ rawSTT: turn.input, cart: cart.cart });
+        }
+    
+        const testCase: YamlTestCase = {
+            suites: this.suites.join(' '),
+            comment: this.comment,
+            steps,
+        };
+    
+        return [testCase];
+    }  
+}
+
 const maxHistorySteps = 1000;
 const historyFile = '.repl_history';
 
@@ -124,9 +239,10 @@ class ReplCore implements IRepl {
 
         // Variables related to the .newtest, .step, .suites, .comment, and .yaml commands.
         // TODO: put these into a dedicated class related to YAML test authoring.
-        let steps: Turn[] = [];
-        let comment = '';
-        let suites: string[] = [];
+        // let steps: Turn[] = [];
+        // let comment = '';
+        // let suites: string[] = [];
+        const testCase = new TestBuilder(catalog);
 
         // Print the welcome message.
         console.log();
@@ -196,7 +312,8 @@ class ReplCore implements IRepl {
                 console.log('Cart has been reset.');
                 const session = stack[stack.length - 1];
                 session.reset();
-                steps = [];
+                testCase.clearSteps();
+                // steps = [];
                 repl.displayPrompt();
             },
         });
@@ -206,7 +323,8 @@ class ReplCore implements IRepl {
             async action(text: string) {
                 const session = stack[stack.length - 1];
                 const state = session.state();
-                steps.push({ input: text, state });
+                testCase.addStep(text, state);
+                // steps.push({ input: text, state });
 
                 await processInputLine(text);
 
@@ -215,9 +333,20 @@ class ReplCore implements IRepl {
         });
 
         repl.defineCommand('comment', {
-            help: 'Set the current for the current yaml test',
+            help: 'Set the comment for the current yaml test',
             action(text: string) {
-                comment = text;
+                testCase.setCommment(text);
+                console.log(`comment set to "${text}"`);
+                // comment = text;
+                repl.displayPrompt();
+            },
+        });
+
+        repl.defineCommand('speaker', {
+            help: 'Set the speaker for the current yaml test',
+            action(text: string) {
+                testCase.setSpeaker(text);
+                console.log(`speaker set to "${text}"`);
                 repl.displayPrompt();
             },
         });
@@ -225,7 +354,9 @@ class ReplCore implements IRepl {
         repl.defineCommand('suites', {
             help: 'Set the suites field for the current yaml test',
             action(text: string) {
-                suites = text.split(/\s+/);
+                testCase.setSuites(text.split(/\s+/));
+                console.log(`suites set to "${text}"`);
+                // suites = text.split(/\s+/);
                 repl.displayPrompt();
             },
         });
@@ -233,12 +364,19 @@ class ReplCore implements IRepl {
         repl.defineCommand('list', {
             help: 'Display the steps in the current test',
             action(text: string) {
-                console.log(`Suites: ${suites.join(' ')}`);
-                console.log(`Comment: ${comment}`);
-                for (const step of steps) {
+                console.log(`Suites: ${testCase.getSuites().join(' ')}`);
+                console.log(`Comment: ${testCase.getComment()}`);
+                for (const step of testCase.getSteps()) {
                     console.log(`Input: "${step.input}"`);
                     displayState(catalog, step.state);
                 }
+
+                // console.log(`Suites: ${suites.join(' ')}`);
+                // console.log(`Comment: ${comment}`);
+                // for (const step of steps) {
+                //     console.log(`Input: "${step.input}"`);
+                //     displayState(catalog, step.state);
+                // }
                 repl.displayPrompt();
             },
         });
@@ -248,12 +386,13 @@ class ReplCore implements IRepl {
             action(text: string) {
                 repl.displayPrompt();
 
-                const yamlTestCases = cartYaml2(
-                    catalog,
-                    steps,
-                    suites,
-                    comment
-                );
+                const yamlTestCases = testCase.cartYaml2();
+                // const yamlTestCases = cartYaml2(
+                //     catalog,
+                //     steps,
+                //     suites,
+                //     comment
+                // );
                 const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
                 console.log(' ');
                 console.log(`${style.red.open}`);
@@ -265,6 +404,31 @@ class ReplCore implements IRepl {
                 repl.displayPrompt();
             },
         });
+
+        // repl.defineCommand('rawyaml', {
+        //     help: 'Display YAML test case for cart',
+        //     action(text: string) {
+        //         const session = stack[stack.length - 1];
+        //         const turns = session.getTurns();
+
+        //         const yamlTestCases = cartYaml2(
+        //             catalog,
+        //             turns,
+        //             ['unverified'],
+        //             'generated by repl'
+        //         );
+        //         const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
+        //         console.log(' ');
+        //         console.log(`${style.red.open}`);
+        //         console.log('WARNING: test case expects short-order behavior.');
+        //         console.log('Be sure to manually verify.');
+        //         console.log(`${style.red.close}`);
+        //         console.log(' ');
+        //         console.log(yamlText);
+
+        //         repl.displayPrompt();
+        //     },
+        // });
 
         repl.defineCommand('debug', {
             help: 'Toggle debug mode.',
@@ -306,7 +470,8 @@ class ReplCore implements IRepl {
             action(text: string) {
                 stack[stack.length - 1].reset();
                 const session = stack[stack.length - 1];
-                updateSteps(session.state());
+                testCase.updateStep(session.state());
+                // updateSteps(session.state());
                 console.log('Cart has been reset.');
                 repl.displayPrompt();
             },
@@ -328,7 +493,8 @@ class ReplCore implements IRepl {
                 if (stack.length > 1) {
                     stack.pop();
                     const session = stack[stack.length - 1];
-                    updateSteps(session.state());
+                    testCase.updateStep(session.state());
+                    // updateSteps(session.state());
                     displayState(catalog, session.state());
                 } else {
                     console.log('Cannot pop - stack is already empty');
@@ -344,7 +510,8 @@ class ReplCore implements IRepl {
                     stack.pop();
                     stack.push(stack[stack.length - 1].copy());
                     const session = stack[stack.length - 1];
-                    updateSteps(session.state());
+                    testCase.updateStep(session.state());
+                    // updateSteps(session.state());
                     displayState(catalog, session.state());
                 } else {
                     console.log('Cannot restore - stack is already empty');
@@ -358,7 +525,8 @@ class ReplCore implements IRepl {
             action(text: string) {
                 const session = stack[stack.length - 1];
                 if (session.undo()) {
-                    updateSteps(session.state());
+                    testCase.updateStep(session.state());
+                    // updateSteps(session.state());
                     displayState(catalog, session.state());
                 } else {
                     console.log('Nothing to undo.');
@@ -372,7 +540,8 @@ class ReplCore implements IRepl {
             action(text: string) {
                 const session = stack[stack.length - 1];
                 if (session.redo()) {
-                    updateSteps(session.state());
+                    testCase.updateStep(session.state());
+                    // updateSteps(session.state());
                     displayState(catalog, session.state());
                 } else {
                     console.log('Nothing to redo.');
@@ -387,31 +556,6 @@ class ReplCore implements IRepl {
                 const session = stack[stack.length - 1];
                 await processInputLine(text);
                 session.undo();
-
-                repl.displayPrompt();
-            },
-        });
-
-        repl.defineCommand('rawyaml', {
-            help: 'Display YAML test case for cart',
-            action(text: string) {
-                const session = stack[stack.length - 1];
-                const turns = session.getTurns();
-
-                const yamlTestCases = cartYaml2(
-                    catalog,
-                    turns,
-                    ['unverified'],
-                    'generated by repl'
-                );
-                const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
-                console.log(' ');
-                console.log(`${style.red.open}`);
-                console.log('WARNING: test case expects short-order behavior.');
-                console.log('Be sure to manually verify.');
-                console.log(`${style.red.close}`);
-                console.log(' ');
-                console.log(yamlText);
 
                 repl.displayPrompt();
             },
@@ -484,18 +628,19 @@ class ReplCore implements IRepl {
                         const session = stack[stack.length - 1];
                         const state = await processor(text, session.state());
                         session.takeTurn(text, state);
-                        updateSteps(state);
+                        testCase.updateStep(state);
+                        // updateSteps(state);
                         displayState(catalog, state);
                     }
                 }
             }
         }
 
-        function updateSteps(state: State) {
-            if (steps.length > 0) {
-                steps[steps.length - 1].state = state;
-            }
-        }
+        // function updateSteps(state: State) {
+        //     if (steps.length > 0) {
+        //         steps[steps.length - 1].state = state;
+        //     }
+        // }
 
         function myWriter(text: string) {
             return text;

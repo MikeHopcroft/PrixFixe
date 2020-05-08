@@ -2,10 +2,10 @@
 
 * Issue with falsey values (if (form || ...))
 * REPL
-  * Generate new test suite format
-    * New structure
-    * SKU based, instead of Keys
-  * .products and .options command for REPL
+  * x Generate new test suite format
+    * x New structure
+    * x SKU based, instead of Keys
+  * x .products and .options command for REPL
   * Show exclusion sets in REPL
 * x Understand importance of ENTITY vs OPTION
   * x Implement in builder, processGroups()
