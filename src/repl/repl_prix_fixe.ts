@@ -1,7 +1,7 @@
 import * as style from 'ansi-styles';
 import * as replServer from 'repl';
 
-import { ICatalog, Key, MENUITEM, PID } from '../catalog';
+import { ICatalog, Key, MENUITEM, PID, TypedEntity, OPTION } from '../catalog';
 
 import { aliasesFromPattern, patternFromExpression } from '../utilities';
 
@@ -13,6 +13,7 @@ import {
 } from './interfaces';
 
 import { World } from '../processors';
+import { ItemType } from '../authoring/types';
 
 export class PrixFixeReplExtension implements IReplExtension {
     world: World;
@@ -32,21 +33,23 @@ export class PrixFixeReplExtension implements IReplExtension {
         repl.getReplServer().defineCommand('menu', {
             help: 'Display menu',
             action: (line: string) => {
-                if (line.length === 0) {
-                    // No Key or PID was specified. Print out name of all of the
-                    // MENUITEM generics.
-                    printCatalog(catalog);
-                } else if (line.indexOf(':') !== -1) {
-                    // This is a specific entity. Just print out its options.
-                    const key = line.trim();
-                    describeSpecific(world, key);
-                } else if (!isNaN(Number(line))) {
-                    // This is a generic entity. Print out its attributes and options.
-                    const pid: PID = Number(line);
-                    describeGeneric(world, pid);
-                } else {
-                    console.log(`Unknown item "${line}".`);
-                }
+                displayMenu(world, line);
+                repl.getReplServer().displayPrompt();
+            },
+        });
+
+        repl.getReplServer().defineCommand('products', {
+            help: 'Display top-level products',
+            action: (line: string) => {
+                displayMenu(world, line, MENUITEM);
+                repl.getReplServer().displayPrompt();
+            },
+        });
+
+        repl.getReplServer().defineCommand('options', {
+            help: 'Display options',
+            action: (line: string) => {
+                displayMenu(world, line, OPTION);
                 repl.getReplServer().displayPrompt();
             },
         });
@@ -89,15 +92,33 @@ export class PrixFixeReplExtension implements IReplExtension {
     }
 }
 
+function displayMenu(world: World, line: string, kind?: MENUITEM | OPTION) {
+    if (line.length === 0) {
+        // No Key or PID was specified. Print out name of all of the
+        // MENUITEM generics.
+        printCatalog(world.catalog, kind);
+    } else if (line.indexOf(':') !== -1) {
+        // This is a specific entity. Just print out its options.
+        const key = line.trim();
+        describeSpecific(world, key);
+    } else if (!isNaN(Number(line))) {
+        // This is a generic entity. Print out its attributes and options.
+        const pid: PID = Number(line);
+        describeGeneric(world, pid);
+    } else {
+        console.log(`Unknown item "${line}".`);
+    }
+}
+
 export const prixFixeReplExtensionFactory: IReplExtensionFactory = {
     create: (world: World, dataPath: string) => {
         return new PrixFixeReplExtension(world, dataPath);
     },
 };
 
-export function printCatalog(catalog: ICatalog) {
+export function printCatalog(catalog: ICatalog, kind: MENUITEM | OPTION | undefined) {
     for (const item of catalog.genericEntities()) {
-        if (item.kind === MENUITEM) {
+        if (!kind || item.kind === kind) {
             console.log(`${item.name} (${item.pid})`);
         }
     }
@@ -208,7 +229,10 @@ function printLegalSpecifics(world: World, pid: PID) {
     console.log('  Specifics:');
     for (const key of catalog.getSpecificsForGeneric(pid)) {
         const defaultMark = item.defaultKey === key ? ' <== default' : '';
-        const name = catalog.getSpecific(key).name;
-        console.log(`    ${name} (${key})${defaultMark}`);
+        const s = catalog.getSpecific(key);
+        const name = s.name;
+        const sku = s.sku;
+        // const name = catalog.getSpecific(key).name;
+        console.log(`    ${name} (${key}, ${sku})${defaultMark}`);
     }
 }

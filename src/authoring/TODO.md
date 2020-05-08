@@ -1,7 +1,12 @@
 # TODO List
 
 * Issue with falsey values (if (form || ...))
-* .products and .options command for REPL
+* REPL
+  * Generate new test suite format
+    * New structure
+    * SKU based, instead of Keys
+  * .products and .options command for REPL
+  * Show exclusion sets in REPL
 * x Understand importance of ENTITY vs OPTION
   * x Implement in builder, processGroups()
 * Verify that defaultForm is one of the generated forms
@@ -25,6 +30,3 @@
 * Per-SKU overrides for specifics
   * some solution for overriding generated specifics with hand-authored
   * e.g. to supply custom/non-generated SKU, custom/non-generated name
-* Modify REPL to generate new test suite format
-  * New structure
-  * SKU based, instead of Keys
