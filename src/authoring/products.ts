@@ -34,89 +34,89 @@ import { IdGenerator } from './utilities';
 //
 ///////////////////////////////////////////////////////////////////////////////
 class Context {
-    tensor: TensorDescription;
-    dimensions: DimensionDescription[];
-    forms = new Set<Key>();
-    defaultForm: string;
+    tensor!: TensorDescription;
+    dimensions!: DimensionDescription[];
+    forms!: Set<Key>;
+    defaultForm!: string;
     tags = new Set<string>();
     type = ItemType.PRODUCT;
 
-    constructor(
+    constructor(builder: GroupBuilder) {
+        // DESIGN NOTE: initializes this.tensor, this.dimensions, this.forms,
+        // and this.defaultForm.
+        this.initializeTensor(builder, 'none');
+    }
+
+    private initializeTensor(
         builder: GroupBuilder,
-        tensor?: string,
-        forms?: FormSpec[],
-        defaultForm?: string[]
+        tensor: string
     ) {
-        const t = builder.tensors.get(tensor || 'none');
+        // WARNING: constructor() assumes this method initializes this.tensor,
+        // this.dimensions, this.forms, and this.defaultForm.
+
+        const t = builder.tensors.get(tensor);
         if (t === undefined) {
             const message = `Unknown tensor "${tensor}"`;
             throw new InvalidParameterError(message);
         }
         this.tensor = t;
-        this.dimensions = this.tensor.dimensions.map(
+        this.dimensions = t.dimensions.map(
             x => builder.dimensions.getById(x).dimension
         );
 
-        // TODO: REVIEW falsey values.
-        const f = forms || [{ include: this.tensor.dimensions.map(x => '*') }];
-        this.mergeForms(f, this.dimensions);
+        const forms = [{ include: this.tensor.dimensions.map(x => '*') }];
+        this.forms = new Set<string>();
+        this.mergeForms(forms, this.dimensions);
 
-        this.defaultForm = defaultForm ?
-            keyFromAttributes(this.dimensions, defaultForm) :
-            this.dimensions.map(x => '0').join(':');
+        this.defaultForm = this.dimensions.map(x => '0').join(':');
 
         this.verifyDefaultForm();
     }
 
+
     extend(
         builder: GroupBuilder,
-        tensor?: string,
-        forms?: FormSpec[],
-        defaultForm?: string[],
-        tags?: string[],
-        type?: ItemType
+        group: ContextSpec
     ): Context {
-        let context: Context;
+        const {
+            tensor,
+            forms,
+            tags,
+            type,
+        } = group;
 
-        if (tensor === undefined) {
-            // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
-            // Tensor remains the same, so just copy over the current context.
-            // context = Object.assign( Object.create(this), this);
-            context = Object.assign(Object.create(Object.getPrototypeOf(this)), this);
-            // context = Object.create(this);
-
-            // Modify the forms to generate, if specified.
-            if (forms !== undefined) {
-                context.forms = new Set<string>(context.forms);
-                context.mergeForms(forms, this.dimensions);
-            }
-
-            // Modify the default form, if specified.
-            if (defaultForm !== undefined) {
-                context.defaultForm = keyFromAttributes(this.dimensions, defaultForm);
-            }
-
-            // Verify that the default form is one of the generated forms.
-            context.verifyDefaultForm();
-        } else {
-            // We're specifying a new tensor, so just construct a new context.
-            context = new Context(
-                builder,
-                tensor,
-                forms,
-                defaultForm
-            );
-
-            // Hack - really just want the new tensor/form/defaultForm application,
-            // as done by the constructor. Copying the properties here, one by one
-            // is error-prone.
-            context.tags = this.tags;
-            context.type = this.type;
+        if (tags && tags[0] === 'syrups') {
+            console.log('here here');
         }
+
+        const defaultForm = group.default;
+
+        // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
+        const context: Context = Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+
+        if (tensor !== undefined) {
+            context.initializeTensor(builder, tensor);
+        }
+
+        // Modify the forms to generate, if specified.
+        if (forms !== undefined) {
+            // New forms set based on copy of original.
+            context.forms = new Set<string>(context.forms);
+            context.mergeForms(forms, context.dimensions);
+        }
+
+        // Modify the default form, if specified.
+        if (defaultForm !== undefined) {
+            context.defaultForm = keyFromAttributes(context.dimensions, defaultForm);
+        }
+
+        // Verify that the default form is one of the generated forms.
+        context.verifyDefaultForm();
 
         // Merge in any tags that were specified.
         if (tags !== undefined) {
-            context.tags = new Set<string>(this.tags);
+            // New tags set based on copy of original.
+            context.tags = new Set<string>(context.tags);
             for (const tag of tags) {
                 context.tags.add(tag);
             }
@@ -188,7 +188,7 @@ export class GroupBuilder {
 
         // WARNING: createTensorContext() relies on this.tensors and
         // this.dimensions.
-        this.context = [new Context(this, 'none')];
+        this.context = [new Context(this)];
     }
 
     getContext(): Context {
@@ -196,15 +196,7 @@ export class GroupBuilder {
     }
 
     push(group: ContextSpec) {
-        const c = this.getContext().extend(
-            this,
-            group.tensor,
-            group.forms,
-            group.default,
-            group.tags,
-            group.type
-        );
-        this.context.push(c);
+        this.context.push(this.getContext().extend(this, group));
     }
 
     pop() {

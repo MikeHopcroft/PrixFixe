@@ -107,22 +107,22 @@ catalog:
         - name: mocha
           aliases:
             - "[caffe] mocha"
-      - tags: [espresso_drinks]
-        tensor: espresso_drinks
-        default: [hot, doppio]
-        items:
-          - name: espresso
-            aliases:
-              - "[caffe] espresso"
-          - name: lungo
-            aliases:
-              - "[caffe] lungo"
-          - name: ristretto
-            aliases:
-              - "[caffe] ristretto"
-          - name: macchiato
-            aliases:
-              - "[caffe] macchiato"
+    - tags: [espresso_drinks]
+      tensor: espresso_drinks
+      default: [hot, doppio]
+      items:
+        - name: espresso
+          aliases:
+            - "[caffe] espresso"
+        - name: lungo
+          aliases:
+            - "[caffe] lungo"
+        - name: ristretto
+          aliases:
+            - "[caffe] ristretto"
+        - name: macchiato
+          aliases:
+            - "[caffe] macchiato"
     - tags: [coffee_drinks]
       tensor: latte_drinks
       default: [hot, grande]
@@ -144,34 +144,34 @@ catalog:
         tensor: options
         default: [regular]
         items:
-          - name: almond
+          - name: almond syrup
             aliases:
               - "almond [syrup]"
-          - name: buttered rum
+          - name: buttered rum syrup
             aliases:
               - "[buttered] rum [syrup]"
-          - name: caramel
+          - name: caramel syrup
             aliases:
               - "caramel [syrup]"
-          - name: cinnamon
+          - name: cinnamon syrup
             aliases:
               - "cinnamon [syrup]"
-          - name: hazelnut
+          - name: hazelnut syrup
             aliases:
               - "hazelnut [syrup]"
-          - name: orange
+          - name: orange syrup
             aliases:
               - "orange [syrup]"
-          - name: peppermint
+          - name: peppermint syrup
             aliases:
               - "peppermint [syrup]"
-          - name: raspberry
+          - name: raspberry syrup
             aliases:
               - "raspberry [syrup]"
-          - name: toffee
+          - name: toffee syrup
             aliases:
               - "toffee [syrup]"
-          - name: vanilla
+          - name: vanilla syrup
             aliases:
               - "vanilla [syrup]"
       - tags: [caffeines]

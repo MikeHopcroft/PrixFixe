@@ -1,5 +1,8 @@
 # TODO List
 
+* catalog.yaml
+  * "syrup" on end of syrup names
+  * caffe mocha aliases
 * Decide about keys with no attributes. PID: or PID?
 * Ability to merge catalogs
   * Import field in group?

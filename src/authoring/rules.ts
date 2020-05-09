@@ -93,15 +93,6 @@ function processExclusions(
     }
 }
 
-// IRuleChecker methods
-//     isValidChild - entity_builder.ts
-//     getValidChildren - product_generator.ts (fuzzer)
-//     getPairwiseMutualExclusionPredicate - unused?
-//     getIncrementalMutualExclusionPredicate - entity_builder and product_generator
-//     getDefaultQuantity - unused?
-//     isValidQuantity - unused?
-
-
 class RuleChecker2 implements IRuleChecker {
     private readonly emptySet = new Set<PID>();
     private readonly validChildren = new Map<PID, Set<PID>>();
