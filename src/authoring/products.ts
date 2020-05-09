@@ -38,6 +38,10 @@ class Context {
     dimensions!: DimensionDescription[];
     forms!: Set<Key>;
     defaultForm!: string;
+
+    pids = new IdGenerator();
+    skus = new IdGenerator();
+
     tags = new Set<string>();
     type = ItemType.PRODUCT;
 
@@ -81,6 +85,8 @@ class Context {
         const {
             tensor,
             forms,
+            pid,
+            sku,
             tags,
             type,
         } = group;
@@ -112,6 +118,14 @@ class Context {
 
         // Verify that the default form is one of the generated forms.
         context.verifyDefaultForm();
+
+        if (pid !== undefined) {
+            context.pids = new IdGenerator(pid);
+        }
+        
+        if (sku !== undefined) {
+            context.skus = new IdGenerator(sku);
+        }
 
         // Merge in any tags that were specified.
         if (tags !== undefined) {
@@ -170,8 +184,8 @@ class Context {
 export class GroupBuilder {
     readonly generics: GenericTypedEntity[] = [];
     readonly specifics: SpecificTypedEntity[] = [];
-    readonly pids = new IdGenerator();
-    readonly skus = new IdGenerator(10000);
+    // readonly pids = new IdGenerator();
+    // readonly skus = new IdGenerator(10000);
     readonly tagsToPIDs = new Map<string, PID[]>();
 
     readonly tensors: IIndex<TID, TensorDescription>;
@@ -233,7 +247,7 @@ export function processGroups(
             }
         }
     }
-    builder.pids.gap();
+    builder.getContext().pids.gap();
 }
 
 function processItem(
@@ -243,7 +257,7 @@ function processItem(
     const context = builder.getContext();
 
     // Create generic
-    const pid = builder.pids.next();
+    const pid = builder.getContext().pids.next();
     const defaultKey = [pid, context.defaultForm].join(':');
     const entity: GenericEntity = {
         name: item.name,
@@ -276,12 +290,12 @@ function processItem(
                 ...namePrefixFromForm(context.dimensions, f, false),
                 generic.name,
             ].join(' '),
-            sku: builder.skus.next(),
+            sku: builder.getContext().skus.next(),
             key,
         };
         builder.specifics.push(specific);
     }
-    builder.skus.gap();
+    builder.getContext().skus.gap();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -81,8 +81,8 @@ tensors:
   - name: options
     dimensions: [option_quantity]
 catalog:
-  - pid: 1
-    sku: 10000
+  - pid: 500
+    sku: 20000
     items:
     - tags: [latte_drinks]
       tensor: latte_drinks
