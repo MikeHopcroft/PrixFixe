@@ -47,7 +47,12 @@ class Context {
         forms?: FormSpec[],
         defaultForm?: string[]
     ) {
-        this.tensor = builder.tensors.get(tensor || 'none');
+        const t = builder.tensors.get(tensor || 'none');
+        if (t === undefined) {
+            const message = `Unknown tensor "${tensor}"`;
+            throw new InvalidParameterError(message);
+        }
+        this.tensor = t;
         this.dimensions = this.tensor.dimensions.map(
             x => builder.dimensions.getById(x).dimension
         );
@@ -74,8 +79,11 @@ class Context {
         let context: Context;
 
         if (tensor === undefined) {
+            // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
             // Tensor remains the same, so just copy over the current context.
-            context = Object.create(this);
+            // context = Object.assign( Object.create(this), this);
+            context = Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+            // context = Object.create(this);
 
             // Modify the forms to generate, if specified.
             if (forms !== undefined) {
@@ -98,6 +106,12 @@ class Context {
                 forms,
                 defaultForm
             );
+
+            // Hack - really just want the new tensor/form/defaultForm application,
+            // as done by the constructor. Copying the properties here, one by one
+            // is error-prone.
+            context.tags = this.tags;
+            context.type = this.type;
         }
 
         // Merge in any tags that were specified.
@@ -133,7 +147,17 @@ class Context {
 
     private verifyDefaultForm() {
         if (!this.forms.has(this.defaultForm)) {
-            const message = `Default form ${this.defaultForm} not in set of generated forms`;
+            const prefix = namePrefixFromForm(
+                this.dimensions,
+                this.defaultForm,
+                true
+            );
+            const message = `Default form "[${
+                prefix
+            }]" not in set of generated forms for tensor "${
+                this.tensor.name
+            }"`;
+            throw new InvalidParameterError(message);
         }
     }
 }
@@ -227,7 +251,6 @@ function processItem(
     const context = builder.getContext();
 
     // Create generic
-    const kind = context.type === ItemType.PRODUCT ? MENUITEM : OPTION;
     const pid = builder.pids.next();
     const defaultKey = [pid, context.defaultForm].join(':');
     const entity: GenericEntity = {
@@ -238,6 +261,7 @@ function processItem(
         tensor: context.tensor.tid,
         defaultKey,
     };
+    const kind = (context.type === ItemType.PRODUCT) ? MENUITEM : OPTION;
     const generic = genericEntityFactory(entity, kind);
     builder.generics.push(generic);
 
@@ -257,7 +281,7 @@ function processItem(
         const specific: SpecificTypedEntity = {
             kind: MENUITEM,
             name: [
-                ...namePrefixFromForm(context.dimensions, f),
+                ...namePrefixFromForm(context.dimensions, f, false),
                 generic.name,
             ].join(' '),
             sku: builder.skus.next(),
@@ -308,13 +332,17 @@ function keyFromAttributes(d: DimensionDescription[], attributes: string[]) {
     return k.join(':');
 }
 
-function namePrefixFromForm(d: DimensionDescription[], form: string) {
+function namePrefixFromForm(
+    d: DimensionDescription[],
+    form: string,
+    showHidden: boolean
+) {
     if (d.length > 0) {
         const parts = form.split(':').map(x => Number(x));
         const names: string[] = [];
         for (const [i, part] of parts.entries()) {
             const a = d[i].attributes[part];
-            if (!a.hidden) {
+            if (!a.hidden || showHidden) {
                 names.push(a.name);
             }
         }

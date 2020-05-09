@@ -16,7 +16,8 @@ import { validate } from './validate';
 
 
 export function createWorld2(dataPath: string): World {
-    const catalogFile = path.join(dataPath, 'catalog.yaml');
+    const catalogFile = path.join(dataPath, 'coffee.yaml');
+    // const catalogFile = path.join(dataPath, 'catalog.yaml');
 
     const root = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8'));
     const spec = validate(catalogSpecType, root);

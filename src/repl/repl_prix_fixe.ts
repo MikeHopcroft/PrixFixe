@@ -136,6 +136,7 @@ export function printCatalog(catalog: ICatalog, kind: MENUITEM | OPTION | undefi
             console.log(`${item.name} (${item.pid})`);
         }
     }
+    console.log(' ');
 }
 
 export function describeSpecific(world: World, key: Key) {

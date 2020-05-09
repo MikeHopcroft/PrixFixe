@@ -1,5 +1,18 @@
 # TODO List
 
+* Ability to merge catalogs
+  * Import field in group?
+  * Merge *.yaml from directory?
+  * Namespacing
+* It is confusing that exclusion sets can contain illegal children
+* x Verify that defaultForm is one of the generated forms
+  * x Decode "Default form 0:3 not in set of generated forms"
+* . Larger menu
+* Fix comment "// Hack - really just want the new tensor/form/defaultForm application"
+* Roadmap.yaml
+* Consistent tab spacing.
+* Update error formatting for new groupSpecType
+* Where do pid gaps go?
 * Issue with falsey values (if (form || ...))
 * REPL
   * x Consider printing SKUs in cart display
@@ -10,12 +23,6 @@
   * x Show exclusion sets in REPL
 * x Understand importance of ENTITY vs OPTION
   * x Implement in builder, processGroups()
-* Verify that defaultForm is one of the generated forms
-* Larger menu
-* Roadmap.yaml
-* Consistent tab spacing.
-* Update error formatting for new groupSpecType
-* Where do pid gaps go?
 * Investigate keys for null tensor
 * x Better validation errors
   * x https://github.com/gcanti/io-ts/blob/master/Type.md#error-reporters

@@ -21,7 +21,8 @@ export interface HasName {
 
 // tslint:disable-next-line:interface-name
 export interface IIndex<ID, S> {
-    get(name: string): S;
+    // has(name: string): boolean;
+    get(name: string): S | undefined;
     getById(id: ID): S;
     values(): IterableIterator<S>;
 }
@@ -47,15 +48,19 @@ export class Index<ID, S, T extends HasName> implements IIndex<ID, S> {
         }
     }
 
-    get(name: string): S {
-        const a = this.nameToEntry.get(name);
+    // has(name: string): boolean {
+    //     return this.nameToEntry.has(name);
+    // }
 
-        if (!a) {
-            const message = `cannot find "${name}" in "${this.collection}"`;
-            throw new InvalidParameterError(message);
-        }
+    get(name: string): S | undefined {
+        return this.nameToEntry.get(name);
 
-        return a;
+        // if (!a) {
+        //     const message = `cannot find "${name}" in "${this.collection}"`;
+        //     throw new InvalidParameterError(message);
+        // }
+
+        // return a;
     }
 
     getById(id: ID) {
@@ -127,7 +132,12 @@ export function processTensors(
         (t: TensorSpec) => {
             const tensorDimensions = new Set<DimensionDescription>();
             for (const name of t.dimensions) {
-                const d = dimensions.get(name).dimension;
+                const indexedDimension = dimensions.get(name);
+                if (indexedDimension === undefined) {
+                    const message = `Cannot find dimension "${name}" in tensor "${t.name}"`;
+                    throw new InvalidParameterError(message);
+                }
+                const d = indexedDimension.dimension;
                 if (tensorDimensions.has(d)) {
                     const message =
                         `Duplicate dimension "${d.name}" in tensor "${t.name}"`;

@@ -60,6 +60,7 @@ function go(filename: string) {
     // console.log(JSON.stringify(x, null, 4));
 }
 
-go('c:\\temp\\catalog.yaml');
+// go('c:\\temp\\catalog.yaml');
+go('d:\\git\\menubot\\prixfixe\\samples\\menu\\coffee.yaml');
 console.log('done done done done');
 
