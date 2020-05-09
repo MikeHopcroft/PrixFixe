@@ -151,7 +151,27 @@ class RuleChecker2 implements IRuleChecker {
     }
 
     getPairwiseMutualExclusionPredicate(parent: string, child: string): (existing: string) => boolean {
-        throw new Error("Method not implemented.");
+        const pPID = AttributeInfo.pidFromKey(parent);
+        const children = new Set<PID>();
+
+        // Exclusion sets associated with the parrent.
+        const allExclusionSets = this.exclusion.get(pPID);
+
+        if (allExclusionSets === undefined) {
+            return (existing: string) => true;
+        }
+
+        const cPID = AttributeInfo.pidFromKey(child);
+
+        return (existing: string) => {
+            const ePID = AttributeInfo.pidFromKey(existing);
+            for (const es of allExclusionSets) {
+                if (es.has(cPID) && es.has(ePID)) {
+                    return false;
+                }
+            }
+            return true;
+        };
     }
 
     getIncrementalMutualExclusionPredicate(parent: string): (existing: string) => boolean {

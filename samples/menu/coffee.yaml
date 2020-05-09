@@ -81,251 +81,254 @@ tensors:
   - name: options
     dimensions: [option_quantity]
 catalog:
-  - tags: [latte_drinks]
-    tensor: latte_drinks
-    default: [hot,grande]
-    forms:
-      - include: ['*', '*']
-      - exclude: [hot, venti]
-      - exclude: [iced, short]
+  - pid: 1
+    sku: 10000
     items:
-      - name: cappuccino
-        aliases:
-          - cappuccino
-      - name: flat white
-        aliases:
-          - flat white
-      - name: latte
-        aliases:
-          - "[caffe] latte"
-      - name: latte macchiato
-        aliases:
-          - "[caffe] latte macchiato"
-      - name: mocha
-        aliases:
-          - "[caffe] mocha"
-  - tags: [espresso_drinks]
-    tensor: espresso_drinks
-    default: [hot, doppio]
-    items:
-      - name: espresso
-        aliases:
-          - "[caffe] espresso"
-      - name: lungo
-        aliases:
-          - "[caffe] lungo"
-      - name: ristretto
-        aliases:
-          - "[caffe] ristretto"
-      - name: macchiato
-        aliases:
-          - "[caffe] macchiato"
-  - tags: [coffee_drinks]
-    tensor: latte_drinks
-    default: [hot, grande]
-    forms:
-      - include: ['*', '*']
-      - exclude: [hot, venti]
-      - exclude: [iced, short]
-    items:
-      - name: americano
-        aliases:
-          - "[caffe] americano"
-      - name: dark roast coffee
-        aliases:
-          - "[cup of] [house,plain,regular] coffee"
-          - "[cup of] (dark roast,drip) [coffee]"
-  - type: option
-    items:
-    - tags: [syrups]
-      tensor: options
-      default: [regular]
+    - tags: [latte_drinks]
+      tensor: latte_drinks
+      default: [hot,grande]
+      forms:
+        - include: ['*', '*']
+        - exclude: [hot, venti]
+        - exclude: [iced, short]
       items:
-        - name: almond
+        - name: cappuccino
           aliases:
-            - "almond [syrup]"
-        - name: buttered rum
+            - cappuccino
+        - name: flat white
           aliases:
-            - "[buttered] rum [syrup]"
-        - name: caramel
+            - flat white
+        - name: latte
           aliases:
-            - "caramel [syrup]"
-        - name: cinnamon
+            - "[caffe] latte"
+        - name: latte macchiato
           aliases:
-            - "cinnamon [syrup]"
-        - name: hazelnut
+            - "[caffe] latte macchiato"
+        - name: mocha
           aliases:
-            - "hazelnut [syrup]"
-        - name: orange
-          aliases:
-            - "orange [syrup]"
-        - name: peppermint
-          aliases:
-            - "peppermint [syrup]"
-        - name: raspberry
-          aliases:
-            - "raspberry [syrup]"
-        - name: toffee
-          aliases:
-            - "toffee [syrup]"
-        - name: vanilla
-          aliases:
-            - "vanilla [syrup]"
-    - tags: [caffeines]
-      tensor: none
+            - "[caffe] mocha"
+      - tags: [espresso_drinks]
+        tensor: espresso_drinks
+        default: [hot, doppio]
+        items:
+          - name: espresso
+            aliases:
+              - "[caffe] espresso"
+          - name: lungo
+            aliases:
+              - "[caffe] lungo"
+          - name: ristretto
+            aliases:
+              - "[caffe] ristretto"
+          - name: macchiato
+            aliases:
+              - "[caffe] macchiato"
+    - tags: [coffee_drinks]
+      tensor: latte_drinks
+      default: [hot, grande]
+      forms:
+        - include: ['*', '*']
+        - exclude: [hot, venti]
+        - exclude: [iced, short]
       items:
-        - name: regular
+        - name: americano
           aliases:
-            - regular
-            - "[fully] caffeinated"
-            - full caf
-        - name: half caf
+            - "[caffe] americano"
+        - name: dark roast coffee
           aliases:
-            - half caf
-            - split shot
-        - name: decaf
-          aliases:
-            - decaf
-            - decaffeinated
-            - non caf
-    - tags: [milks]
-      tensor: none
+            - "[cup of] [house,plain,regular] coffee"
+            - "[cup of] (dark roast,drip) [coffee]"
+    - type: option
       items:
-        - name: whole milk
-          aliases:
-            - "[whole,regular] milk"
-        - name: two percent milk
-          aliases:
-            - "two percent [milk]"
-        - name: one percent milk
-          aliases:
-            - "(one percent,low fat) [milk]"
-        - name: nonfat milk
-          aliases:
-            - "(nonfat, fat free, zero percent, skinny) [milk]"
-        - name: coconut milk
-          aliases:
-            - "coconut [milk]"
-        - name: soy milk
-          aliases:
-            - "soy [milk]"
-        - name: almond milk
-          aliases:
-            - "almond [milk]"
-        - name: oat milk
-          aliases:
-            - "oat [milk]"
-        - name: eggnog
-          aliases:
-            - "eggnog"
-    - tags: [creamers]
-      tensor: none
-      items:
-        - name: whole milk creamer
-          aliases:
-            - "[whole,regular] milk"
-        - name: two percent milk creamer
-          aliases:
-            - "two percent [milk]"
-        - name: one percent milk creamer
-          aliases:
-            - "(one percent,low fat) [milk]"
-        - name: nonfat milk creamer
-          aliases:
-            - "(nonfat, fat free, zero percent, skinny) [milk]"
-        - name: coconut milk creamer
-          aliases:
-            - "coconut [milk]"
-        - name: soy milk creamer
-          aliases:
-            - "soy [milk]"
-        - name: almond milk creamer
-          aliases:
-            - "almond [milk]"
-        - name: oat milk creamer
-          aliases:
-            - "oat [milk]"
-        - name: eggnog creamer
-          aliases:
-            - "eggnog"
-        - name: half and half
-          aliases:
-            - (half and half,cream)
-        - name: heavy cream
-          aliases:
-            - heavy cream
-    - tags: [toppings]
-      tensor: options
-      default: [regular]
-      items:
-        - name: cinnamon
-          aliases:
-            - cinnamon
-        - name: foam
-          aliases:
-            - foam
-        - name: ice
-          aliases:
-            - ice
-        - name: nutmeg
-          aliases:
-            - nutmeg
-        - name: whipped cream
-          aliases:
-            - whipped cream [topping]
-            - whip [topping]
-        - name: water
-          aliases:
-            - water
-    - tags: [latte_preparations]
-      tensor: none
-      items:
-        - name: for here cup
-          tags: [here-or-to-go]
-          aliases:
-            - for here [cup]
-        - name: lid
-          aliases:
-            - lid
-        - name: with room
-          aliases:
-            - room [for cream]
-        - name: to go
-          tags: [here-or-to-go]
-          aliases:
-            - to go [cup]
-            - travelling
-        - name: dry
-          tags: [wet-or-dry]
-          aliases:
-            - dry
-        - name: wet
-          tags: [wet-or-dry]
-          aliases:
-            - dry
-    - tags: [sweeteners]
-      tensor: options
-      default: [regular]
-      items:
-        - name: equal
-          aliases:
-            - equal
-            - blue packet
-        - name: splenda
-          aliases:
-            - splenda
-            - yellow packet
-        - name: sugar
-          aliases:
-            - sugar
-        - name: sugar in the raw
-          aliases:
-            - sugar in the raw
-            - raw sugar
-        - name: sweet n low
-          aliases:
-            - sweet n low
-            - pink packet
+      - tags: [syrups]
+        tensor: options
+        default: [regular]
+        items:
+          - name: almond
+            aliases:
+              - "almond [syrup]"
+          - name: buttered rum
+            aliases:
+              - "[buttered] rum [syrup]"
+          - name: caramel
+            aliases:
+              - "caramel [syrup]"
+          - name: cinnamon
+            aliases:
+              - "cinnamon [syrup]"
+          - name: hazelnut
+            aliases:
+              - "hazelnut [syrup]"
+          - name: orange
+            aliases:
+              - "orange [syrup]"
+          - name: peppermint
+            aliases:
+              - "peppermint [syrup]"
+          - name: raspberry
+            aliases:
+              - "raspberry [syrup]"
+          - name: toffee
+            aliases:
+              - "toffee [syrup]"
+          - name: vanilla
+            aliases:
+              - "vanilla [syrup]"
+      - tags: [caffeines]
+        tensor: none
+        items:
+          - name: regular
+            aliases:
+              - regular
+              - "[fully] caffeinated"
+              - full caf
+          - name: half caf
+            aliases:
+              - half caf
+              - split shot
+          - name: decaf
+            aliases:
+              - decaf
+              - decaffeinated
+              - non caf
+      - tags: [milks]
+        tensor: none
+        items:
+          - name: whole milk
+            aliases:
+              - "[whole,regular] milk"
+          - name: two percent milk
+            aliases:
+              - "two percent [milk]"
+          - name: one percent milk
+            aliases:
+              - "(one percent,low fat) [milk]"
+          - name: nonfat milk
+            aliases:
+              - "(nonfat, fat free, zero percent, skinny) [milk]"
+          - name: coconut milk
+            aliases:
+              - "coconut [milk]"
+          - name: soy milk
+            aliases:
+              - "soy [milk]"
+          - name: almond milk
+            aliases:
+              - "almond [milk]"
+          - name: oat milk
+            aliases:
+              - "oat [milk]"
+          - name: eggnog
+            aliases:
+              - "eggnog"
+      - tags: [creamers]
+        tensor: none
+        items:
+          - name: whole milk creamer
+            aliases:
+              - "[whole,regular] milk"
+          - name: two percent milk creamer
+            aliases:
+              - "two percent [milk]"
+          - name: one percent milk creamer
+            aliases:
+              - "(one percent,low fat) [milk]"
+          - name: nonfat milk creamer
+            aliases:
+              - "(nonfat, fat free, zero percent, skinny) [milk]"
+          - name: coconut milk creamer
+            aliases:
+              - "coconut [milk]"
+          - name: soy milk creamer
+            aliases:
+              - "soy [milk]"
+          - name: almond milk creamer
+            aliases:
+              - "almond [milk]"
+          - name: oat milk creamer
+            aliases:
+              - "oat [milk]"
+          - name: eggnog creamer
+            aliases:
+              - "eggnog"
+          - name: half and half
+            aliases:
+              - (half and half,cream)
+          - name: heavy cream
+            aliases:
+              - heavy cream
+      - tags: [toppings]
+        tensor: options
+        default: [regular]
+        items:
+          - name: cinnamon
+            aliases:
+              - cinnamon
+          - name: foam
+            aliases:
+              - foam
+          - name: ice
+            aliases:
+              - ice
+          - name: nutmeg
+            aliases:
+              - nutmeg
+          - name: whipped cream
+            aliases:
+              - whipped cream [topping]
+              - whip [topping]
+          - name: water
+            aliases:
+              - water
+      - tags: [latte_preparations]
+        tensor: none
+        items:
+          - name: for here cup
+            tags: [here-or-to-go]
+            aliases:
+              - for here [cup]
+          - name: lid
+            aliases:
+              - lid
+          - name: with room
+            aliases:
+              - room [for cream]
+          - name: to go
+            tags: [here-or-to-go]
+            aliases:
+              - to go [cup]
+              - travelling
+          - name: dry
+            tags: [wet-or-dry]
+            aliases:
+              - dry
+          - name: wet
+            tags: [wet-or-dry]
+            aliases:
+              - dry
+      - tags: [sweeteners]
+        tensor: options
+        default: [regular]
+        items:
+          - name: equal
+            aliases:
+              - equal
+              - blue packet
+          - name: splenda
+            aliases:
+              - splenda
+              - yellow packet
+          - name: sugar
+            aliases:
+              - sugar
+          - name: sugar in the raw
+            aliases:
+              - sugar in the raw
+              - raw sugar
+          - name: sweet n low
+            aliases:
+              - sweet n low
+              - pink packet
 rules:
   - parents: [latte_drinks]
     children: 

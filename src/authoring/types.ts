@@ -72,6 +72,8 @@ const formSpecType = t.union([includeFormType, excludeFormType]);
 export type FormSpec = t.TypeOf<typeof formSpecType>;
 
 const contextSpecType = t.partial({
+    pid: t.number,
+    sku: t.number,
     tensor: t.string,
     default: t.array(t.string),
     forms: t.array(formSpecType),

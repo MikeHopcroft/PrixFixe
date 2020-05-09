@@ -1,9 +1,11 @@
 # TODO List
 
+* Decide about keys with no attributes. PID: or PID?
 * Ability to merge catalogs
   * Import field in group?
   * Merge *.yaml from directory?
   * Namespacing
+  * SKU and PID stability
 * It is confusing that exclusion sets can contain illegal children
 * x Verify that defaultForm is one of the generated forms
   * x Decode "Default form 0:3 not in set of generated forms"
