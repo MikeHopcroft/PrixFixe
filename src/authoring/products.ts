@@ -1,12 +1,13 @@
 import { DimensionDescription, TensorDescription } from "../attributes";
 
 import {
+    GenericEntity,
+    genericEntityFactory,
     GenericTypedEntity,
-    SpecificTypedEntity,
     MENUITEM,
     OPTION,
-    GenericEntity,
-    genericEntityFactory
+    SKU,
+    SpecificTypedEntity,
 } from '../catalog';
 
 import { IIndex, IndexedDimension } from './attributes';
@@ -18,11 +19,11 @@ import {
     ContextSpec,
     FormSpec,
     GroupSpec,
+    ItemSpec,
+    ItemType,
     Key,
     TID,
     WILDCARD,
-    ItemSpec,
-    ItemType,
 } from "./types";
 
 import { IdGenerator } from './utilities';
@@ -76,7 +77,6 @@ class Context {
 
         this.verifyDefaultForm();
     }
-
 
     extend(
         builder: GroupBuilder,
@@ -184,14 +184,15 @@ class Context {
 export class GroupBuilder {
     readonly generics: GenericTypedEntity[] = [];
     readonly specifics: SpecificTypedEntity[] = [];
-    // readonly pids = new IdGenerator();
-    // readonly skus = new IdGenerator(10000);
     readonly tagsToPIDs = new Map<string, PID[]>();
 
     readonly tensors: IIndex<TID, TensorDescription>;
     readonly dimensions: IIndex<DID, IndexedDimension>;
 
-    readonly context: Context[];
+    private readonly context: Context[];
+
+    private readonly pids = new Set<PID>();
+    private readonly skus = new Set<SKU>();
 
     constructor(
         dimensions: IIndex<DID, IndexedDimension>,
@@ -207,6 +208,26 @@ export class GroupBuilder {
 
     getContext(): Context {
         return this.context[this.context.length - 1];
+    }
+
+    nextPID(): PID {
+        const pid = this.getContext().pids.next();
+        if (this.pids.has(pid)) {
+            const message = `Duplicate pid ${pid}`;
+            throw new InvalidParameterError(message);
+        }
+        this.pids.add(pid);
+        return pid;
+    }
+
+    nextSKU(): SKU {
+        const sku = this.getContext().skus.next();
+        if (this.skus.has(sku)) {
+            const message = `Duplicate sku ${sku}`;
+            throw new InvalidParameterError(message);
+        }
+        this.skus.add(sku);
+        return sku;
     }
 
     push(group: ContextSpec) {
@@ -243,7 +264,9 @@ export function processGroups(
                 processItem(builder, group);
                 builder.pop();
             } else {
+                builder.push(group);
                 processItem(builder, group);
+                builder.pop();
             }
         }
     }
@@ -257,7 +280,7 @@ function processItem(
     const context = builder.getContext();
 
     // Create generic
-    const pid = builder.getContext().pids.next();
+    const pid = builder.nextPID();
     const defaultKey = [pid, context.defaultForm].join(':');
     const entity: GenericEntity = {
         name: item.name,
@@ -284,13 +307,14 @@ function processItem(
     // Create specifics
     for (const f of context.forms) {
         const key = generic.pid + ':' + f;
+        const sku = builder.nextSKU();
         const specific: SpecificTypedEntity = {
             kind: MENUITEM,
             name: [
                 ...namePrefixFromForm(context.dimensions, f, false),
                 generic.name,
             ].join(' '),
-            sku: builder.getContext().skus.next(),
+            sku,
             key,
         };
         builder.specifics.push(specific);

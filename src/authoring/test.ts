@@ -1,9 +1,8 @@
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
-import { DimensionAndTensorDescription } from '../attributes';
-
 import { processDimensions, processTensors} from './attributes';
+import { loadCatalog } from './loader';
 import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
 
@@ -52,8 +51,10 @@ export function build(
 }
 
 function go(filename: string) {
-    const root = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
-    const spec = validate(catalogSpecType, root);
+    // const root = yaml.safeLoad(fs.readFileSync(filename, 'utf8'));
+    // const spec = validate(catalogSpecType, root);
+
+    const spec = loadCatalog(filename);
 
     build(spec.dimensions, spec.tensors, spec.catalog, spec.rules);
 

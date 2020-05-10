@@ -1,3 +1,5 @@
+imports:
+  - snacks.yaml
 dimensions:
   - name: coffee_temperature
     attributes:

@@ -138,4 +138,10 @@ export const catalogSpecType = t.type({
 });
 export type CatalogSpec = t.TypeOf<typeof catalogSpecType>;
 
-
+export const partialCatalogSpecType = t.intersection([
+    t.partial(catalogSpecType.props),
+    t.partial({
+        imports: t.array(t.string),
+    }),
+]);
+export type PartialCatalogSpec = t.TypeOf<typeof partialCatalogSpecType>;

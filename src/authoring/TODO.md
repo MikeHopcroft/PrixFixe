@@ -1,14 +1,16 @@
 # TODO List
 
+* Get SKU, PID, TID, Key, AID, etc from correct location
 * catalog.yaml
   * x "syrup" on end of syrup names
   * x caffe mocha aliases
 * Decide about keys with no attributes. PID: or PID?
-* Ability to merge catalogs
-  * Import field in group?
-  * Merge *.yaml from directory?
+* x Ability to merge catalogs
+  * x Ability to detect PID and SKU conflicts
+  * x Imports field in group?
+  * x Merge *.yaml from directory?
   * Namespacing
-  * SKU and PID stability
+  * x SKU and PID stability
 * It is confusing that exclusion sets can contain illegal children
 * x Verify that defaultForm is one of the generated forms
   * x Decode "Default form 0:3 not in set of generated forms"

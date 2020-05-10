@@ -1,0 +1,4 @@
+catalog:
+  - name: cupcake
+    aliases: [cupcake]
+    xsku: 12345

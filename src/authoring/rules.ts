@@ -102,7 +102,7 @@ class RuleChecker2 implements IRuleChecker {
     }
 
     addChild(parent: PID, child: PID) {
-        console.log(`rules.addChild(${parent}, ${child})`);
+        // console.log(`rules.addChild(${parent}, ${child})`);
         const children = this.validChildren.get(parent);
         if (children) {
             children.add(child);
@@ -112,7 +112,7 @@ class RuleChecker2 implements IRuleChecker {
     }
 
     addExclusionSet(parent: PID, exclusionSet: Set<PID>) {
-        console.log(`rules.addExclusionSet(${parent}, [${[...exclusionSet.values()].join(',')}])`);
+        // console.log(`rules.addExclusionSet(${parent}, [${[...exclusionSet.values()].join(',')}])`);
         const exclusions = this.exclusion.get(parent);
         if (exclusions) {
             exclusions.push(exclusionSet);
