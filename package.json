@@ -86,7 +86,7 @@
   "dependencies": {
     "@types/debug": "^4.1.4",
     "@types/js-yaml": "^3.12.1",
-    "ajv": "^6.10.0",
+    "ajv": "^6.12.2",
     "ansi-styles": "^4.0.0",
     "better-ajv-errors": "^0.6.5",
     "command-line-usage": "^6.0.2",

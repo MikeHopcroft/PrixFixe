@@ -2,15 +2,13 @@ import * as commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
-import { safeDump } from 'js-yaml';
 import * as minimist from 'minimist';
 import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
 
 import { createWorld2 } from '../authoring/world';
-import { createWorld, Processor, State, World } from '../processors';
+import { Processor, State, World } from '../processors';
 
-// import { createMarkdown } from './print_markdown';
 import { allSuites, suitePredicate } from '../test_suite/suite_predicate';
 import { TestProcessors } from '../test_suite/test_processors';
 
@@ -23,7 +21,6 @@ import {
 } from './filter';
 
 import {
-    AnyTurn,
     GenericCase,
     GenericSuite,
     LogicalValidationSuite,
@@ -35,16 +32,6 @@ import { loadLogicalValidationSuite } from './loaders';
 import { logicalCartFromCart } from './logical_cart';
 import { createMenuBasedRepairFunction } from './repair_functions';
 import { scoreSuite } from './scoring';
-
-// import {
-//     TestCase,
-//     TestSuite,
-//     getYamlInputText,
-//     getCorrectLevelFields,
-//     getCorrectionLevel,
-// } from './test_suite';
-
-// import { verifyTestSuite } from './test_verifier';
 
 export async function testRunnerMain2(
     title: string,
@@ -119,30 +106,6 @@ export async function testRunnerMain2(
     const generate = args['g'];
     const outputPath = args['o'];
 
-    // const correctionLevelFlag = args['c'] || 'scoped';
-    // const correctionLevel = getCorrectionLevel(correctionLevelFlag);
-    // if (correctionLevel === undefined) {
-    //     const message = `Unsupported correction level "${correctionLevelFlag}"`;
-    //     return fail(message);
-    // }
-    // console.log(`Correction Level: ${correctionLevelFlag}.`);
-    // const fields = getCorrectLevelFields(correctionLevel).join(' ');
-    // console.log(
-    //     `  Tests will use the rightmost available field from [${fields}]`
-    // );
-
-    // const skipIntermediate = args['x'] === true;
-    // if (skipIntermediate) {
-    //     console.log(
-    //         'Intermediate steps in multi-line tests will not be verified.'
-    //     );
-    // }
-
-    // const isomorphic = args['i'] === true;
-    // if (isomorphic) {
-    //     console.log('Using isomorphic tree comparison in cart.');
-    // }
-
     let runOneTest: number | undefined = undefined;
     if (args['n'] !== undefined) {
         const n = Number(args['n']);
@@ -153,8 +116,6 @@ export async function testRunnerMain2(
             return fail(message);
         }
     }
-
-    // const fixup = args['f'];
 
     //
     // Set up short-order processor
@@ -213,9 +174,8 @@ export async function testRunnerMain2(
     //
 
     // First get all TestCases into a single array.
-    // let suite: LogicalValidationSuite<AnyTurn> = {
     let suite: GenericSuite<ValidationStep<TextTurn>> = {
-            comment: `Combined ${testFiles.join(', ')}`,
+        comment: `Combined ${testFiles.join(', ')}`,
         tests: [],
     };
     for (const testFile of testFiles) {
@@ -223,9 +183,6 @@ export async function testRunnerMain2(
             console.log(`Reading ${testFile}`);
             const s: LogicalValidationSuite<TextTurn> = 
                 loadLogicalValidationSuite(testFile);
-            // const yaml = fs.readFileSync(testFile, 'utf8');
-            // const suite = TestSuite.fromYamlString(yaml);
-            // verifyTestSuite(suite, world.catalog, world.ruleChecker);
             suite.tests.push(s);
         } catch (err) {
             if (err.code === 'ENOENT' || err.code === 'EISDIR') {
@@ -247,15 +204,8 @@ export async function testRunnerMain2(
         test.id = index++;
     }
 
-    // for (const [index, test] of tests.entries()) {
-    //     test.id = index;
-    // }
-
-    // Construct a TestSuite with all of the TestCases.
-    // let suite = new TestSuite(tests);
-
-    // Handle the scenario where the user wants to run the nth TestCase.
     if (oneTest) {
+        // Handle the scenario where the user wants to run the nth TestCase.
         suite = {
             comment: `Test ${oneTest.id}`,
             tests: [oneTest],
@@ -266,27 +216,18 @@ export async function testRunnerMain2(
             suitePredicateFilter(suiteExpression)
         );
     }
-    // if (runOneTest !== undefined) {
-    //     if (runOneTest >= 0 && runOneTest < suite.tests.length) {
-    //         suite = new TestSuite([suite.tests[runOneTest]]);
-    //     } else {
-    //         const message = `Invalid test number ${runOneTest}`;
-    //         return fail(message);
-    //     }
-    // }
 
     if (brief) {
         // In brief mode, don't actually run the tests.
         // Just display the input text.
         console.log(' ');
         console.log('Displaying test utterances without running.');
-        // for (const test of suite.filteredTests(suiteExpression)) {
         for (const test of enumerateTestCases(suite)) {
             console.log(`Test ${test.id}: ${test.comment}`);
-            for (const step of test.steps) {
-                // const input = getYamlInputText(step, correctionLevel);
+            for (const [i, step] of test.steps.entries()) {
+                console.log(`  Step ${i}`);
                 for (const turn of step.turns) {
-                    console.log(`  ${turn.speaker}: ${turn.transcription}`);
+                    console.log(`    ${turn.speaker}: ${turn.transcription}`);
                 }
             }
             console.log(' ');
@@ -294,27 +235,21 @@ export async function testRunnerMain2(
         console.log('Tests not run.');
         console.log('Exiting with failing return code.');
         return succeed(false);
-    // } else if (fixup) {
-    //     console.log('Fixup completed.');
     } else {
         // Otherwise, run the tests.
-        // const results = await suite.run(
-        //     processor,
-        //     world.catalog,
-        //     suiteExpression,
-        //     correctionLevel,
-        //     isomorphic,
-        //     !skipIntermediate
-        // );
         const observed = await mapSuiteAsync(suite, async test => {
             let state: State = { cart: { items: [] } };
             const steps: typeof test.steps = [];
             for (const step of test.steps) {
                 for (const turn of step.turns) {
-                    state = await processor(
-                        turn.transcription,
-                        state
-                    );
+                    try {
+                        state = await processor(
+                            turn.transcription,
+                            state
+                        );
+                    } catch (e) {
+                        // TODO: record the error here, somehow.
+                    }
                 }
                 steps.push({
                     ...step,
@@ -324,12 +259,11 @@ export async function testRunnerMain2(
             return { ...test, steps };
         });
 
-        console.log('---------------------------');
-        const repairs = createMenuBasedRepairFunction(
+        const repairFunction = createMenuBasedRepairFunction(
             world.attributeInfo,
             world.catalog
         );
-        const scored = scoreSuite(observed, suite, repairs, '');
+        const scored = scoreSuite(observed, suite, repairFunction, '');
 
         for (const test of enumerateTestCases(scored)) {
             console.log(`${test.id}: ${test.comment}`);
@@ -350,12 +284,6 @@ export async function testRunnerMain2(
         // Print out summary.
         printAggregateMeasures(scored.measures);
 
-        // if (markdown) {
-        //     const md = createMarkdown(results);
-        //     console.log(md);
-        // } else {
-        //     results.print(showAll);
-        // }
         console.log('---------------------------');
 
         console.log('');
@@ -413,13 +341,6 @@ function showUsage(processorFactory: TestProcessors) {
                         'Can use suite names, !, &, |, and parentheses.' +
                         'Note that the -n flag overrides the -s flag.',
                 },
-                // {
-                //     name: 's',
-                //     alias: 'i',
-                //     type: Boolean,
-                //     description:
-                //         'Perform isomorphic tree comparison on carts. Relaxes cart matching to allow for items to be out of order.',
-                // },
                 {
                     name: 'a',
                     alias: 'a',
@@ -453,13 +374,6 @@ function showUsage(processorFactory: TestProcessors) {
                         'Run only the Nth test.' +
                         'Note that the -n flag overrides the -s flag.',
                 },
-                // {
-                //     name: 'x',
-                //     alias: 'x',
-                //     type: Boolean,
-                //     description:
-                //         'Validate final cart state only, do not verify intermediate results.',
-                // },
                 {
                     name: 'generate',
                     alias: 'g',
@@ -488,25 +402,11 @@ function showUsage(processorFactory: TestProcessors) {
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
                     type: Boolean,
                 },
-                // {
-                //     name: 'c',
-                //     alias: 'c',
-                //     typeLabel: '{underline < raw | stt | scoped >}',
-                //     description: `Run tests using specified utterance field. The default is SCOPED and will use the highest corrected value provided in the yaml.\n
-                // {bold RAW}: force it to run on the original input, even if there are corrected versions available\n
-                // {bold STT}: if there is correctedSTT available use that otherwise use input, even if there is correctedScope available\n
-                // {bold SCOPED}: if there is correctedScope available use it, other wise fall back to correctedSTT and then input`,
-                // },
                 {
                     name: 't',
                     alias: 't',
                     typeLabel: '{underline <snowball | metaphone | hybrid >}',
                     description: 'Reserved for short-order term model.',
-                },
-                {
-                    name: 'f',
-                    alias: 'f',
-                    description: 'Attempt to fix rules errors.',
                 },
             ],
         },

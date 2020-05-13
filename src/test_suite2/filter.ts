@@ -97,10 +97,15 @@ export function mapSuite<
             tests.push(mapSuite(test, convert));
         }
     }
-    return {
-        comment: suite.comment,
-        tests,
-    };
+
+    if (suite.comment) {
+        return {
+            comment: suite.comment,
+            tests,
+        };
+    } else {
+        return { tests };
+    }
 }
 
 export async function mapSuiteAsync<

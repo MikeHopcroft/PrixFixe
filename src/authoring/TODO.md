@@ -1,5 +1,14 @@
 # TODO List
 
+* General purpose traverse, map, filter methods for carts and test suites.
+  * Also consider async versions.
+* test_runner2
+  * Work on tree of tests, instead of flat list
+  * Write results
+  * Option to rebase tests
+  * Better repair function messages
+* Test measurements should be able to record crashes/exceptions
+  * Update test_runner2.js to handle exceptions
 * Ability to import catalog multiple times - to allow each catalog file to be stand-alone
 * Get SKU, PID, TID, Key, AID, etc from correct location
 * catalog.yaml
