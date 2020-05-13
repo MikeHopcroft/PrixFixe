@@ -1,4 +1,4 @@
-import { AttributeInfo} from '../attributes';
+import { AttributeInfo } from '../attributes';
 import { PID } from '../catalog';
 import { IRuleChecker } from '../rule_checker';
 
@@ -98,8 +98,7 @@ class RuleChecker2 implements IRuleChecker {
     private readonly validChildren = new Map<PID, Set<PID>>();
     private readonly exclusion = new Map<PID, Array<Set<PID>>>();
 
-    constructor() {
-    }
+    constructor() {}
 
     addChild(parent: PID, child: PID) {
         // console.log(`rules.addChild(${parent}, ${child})`);
@@ -141,7 +140,10 @@ class RuleChecker2 implements IRuleChecker {
         return this.emptySet;
     }
 
-    getPairwiseMutualExclusionPredicate(parent: string, child: string): (existing: string) => boolean {
+    getPairwiseMutualExclusionPredicate(
+        parent: string,
+        child: string
+    ): (existing: string) => boolean {
         const pPID = AttributeInfo.pidFromKey(parent);
         const children = new Set<PID>();
 
@@ -165,7 +167,9 @@ class RuleChecker2 implements IRuleChecker {
         };
     }
 
-    getIncrementalMutualExclusionPredicate(parent: string): (existing: string) => boolean {
+    getIncrementalMutualExclusionPredicate(
+        parent: string
+    ): (existing: string) => boolean {
         const pPID = AttributeInfo.pidFromKey(parent);
         const children = new Set<PID>();
 
@@ -192,7 +196,7 @@ class RuleChecker2 implements IRuleChecker {
             for (const es of allExclusionSets) {
                 if (activeExclusionSets.has(es)) {
                     // New child conflicts with an existing child.
-                    return false;
+                    return !es.has(cPID);
                 } else if (es.has(cPID)) {
                     // No conflict. Save exclusion set for later.
                     newExclusionSets.push(es);
@@ -211,11 +215,11 @@ class RuleChecker2 implements IRuleChecker {
     }
 
     getDefaultQuantity(parent: string, child: string): number {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     isValidQuantity(parent: string, child: string, qty: number): boolean {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
 
     getExclusionGroups(pid: PID): Array<Set<PID>> {

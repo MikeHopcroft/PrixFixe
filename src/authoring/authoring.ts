@@ -1,25 +1,25 @@
-import { hidden } from "ansi-styles";
+import { hidden } from 'ansi-styles';
 
 function cross1<A, B, C>(
-    f: (a: A, b: B, c:C)=> void,
+    f: (a: A, b: B, c: C) => void,
     a: A,
     b: B,
     c: C
 ): void {
-    const x: Parameters<typeof f> = [a,b,c];
-    f.apply(undefined, [a,b,c]);
+    const x: Parameters<typeof f> = [a, b, c];
+    f.apply(undefined, [a, b, c]);
 }
 
 function cross2<A, B, C>(
-    f: (a: A, b: B, c: C)=> void,
+    f: (a: A, b: B, c: C) => void,
     a: A | A[],
     b: B | B[],
     c: C | C[]
 ): void {
     // const x = arguments[0];
-    const a1 = (a instanceof Array) ? a : [a];
-    const b1 = (b instanceof Array) ? b : [b];
-    const c1 = (c instanceof Array) ? c : [c];
+    const a1 = a instanceof Array ? a : [a];
+    const b1 = b instanceof Array ? b : [b];
+    const c1 = c instanceof Array ? c : [c];
 
     for (const a2 of a1) {
         for (const b2 of b1) {
@@ -28,7 +28,6 @@ function cross2<A, B, C>(
             }
         }
     }
-
 }
 
 // function foo<T extends Function>(f: T) {
@@ -40,15 +39,15 @@ function cross2<A, B, C>(
 // }
 
 function cross3<A, B, C>(
-    f: (a: A, b: B, c: C)=> void,
+    f: (a: A, b: B, c: C) => void,
     a: A | A[],
     b: B | B[],
     c: C | C[]
 ): void {
     // const x = arguments[0];
-    const a1 = (a instanceof Array) ? a : [a];
-    const b1 = (b instanceof Array) ? b : [b];
-    const c1 = (c instanceof Array) ? c : [c];
+    const a1 = a instanceof Array ? a : [a];
+    const b1 = b instanceof Array ? b : [b];
+    const c1 = c instanceof Array ? c : [c];
 
     for (const a2 of a1) {
         for (const b2 of b1) {
@@ -57,7 +56,6 @@ function cross3<A, B, C>(
             }
         }
     }
-
 }
 
 // // tslint:disable-next-line:no-any
@@ -77,12 +75,7 @@ function print(a: string, b: number, c: boolean) {
     console.log(`a: ${a}, b: ${b}, c: ${c}`);
 }
 
-cross2(
-    print,
-    ["hello", "world"],
-    [1,2,3],
-    [true, false]
-);
+cross2(print, ['hello', 'world'], [1, 2, 3], [true, false]);
 
 // // const p = args(1, [2], 'hello');
 
@@ -116,8 +109,7 @@ cross2(
 
 // const p = tuple(1, 'hi', true);
 
-
-function* merge<A, B>(a: A | A[], b: B | B[]): IterableIterator<A&B> {
+function* merge<A, B>(a: A | A[], b: B | B[]): IterableIterator<A & B> {
     const a1 = a instanceof Array ? a : [a];
     const b1 = b instanceof Array ? b : [b];
 
@@ -128,20 +120,16 @@ function* merge<A, B>(a: A | A[], b: B | B[]): IterableIterator<A&B> {
     }
 }
 
-const catalog = merge(
-    { tensor: 5},
-    [
-        { name: 'latte', sku: 3 },
-        { name: 'americano', sku: 3 },
-    ]
-);
+const catalog = merge({ tensor: 5 }, [
+    { name: 'latte', sku: 3 },
+    { name: 'americano', sku: 3 },
+]);
 
 console.log(JSON.stringify([...catalog], null, 4));
 
 // Generate all arg combinations
 
 // Invoke function on each combination
-
 
 // // tslint:disable-next-line:no-any
 // function* gen<A, U extends any[], V>(a: A, ...args : U): IterableIterator<V> {
@@ -168,4 +156,3 @@ console.log(JSON.stringify([...catalog], null, 4));
 // console.log(f2("hello", true));
 // console.log(f1(true));
 // console.log(f0());
-

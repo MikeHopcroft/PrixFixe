@@ -48,12 +48,12 @@ const createEnum = <E>(e: any, name: string): t.Type<E> => {
     // tslint:disable-next-line:no-any
     const keys: any = {};
     Object.keys(e).forEach(k => {
-      keys[e[k]] = null;
+        keys[e[k]] = null;
     });
     // tslint:disable-next-line:no-any
     return t.keyof(keys, name) as any;
-  };
-  
+};
+
 export enum ItemType {
     PRODUCT = 'product',
     OPTION = 'option',
@@ -61,7 +61,7 @@ export enum ItemType {
 
 // tslint:disable-next-line:variable-name
 const ItemTypeType = createEnum<ItemType>(ItemType, 'ItemType');
-  
+
 const includeFormType = t.type({
     include: t.array(t.string),
 });
@@ -88,17 +88,16 @@ const itemSpecType = t.type({
 });
 export type ItemSpec = t.TypeOf<typeof itemSpecType>;
 
-type GroupSpecType = ContextSpec & ( {items: GroupSpecType[]} | ItemSpec);
+type GroupSpecType = ContextSpec & ({ items: GroupSpecType[] } | ItemSpec);
 
-const groupSpecType: t.Type<GroupSpecType> = t.recursion(
-    'groupSpecType',
-    () => t.intersection([
+const groupSpecType: t.Type<GroupSpecType> = t.recursion('groupSpecType', () =>
+    t.intersection([
         contextSpecType,
         t.union([
             t.type({
                 items: t.array(groupSpecType),
             }),
-            itemSpecType,    
+            itemSpecType,
         ]),
     ])
 );
@@ -119,10 +118,7 @@ const exclusiveRuleType = t.type({
     exclusive: t.array(t.string),
 });
 
-const anyRuleType = t.union([
-    parentChildRuleType,
-    exclusiveRuleType,
-]);
+const anyRuleType = t.union([parentChildRuleType, exclusiveRuleType]);
 export type AnyRule = t.TypeOf<typeof anyRuleType>;
 
 ///////////////////////////////////////////////////////////////////////////////

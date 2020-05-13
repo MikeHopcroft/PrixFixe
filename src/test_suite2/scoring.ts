@@ -1,8 +1,11 @@
 import { aggregateMeasures } from './aggregate';
 import { cartIsComplete } from './complete_cart';
+import { enumerateTestCases } from './filter';
 
 import {
+    AnyTurn,
     GenericCase,
+    GenericSuite,
     LogicalValidationSuite,
     LogicalScoredSuite,
     ScoredStep,
@@ -18,20 +21,27 @@ export type RepairFunction = (
     expected: LogicalCart
 ) => DiffResults<string>;
 
-export function scoreSuite<TURN>(
-    observed: LogicalValidationSuite<TURN>,
-    expected: LogicalValidationSuite<TURN>,
+export function scoreSuite(
+    observed: LogicalValidationSuite<AnyTurn>,
+    expected: LogicalValidationSuite<AnyTurn>,
     repairFunction: RepairFunction,
     notes: string
-): LogicalScoredSuite<TURN> {
-    if (observed.tests.length !== expected.tests.length) {
+): LogicalScoredSuite<AnyTurn> {
+    const expectedCases = [
+        ...enumerateTestCases(expected),
+    ];
+    const observedCases = [
+        ...enumerateTestCases(observed),
+    ];
+
+    if (observedCases.length !== expectedCases.length) {
         const message = `test count mismatch`;
         throw new TypeError(message);
     }
 
-    const tests: Array<GenericCase<ScoredStep<TURN>>> = [];
-    for (const [i, o] of observed.tests.entries()) {
-        const e = expected.tests[i];
+    const tests: Array<GenericCase<ScoredStep<AnyTurn>>> = [];
+    for (const [i, o] of observedCases.entries()) {
+        const e = expectedCases[i];
         tests.push(scoreOneCase(o, e, repairFunction));
     }
 

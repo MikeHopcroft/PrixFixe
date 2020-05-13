@@ -12,6 +12,7 @@ export class IdGenerator {
     }
 
     gap() {
-        this.current = (Math.floor(this.current / this.rounding) + 1) * this.rounding;
+        this.current =
+            (Math.floor(this.current / this.rounding) + 1) * this.rounding;
     }
 }

@@ -1,116 +1,116 @@
-import * as AJV from 'ajv';
-import * as betterAjvErrors from 'better-ajv-errors';
-import * as fs from 'fs';
-import * as yaml from 'js-yaml';
+// import * as AJV from 'ajv';
+// import * as betterAjvErrors from 'better-ajv-errors';
+// import * as fs from 'fs';
+// import * as yaml from 'js-yaml';
 
-import { YAMLValidationError } from '../utilities';
+// import { YAMLValidationError } from '../utilities';
 
-import {
-    AnyTurn,
-    GenericSuite,
-    Step,
-    LogicalScoredSuite,
-    LogicalTestSuite,
-    LogicalValidationSuite,
-} from './interfaces';
+// import {
+//     AnyTurn,
+//     GenericSuite,
+//     Step,
+//     LogicalScoredSuite,
+//     LogicalTestSuite,
+//     LogicalValidationSuite,
+// } from './interfaces';
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Loaders
-//
-///////////////////////////////////////////////////////////////////////////////
-export function loadLogicalScoredSuite<TURN extends AnyTurn>(
-    filename: string
-): LogicalScoredSuite<TURN> {
-    const yamlTextIn = fs.readFileSync(filename, 'utf8');
-    const root = yaml.safeLoad(yamlTextIn);
-    return logicalScoredSuite<TURN>(root);
-}
+// ///////////////////////////////////////////////////////////////////////////////
+// //
+// // Loaders
+// //
+// ///////////////////////////////////////////////////////////////////////////////
+// export function loadLogicalScoredSuite<TURN extends AnyTurn>(
+//     filename: string
+// ): LogicalScoredSuite<TURN> {
+//     const yamlTextIn = fs.readFileSync(filename, 'utf8');
+//     const root = yaml.safeLoad(yamlTextIn);
+//     return logicalScoredSuite<TURN>(root);
+// }
 
-export function loadLogicalTestSuite<TURN extends AnyTurn>(
-    filename: string
-): LogicalTestSuite<TURN> {
-    const yamlTextIn = fs.readFileSync(filename, 'utf8');
-    const root = yaml.safeLoad(yamlTextIn);
-    return logicalTestSuite<TURN>(root);
-}
+// export function loadLogicalTestSuite<TURN extends AnyTurn>(
+//     filename: string
+// ): LogicalTestSuite<TURN> {
+//     const yamlTextIn = fs.readFileSync(filename, 'utf8');
+//     const root = yaml.safeLoad(yamlTextIn);
+//     return logicalTestSuite<TURN>(root);
+// }
 
-export function loadLogicalValidationSuite<TURN extends AnyTurn>(
-    filename: string
-): LogicalValidationSuite<TURN> {
-    const yamlTextIn = fs.readFileSync(filename, 'utf8');
-    const root = yaml.safeLoad(yamlTextIn);
-    return logicalValidationSuite<TURN>(root);
-}
+// export function loadLogicalValidationSuite<TURN extends AnyTurn>(
+//     filename: string
+// ): LogicalValidationSuite<TURN> {
+//     const yamlTextIn = fs.readFileSync(filename, 'utf8');
+//     const root = yaml.safeLoad(yamlTextIn);
+//     return logicalValidationSuite<TURN>(root);
+// }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Writer
-//
-///////////////////////////////////////////////////////////////////////////////
-export function writeYAML<T>(filename: string, root: T) {
-    const yamlTextOut = yaml.safeDump(root);
-    fs.writeFileSync(filename, yamlTextOut, 'utf8');
-}
+// ///////////////////////////////////////////////////////////////////////////////
+// //
+// // Writer
+// //
+// ///////////////////////////////////////////////////////////////////////////////
+// export function writeYAML<T>(filename: string, root: T) {
+//     const yamlTextOut = yaml.safeDump(root);
+//     fs.writeFileSync(filename, yamlTextOut, 'utf8');
+// }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Validators
-//
-///////////////////////////////////////////////////////////////////////////////
-export function logicalScoredSuite<TURN extends AnyTurn>(
-    // tslint:disable-next-line:no-any
-    root: any
-): LogicalScoredSuite<TURN> {
-    return validate<TURN, LogicalScoredSuite<TURN>>(
-        '#/definitions/LogicalScoredSuite<TURN>',
-        root
-    ) as LogicalScoredSuite<TURN>;
-}
+// ///////////////////////////////////////////////////////////////////////////////
+// //
+// // Validators
+// //
+// ///////////////////////////////////////////////////////////////////////////////
+// export function logicalScoredSuite<TURN extends AnyTurn>(
+//     // tslint:disable-next-line:no-any
+//     root: any
+// ): LogicalScoredSuite<TURN> {
+//     return validate<TURN, LogicalScoredSuite<TURN>>(
+//         '#/definitions/LogicalScoredSuite<TURN>',
+//         root
+//     ) as LogicalScoredSuite<TURN>;
+// }
 
-export function logicalTestSuite<TURN extends AnyTurn>(
-    // tslint:disable-next-line:no-any
-    root: any
-): LogicalTestSuite<TURN> {
-    return validate<TURN, LogicalTestSuite<TURN>>(
-        '#/definitions/LogicalScoredSuite<TURN>',
-        root
-    ) as LogicalTestSuite<TURN>;
-}
+// export function logicalTestSuite<TURN extends AnyTurn>(
+//     // tslint:disable-next-line:no-any
+//     root: any
+// ): LogicalTestSuite<TURN> {
+//     return validate<TURN, LogicalTestSuite<TURN>>(
+//         '#/definitions/LogicalScoredSuite<TURN>',
+//         root
+//     ) as LogicalTestSuite<TURN>;
+// }
 
-export function logicalValidationSuite<TURN extends AnyTurn>(
-    // tslint:disable-next-line:no-any
-    root: any
-): LogicalValidationSuite<TURN> {
-    return validate<TURN, LogicalValidationSuite<TURN>>(
-        '#/definitions/LogicalValidationSuite<TURN>',
-        root
-    ) as LogicalValidationSuite<TURN>;
-}
+// export function logicalValidationSuite<TURN extends AnyTurn>(
+//     // tslint:disable-next-line:no-any
+//     root: any
+// ): LogicalValidationSuite<TURN> {
+//     return validate<TURN, LogicalValidationSuite<TURN>>(
+//         '#/definitions/LogicalValidationSuite<TURN>',
+//         root
+//     ) as LogicalValidationSuite<TURN>;
+// }
 
-function validate<TURN extends AnyTurn, SUITE extends GenericSuite<Step<TURN>>>(
-    schemaRef: string,
-    // tslint:disable-next-line:no-any
-    root: any
-): SUITE {
-    const ajv = new AJV({ jsonPointers: true });
-    const validator = ajv.compile(anySuiteSchema);
+// function validate<TURN extends AnyTurn, SUITE extends GenericSuite<Step<TURN>>>(
+//     schemaRef: string,
+//     // tslint:disable-next-line:no-any
+//     root: any
+// ): SUITE {
+//     const ajv = new AJV({ jsonPointers: true });
+//     const validator = ajv.compile(anySuiteSchema);
 
-    if (!ajv.validate(schemaRef, root)) {
-        const message = 'yaml data does not conform to schema.';
-        const output = betterAjvErrors(anySuiteSchema, root, ajv.errors, {
-            format: 'cli',
-            indent: 1,
-        });
-        throw new YAMLValidationError(message, output || []);
-    }
+//     if (!ajv.validate(schemaRef, root)) {
+//         const message = 'yaml data does not conform to schema.';
+//         const output = betterAjvErrors(anySuiteSchema, root, ajv.errors, {
+//             format: 'cli',
+//             indent: 1,
+//         });
+//         throw new YAMLValidationError(message, output || []);
+//     }
 
-    return root as SUITE;
-}
+//     return root as SUITE;
+// }
 
 // Schema generated with
 //   typescript-json-schema tsconfig.json AnySuite --required
-const anySuiteSchema = {
+export const anySuiteSchema = {
     $schema: 'http://json-schema.org/draft-07/schema#',
     anyOf: [
         {
@@ -120,10 +120,57 @@ const anySuiteSchema = {
             $ref: '#/definitions/LogicalValidationSuite<TURN>',
         },
         {
-            $ref: '#/definitions/LogicalScoredSuite<TURN>',
+            allOf: [
+                {
+                    $ref: '#/definitions/GenericSuite<ScoredStep<TURN>>',
+                },
+                {
+                    $ref: '#/definitions/AggregatedMeasuresField',
+                },
+            ],
         },
     ],
     definitions: {
+        AggregatedMeasures: {
+            properties: {
+                completeSteps: {
+                    type: 'number',
+                },
+                notes: {
+                    type: 'string',
+                },
+                perfectSteps: {
+                    type: 'number',
+                },
+                totalRepairs: {
+                    type: 'number',
+                },
+                totalSteps: {
+                    type: 'number',
+                },
+                totalTests: {
+                    type: 'number',
+                },
+            },
+            required: [
+                'completeSteps',
+                'notes',
+                'perfectSteps',
+                'totalRepairs',
+                'totalSteps',
+                'totalTests',
+            ],
+            type: 'object',
+        },
+        AggregatedMeasuresField: {
+            properties: {
+                measures: {
+                    $ref: '#/definitions/AggregatedMeasures',
+                },
+            },
+            required: ['measures'],
+            type: 'object',
+        },
         Expected: {
             properties: {
                 cart: {
@@ -151,7 +198,7 @@ const anySuiteSchema = {
                                 $ref: '#/definitions/Expected',
                             },
                             {
-                                $ref: '#/definitions/Measures',
+                                $ref: '#/definitions/MeasuresField',
                             },
                         ],
                     },
@@ -213,6 +260,100 @@ const anySuiteSchema = {
             required: ['comment', 'id', 'steps', 'suites'],
             type: 'object',
         },
+        'GenericSuite<ScoredStep<TURN>>': {
+            properties: {
+                comment: {
+                    type: 'string',
+                },
+                tests: {
+                    items: {
+                        anyOf: [
+                            {
+                                $ref:
+                                    '#/definitions/GenericSuite<ScoredStep<TURN>>_1',
+                            },
+                            {
+                                $ref:
+                                    '#/definitions/GenericCase<ScoredStep<TURN>>',
+                            },
+                        ],
+                    },
+                    type: 'array',
+                },
+            },
+            required: ['tests'],
+            type: 'object',
+        },
+        'GenericSuite<ScoredStep<TURN>>_1': {
+            properties: {
+                comment: {
+                    type: 'string',
+                },
+                tests: {
+                    items: {
+                        anyOf: [
+                            {
+                                $ref:
+                                    '#/definitions/GenericSuite<ScoredStep<TURN>>_1',
+                            },
+                            {
+                                $ref:
+                                    '#/definitions/GenericCase<ScoredStep<TURN>>',
+                            },
+                        ],
+                    },
+                    type: 'array',
+                },
+            },
+            required: ['tests'],
+            type: 'object',
+        },
+        'GenericSuite<Step<TURN>>': {
+            properties: {
+                comment: {
+                    type: 'string',
+                },
+                tests: {
+                    items: {
+                        anyOf: [
+                            {
+                                $ref: '#/definitions/GenericSuite<Step<TURN>>',
+                            },
+                            {
+                                $ref: '#/definitions/GenericCase<Step<TURN>>',
+                            },
+                        ],
+                    },
+                    type: 'array',
+                },
+            },
+            required: ['tests'],
+            type: 'object',
+        },
+        'GenericSuite<ValidationStep<TURN>>': {
+            properties: {
+                comment: {
+                    type: 'string',
+                },
+                tests: {
+                    items: {
+                        anyOf: [
+                            {
+                                $ref:
+                                    '#/definitions/GenericSuite<ValidationStep<TURN>>',
+                            },
+                            {
+                                $ref:
+                                    '#/definitions/GenericCase<ValidationStep<TURN>>',
+                            },
+                        ],
+                    },
+                    type: 'array',
+                },
+            },
+            required: ['tests'],
+            type: 'object',
+        },
         LogicalCart: {
             properties: {
                 items: {
@@ -246,23 +387,21 @@ const anySuiteSchema = {
             required: ['children', 'name', 'quantity', 'sku'],
             type: 'object',
         },
-        'LogicalScoredSuite<TURN>': {
-            properties: {
-                tests: {
-                    items: {
-                        $ref: '#/definitions/GenericCase<ScoredStep<TURN>>',
-                    },
-                    type: 'array',
-                },
-            },
-            required: ['tests'],
-            type: 'object',
-        },
         'LogicalTestSuite<TURN>': {
             properties: {
+                comment: {
+                    type: 'string',
+                },
                 tests: {
                     items: {
-                        $ref: '#/definitions/GenericCase<Step<TURN>>',
+                        anyOf: [
+                            {
+                                $ref: '#/definitions/GenericSuite<Step<TURN>>',
+                            },
+                            {
+                                $ref: '#/definitions/GenericCase<Step<TURN>>',
+                            },
+                        ],
                     },
                     type: 'array',
                 },
@@ -272,9 +411,21 @@ const anySuiteSchema = {
         },
         'LogicalValidationSuite<TURN>': {
             properties: {
+                comment: {
+                    type: 'string',
+                },
                 tests: {
                     items: {
-                        $ref: '#/definitions/GenericCase<ValidationStep<TURN>>',
+                        anyOf: [
+                            {
+                                $ref:
+                                    '#/definitions/GenericSuite<ValidationStep<TURN>>',
+                            },
+                            {
+                                $ref:
+                                    '#/definitions/GenericCase<ValidationStep<TURN>>',
+                            },
+                        ],
                     },
                     type: 'array',
                 },
@@ -307,6 +458,15 @@ const anySuiteSchema = {
                 },
             },
             required: ['complete', 'perfect'],
+            type: 'object',
+        },
+        MeasuresField: {
+            properties: {
+                measures: {
+                    $ref: '#/definitions/Measures',
+                },
+            },
+            required: ['measures'],
             type: 'object',
         },
         'Step<TURN>': {

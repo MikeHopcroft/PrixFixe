@@ -42,7 +42,7 @@ function main() {
 
     try {
         // Load the input test suite.
-        console.log(`Reading suite to ${inFile}`);
+        console.log(`Reading suite from ${inFile}`);
         const inputSuite = loadLogicalValidationSuite<CombinedTurn>(inFile);
 
         const suiteExpressionText = args['s'];

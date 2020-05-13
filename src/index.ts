@@ -1,4 +1,5 @@
 export * from './attributes';
+export * from './authoring';
 export * from './cart';
 export * from './catalog';
 export * from './cookbook';

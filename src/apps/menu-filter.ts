@@ -10,6 +10,7 @@ import { createWorld } from '../processors';
 import {
     CombinedTurn,
     fail,
+    filterSuite,
     GenericCase,
     handleError,
     loadLogicalValidationSuite,
@@ -56,12 +57,13 @@ function main() {
         }
 
         // Load the input test suite.
-        console.log(`Reading suite to ${inFile}`);
+        console.log(`Reading suite from ${inFile}`);
         const inputSuite = loadLogicalValidationSuite<CombinedTurn>(inFile);
 
-        const outputSuite = {
-            tests: inputSuite.tests.filter(predicate),
-        };
+        const outputSuite = filterSuite(inputSuite, predicate);
+        // const outputSuite = {
+        //     tests: inputSuite.tests.filter(predicate),
+        // };
 
         const removed = inputSuite.tests.length - outputSuite.tests.length;
         if (removed) {

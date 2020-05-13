@@ -12,7 +12,7 @@ import {
     partialCatalogSpecType,
     PartialCatalogSpec,
     TensorSpec,
-} from "./types";
+} from './types';
 
 export function loadCatalog(filename: string): CatalogSpec {
     const builder = new CatalogBuilder();
@@ -26,12 +26,14 @@ class CatalogBuilder {
     catalog: GroupSpec[] = [];
     rules: AnyRule[] = [];
 
-    context: string[] = [ process.cwd() ];
+    context: string[] = [process.cwd()];
 
     process(filename: string) {
+        console.log(`Reading ${filename}`);
+
         // Resolve filename relative to previous file.
         const resolved: string = path.resolve(
-            path.dirname(this.context[this.context.length -1]),
+            path.dirname(this.context[this.context.length - 1]),
             filename
         );
 

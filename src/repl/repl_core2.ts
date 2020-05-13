@@ -94,7 +94,7 @@ class TestBuilder {
 
     constructor(catalog: ICatalog) {
         this.catalog = catalog;
-        this.speaker = "speaker";
+        this.speaker = 'speaker';
     }
 
     getComment() {
@@ -118,7 +118,7 @@ class TestBuilder {
     }
 
     addStep(input: string, state: State) {
-        this.steps.push({input, state});
+        this.steps.push({ input, state });
     }
 
     clearSteps() {
@@ -133,18 +133,20 @@ class TestBuilder {
         if (this.steps.length > 0) {
             this.steps[this.steps.length - 1].state = state;
         }
-    }    
+    }
 
     createValidationSuite(): LogicalValidationSuite<TextTurn> {
         const tests: Array<GenericCase<ValidationStep<TextTurn>>> = [];
         const steps: Array<ValidationStep<TextTurn>> = [];
         for (const step of this.steps) {
             const cart = logicalCartFromCart(step.state.cart, this.catalog);
-            const turns = [{
-                speaker: this.speaker,
-                transcription: step.input,
-            }];
-            steps.push({turns, cart});
+            const turns = [
+                {
+                    speaker: this.speaker,
+                    transcription: step.input,
+                },
+            ];
+            steps.push({ turns, cart });
         }
 
         return {
@@ -171,7 +173,7 @@ class ReplCore implements IRepl {
         let debugMode = false;
         Debug.enable('tf-interactive,tf:*');
 
-        const world = createWorld(dataPath);
+        const world = createWorld2(dataPath);
         const catalog = world.catalog;
 
         // Incorporate REPL extensions.

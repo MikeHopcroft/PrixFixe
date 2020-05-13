@@ -1,7 +1,7 @@
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
-import { processDimensions, processTensors} from './attributes';
+import { processDimensions, processTensors } from './attributes';
 import { loadCatalog } from './loader';
 import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
@@ -62,6 +62,6 @@ function go(filename: string) {
 }
 
 // go('c:\\temp\\catalog.yaml');
-go('d:\\git\\menubot\\prixfixe\\samples\\menu\\coffee.yaml');
+// go('d:\\git\\menubot\\prixfixe\\samples\\menu\\coffee.yaml');
+go('d:\\git\\menubot\\shortorder\\samples\\menu\\coffee.yaml');
 console.log('done done done done');
-

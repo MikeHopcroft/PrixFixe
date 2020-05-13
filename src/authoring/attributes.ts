@@ -7,13 +7,7 @@ import {
 
 import { InvalidParameterError, ValidationError } from './errors';
 
-import {
-    AID,
-    DID,
-    DimensionSpec,
-    TID,
-    TensorSpec
-} from './types';
+import { AID, DID, DimensionSpec, TID, TensorSpec } from './types';
 
 export interface HasName {
     name: string;
@@ -109,7 +103,7 @@ export function processDimensions(
                 index: attributes,
             };
         },
-        (d: IndexedDimension) => d.dimension.did 
+        (d: IndexedDimension) => d.dimension.did
     );
 
     return dimensions;
@@ -139,8 +133,7 @@ export function processTensors(
                 }
                 const d = indexedDimension.dimension;
                 if (tensorDimensions.has(d)) {
-                    const message =
-                        `Duplicate dimension "${d.name}" in tensor "${t.name}"`;
+                    const message = `Duplicate dimension "${d.name}" in tensor "${t.name}"`;
                     throw new InvalidParameterError(message);
                 }
                 tensorDimensions.add(d);
@@ -158,12 +151,11 @@ export function processTensors(
     return tensors;
 }
 
-
 function validateName<T>(map: Map<string, T>, name: string) {
     // Alphanumeric + - + _
     // TODO: can we allow spaces, commas, other punctuation?
     if (!name.match(/^[A-Za-z][A-Za-z0-9\-_]*$/)) {
-        const message = 'Names must match /^[A-Za-z][A-Za-z0-9\-_]*$/';
+        const message = 'Names must match /^[A-Za-z][A-Za-z0-9-_]*$/';
         throw new ValidationError(message);
     }
 

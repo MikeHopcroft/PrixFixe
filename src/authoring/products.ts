@@ -1,4 +1,4 @@
-import { DimensionDescription, TensorDescription } from "../attributes";
+import { DimensionDescription, TensorDescription } from '../attributes';
 
 import {
     GenericEntity,
@@ -24,10 +24,9 @@ import {
     Key,
     TID,
     WILDCARD,
-} from "./types";
+} from './types';
 
 import { IdGenerator } from './utilities';
-
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -52,10 +51,7 @@ class Context {
         this.initializeTensor(builder, 'none');
     }
 
-    private initializeTensor(
-        builder: GroupBuilder,
-        tensor: string
-    ) {
+    private initializeTensor(builder: GroupBuilder, tensor: string) {
         // WARNING: constructor() assumes this method initializes this.tensor,
         // this.dimensions, this.forms, and this.defaultForm.
 
@@ -78,18 +74,8 @@ class Context {
         this.verifyDefaultForm();
     }
 
-    extend(
-        builder: GroupBuilder,
-        group: ContextSpec
-    ): Context {
-        const {
-            tensor,
-            forms,
-            pid,
-            sku,
-            tags,
-            type,
-        } = group;
+    extend(builder: GroupBuilder, group: ContextSpec): Context {
+        const { tensor, forms, pid, sku, tags, type } = group;
 
         if (tags && tags[0] === 'syrups') {
             console.log('here here');
@@ -98,7 +84,10 @@ class Context {
         const defaultForm = group.default;
 
         // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
-        const context: Context = Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+        const context: Context = Object.assign(
+            Object.create(Object.getPrototypeOf(this)),
+            this
+        );
 
         if (tensor !== undefined) {
             context.initializeTensor(builder, tensor);
@@ -113,7 +102,10 @@ class Context {
 
         // Modify the default form, if specified.
         if (defaultForm !== undefined) {
-            context.defaultForm = keyFromAttributes(context.dimensions, defaultForm);
+            context.defaultForm = keyFromAttributes(
+                context.dimensions,
+                defaultForm
+            );
         }
 
         // Verify that the default form is one of the generated forms.
@@ -122,7 +114,7 @@ class Context {
         if (pid !== undefined) {
             context.pids = new IdGenerator(pid);
         }
-        
+
         if (sku !== undefined) {
             context.skus = new IdGenerator(sku);
         }
@@ -166,11 +158,7 @@ class Context {
                 this.defaultForm,
                 true
             );
-            const message = `Default form "[${
-                prefix
-            }]" not in set of generated forms for tensor "${
-                this.tensor.name
-            }"`;
+            const message = `Default form "[${prefix}]" not in set of generated forms for tensor "${this.tensor.name}"`;
             throw new InvalidParameterError(message);
         }
     }
@@ -273,15 +261,20 @@ export function processGroups(
     builder.getContext().pids.gap();
 }
 
-function processItem(
-    builder: GroupBuilder,
-    item: ItemSpec
-) {
+function makeKey(pid: number, defaultForm: string) {
+    if (defaultForm) {
+        return [pid, defaultForm].join(':');
+    } else {
+        return pid.toString();
+    }
+}
+
+function processItem(builder: GroupBuilder, item: ItemSpec) {
     const context = builder.getContext();
 
     // Create generic
     const pid = builder.nextPID();
-    const defaultKey = [pid, context.defaultForm].join(':');
+    const defaultKey = makeKey(pid, context.defaultForm);// [pid, context.defaultForm].join(':');
     const entity: GenericEntity = {
         name: item.name,
         pid,
@@ -290,7 +283,7 @@ function processItem(
         tensor: context.tensor.tid,
         defaultKey,
     };
-    const kind = (context.type === ItemType.PRODUCT) ? MENUITEM : OPTION;
+    const kind = context.type === ItemType.PRODUCT ? MENUITEM : OPTION;
     const generic = genericEntityFactory(entity, kind);
     builder.generics.push(generic);
 
@@ -306,7 +299,7 @@ function processItem(
 
     // Create specifics
     for (const f of context.forms) {
-        const key = generic.pid + ':' + f;
+        const key = makeKey(generic.pid, f); //generic.pid + ':' + f;
         const sku = builder.nextSKU();
         const specific: SpecificTypedEntity = {
             kind: MENUITEM,

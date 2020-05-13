@@ -1,5 +1,6 @@
 # TODO List
 
+* Ability to import catalog multiple times - to allow each catalog file to be stand-alone
 * Get SKU, PID, TID, Key, AID, etc from correct location
 * catalog.yaml
   * x "syrup" on end of syrup names

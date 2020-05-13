@@ -71,7 +71,8 @@ export interface GenericCase<STEP> {
 }
 
 export interface GenericSuite<STEP> {
-    tests: Array<GenericCase<STEP>>;
+    comment?: string;
+    tests: Array<GenericCase<STEP> | GenericSuite<STEP>>;
 }
 
 export type LogicalTestSuite<TURN> = GenericSuite<Step<TURN>>;

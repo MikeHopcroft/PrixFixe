@@ -130,7 +130,10 @@ export const prixFixeReplExtensionFactory: IReplExtensionFactory = {
     },
 };
 
-export function printCatalog(catalog: ICatalog, kind: MENUITEM | OPTION | undefined) {
+export function printCatalog(
+    catalog: ICatalog,
+    kind: MENUITEM | OPTION | undefined
+) {
     for (const item of catalog.genericEntities()) {
         if (!kind || item.kind === kind) {
             console.log(`${item.name} (${item.pid})`);

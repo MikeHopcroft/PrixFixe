@@ -285,7 +285,6 @@ export class RuleChecker implements IRuleChecker {
         return false;
     };
 
-    
     getExclusionGroups(pid: PID): Array<Set<PID>> {
         // NOTE: this feature is not implemented for RuleChecker.
         return [];

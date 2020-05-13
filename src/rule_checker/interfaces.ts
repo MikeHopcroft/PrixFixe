@@ -116,9 +116,9 @@ export interface IRuleChecker {
 
     /**
      * Gets the exclusion groups associated with a generic PID.
-     * 
+     *
      * @param pid
-     * 
+     *
      */
     getExclusionGroups(pid: PID): Array<Set<PID>>;
 }

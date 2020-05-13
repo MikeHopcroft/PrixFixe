@@ -35,9 +35,8 @@ export function convertSuite<
     stepConverter: StepConverter<ValidationStep<TURN1>, TURN1, STEP2, TURN1>,
     turnConverter: TurnConverter<TURN1, TURN2>
 ): GenericSuite<Step<TURN2>> {
-    // const s = suite.tests.filter(test => suiteFilter(test.suites.split(/\s+/)));
-    const s = suite.tests.filter(testCasePredicate);
-    const tests = s.map(test => {
+    const s1 = filterSuite(suite, testCasePredicate);
+    const s2 = mapSuite(s1, (test: GenericCase<STEP1>) => {
         const steps = test.steps.map(step => {
             const s = stepConverter(step);
             const turns = s.turns.map(turnConverter);
@@ -47,8 +46,140 @@ export function convertSuite<
         return { ...test, steps };
     });
 
-    return { tests };
+    return s2;
+
+    // const s = suite.tests.filter(testCasePredicate);
+    // const tests = s.map(test => {
+    //     const steps = test.steps.map(step => {
+    //         const s = stepConverter(step);
+    //         const turns = s.turns.map(turnConverter);
+    //         return { ...s, turns };
+    //     });
+
+    //     return { ...test, steps };
+    // });
+
+    // return { tests };
 }
+
+export function filterSuite<
+    SUITE extends GenericSuite<STEP1>,
+    STEP1 extends ValidationStep<TURN1>,
+    TURN1
+>(suite: SUITE, predicate: TestCasePredicate<STEP1, TURN1>): SUITE {
+    const tests: typeof suite.tests = [];
+    for (const test of suite.tests) {
+        if ('id' in test) {
+            if (predicate(test)) {
+                tests.push(test);
+            }
+        } else {
+            tests.push(filterSuite(test, predicate));
+        }
+    }
+    return { ...suite, tests };
+}
+
+export function mapSuite<
+    // SUITE1 extends GenericSuite<STEP1>,
+    STEP1 extends ValidationStep<TURN1>,
+    STEP2 extends Step<TURN1>,
+    TURN1
+>(
+    suite: GenericSuite<STEP1>,
+    convert: (a: GenericCase<STEP1>) => GenericCase<STEP2>
+): GenericSuite<STEP2> {
+    const tests: Array<GenericCase<STEP2> | GenericSuite<STEP2>> = [];
+    for (const test of suite.tests) {
+        if ('id' in test) {
+            tests.push(convert(test));
+        } else {
+            tests.push(mapSuite(test, convert));
+        }
+    }
+    return {
+        comment: suite.comment,
+        tests,
+    };
+}
+
+export async function mapSuiteAsync<
+    // SUITE1 extends GenericSuite<STEP1>,
+    STEP1 extends ValidationStep<TURN1>,
+    STEP2 extends Step<TURN1>,
+    TURN1
+>(
+    suite: GenericSuite<STEP1>,
+    convert: (a: GenericCase<STEP1>) => Promise<GenericCase<STEP2>>
+): Promise<GenericSuite<STEP2>> {
+    const tests: Array<GenericCase<STEP2> | GenericSuite<STEP2>> = [];
+    for (const test of suite.tests) {
+        if ('id' in test) {
+            tests.push(await convert(test));
+        } else {
+            tests.push(await mapSuiteAsync(test, convert));
+        }
+    }
+    return {
+        comment: suite.comment,
+        tests,
+    };
+}
+
+// export function* enumerateTestCases<
+//     // SUITE1 extends GenericSuite<STEP1>,
+//     STEP1 //extends ValidationStep<TURN1>,
+//     // TURN1,
+// >(suite: GenericSuite<STEP1>): IterableIterator<GenericCase<STEP1>> {
+//     for (const test of suite.tests) {
+//         if ('id' in test) {
+//             yield test;
+//         } else {
+//             yield* enumerateTestCases(test);
+//         }
+//     }
+// }
+// export function* enumerateTestCases<
+//     STEP1,
+//     SUITE1 extends GenericSuite<STEP1>,
+//     // STEP1 extends ValidationStep<TURN1>,
+//     // TURN1,
+// >(suite: SUITE1): IterableIterator<GenericCase<STEP1>> {
+//     for (const test of suite.tests) {
+//         if ('id' in test) {
+//             yield test;
+//         } else {
+//             yield* enumerateTestCases(test);
+//         }
+//     }
+// }
+export function* enumerateTestCases<
+    STEP1,
+    // SUITE1 extends GenericSuite<STEP1>,
+    // STEP1 extends ValidationStep<TURN1>,
+    // TURN1,
+>(suite: GenericSuite<STEP1>): IterableIterator<GenericCase<STEP1>> {
+    for (const test of suite.tests) {
+        if ('id' in test) {
+            yield test;
+        } else {
+            yield* enumerateTestCases(test);
+        }
+    }
+}
+// export function* enumerateTestCases<
+//     SUITE1 extends GenericSuite<STEP1>,
+//     STEP1 //extends ValidationStep<TURN1>,
+//     // TURN1,
+// >(suite: SUITE1): IterableIterator<GenericCase<STEP1>> {
+//     for (const test of suite.tests) {
+//         if ('id' in test) {
+//             yield test;
+//         } else {
+//             yield* enumerateTestCases(test);
+//         }
+//     }
+// }
 
 export function allCases<STEP extends ValidationStep<TURN>, TURN>(
     test: GenericCase<STEP>

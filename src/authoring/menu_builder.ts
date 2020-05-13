@@ -1,8 +1,4 @@
-import {
-    AttributeInfo,
-    Dimension,
-    Tensor
-} from '../attributes';
+import { AttributeInfo, Dimension, Tensor } from '../attributes';
 
 /*
 
@@ -43,9 +39,7 @@ build rules
   mutual exclusion
 */
 
-
 // export type SpecificEntity = t.TypeOf<typeof specificEntityType>;
-
 
 // export interface SpecificEntity {
 //     // name: string;
@@ -133,7 +127,7 @@ build rules
 // function* generateSpecifics(item: Generic): Specific {
 //     // Verify tensor exists
 //     const tensor = getTensor(item.tensor);
-    
+
 //     // Verify that forms have the correct rank
 //     for (const form of item.forms)
 //     // Generate forms, by processing sequence of includes and excludes

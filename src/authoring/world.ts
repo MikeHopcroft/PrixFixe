@@ -8,19 +8,20 @@ import { Catalog } from '../catalog';
 import { Cookbook } from '../cookbook';
 import { World } from '../processors';
 
-import { processDimensions, processTensors} from './attributes';
+import { processDimensions, processTensors } from './attributes';
+import { loadCatalog } from './loader';
 import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
-import { catalogSpecType } from './types';
-import { validate } from './validate';
-
 
 export function createWorld2(dataPath: string): World {
+    console.log('CreateWorld2');
+
     const catalogFile = path.join(dataPath, 'coffee.yaml');
     // const catalogFile = path.join(dataPath, 'catalog.yaml');
 
-    const root = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8'));
-    const spec = validate(catalogSpecType, root);
+    // const root = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8'));
+    // const spec = validate(catalogSpecType, root);
+    const spec = loadCatalog(catalogFile);
 
     const dimensions = processDimensions(spec.dimensions);
     const tensors = processTensors(dimensions, spec.tensors);
@@ -45,7 +46,7 @@ export function createWorld2(dataPath: string): World {
     });
 
     const ruleChecker = processRules(builder.tagsToPIDs, spec.rules);
- 
+
     const cartOps = new CartOps(attributeInfo, catalog, ruleChecker);
 
     return {

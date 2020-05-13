@@ -9,6 +9,7 @@ import { createWorld } from '../processors';
 import {
     createMenuBasedRepairFunction,
     createSimpleRepairFunction,
+    enumerateTestCases,
     fail,
     handleError,
     loadLogicalValidationSuite,
@@ -110,8 +111,16 @@ function evaluate(
         notes
     );
 
+    // const a:{a: 5} & { b: 6} = { a: 5, b: 6 };
+    // const b = a as {a: 5};
+
     if (verbose) {
-        for (const test of scoredSuite.tests) {
+        // // tslint:disable-next-line:no-any
+        for (const test of enumerateTestCases(scoredSuite)) {
+            // for (const test of enumerateTestCases(
+            //     scoredSuite as GenericSuite<ScoredStep<AnyTurn>>
+            // )) {
+            // for (const test of enumerateTestCases(scoredSuite) {
             console.log(`${test.id}: ${test.comment}`);
             for (const [index, step] of test.steps.entries()) {
                 const { perfect, complete, repairs } = step.measures;
