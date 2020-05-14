@@ -1,20 +1,47 @@
 # TODO List
 
-* General purpose traverse, map, filter methods for carts and test suites.
-  * Also consider async versions.
-* test_runner2
+* better documentation for apps/authoring/test_suite2
+* test_runner_main2
+  * factor out scoring code for use by file comparison tool
+  * combine aggregate.ts and pass_fail.ts, convert from print to format
+  * x Summarize pass/fail rates by suite
+  * Fix: console.log(`repair algorithm: ${measures.notes}`); - measures.notes is '' in test_runner2.
   * Work on tree of tests, instead of flat list
   * Write results
   * Option to rebase tests
-  * Better repair function messages
-* Test measurements should be able to record crashes/exceptions
-  * Update test_runner2.js to handle exceptions
+  * Test measurements should be able to record crashes/exceptions
+    * Update test_runner2.js to handle exceptions
+  * x Better repair function messages
+* short-order repl .tokenize command should print scores
+* figure out how to share prix-fixe apps
+  * with short-order
+  * without breaking web pages
+* console.log(' ') vs console.log('') vs console.log().
+* attribute_info.ts
+  * Consider rewrite, based on DimensionSpec
+  * Remove Dimension class - just use DimensionDescription
+  * Move DID to interfaces.ts
+* Test cases should be able to start with a non-empty cart
+* Cookbooks
+* General purpose traverse, map, filter methods for carts and test suites.
+  * Also consider async versions.
 * Ability to import catalog multiple times - to allow each catalog file to be stand-alone
 * Get SKU, PID, TID, Key, AID, etc from correct location
 * catalog.yaml
   * x "syrup" on end of syrup names
   * x caffe mocha aliases
-* Decide about keys with no attributes. PID: or PID?
+  * chai [tea] latte - alias change
+  * iced tea
+  * chamomile tea / tea latte
+  * earl gray tea
+  * rooibos tea
+  * peppermint tea
+  * green tea
+  * hot cocoa
+  * steamer
+  * tea latte
+  * chai syrup
+* x Decide about keys with no attributes. PID: or PID?
 * x Ability to merge catalogs
   * x Ability to detect PID and SKU conflicts
   * x Imports field in group?

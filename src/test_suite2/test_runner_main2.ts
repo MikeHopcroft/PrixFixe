@@ -13,6 +13,7 @@ import { allSuites, suitePredicate } from '../test_suite/suite_predicate';
 import { TestProcessors } from '../test_suite/test_processors';
 
 import { printAggregateMeasures } from './aggregate';
+
 import {
     enumerateTestCases,
     filterSuite,
@@ -30,6 +31,8 @@ import {
 
 import { loadLogicalValidationSuite } from './loaders';
 import { logicalCartFromCart } from './logical_cart';
+import { renderCart } from './markdown';
+import { PassFailRates } from './pass_fail_rates';
 import { createMenuBasedRepairFunction } from './repair_functions';
 import { scoreSuite } from './scoring';
 
@@ -263,26 +266,61 @@ export async function testRunnerMain2(
             world.attributeInfo,
             world.catalog
         );
-        const scored = scoreSuite(observed, suite, repairFunction, '');
+        // TODO: replace xyz
+        const scored = scoreSuite(observed, suite, repairFunction, 'xyz');
 
+        const passFailRates = new PassFailRates();
         for (const test of enumerateTestCases(scored)) {
-            console.log(`${test.id}: ${test.comment}`);
-            for (const [index, step] of test.steps.entries()) {
-                const { perfect, complete, repairs } = step.measures;
-                console.log(
-                    `  step ${index}: perfect: ${perfect}, complete: ${complete}, repairs: ${
-                        repairs!.cost
-                    }`
-                );
-                for (const edit of repairs!.steps) {
-                    console.log(`    ${edit}`);
+            const repairCost = test.steps.reduce(
+                (p, c) => p + c.measures.repairs!.cost,
+                0
+            );
+
+            for (const suite of test.suites.split(/\s+/)) {
+                if (suite) {
+                    passFailRates.record(suite, repairCost === 0);
                 }
             }
-            console.log(' ');
+
+            if (repairCost > 0) {
+                console.log('---------------------------------------');
+                console.log(`${test.id}: ${test.comment}`);
+                for (const [index, step] of test.steps.entries()) {
+                    const { repairs } = step.measures;
+                    const status = repairs!.cost > 0 ? ': NEEDS REPAIRS' : '';
+                    console.log(`  step ${index}${status}`);
+
+                    for (const turn of step.turns) {
+                        if ('transcription' in turn) {
+                            console.log(`    ${turn.speaker}: ${turn.transcription}`);
+                        }
+                    }
+                    console.log(' ');
+
+                    const lines: string[] = [];
+                    renderCart(lines, step.cart);
+                    for (const line of lines) {
+                        console.log('    ' + line);
+                    }
+
+                    console.log(' ');
+                    for (const edit of repairs!.steps) {
+                        console.log(`    ${edit}`);
+                    }
+                }
+                console.log(' ');
+            }
         }
 
         // Print out summary.
         printAggregateMeasures(scored.measures);
+        console.log(' ');
+
+        console.log('Case pass rate by suite:');
+        const lines = passFailRates.format();
+        for (const line of lines) {
+            console.log('  ' + line);
+        }
 
         console.log('---------------------------');
 

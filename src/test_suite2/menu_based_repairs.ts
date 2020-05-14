@@ -39,10 +39,11 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
     }
 
     delete(item: ItemInstance): Edit<string> {
+        const name = this.catalog.getSpecific(item.key).name;
         return {
             op: EditOp.DELETE_A,
             cost: 1,
-            steps: [`id(${item.uid}): delete item(${item.key})`],
+            steps: [`id(${item.uid}): delete item(${name})`],
         };
     }
 
@@ -50,24 +51,30 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
         const steps: string[] = [];
         let cost = 0;
 
+        const generic = this.catalog.getGenericForKey(item.key);
+        const defaultItem = this.catalog.getSpecific(generic.defaultKey);
+
         // Inserting the generic item's default form.
         cost += 1;
-        steps.push(`id(${item.uid}): insert default item(${item.key})`);
+        steps.push(`id(${item.uid}): insert default item(${defaultItem.name})`);
 
         // Non-standard quantity
         if (item.quantity > 1) {
             // 1 if quantity greater than 1
             cost += 1;
-            steps.push(`id(${item.uid}): make quantity ${item.quantity}`);
+            steps.push(`id(${
+                item.uid
+            }): make item(${
+                defaultItem.name
+            }) quantity ${
+                item.quantity
+            }`);
         }
 
         //
         // Non-standard attributes.
         //
         const itemAttribs = this.attributeInfo.getAttributes(item.key);
-
-        const generic = this.catalog.getGenericForKey(item.key);
-        const defaultItem = this.catalog.getSpecific(generic.defaultKey);
         const defaultAttribs = this.attributeInfo.getAttributes(
             defaultItem.key
         );
@@ -76,8 +83,18 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
             if (itemAttribs[i] !== defaultAttribs[i]) {
                 // 1 for non-standard attribute
                 cost += 1;
+                const a = this.attributeInfo.getAttribute(defaultAttribs[i]);
+                const b = this.attributeInfo.getAttribute(itemAttribs[i]);
                 steps.push(
-                    `id(${item.uid}): non-standard attribute(${itemAttribs[i]})`
+                    `id(${
+                        item.uid
+                    }): change item(${
+                        defaultItem.name
+                    }) attribute "${
+                        a.name
+                    }" to "${
+                        b.name
+                    }"`
                 );
             }
         }
@@ -121,12 +138,19 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
             cost -= 0.001;
         } else {
             // Repair quantity
+            const name = this.catalog.getSpecific(observed.key).name;
             if (observed.quantity !== expected.quantity) {
                 cost += 1;
                 // TODO: need to indicate whose quantity is changed.
                 // This applies to all steps.
                 steps.push(
-                    `id(${observed.uid}): change quantity to ${expected.quantity}`
+                    `id(${
+                        observed.uid
+                    }): change item(${
+                        name
+                    }) quantity to ${
+                        expected.quantity
+                    }`
                 );
             }
 
@@ -140,8 +164,22 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
             for (let i = 0; i < observedAttribs.length; ++i) {
                 if (observedAttribs[i] !== expectedAttribs[i]) {
                     cost += 1;
+                    const o = this.attributeInfo.getAttribute(
+                        observedAttribs[i]
+                    );
+                    const e = this.attributeInfo.getAttribute(
+                        expectedAttribs[i]
+                    );
                     steps.push(
-                        `id(${observed.uid}): change attribute ${observedAttribs[i]} to ${expectedAttribs[i]}`
+                        `id(${
+                            observed.uid
+                        }): change item(${
+                            name
+                        }) attribute "${
+                            o.name
+                        }" to "${
+                            e.name
+                        }"`
                     );
                 }
             }

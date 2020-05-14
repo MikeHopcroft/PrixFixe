@@ -2,7 +2,13 @@ import { DID } from '../attributes';
 import { Catalog, Key, TID, PID } from '../catalog';
 
 import { Dimension } from './dimension';
-import { AID, DimensionAndTensorDescription } from './interfaces';
+
+import {
+    AID,
+    AttributeDescription,
+    DimensionAndTensorDescription
+} from './interfaces';
+
 import { Tensor } from './tensor';
 
 /**
@@ -27,11 +33,22 @@ export class AttributeInfo {
         AttributeCoordinate
     >();
     private readonly tensorIdToTensor = new Map<TID, Tensor>();
+    private readonly aidToDescription = new Map<AID, AttributeDescription>();
 
     constructor(catalog: Catalog, attributes: DimensionAndTensorDescription) {
         this.catalog = catalog;
 
         for (const dimension of attributes.dimensions) {
+            for (const attribute of dimension.attributes) {
+                if (this.aidToDescription.has(attribute.aid)) {
+                    const message = `Duplicate aid ${
+                        attribute.aid
+                    } on "${attribute.name}"`;
+                    throw new TypeError(message);
+                }
+                this.aidToDescription.set(attribute.aid, attribute);
+            }
+ 
             this.addDimension(
                 new Dimension(
                     dimension.did,
@@ -80,13 +97,22 @@ export class AttributeInfo {
         }
     }
 
-    getDimension(did: DID) {
+    getDimension(did: DID): Dimension {
         const dimension = this.dimensionIdToDimension.get(did);
         if (dimension === undefined) {
             const message = `Unknown dimension id ${did}.`;
             throw TypeError(message);
         }
         return dimension;
+    }
+
+    getAttribute(aid: AID): AttributeDescription {
+        const attribute = this.aidToDescription.get(aid);
+        if (attribute === undefined) {
+            const message = `Unknown attribute id ${aid}.`;
+            throw TypeError(message);
+        }
+        return attribute;
     }
 
     /**

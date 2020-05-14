@@ -117,7 +117,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.INSERT_A,
                 cost: 1,
-                steps: ['id(9999): insert default item(9000:0:0:0)'],
+                steps: ['id(9999): insert default item(small coffee)'],
             },
         ];
 
@@ -152,11 +152,11 @@ describe('Menu-based Repairs (Cart)', () => {
                 op: EditOp.INSERT_A,
                 cost: 5,
                 steps: [
-                    'id(9000): insert default item(9000:0:1:1)',
-                    'id(9000): make quantity 2',
-                    'id(9000): non-standard attribute(5)',
-                    'id(9000): non-standard attribute(7)',
-                    '  id(9001): insert default item(5000:1)',
+                    'id(9000): insert default item(small coffee)',
+                    'id(9000): make item(small coffee) quantity 2',
+                    'id(9000): change item(small coffee) attribute \"hot\" to \"cold\"',
+                    'id(9000): change item(small coffee) attribute \"regular\" to \"decaf\"',
+                    '  id(9001): insert default item(two percent milk)',
                 ],
             },
         ];
@@ -209,12 +209,12 @@ describe('Menu-based Repairs (Cart)', () => {
                 op: EditOp.REPAIR_A,
                 cost: 6,
                 steps: [
-                    'id(9000): delete item(8000:1:1)',
-                    'id(9000): insert default item(9000:0:1:1)',
-                    'id(9000): make quantity 2',
-                    'id(9000): non-standard attribute(5)',
-                    'id(9000): non-standard attribute(7)',
-                    '  id(9001): insert default item(5000:1)',
+                    'id(9000): delete item(medium chocolate cone)',
+                    'id(9000): insert default item(small coffee)',
+                    'id(9000): make item(small coffee) quantity 2',
+                    'id(9000): change item(small coffee) attribute \"hot\" to \"cold\"',
+                    'id(9000): change item(small coffee) attribute \"regular\" to \"decaf\"',
+                    '  id(9001): insert default item(two percent milk)',
                 ],
             },
         ];
@@ -235,7 +235,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(1): delete item(9000:0:0:0)'],
+                steps: ['id(1): delete item(small coffee)'],
             },
         ];
 
@@ -253,7 +253,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(2): delete item(8000:1:1)'],
+                steps: ['id(2): delete item(medium chocolate cone)'],
             },
         ];
 
@@ -271,12 +271,12 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(1): delete item(9000:0:0:0)'],
+                steps: ['id(1): delete item(small coffee)'],
             },
             {
                 op: EditOp.DELETE_A,
                 cost: 1,
-                steps: ['id(2): delete item(8000:1:1)'],
+                steps: ['id(2): delete item(medium chocolate cone)'],
             },
         ];
 
@@ -320,7 +320,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['id(1): change quantity to 2'],
+                steps: ['id(1): change item(small coffee) quantity to 2'],
             },
         ];
 
@@ -347,7 +347,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['id(1): change attribute 6 to 7'],
+                steps: ['id(1): change item(small coffee) attribute "regular" to "decaf"'],
             },
         ];
 
@@ -375,8 +375,8 @@ describe('Menu-based Repairs (Cart)', () => {
                 op: EditOp.REPAIR_A,
                 cost: 2,
                 steps: [
-                    'id(1): change attribute 0 to 1',
-                    'id(1): change attribute 6 to 7',
+                    'id(1): change item(small coffee) attribute "small" to "medium"',
+                    'id(1): change item(small coffee) attribute "regular" to "decaf"',
                 ],
             },
         ];
@@ -412,8 +412,8 @@ describe('Menu-based Repairs (Cart)', () => {
                 op: EditOp.INSERT_A,
                 cost: 2,
                 steps: [
-                    'id(1): insert default item(9000:0:0:0)',
-                    '  id(9001): insert default item(5000:1)',
+                    'id(1): insert default item(small coffee)',
+                    '  id(9001): insert default item(two percent milk)',
                 ],
             },
         ];
@@ -440,7 +440,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(4): delete item(5000:0)'],
+                steps: ['  id(4): delete item(whole milk)'],
             },
         ];
 
@@ -466,7 +466,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(5): delete item(2000:2)'],
+                steps: ['  id(5): delete item(with whipped cream)'],
             },
         ];
 
@@ -496,8 +496,8 @@ describe('Menu-based Repairs (Cart)', () => {
                 op: EditOp.REPAIR_A,
                 cost: 2,
                 steps: [
-                    '  id(4): delete item(5000:0)',
-                    '  id(5): delete item(2000:2)',
+                    '  id(4): delete item(whole milk)',
+                    '  id(5): delete item(with whipped cream)',
                 ],
             },
         ];
@@ -546,7 +546,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(5): change attribute 10 to 8'],
+                steps: ['  id(5): change item(with whipped cream) attribute "regular" to "no"'],
             },
         ];
 
@@ -594,7 +594,7 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(4): change quantity to 5'],
+                steps: ['  id(4): change item(whole milk) quantity to 5'],
             },
         ];
 
