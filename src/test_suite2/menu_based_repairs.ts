@@ -62,13 +62,9 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
         if (item.quantity > 1) {
             // 1 if quantity greater than 1
             cost += 1;
-            steps.push(`id(${
-                item.uid
-            }): make item(${
-                defaultItem.name
-            }) quantity ${
-                item.quantity
-            }`);
+            steps.push(
+                `id(${item.uid}): make item(${defaultItem.name}) quantity ${item.quantity}`
+            );
         }
 
         //
@@ -86,15 +82,7 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
                 const a = this.attributeInfo.getAttribute(defaultAttribs[i]);
                 const b = this.attributeInfo.getAttribute(itemAttribs[i]);
                 steps.push(
-                    `id(${
-                        item.uid
-                    }): change item(${
-                        defaultItem.name
-                    }) attribute "${
-                        a.name
-                    }" to "${
-                        b.name
-                    }"`
+                    `id(${item.uid}): change item(${defaultItem.name}) attribute "${a.name}" to "${b.name}"`
                 );
             }
         }
@@ -144,13 +132,7 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
                 // TODO: need to indicate whose quantity is changed.
                 // This applies to all steps.
                 steps.push(
-                    `id(${
-                        observed.uid
-                    }): change item(${
-                        name
-                    }) quantity to ${
-                        expected.quantity
-                    }`
+                    `id(${observed.uid}): change item(${name}) quantity to ${expected.quantity}`
                 );
             }
 
@@ -171,15 +153,7 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
                         expectedAttribs[i]
                     );
                     steps.push(
-                        `id(${
-                            observed.uid
-                        }): change item(${
-                            name
-                        }) attribute "${
-                            o.name
-                        }" to "${
-                            e.name
-                        }"`
+                        `id(${observed.uid}): change item(${name}) attribute "${o.name}" to "${e.name}"`
                     );
                 }
             }

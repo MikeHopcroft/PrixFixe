@@ -10,7 +10,7 @@ export class PassFailRates {
     record(suite: string, passed: boolean) {
         let pf = this.suiteToPassFail.get(suite);
         if (!pf) {
-            pf = { passed: 0, failed: 0};
+            pf = { passed: 0, failed: 0 };
             this.suiteToPassFail.set(suite, pf);
         }
 

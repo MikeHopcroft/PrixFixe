@@ -154,8 +154,8 @@ describe('Menu-based Repairs (Cart)', () => {
                 steps: [
                     'id(9000): insert default item(small coffee)',
                     'id(9000): make item(small coffee) quantity 2',
-                    'id(9000): change item(small coffee) attribute \"hot\" to \"cold\"',
-                    'id(9000): change item(small coffee) attribute \"regular\" to \"decaf\"',
+                    'id(9000): change item(small coffee) attribute "hot" to "cold"',
+                    'id(9000): change item(small coffee) attribute "regular" to "decaf"',
                     '  id(9001): insert default item(two percent milk)',
                 ],
             },
@@ -212,8 +212,8 @@ describe('Menu-based Repairs (Cart)', () => {
                     'id(9000): delete item(medium chocolate cone)',
                     'id(9000): insert default item(small coffee)',
                     'id(9000): make item(small coffee) quantity 2',
-                    'id(9000): change item(small coffee) attribute \"hot\" to \"cold\"',
-                    'id(9000): change item(small coffee) attribute \"regular\" to \"decaf\"',
+                    'id(9000): change item(small coffee) attribute "hot" to "cold"',
+                    'id(9000): change item(small coffee) attribute "regular" to "decaf"',
                     '  id(9001): insert default item(two percent milk)',
                 ],
             },
@@ -347,7 +347,9 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['id(1): change item(small coffee) attribute "regular" to "decaf"'],
+                steps: [
+                    'id(1): change item(small coffee) attribute "regular" to "decaf"',
+                ],
             },
         ];
 
@@ -546,7 +548,9 @@ describe('Menu-based Repairs (Cart)', () => {
             {
                 op: EditOp.REPAIR_A,
                 cost: 1,
-                steps: ['  id(5): change item(with whipped cream) attribute "regular" to "no"'],
+                steps: [
+                    '  id(5): change item(with whipped cream) attribute "regular" to "no"',
+                ],
             },
         ];
 

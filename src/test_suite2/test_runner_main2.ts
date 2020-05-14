@@ -18,7 +18,7 @@ import {
     enumerateTestCases,
     filterSuite,
     mapSuiteAsync,
-    suitePredicateFilter
+    suitePredicateFilter,
 } from './filter';
 
 import {
@@ -184,8 +184,9 @@ export async function testRunnerMain2(
     for (const testFile of testFiles) {
         try {
             console.log(`Reading ${testFile}`);
-            const s: LogicalValidationSuite<TextTurn> = 
-                loadLogicalValidationSuite(testFile);
+            const s: LogicalValidationSuite<
+                TextTurn
+            > = loadLogicalValidationSuite(testFile);
             suite.tests.push(s);
         } catch (err) {
             if (err.code === 'ENOENT' || err.code === 'EISDIR') {
@@ -214,10 +215,7 @@ export async function testRunnerMain2(
             tests: [oneTest],
         };
     } else {
-        suite = filterSuite(
-            suite,
-            suitePredicateFilter(suiteExpression)
-        );
+        suite = filterSuite(suite, suitePredicateFilter(suiteExpression));
     }
 
     if (brief) {
@@ -246,10 +244,7 @@ export async function testRunnerMain2(
             for (const step of test.steps) {
                 for (const turn of step.turns) {
                     try {
-                        state = await processor(
-                            turn.transcription,
-                            state
-                        );
+                        state = await processor(turn.transcription, state);
                     } catch (e) {
                         // TODO: record the error here, somehow.
                     }
@@ -292,7 +287,9 @@ export async function testRunnerMain2(
 
                     for (const turn of step.turns) {
                         if ('transcription' in turn) {
-                            console.log(`    ${turn.speaker}: ${turn.transcription}`);
+                            console.log(
+                                `    ${turn.speaker}: ${turn.transcription}`
+                            );
                         }
                     }
                     console.log(' ');

@@ -159,7 +159,7 @@ export async function mapSuiteAsync<
 //     }
 // }
 export function* enumerateTestCases<
-    STEP1,
+    STEP1
     // SUITE1 extends GenericSuite<STEP1>,
     // STEP1 extends ValidationStep<TURN1>,
     // TURN1,

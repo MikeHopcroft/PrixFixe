@@ -274,7 +274,7 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
 
     // Create generic
     const pid = builder.nextPID();
-    const defaultKey = makeKey(pid, context.defaultForm);// [pid, context.defaultForm].join(':');
+    const defaultKey = makeKey(pid, context.defaultForm); // [pid, context.defaultForm].join(':');
     const entity: GenericEntity = {
         name: item.name,
         pid,
@@ -299,7 +299,7 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
 
     // Create specifics
     for (const f of context.forms) {
-        const key = makeKey(generic.pid, f); //generic.pid + ':' + f;
+        const key = makeKey(generic.pid, f);
         const sku = builder.nextSKU();
         const specific: SpecificTypedEntity = {
             kind: MENUITEM,

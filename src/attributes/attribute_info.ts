@@ -6,7 +6,7 @@ import { Dimension } from './dimension';
 import {
     AID,
     AttributeDescription,
-    DimensionAndTensorDescription
+    DimensionAndTensorDescription,
 } from './interfaces';
 
 import { Tensor } from './tensor';
@@ -41,14 +41,12 @@ export class AttributeInfo {
         for (const dimension of attributes.dimensions) {
             for (const attribute of dimension.attributes) {
                 if (this.aidToDescription.has(attribute.aid)) {
-                    const message = `Duplicate aid ${
-                        attribute.aid
-                    } on "${attribute.name}"`;
+                    const message = `Duplicate aid ${attribute.aid} on "${attribute.name}"`;
                     throw new TypeError(message);
                 }
                 this.aidToDescription.set(attribute.aid, attribute);
             }
- 
+
             this.addDimension(
                 new Dimension(
                     dimension.did,

@@ -27,12 +27,8 @@ export function scoreSuite(
     repairFunction: RepairFunction,
     notes: string
 ): LogicalScoredSuite<AnyTurn> {
-    const expectedCases = [
-        ...enumerateTestCases(expected),
-    ];
-    const observedCases = [
-        ...enumerateTestCases(observed),
-    ];
+    const expectedCases = [...enumerateTestCases(expected)];
+    const observedCases = [...enumerateTestCases(observed)];
 
     if (observedCases.length !== expectedCases.length) {
         const message = `test count mismatch`;
