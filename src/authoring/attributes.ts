@@ -161,7 +161,7 @@ function validateName<T>(map: Map<string, T>, name: string) {
 
     // Unique
     if (map.has(name)) {
-        const message = `Duplicate name "${name}"`;
+        const message = `validateName(): Duplicate name "${name}"`;
         throw new ValidationError(message);
     }
 }

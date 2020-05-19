@@ -51,7 +51,9 @@ function main() {
         const nameToSKU = new Map<string, number>();
         for (const s of world.catalog.specificEntities()) {
             if (nameToSKU.has(s.name)) {
-                throw new TypeError(`Duplicate name ${s.name}`);
+                console.log(`old SKU = ${nameToSKU.get(s.name)!}`);
+                console.log(`new SKU = ${s.sku}`);
+                throw new TypeError(`repairSuite: Duplicate name ${s.name}`);
             }
             nameToSKU.set(s.name, s.sku);
         }

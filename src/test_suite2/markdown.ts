@@ -62,8 +62,12 @@ function renderStep<STEP1 extends ValidationStep<TextTurn>>(
 }
 
 export function renderCart(fragments: string[], cart: LogicalCart) {
-    for (const item of cart.items) {
-        renderItem(fragments, 0, item);
+    if (cart.items.length > 0) {
+        for (const item of cart.items) {
+            renderItem(fragments, 0, item);
+        }
+    } else {
+        fragments.push('(empty cart)');
     }
 }
 

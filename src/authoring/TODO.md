@@ -1,5 +1,30 @@
 # TODO List
 
+~~~
+D:\git\menubot\PrixFixe>node build\src\apps\repair-suite.js ..\ShortOrder\samples\menu\regression.yaml c:\temp\regression.yaml -d=..\ShortOrder\samples\menu
+CreateWorld2
+Reading ..\ShortOrder\samples\menu\coffee.yaml
+Loading D:\git\ShortOrder\samples\menu\coffee.yaml
+Error: cannot open "D:\git\ShortOrder\samples\menu\coffee.yaml".
+
+Combines paths wrong
+~~~
+
+* Documentation for new tools
+* Deprecate old tools
+* Merge into master
+* Test matrix generator for modify
+  * make [that|target] [with] [attribute|option|product]
+  * change [that|target] to [attribute|option|product]
+  * add [attribute|option] [to [that|target]]
+  * remove the [option] [from [that|product]]
+  * make [that|target] [no|non|without] [opton]
+  * replace [the|that] [option] with [option]
+  * make the [option|attribute] [option|attribute]
+* x Bug
+  * x node build\samples\test_runner.js samples\menu\regression.yaml -s=!regression
+  * x Reports incorrect number of failed cases
+  * x May want to refactor PassFail to take suite string
 * better documentation for apps/authoring/test_suite2
 * test_runner_main2
   * factor out scoring code for use by file comparison tool

@@ -198,14 +198,11 @@ export async function testRunnerMain2(
         }
     }
 
-    // Renumber the TestCases
-    let index = 0;
     let oneTest: GenericCase<ValidationStep<TextTurn>> | undefined;
     for (const test of enumerateTestCases(suite)) {
-        if (runOneTest === index) {
+        if (runOneTest === test.id) {
             oneTest = test;
         }
-        test.id = index++;
     }
 
     if (oneTest) {
@@ -271,11 +268,7 @@ export async function testRunnerMain2(
                 0
             );
 
-            for (const suite of test.suites.split(/\s+/)) {
-                if (suite) {
-                    passFailRates.record(suite, repairCost === 0);
-                }
-            }
+            passFailRates.record(test.suites, repairCost === 0);
 
             if (repairCost > 0) {
                 console.log('---------------------------------------');

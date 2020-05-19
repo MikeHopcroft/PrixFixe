@@ -33,7 +33,7 @@ class CatalogBuilder {
 
         // Resolve filename relative to previous file.
         const resolved: string = path.resolve(
-            path.dirname(this.context[this.context.length - 1]),
+            this.context[this.context.length - 1],
             filename
         );
 
@@ -44,7 +44,7 @@ class CatalogBuilder {
         this.merge(catalog);
 
         if (catalog.imports !== undefined) {
-            this.context.push(resolved);
+            this.context.push(path.dirname(resolved));
             for (const f of catalog.imports) {
                 this.process(f);
             }
