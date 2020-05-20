@@ -152,10 +152,10 @@ function badSKUs(
         for (const item of step.cart.items) {
             if (!catalog.hasSKU(Number(item.sku))) {
                 bad.add(item.sku);
-                for (const child of item.children) {
-                    if (!catalog.hasSKU(Number(child.sku))) {
-                        bad.add(child.sku);
-                    }
+            }
+            for (const child of item.children) {
+                if (!catalog.hasSKU(Number(child.sku))) {
+                    bad.add(child.sku);
                 }
             }
         }
