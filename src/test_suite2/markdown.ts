@@ -4,58 +4,67 @@ import {
     GenericCase,
     GenericSuite,
     LogicalCart,
+    LogicalItem,
+    ScoredStep,
     TextTurn,
     ValidationStep,
-    LogicalItem,
 } from './interfaces';
 
-export function markdown<
-    SUITE1 extends GenericSuite<STEP1>,
-    STEP1 extends ValidationStep<TextTurn>
->(suite: SUITE1): string {
+type MaybeScoredStep = ValidationStep<TextTurn> | ScoredStep<TextTurn>;
+type MaybeScoredSuite = GenericSuite<MaybeScoredStep>;
+
+export function renderSuiteAsMarkdown(suite: MaybeScoredSuite): string {
     const fragments: string[] = [];
-    markdownTraverse(fragments, suite);
+    renderSuiteAsMarkdownTraverse(fragments, suite);
     return fragments.join('\n');
 }
 
-// Extract this function into a generator
-function markdownTraverse<
-    SUITE1 extends GenericSuite<STEP1>,
-    STEP1 extends ValidationStep<TextTurn>
->(fragments: string[], suite: SUITE1) {
+function renderSuiteAsMarkdownTraverse(
+    fragments: string[],
+    suite: MaybeScoredSuite
+) {
     for (const test of suite.tests) {
         if ('id' in test) {
-            renderTest(fragments, test);
+            renderTestAsMarkdown(fragments, test);
         } else {
             if (test.comment) {
                 fragments.push(test.comment);
             }
-            markdownTraverse(fragments, test);
+            renderSuiteAsMarkdownTraverse(fragments, test);
         }
     }
 }
 
-// Rename this file to render.ts or format.ts or something else
-// Make this render test as text (instead of markdown). Wrap inside of markdown renderer.
-function renderTest<STEP1 extends ValidationStep<TextTurn>>(
+function renderTestAsMarkdown(
     fragments: string[],
-    test: GenericCase<STEP1>
+    test: GenericCase<MaybeScoredStep>
 ) {
     fragments.push(test.comment);
     fragments.push('~~~');
+
+    const step = test.steps[0];
+    if ('measures' in step) {
+        const status = step.measures.complete ? 'PASSED' : 'FAILED';
+        fragments.push(`Status: ${status}`);
+    }
+    renderTestAsText(fragments, test);
+    fragments.push('~~~');
+}
+
+// Rename this file to render.ts or format.ts or something else
+export function renderTestAsText(
+    fragments: string[],
+    test: GenericCase<MaybeScoredStep>
+) {
     for (const [i, step] of test.steps.entries()) {
-        renderStep(fragments, step);
+        renderStepAsText(fragments, step);
         if (i < test.steps.length - 1) {
             fragments.push('');
         }
     }
-    fragments.push('~~~');
 }
 
-function renderStep<STEP1 extends ValidationStep<TextTurn>>(
-    fragments: string[],
-    step: STEP1
-) {
+function renderStepAsText(fragments: string[], step: MaybeScoredStep) {
     for (const turn of step.turns) {
         fragments.push(`${turn.speaker}: ${turn.transcription}`);
     }

@@ -183,7 +183,9 @@ class ReplCore implements IRepl {
         let debugMode = false;
         Debug.enable('tf-interactive,tf:*');
 
-        const world = useCreateWorld2 ? createWorld2(dataPath) : createWorld(dataPath);
+        const world = useCreateWorld2
+            ? createWorld2(dataPath)
+            : createWorld(dataPath);
         const catalog = world.catalog;
 
         // Incorporate REPL extensions.
@@ -196,11 +198,9 @@ class ReplCore implements IRepl {
 
             const processor = extension.createProcessor();
             if (processor) {
-                console.log(`  Registering ${
-                    processor.name
-                } processor: ${
-                    processor.description
-                }`);
+                console.log(
+                    `  Registering ${processor.name} processor: ${processor.description}`
+                );
                 processors.push(processor);
             }
         }
@@ -502,7 +502,6 @@ class ReplCore implements IRepl {
             },
         });
 
-
         repl.defineCommand('score', {
             help: 'Score current cart against expected cart.',
             action(text: string) {
@@ -517,16 +516,27 @@ class ReplCore implements IRepl {
                 );
 
                 // TODO: replace xyz
-                const scored = scoreSuite(oSuite, eSuite, repairFunction, 'xyz');
+                const scored = scoreSuite(
+                    oSuite,
+                    eSuite,
+                    repairFunction,
+                    'xyz'
+                );
 
                 if (scored.measures.perfectSteps === 1) {
                     console.log('Carts are identical');
                 } else if (scored.measures.completeSteps === 1) {
-                    console.log('Carts are complete. They contain the same items, but in different order.');
+                    console.log(
+                        'Carts are complete. They contain the same items, but in different order.'
+                    );
                 } else {
                     console.log('Carts are different.');
-                    console.log(`Total repairs: ${scored.measures.totalRepairs}`);
-                    const testCase = scored.tests[0] as GenericCase<ScoredStep<AnyTurn>>;
+                    console.log(
+                        `Total repairs: ${scored.measures.totalRepairs}`
+                    );
+                    const testCase = scored.tests[0] as GenericCase<
+                        ScoredStep<AnyTurn>
+                    >;
                     const steps = testCase.steps[0].measures.repairs!.steps;
                     for (const [i, step] of steps.entries()) {
                         console.log(`  ${i}: ${step}`);
@@ -537,7 +547,6 @@ class ReplCore implements IRepl {
                 repl.displayPrompt();
             },
         });
-
 
         async function processReplInput(
             line: string,
@@ -628,7 +637,10 @@ class ReplCore implements IRepl {
     }
 }
 
-function suiteFromCart(catalog: ICatalog, cart: Cart): LogicalValidationSuite<AnyTurn> {
+function suiteFromCart(
+    catalog: ICatalog,
+    cart: Cart
+): LogicalValidationSuite<AnyTurn> {
     return {
         tests: [
             {

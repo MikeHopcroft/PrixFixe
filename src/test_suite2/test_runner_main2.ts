@@ -12,14 +12,14 @@ import { Processor, State, World } from '../processors';
 import { allSuites, suitePredicate } from '../test_suite/suite_predicate';
 import { TestProcessors } from '../test_suite/test_processors';
 
-import { printAggregateMeasures } from './aggregate';
-
 import {
     enumerateTestCases,
     filterSuite,
     mapSuiteAsync,
     suitePredicateFilter,
 } from './filter';
+
+import { formatScoredSuite } from './formatting';
 
 import {
     GenericCase,
@@ -29,10 +29,8 @@ import {
     ValidationStep,
 } from './interfaces';
 
-import { loadLogicalValidationSuite } from './loaders';
+import { loadLogicalValidationSuite, writeYAML } from './loaders';
 import { logicalCartFromCart } from './logical_cart';
-import { renderCart } from './markdown';
-import { PassFailRates } from './pass_fail_rates';
 import { createMenuBasedRepairFunction } from './repair_functions';
 import { scoreSuite } from './scoring';
 
@@ -74,18 +72,15 @@ export async function testRunnerMain2(
 
     const recursive = args['r'] === true;
 
-    if (args._.length === 0) {
+    if (args._.length !== 1 && args._.length !== 2) {
         const message =
             'Expected YAML input file or directory on command line.';
         return fail(message);
-    } else if (args._.length > 1) {
-        const message = 'Found extra arguments on command line.';
-        return fail(message);
     }
+    const input = args._[0];
+    const outputFile = args._[1];
 
     let testFiles: string[];
-    const cwd = process.cwd();
-    const input = path.resolve(cwd, args._[0]);
     if (fs.lstatSync(input).isDirectory()) {
         console.log(`test dir = ${input}`);
 
@@ -259,74 +254,23 @@ export async function testRunnerMain2(
             world.catalog
         );
         // TODO: replace xyz
-        const scored = scoreSuite(observed, suite, repairFunction, 'xyz');
+        const scoredSuite = scoreSuite(observed, suite, repairFunction, 'xyz');
 
-        const passFailRates = new PassFailRates();
-        for (const test of enumerateTestCases(scored)) {
-            const repairCost = test.steps.reduce(
-                (p, c) => p + c.measures.repairs!.cost,
-                0
-            );
-
-            passFailRates.record(test.suites, repairCost === 0);
-
-            if (repairCost > 0) {
-                console.log('---------------------------------------');
-                console.log(`${test.id}: ${test.comment}`);
-                for (const [index, step] of test.steps.entries()) {
-                    const { repairs } = step.measures;
-                    const status = repairs!.cost > 0 ? ': NEEDS REPAIRS' : '';
-                    console.log(`  step ${index}${status}`);
-
-                    for (const turn of step.turns) {
-                        if ('transcription' in turn) {
-                            console.log(
-                                `    ${turn.speaker}: ${turn.transcription}`
-                            );
-                        }
-                    }
-                    console.log(' ');
-
-                    const lines: string[] = [];
-                    renderCart(lines, step.cart);
-                    for (const line of lines) {
-                        console.log('    ' + line);
-                    }
-
-                    console.log(' ');
-                    for (const edit of repairs!.steps) {
-                        console.log(`    ${edit}`);
-                    }
-                }
-                console.log(' ');
-            }
-        }
-
-        // Print out summary.
-        printAggregateMeasures(scored.measures);
-        console.log(' ');
-
-        console.log('Case pass rate by suite:');
-        const lines = passFailRates.format();
+        const lines: string[] = [];
+        formatScoredSuite(lines, scoredSuite);
         for (const line of lines) {
-            console.log('  ' + line);
+            console.log(line);
         }
 
-        console.log('---------------------------');
-
-        console.log('');
-        console.log('');
-
+        if (outputFile) {
+            console.log(`Writing to "${outputFile}"`);
+            writeYAML(outputFile, scoredSuite);
+        }
         // if (generate) {
         //     const outfile = path.resolve(cwd, generate);
         //     console.log(`Rebasing test cases to ${outfile}.`);
         //     const newResults = results.rebase();
         //     await fs.writeFileSync(outfile, safeDump(newResults));
-        // }
-
-        // if (outputPath) {
-        //     console.log(`Writing results to '${outputPath}'`);
-        //     fs.writeFileSync(path.resolve(outputPath), results.toJUnitXml());
         // }
 
         return succeed(true);
@@ -345,7 +289,7 @@ function showUsage(processorFactory: TestProcessors) {
         {
             header: 'Usage',
             content: [
-                `node ${program} <file|directory> [...options]`,
+                `node ${program} <file|directory> [output file] [...options]`,
                 '',
                 `Where <file> is the name of a single YAML test file and <directory> is a directory of YAML test files.`,
             ],

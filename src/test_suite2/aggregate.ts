@@ -37,30 +37,43 @@ export function aggregateMeasures<TURN>(
     };
 }
 
-export function printAggregateMeasures(measures: AggregatedMeasures) {
-    console.log(`repair algorithm: ${measures.notes}`);
-    console.log(`total test cases: ${measures.totalTests}`);
-    console.log(`total steps: ${measures.totalSteps}`);
-    formatFraction('perfect carts', measures.perfectSteps, measures.totalSteps);
-    formatFraction(
-        'complete carts',
-        measures.completeSteps,
-        measures.totalSteps
+export function formatAggregateMeasures(
+    fragments: string[],
+    measures: AggregatedMeasures
+) {
+    fragments.push(`Repair algorithm: ${measures.notes}`);
+    fragments.push(`Total test cases: ${measures.totalTests}`);
+    fragments.push(`Total steps: ${measures.totalSteps}`);
+    fragments.push(
+        formatFraction(
+            'Perfect carts',
+            measures.perfectSteps,
+            measures.totalSteps
+        )
     );
-    formatFraction(
-        'repaired carts',
-        measures.totalSteps - measures.completeSteps,
-        measures.totalSteps
+    fragments.push(
+        formatFraction(
+            'Complete carts',
+            measures.completeSteps,
+            measures.totalSteps
+        )
     );
-    console.log(`total repairs: ${measures.totalRepairs}`);
-    console.log(
-        `repairs/step: ${(measures.totalRepairs / measures.totalSteps).toFixed(
+    fragments.push(
+        formatFraction(
+            'Repaired carts',
+            measures.totalSteps - measures.completeSteps,
+            measures.totalSteps
+        )
+    );
+    fragments.push(`Total repairs: ${measures.totalRepairs}`);
+    fragments.push(
+        `Repairs/Step: ${(measures.totalRepairs / measures.totalSteps).toFixed(
             2
         )}`
     );
 }
 
-function formatFraction(name: string, n: number, d: number) {
+function formatFraction(name: string, n: number, d: number): string {
     const percent = ((n / d) * 100).toFixed(1);
-    console.log(`${name}: ${n}/${d} (${percent}%)`);
+    return `${name}: ${n}/${d} (${percent}%)`;
 }

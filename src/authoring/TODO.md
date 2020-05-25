@@ -1,6 +1,12 @@
 # TODO List
 
 * x Verify expected vs observed parameter order in scoreSuite
+* Rationalize formatting.ts and markdown.ts
+* test_runner_main2.ts and evaluate.ts should share evaluate function.
+* test_runner_main2.ts markdown output
+* test_runner_main2.ts verbose mode and other command-line flags
+* Remove directory mode from test_runner_main2. Preserve suite hierarchy.
+* Markdown rendering should indicate pass/fail status if available
 * Documentation for new tools
 * Deprecate old tools
 * Merge into master
@@ -24,6 +30,8 @@
   * Fix: console.log(`repair algorithm: ${measures.notes}`); - measures.notes is '' in test_runner2.
   * Work on tree of tests, instead of flat list !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   * Write results
+    * Text
+    * Markdown
   * Option to rebase tests
   * Test measurements should be able to record crashes/exceptions
     * Update test_runner2.js to handle exceptions

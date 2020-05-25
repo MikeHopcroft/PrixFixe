@@ -9,15 +9,15 @@ import { createWorld } from '../processors';
 import {
     createMenuBasedRepairFunction,
     createSimpleRepairFunction,
-    enumerateTestCases,
     fail,
+    formatScoredSuite,
     handleError,
     loadLogicalValidationSuite,
-    printAggregateMeasures,
     RepairFunction,
     scoreSuite,
     succeed,
     writeYAML,
+    FormatScoredSuiteOptions,
 } from '../test_suite2';
 
 function main() {
@@ -30,8 +30,8 @@ function main() {
         return succeed(false);
     }
 
-    if (args._.length !== 3) {
-        return fail('Error: expected command line three parameters.');
+    if (args._.length !== 3 && args._.length !== 2) {
+        return fail('Error: expected two or three command line parameters.');
     }
 
     const expectedFile = args._[0];
@@ -68,7 +68,7 @@ function main() {
 function evaluate(
     expectedFile: string,
     observedFile: string,
-    scoredFile: string,
+    ouputFile: string | undefined,
     dataPath: string | undefined,
     verbose: boolean
 ) {
@@ -111,37 +111,26 @@ function evaluate(
         notes
     );
 
-    if (verbose) {
-        // // tslint:disable-next-line:no-any
-        for (const test of enumerateTestCases(scoredSuite)) {
-            // for (const test of enumerateTestCases(
-            //     scoredSuite as GenericSuite<ScoredStep<AnyTurn>>
-            // )) {
-            // for (const test of enumerateTestCases(scoredSuite) {
-            console.log(`${test.id}: ${test.comment}`);
-            for (const [index, step] of test.steps.entries()) {
-                const { perfect, complete, repairs } = step.measures;
-                console.log(
-                    `  step ${index}: perfect: ${perfect}, complete: ${complete}, repairs: ${
-                        repairs!.cost
-                    }`
-                );
-                for (const edit of repairs!.steps) {
-                    console.log(`    ${edit}`);
-                }
-            }
-            console.log(' ');
-        }
+    const options: FormatScoredSuiteOptions = {
+        showPassing: false,
+        showFailing: verbose,
+        showBySuite: true,
+        showMeasures: true,
+    };
+
+    const lines: string[] = [];
+    formatScoredSuite(lines, scoredSuite, options);
+    for (const line of lines) {
+        console.log(line);
     }
 
-    console.log(`Writing scored suite to ${scoredFile}`);
-    writeYAML(scoredFile, scoredSuite);
+    if (ouputFile) {
+        console.log(`Writing scored suite to ${ouputFile}`);
+        writeYAML(ouputFile, scoredSuite);
+    }
 
     console.log('Scoring complete');
     console.log('');
-
-    // Print out summary.
-    printAggregateMeasures(scoredSuite.measures);
 
     return succeed(true);
 }
@@ -157,7 +146,7 @@ function showUsage() {
         {
             header: 'Usage',
             content: [
-                `node ${program} <expected file> <observed file > <output file> [...options]`,
+                `node ${program} <expected file> <observed file > [output file] [...options]`,
             ],
         },
         {
@@ -205,6 +194,12 @@ function showUsage() {
                     description:
                         `Use simple repair cost scoring that doesn't require menu files.\n` +
                         'The -d option and PRIX_FIXE_DATA_PATH are not required when using -x.',
+                    type: Boolean,
+                },
+                {
+                    name: 'verbose',
+                    alias: 'v',
+                    description: 'Print out failing test cases',
                     type: Boolean,
                 },
                 {

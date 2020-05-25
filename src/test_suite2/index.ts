@@ -3,6 +3,7 @@ export * from './bipartite_matching_diff';
 export * from './cart_sort';
 export * from './complete_cart';
 export * from './filter';
+export * from './formatting';
 export * from './handle-errors';
 export * from './interfaces';
 export * from './loaders';
