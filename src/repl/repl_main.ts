@@ -26,7 +26,13 @@ export function replMain(extensions: IReplExtensionFactory[]) {
         return;
     }
 
-    runRepl(dataPath, extensions);
+    // TODO: remove temporary flags '-x'.
+    const useCreateWorld2 = args.x;
+    if (useCreateWorld2) {
+        console.log('Using experimental createWorld2()');
+    }
+
+    runRepl(dataPath, extensions, useCreateWorld2);
 }
 
 function showUsage() {
@@ -49,6 +55,7 @@ function showUsage() {
     console.log('                    units.yaml');
     console.log('                The -d flag overrides the value specified');
     console.log('                in the PRIX_FIXE_DATA environment variable.');
+    console.log('-x              Use experimental createWorld2().');
     console.log('-h|help|?       Show this message.');
     console.log(' ');
 }

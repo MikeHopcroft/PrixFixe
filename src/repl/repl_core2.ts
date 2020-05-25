@@ -6,15 +6,20 @@ import * as replServer from 'repl';
 import { Context } from 'vm';
 
 import { createWorld2 } from '../authoring/world';
+import { Cart } from '../cart';
 import { ICatalog } from '../catalog';
 import { createWorld, Processor, State } from '../processors';
 
 import {
+    AnyTurn,
+    createMenuBasedRepairFunction,
     GenericCase,
     logicalCartFromCart,
+    LogicalValidationSuite,
+    ScoredStep,
+    scoreSuite,
     TextTurn,
     ValidationStep,
-    LogicalValidationSuite,
 } from '../test_suite2';
 
 import { displayState } from './formatting';
@@ -169,11 +174,16 @@ class ReplCore implements IRepl {
     repl: replServer.REPLServer;
     stack: Session[];
 
-    constructor(dataPath: string, factories: IReplExtensionFactory[]) {
+    constructor(
+        dataPath: string,
+        factories: IReplExtensionFactory[],
+        // TODO: remove temporary parameter.
+        useCreateWorld2 = false
+    ) {
         let debugMode = false;
         Debug.enable('tf-interactive,tf:*');
 
-        const world = createWorld2(dataPath);
+        const world = useCreateWorld2 ? createWorld2(dataPath) : createWorld(dataPath);
         const catalog = world.catalog;
 
         // Incorporate REPL extensions.
@@ -186,9 +196,11 @@ class ReplCore implements IRepl {
 
             const processor = extension.createProcessor();
             if (processor) {
-                console.log(
-                    `  Registering ${processor.name} processor: ${processor.description}`
-                );
+                console.log(`  Registering ${
+                    processor.name
+                } processor: ${
+                    processor.description
+                }`);
                 processors.push(processor);
             }
         }
@@ -479,6 +491,54 @@ class ReplCore implements IRepl {
             },
         });
 
+        let expected: Cart = { items: [] };
+
+        repl.defineCommand('expect', {
+            help: 'Set the expected cart for use by the .score command.',
+            action(text: string) {
+                expected = stack[stack.length - 1].state().cart;
+                console.log('Expected cart set');
+                repl.displayPrompt();
+            },
+        });
+
+
+        repl.defineCommand('score', {
+            help: 'Score current cart against expected cart.',
+            action(text: string) {
+                const eSuite = suiteFromCart(world.catalog, expected);
+
+                const observed = stack[stack.length - 1].state().cart;
+                const oSuite = suiteFromCart(world.catalog, observed);
+
+                const repairFunction = createMenuBasedRepairFunction(
+                    world.attributeInfo,
+                    world.catalog
+                );
+
+                // TODO: replace xyz
+                const scored = scoreSuite(oSuite, eSuite, repairFunction, 'xyz');
+
+                if (scored.measures.perfectSteps === 1) {
+                    console.log('Carts are identical');
+                } else if (scored.measures.completeSteps === 1) {
+                    console.log('Carts are complete. They contain the same items, but in different order.');
+                } else {
+                    console.log('Carts are different.');
+                    console.log(`Total repairs: ${scored.measures.totalRepairs}`);
+                    const testCase = scored.tests[0] as GenericCase<ScoredStep<AnyTurn>>;
+                    const steps = testCase.steps[0].measures.repairs!.steps;
+                    for (const [i, step] of steps.entries()) {
+                        console.log(`  ${i}: ${step}`);
+                    }
+                }
+                console.log(' ');
+
+                repl.displayPrompt();
+            },
+        });
+
+
         async function processReplInput(
             line: string,
             context: Context,
@@ -568,6 +628,28 @@ class ReplCore implements IRepl {
     }
 }
 
-export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
-    const repl = new ReplCore(dataPath, factories);
+function suiteFromCart(catalog: ICatalog, cart: Cart): LogicalValidationSuite<AnyTurn> {
+    return {
+        tests: [
+            {
+                id: 0,
+                suites: '',
+                comment: '',
+                steps: [
+                    {
+                        turns: [],
+                        cart: logicalCartFromCart(cart, catalog),
+                    },
+                ],
+            },
+        ],
+    };
+}
+
+export function runRepl(
+    dataPath: string,
+    factories: IReplExtensionFactory[],
+    useCreateWorld2 = false
+) {
+    const repl = new ReplCore(dataPath, factories, useCreateWorld2);
 }

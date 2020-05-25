@@ -1,15 +1,6 @@
 # TODO List
 
-~~~
-D:\git\menubot\PrixFixe>node build\src\apps\repair-suite.js ..\ShortOrder\samples\menu\regression.yaml c:\temp\regression.yaml -d=..\ShortOrder\samples\menu
-CreateWorld2
-Reading ..\ShortOrder\samples\menu\coffee.yaml
-Loading D:\git\ShortOrder\samples\menu\coffee.yaml
-Error: cannot open "D:\git\ShortOrder\samples\menu\coffee.yaml".
-
-Combines paths wrong
-~~~
-
+* x Verify expected vs observed parameter order in scoreSuite
 * Documentation for new tools
 * Deprecate old tools
 * Merge into master
@@ -21,17 +12,17 @@ Combines paths wrong
   * make [that|target] [no|non|without] [opton]
   * replace [the|that] [option] with [option]
   * make the [option|attribute] [option|attribute]
-* x Bug
+* x Bugs
   * x node build\samples\test_runner.js samples\menu\regression.yaml -s=!regression
   * x Reports incorrect number of failed cases
   * x May want to refactor PassFail to take suite string
 * better documentation for apps/authoring/test_suite2
 * test_runner_main2
-  * factor out scoring code for use by file comparison tool
-  * combine aggregate.ts and pass_fail.ts, convert from print to format
+  * factor out scoring code for use by file comparison tool !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  * combine aggregate.ts and pass_fail.ts, convert from print to format !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   * x Summarize pass/fail rates by suite
   * Fix: console.log(`repair algorithm: ${measures.notes}`); - measures.notes is '' in test_runner2.
-  * Work on tree of tests, instead of flat list
+  * Work on tree of tests, instead of flat list !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   * Write results
   * Option to rebase tests
   * Test measurements should be able to record crashes/exceptions

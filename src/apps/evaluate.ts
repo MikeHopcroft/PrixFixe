@@ -111,9 +111,6 @@ function evaluate(
         notes
     );
 
-    // const a:{a: 5} & { b: 6} = { a: 5, b: 6 };
-    // const b = a as {a: 5};
-
     if (verbose) {
         // // tslint:disable-next-line:no-any
         for (const test of enumerateTestCases(scoredSuite)) {

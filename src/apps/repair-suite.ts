@@ -88,7 +88,7 @@ function main() {
         // });
         // writeYAML(outFile, outputSuite);
 
-        console.log(`Writing filtered suite to ${outFile}`);
+        console.log(`Writing repaired suite to ${outFile}`);
         fs.writeFileSync(outFile, outputText);
     } catch (e) {
         handleError(e);
@@ -145,13 +145,8 @@ function replaceSKUsInText(text: string, skus: number[]) {
 function replaceSKUsInLines(lines: string[], skus: number[]) {
     let i = 0;
     return lines.map(line => {
-        const a = line;
         if (line.match(/^(\s*sku: ')\d+('\s*)$/)) {
-            console.log(`XX: ${line}`);
-            console.log(`Insert sku ${skus[i]}`);
             line = line.replace(/^(\s*sku: ')\d+('\s*)$/, `$1${skus[i++]}$2`);
-        } else {
-            console.log(`OK: ${line}`);
         }
         return line;
     });

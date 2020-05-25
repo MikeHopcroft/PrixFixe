@@ -8,7 +8,6 @@ import {
     ValidationStep,
     LogicalItem,
 } from './interfaces';
-import { TestSuite } from '../test_suite/test_suite';
 
 export function markdown<
     SUITE1 extends GenericSuite<STEP1>,
@@ -19,6 +18,7 @@ export function markdown<
     return fragments.join('\n');
 }
 
+// Extract this function into a generator
 function markdownTraverse<
     SUITE1 extends GenericSuite<STEP1>,
     STEP1 extends ValidationStep<TextTurn>
@@ -35,6 +35,8 @@ function markdownTraverse<
     }
 }
 
+// Rename this file to render.ts or format.ts or something else
+// Make this render test as text (instead of markdown). Wrap inside of markdown renderer.
 function renderTest<STEP1 extends ValidationStep<TextTurn>>(
     fragments: string[],
     test: GenericCase<STEP1>

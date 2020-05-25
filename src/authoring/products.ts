@@ -76,11 +76,6 @@ class Context {
 
     extend(builder: GroupBuilder, group: ContextSpec): Context {
         const { tensor, forms, pid, sku, tags, type } = group;
-
-        if (tags && tags[0] === 'syrups') {
-            console.log('here here');
-        }
-
         const defaultForm = group.default;
 
         // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
