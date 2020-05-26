@@ -110,10 +110,15 @@ export async function mapSuiteAsync<
             tests.push(await mapSuiteAsync(test, convert));
         }
     }
-    return {
-        comment: suite.comment,
-        tests,
-    };
+
+    if (suite.comment) {
+        return {
+            comment: suite.comment,
+            tests,
+        };
+    } else {
+        return { tests };
+    }
 }
 
 export function* enumerateTestCases<STEP1>(
@@ -127,6 +132,23 @@ export function* enumerateTestCases<STEP1>(
         }
     }
 }
+
+// export function applySuite<STEP1>(
+//     suite: GenericSuite<STEP1>,
+//     testFunction: (test: GenericCase<STEP1>) => void,
+//     commentFunction: (comment: string) => void
+// ): void {
+//     for (const test of suite.tests) {
+//         if ('id' in test) {
+//             testFunction(test);
+//         } else {
+//             if (test.comment) {
+//                 commentFunction(test.comment);
+//             }
+//             applySuite(test, testFunction, commentFunction);
+//         }
+//     }
+// }
 
 export function allCases<STEP extends ValidationStep<TURN>, TURN>(
     test: GenericCase<STEP>

@@ -42,6 +42,7 @@ function renderTestAsMarkdown(
     fragments.push(test.comment);
     fragments.push('~~~');
 
+    // TODO: this assumes there is only one step.
     const step = test.steps[0];
     if ('measures' in step) {
         const status = step.measures.complete ? 'PASSED' : 'FAILED';

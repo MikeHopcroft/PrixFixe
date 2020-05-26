@@ -31,12 +31,13 @@ export function formatScoredSuite(
 
         passFailRates.record(test.suites, repairCost === 0);
 
-        const passing = repairCost > 0;
+        const passing = repairCost === 0;
 
         if (
             (passing && options.showPassing) ||
             (!passing && options.showFailing)
         ) {
+            // TODO: line formatter handles indent for multi-line
             fragments.push(`${test.id}: ${test.comment}`);
             for (const [index, step] of test.steps.entries()) {
                 const { repairs } = step.measures;

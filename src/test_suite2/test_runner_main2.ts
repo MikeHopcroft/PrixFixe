@@ -9,7 +9,7 @@ import * as recursiveReaddir from 'recursive-readdir';
 import { createWorld2 } from '../authoring/world';
 import { Processor, State, World } from '../processors';
 
-import { allSuites, suitePredicate } from '../test_suite/suite_predicate';
+import { suitePredicate } from '../test_suite/suite_predicate';
 import { TestProcessors } from '../test_suite/test_processors';
 
 import {
@@ -19,14 +19,15 @@ import {
     suitePredicateFilter,
 } from './filter';
 
-import { formatScoredSuite } from './formatting';
+import { formatScoredSuite, FormatScoredSuiteOptions } from './formatting';
 
 import {
-    GenericCase,
+    AnyTurn,
     GenericSuite,
     LogicalValidationSuite,
     TextTurn,
     ValidationStep,
+    LogicalScoredSuite,
 } from './interfaces';
 
 import { loadLogicalValidationSuite, writeYAML } from './loaders';
@@ -38,10 +39,16 @@ export async function testRunnerMain2(
     title: string,
     processorFactory: TestProcessors
 ) {
+    const app = new Application(processorFactory);
+
     dotenv.config();
 
     console.log(`${title} test runner`);
     console.log(new Date().toLocaleString());
+
+    //
+    // Validate command-line arguments.
+    //
 
     const args = minimist(process.argv.slice(2));
 
@@ -49,8 +56,8 @@ export async function testRunnerMain2(
     // flag value might cause an early fail that would prevent showing the
     // help message.
     if (args.h || args.help || args['?']) {
-        showUsage(processorFactory);
-        process.exit(0);
+        app.showUsage();
+        app.exit(0);
     }
 
     let dataPath = process.env.PRIX_FIXE_DATA;
@@ -60,29 +67,92 @@ export async function testRunnerMain2(
     if (dataPath === undefined) {
         const message =
             'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
-        return fail(message);
+        return app.fail(message);
     }
     console.log(`data path = ${dataPath}`);
 
-    const verify = args['v'];
+    const briefMode = args.b === true;
+    // const markdown = args['m'] === true;
 
-    const showAll = args['a'] === true;
-    const brief = args['b'] === true;
-    const markdown = args['m'] === true;
-
-    const recursive = args['r'] === true;
-
-    if (args._.length !== 1 && args._.length !== 2) {
-        const message =
-            'Expected YAML input file or directory on command line.';
-        return fail(message);
+    let testId: number | undefined;
+    if (args.n) {
+        testId = Number(args.n);
+        if (Number.isNaN(testId)) {
+            const message = 'Expected test number after -n flag.';
+            app.fail(message);
+        }
     }
+
+    const processorName = args.p;
+    const recursive = args.r === true;
+    const suiteExpressionText = args.s;
+
     const input = args._[0];
     const outputFile = args._[1];
 
+    if (input === undefined) {
+        const message =
+            'Expected YAML input file or directory on command line.';
+        return app.fail(message, true);
+    }
+
+    // Generate list of input files. The `input` parameter is either the name
+    // of a single test suite file or a directory containing a set of test
+    // suite files. Load these files and combine into a single test suite.
+    const testFiles = await findTestSuites(input, recursive);
+    let suite = loadAndCombineTestSuites(app, input, testFiles);
+
+    // Filter suite by test case id or suite expression, if specified.
+    suite = filterTestSuites(app, suite, testId, suiteExpressionText);
+
+    if (briefMode) {
+        // In brief mode, don't actually run the tests.
+        // Just display the input text.
+        displayBriefView(suite);
+        console.log('Tests not run.');
+        console.log('Exiting with failing return code.');
+        return app.exit(1);
+    } else {
+        // Run the tests in the suite.
+        const scored = await runTests(
+            app,
+            dataPath,
+            processorFactory,
+            processorName,
+            suite
+        );
+
+        // Display results.
+        const lines: string[] = [];
+        const options: FormatScoredSuiteOptions = {
+            showPassing: args.a === true,
+            showFailing: true,
+            showBySuite: true,
+            showMeasures: true,
+        };
+        formatScoredSuite(lines, scored, options);
+        for (const line of lines) {
+            console.log(line);
+        }
+
+        // Write results to outputFile, if specified.
+        if (outputFile) {
+            console.log(`Writing to "${outputFile}"`);
+            writeYAML(outputFile, scored);
+        }
+
+        // Successful exit.
+        return app.exit(0);
+    }
+}
+
+async function findTestSuites(
+    input: string,
+    recursive: boolean
+): Promise<string[]> {
     let testFiles: string[];
     if (fs.lstatSync(input).isDirectory()) {
-        console.log(`test dir = ${input}`);
+        console.log(`Searching for test suites in ${input}`);
 
         let files;
         if (recursive) {
@@ -93,30 +163,108 @@ export async function testRunnerMain2(
 
         testFiles = files
             .sort()
-            .filter(f => f.endsWith('yaml'))
+            .filter(f => f.endsWith('yaml') || f.endsWith('yml'))
             .map(f => path.resolve(input, f));
     } else {
         // Assume that input is a YAML test file.
         testFiles = [input];
-        console.log(`test file = ${input}`);
     }
 
-    const generate = args['g'];
-    const outputPath = args['o'];
+    console.log(`Test files:`);
+    for (const file of testFiles) {
+        console.log(`  ${file}`);
+    }
 
-    let runOneTest: number | undefined = undefined;
-    if (args['n'] !== undefined) {
-        const n = Number(args['n']);
-        if (!Number.isNaN(n)) {
-            runOneTest = Number(n);
+    return testFiles;
+}
+
+function loadAndCombineTestSuites(
+    app: Application,
+    input: string,
+    testFiles: string[]
+) {
+    let suite: GenericSuite<ValidationStep<TextTurn>>;
+    try {
+        if (testFiles.length === 1) {
+            const testFile = testFiles[0];
+            console.log(`Reading ${testFile}`);
+            suite = loadLogicalValidationSuite(testFile);
         } else {
-            const message = 'Expected test number after -n flag.';
-            return fail(message);
+            // Suite is the combination of a number of suites..
+            suite = {
+                comment: `Combination of ${input}/*.yaml`,
+                tests: [],
+            };
+            for (const testFile of testFiles) {
+                console.log(`Reading ${testFile}`);
+                const s: LogicalValidationSuite<
+                    TextTurn
+                > = loadLogicalValidationSuite(testFile);
+                suite.tests.push({
+                    comment: testFile,
+                    tests: [s],
+                });
+            }   
         }
+    } catch (err) {
+        if (err.code === 'ENOENT' || err.code === 'EISDIR') {
+            const message = `Cannot open test file "${err.path}"`;
+            app.fail(message);
+        }
+        throw err;
     }
 
+    return suite;
+}
+
+function filterTestSuites(
+    app: Application,
+    suite: GenericSuite<ValidationStep<TextTurn>>,
+    testId: number | undefined,
+    suiteExpressionText: string | undefined
+): GenericSuite<ValidationStep<TextTurn>> {
+    if (testId !== undefined) {
+        console.log(`Running test with id=${testId}.`);
+        suite = filterSuite(
+            suite,
+            test => testId === test.id
+        );
+    } else if (suiteExpressionText) {
+        console.log(
+            `Running tests matching suite expression: ${suiteExpressionText}`
+        );
+        const suiteExpression = suitePredicate(suiteExpressionText);
+        suite = filterSuite(suite, suitePredicateFilter(suiteExpression));
+    } else {
+        console.log('Running all tests.');
+    }
+    return suite;
+}
+
+function displayBriefView(suite: GenericSuite<ValidationStep<TextTurn>>) {
+    console.log(' ');
+    console.log('Displaying test utterances without running.');
+    for (const test of enumerateTestCases(suite)) {
+        console.log(`Test ${test.id}: ${test.comment}`);
+        for (const [i, step] of test.steps.entries()) {
+            console.log(`  Step ${i}`);
+            for (const turn of step.turns) {
+                console.log(`    ${turn.speaker}: ${turn.transcription}`);
+            }
+        }
+        console.log(' ');
+    }
+}
+
+async function runTests(
+    app: Application,
+    dataPath: string,
+    processorFactory: TestProcessors,
+    verify: string | undefined,
+    suite: GenericSuite<ValidationStep<TextTurn>>
+): Promise<LogicalScoredSuite<AnyTurn>> {
     //
-    // Set up short-order processor
+    // Load the menu.
     //
     let world: World;
     try {
@@ -124,22 +272,24 @@ export async function testRunnerMain2(
     } catch (err) {
         if (err.code === 'ENOENT' || err.code === 'EISDIR') {
             const message = `Create world failed: cannot open "${err.path}"`;
-            return fail(message);
-        } else {
-            throw err;
+            app.fail(message);
         }
+        throw err;
     }
 
+    //
+    // Set up short-order processor.
+    //
     if (processorFactory.count() === 0) {
         const message = `ProcessorFactory must contain at least one ProcessorDescription.`;
-        return fail(message);
+        app.fail(message);
     }
 
     let processor: Processor;
     if (verify) {
         if (!processorFactory.has(verify)) {
             const message = `Unknown processor v=${verify}`;
-            return fail(message);
+            app.fail(message);
         }
         processor = processorFactory.create(verify, world, dataPath);
         console.log(`processor = ${verify}`);
@@ -152,268 +302,171 @@ export async function testRunnerMain2(
     console.log(' ');
 
     //
-    // Run the tests
+    // Run each test case.
     //
-    const suiteExpressionText = args['s'];
-    let suiteExpression = allSuites;
-    if (runOneTest !== undefined) {
-        console.log(`Running test number ${runOneTest}.`);
-    } else if (suiteExpressionText) {
-        console.log(
-            `Running tests matching suite expression: ${suiteExpressionText}`
-        );
-        suiteExpression = suitePredicate(suiteExpressionText);
-    } else {
-        console.log('Running all tests.');
-    }
-
-    //
-    // Combine all test files into a single suite.
-    //
-
-    // First get all TestCases into a single array.
-    let suite: GenericSuite<ValidationStep<TextTurn>> = {
-        comment: `Combined ${testFiles.join(', ')}`,
-        tests: [],
-    };
-    for (const testFile of testFiles) {
-        try {
-            console.log(`Reading ${testFile}`);
-            const s: LogicalValidationSuite<
-                TextTurn
-            > = loadLogicalValidationSuite(testFile);
-            suite.tests.push(s);
-        } catch (err) {
-            if (err.code === 'ENOENT' || err.code === 'EISDIR') {
-                const message = `Cannot open test file "${err.path}"`;
-                return fail(message);
-            } else {
-                throw err;
+    const observed = await mapSuiteAsync(suite, async test => {
+        let state: State = { cart: { items: [] } };
+        const steps: typeof test.steps = [];
+        for (const step of test.steps) {
+            for (const turn of step.turns) {
+                try {
+                    state = await processor(turn.transcription, state);
+                } catch (e) {
+                    // TODO: record the error here, somehow.
+                }
             }
+            const cart = logicalCartFromCart(state.cart, world.catalog);
+            steps.push({ ...step, cart });
+        }
+        return { ...test, steps };
+    });
+
+    //
+    // Score the results
+    //
+    const repairFunction = createMenuBasedRepairFunction(
+        world.attributeInfo,
+        world.catalog
+    );
+    const scored = scoreSuite(observed, suite, repairFunction, 'menu-based');
+
+    return scored;
+}
+
+class Application {
+    private readonly processorFactory: TestProcessors;
+
+    constructor(processorFactory: TestProcessors) {
+        this.processorFactory = processorFactory;
+    }
+
+    showUsage() {
+        const defaultProcessor = this.processorFactory.getDefault().name;
+        const program = path.basename(process.argv[1]);
+
+        const usage: Section[] = [
+            {
+                header: 'Test Runner',
+                content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
+            },
+            {
+                header: 'Usage',
+                content: [
+                    `node ${program} <file|directory> [output file] [...options]`,
+                    '',
+                    `Where <file> is the name of a single YAML test suite file and <directory> is a directory of YAML test suite files.`,
+                ],
+            },
+            {
+                header: 'Options',
+                optionList: [
+                    {
+                        name: 'a',
+                        alias: 'a',
+                        type: Boolean,
+                        description:
+                            'Print results for all tests, passing and failing.',
+                    },
+                    {
+                        name: 'b',
+                        alias: 'b',
+                        type: Boolean,
+                        description: 'Brief mode - just print utterances. Do not run tests.',
+                    },
+                    {
+                        name: 'd',
+                        alias: 'd',
+                        description: `Path to prix-fixe data files.\n
+                                        - attributes.yaml
+                                        - intents.yaml
+                                        - options.yaml
+                                        - products.yaml
+                                        - quantifiers.yaml
+                                        - rules.yaml
+                                        - stopwords.yaml
+                                        - units.yaml\n
+                                        The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
+                        type: Boolean,
+                    },
+                    // {
+                    //     name: 'm',
+                    //     alias: 'm',
+                    //     type: Boolean,
+                    //     description: 'Print out test run, formatted as markdown.',
+                    // },
+                    {
+                        name: 'n',
+                        alias: 'n',
+                        typeLabel: '{underline N}',
+                        description:
+                            'Run the test case with id={underline N}. ' +
+                            'Note that the -n flag overrides the -s flag.',
+                    },
+                    {
+                        name: 'p',
+                        alias: 'p',
+                        typeLabel: '{underline processor}',
+                        description: `Run the generated cases with the specified ' +
+                        'processor (default is -p=${defaultProcessor}).`,
+                    },
+                    {
+                        name: 'r',
+                        alias: 'r',
+                        description:
+                            'When doing a directory scan, recurse through child directories',
+                        type: Boolean,
+                    },
+                    {
+                        name: 's',
+                        alias: 's',
+                        typeLabel: '{underline suiteFilter}',
+                        description:
+                            'Boolean expression of suites to run.' +
+                            'Can use suite names, !, &, |, and parentheses.' +
+                            'Note that the -n flag overrides the -s flag.',
+                    },
+                    {
+                        name: 't',
+                        alias: 't',
+                        typeLabel: '{underline <snowball | metaphone | hybrid >}',
+                        description: 'Reserved for short-order term model.',
+                    },
+                ],
+            },
+        ];
+
+        console.log(commandLineUsage(usage));
+
+        if (this.processorFactory.count() > 0) {
+            console.log('Available Processors:');
+            for (const processor of this.processorFactory.processors()) {
+                console.log(`  "-v=${processor.name}": ${processor.description}`);
+                // TODO: list expected data files for each processor.
+            }
+        } else {
+            console.log('No Processors available.');
+            console.log(
+                'The supplied ProcessorFactory has no ProcessorDescriptions'
+            );
         }
     }
 
-    let oneTest: GenericCase<ValidationStep<TextTurn>> | undefined;
-    for (const test of enumerateTestCases(suite)) {
-        if (runOneTest === test.id) {
-            oneTest = test;
-        }
+    exit(code: number) {
+        process.exit(code);
     }
 
-    if (oneTest) {
-        // Handle the scenario where the user wants to run the nth TestCase.
-        suite = {
-            comment: `Test ${oneTest.id}`,
-            tests: [oneTest],
-        };
-    } else {
-        suite = filterSuite(suite, suitePredicateFilter(suiteExpression));
-    }
-
-    if (brief) {
-        // In brief mode, don't actually run the tests.
-        // Just display the input text.
+    fail(message: string, displayUsage = false) {
         console.log(' ');
-        console.log('Displaying test utterances without running.');
-        for (const test of enumerateTestCases(suite)) {
-            console.log(`Test ${test.id}: ${test.comment}`);
-            for (const [i, step] of test.steps.entries()) {
-                console.log(`  Step ${i}`);
-                for (const turn of step.turns) {
-                    console.log(`    ${turn.speaker}: ${turn.transcription}`);
-                }
-            }
-            console.log(' ');
+        console.log(message);
+
+        if (displayUsage) {
+            this.showUsage();
+        } else {
+            console.log('Use the -h flag for help.');
         }
-        console.log('Tests not run.');
-        console.log('Exiting with failing return code.');
-        return succeed(false);
-    } else {
-        // Otherwise, run the tests.
-        const observed = await mapSuiteAsync(suite, async test => {
-            let state: State = { cart: { items: [] } };
-            const steps: typeof test.steps = [];
-            for (const step of test.steps) {
-                for (const turn of step.turns) {
-                    try {
-                        state = await processor(turn.transcription, state);
-                    } catch (e) {
-                        // TODO: record the error here, somehow.
-                    }
-                }
-                steps.push({
-                    ...step,
-                    cart: logicalCartFromCart(state.cart, world.catalog),
-                });
-            }
-            return { ...test, steps };
-        });
-
-        const repairFunction = createMenuBasedRepairFunction(
-            world.attributeInfo,
-            world.catalog
-        );
-        // TODO: replace xyz
-        const scoredSuite = scoreSuite(observed, suite, repairFunction, 'xyz');
-
-        const lines: string[] = [];
-        formatScoredSuite(lines, scoredSuite);
-        for (const line of lines) {
-            console.log(line);
-        }
-
-        if (outputFile) {
-            console.log(`Writing to "${outputFile}"`);
-            writeYAML(outputFile, scoredSuite);
-        }
-        // if (generate) {
-        //     const outfile = path.resolve(cwd, generate);
-        //     console.log(`Rebasing test cases to ${outfile}.`);
-        //     const newResults = results.rebase();
-        //     await fs.writeFileSync(outfile, safeDump(newResults));
-        // }
-
-        return succeed(true);
-    }
-}
-
-function showUsage(processorFactory: TestProcessors) {
-    const defaultProcessor = processorFactory.getDefault().name;
-    const program = path.basename(process.argv[1]);
-
-    const usage: Section[] = [
-        {
-            header: 'Test Runner',
-            content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
-        },
-        {
-            header: 'Usage',
-            content: [
-                `node ${program} <file|directory> [output file] [...options]`,
-                '',
-                `Where <file> is the name of a single YAML test file and <directory> is a directory of YAML test files.`,
-            ],
-        },
-        {
-            header: 'Options',
-            optionList: [
-                {
-                    name: 'r',
-                    alias: 'r',
-                    description:
-                        'When doing a directory scan, recurse through child directories',
-                    type: Boolean,
-                },
-                {
-                    name: 's',
-                    alias: 's',
-                    typeLabel: '{underline suiteFilter}',
-                    description:
-                        'Boolean expression of suites to run.' +
-                        'Can use suite names, !, &, |, and parentheses.' +
-                        'Note that the -n flag overrides the -s flag.',
-                },
-                {
-                    name: 'a',
-                    alias: 'a',
-                    type: Boolean,
-                    description:
-                        'Print results for all tests, passing and failing.',
-                },
-                {
-                    name: 'b',
-                    alias: 'b',
-                    type: Boolean,
-                    description: 'Just print utterances. Do not run tests.',
-                },
-                {
-                    name: 'm',
-                    alias: 'm',
-                    type: Boolean,
-                    description: 'Print out test run, formatted as markdown.',
-                },
-                {
-                    name: 'v',
-                    alias: 'v',
-                    typeLabel: '{underline processor}',
-                    description: `Run the generated cases with the specified processor\n(default is -v=${defaultProcessor}).`,
-                },
-                {
-                    name: 'n',
-                    alias: 'n',
-                    typeLabel: '{underline N}',
-                    description:
-                        'Run only the Nth test.' +
-                        'Note that the -n flag overrides the -s flag.',
-                },
-                {
-                    name: 'generate',
-                    alias: 'g',
-                    typeLabel: '{underline outputFilePath}',
-                    description:
-                        'Output file to save generated cart results. Not compatible with directories, single file only.',
-                },
-                {
-                    name: 'output',
-                    alias: 'o',
-                    typeLabel: '{underline outputFilePath}',
-                    description: 'Path to output results in JUnit format',
-                },
-                {
-                    name: 'd',
-                    alias: 'd',
-                    description: `Path to prix-fixe data files.\n
-                - attributes.yaml
-                - intents.yaml
-                - options.yaml
-                - products.yaml
-                - quantifiers.yaml
-                - rules.yaml
-                - stopwords.yaml
-                - units.yaml\n
-                The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
-                    type: Boolean,
-                },
-                {
-                    name: 't',
-                    alias: 't',
-                    typeLabel: '{underline <snowball | metaphone | hybrid >}',
-                    description: 'Reserved for short-order term model.',
-                },
-            ],
-        },
-    ];
-
-    console.log(commandLineUsage(usage));
-
-    if (processorFactory.count() > 0) {
-        console.log('Available Processors:');
-        for (const processor of processorFactory.processors()) {
-            console.log(`  "-v=${processor.name}": ${processor.description}`);
-            // TODO: list expected data files for each processor.
-        }
-    } else {
-        console.log('No Processors available.');
-        console.log(
-            'The supplied ProcessorFactory has no ProcessorDescriptions'
-        );
-    }
-}
-
-function fail(message: string) {
-    console.log(' ');
-    console.log(message);
-    console.log('Use the -h flag for help.');
-    console.log(' ');
-    console.log('Aborting');
-    console.log(' ');
-    process.exit(1);
-}
-
-function succeed(succeeded: boolean) {
-    if (succeeded) {
-        process.exit(0);
-    } else {
+        console.log(' ');
+        console.log('Aborting');
+        console.log(' ');
         process.exit(1);
     }
 }
