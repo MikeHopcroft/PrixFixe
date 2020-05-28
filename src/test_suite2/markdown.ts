@@ -43,20 +43,17 @@ function renderTestAsMarkdown(
     fragments.push('~~~');
 
     if ('measures' in test.steps[0]) {
-        const repairCost = test.steps.reduce(
-            (p, c) => {
-                if ('measures' in c) {
-                    return p + c.measures.repairs!.cost;
-                } else {
-                    return p;
-                }
-            },
-            0
-        );
+        const repairCost = test.steps.reduce((p, c) => {
+            if ('measures' in c) {
+                return p + c.measures.repairs!.cost;
+            } else {
+                return p;
+            }
+        }, 0);
         const status = repairCost === 0 ? 'PASSED' : 'FAILED';
         fragments.push(`Status: ${status}`);
     }
-    
+
     renderTestAsText(fragments, test);
     fragments.push('~~~');
 }

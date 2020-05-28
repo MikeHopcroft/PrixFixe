@@ -1,112 +1,36 @@
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
+import * as commandLineUsage from 'command-line-usage';
+import { Section } from 'command-line-usage';
 import * as fs from 'fs';
+import * as minimist from 'minimist';
 import * as path from 'path';
 import stripAnsi = require('strip-ansi');
-// import * as stream from 'stream';
 
-import { PeekableSequence } from "../test_suite";
+import { PeekableSequence } from '../test_suite';
 
-function sleep(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// class Handshake {
-//     iStream: stream.Writable;
-//     oStream: stream.Readable;
-//     prompt: string;
-//     script: string[];
-
-//     fragments: string[] = [];
-
-//     // Position of next character to match in the prompt.
-//     // An undefined value means we're looking for the beginning of a line
-//     // before comparing with characters in the prompt.
-//     // Initialize to zero initially to allow prompts at the first
-//     // character position in the stream.
-//     nextMatch: number | undefined = 0;
-
-//     // Index of the nextscript line to execute.
-//     scriptLine = 0;
-
-//     constructor(
-//         iStream: stream.Writable,
-//         oStream: stream.Readable,
-//         prompt: string,
-//         script: string[]
-//     ) {
-//         this.iStream = iStream;
-//         this.oStream = oStream;
-//         this.prompt = prompt;
-//         this.script = script;
-
-//         const self = this;
-
-//         oStream.on('data', (data: Buffer) => {
-//             // TODO: REVIEW: can a unicode codepoint be split across two
-//             // buffers?
-//             const text = data.toString('utf8');
-//             this.fragments.push(text);
-//             for (const c of text) {
-//                 self.process(c);
-//             }
-//         });
-//     }
-
-//     process(c: string) {
-//         if (this.nextMatch === undefined) {
-//             if (c === '\n') {
-//                 // We're at the beginning of a line.
-//                 // Start comparing with the first character of the prompt.
-//                 this.nextMatch = 0;
-//             }
-//         } else if (c === this.prompt[this.nextMatch]) {
-//             this.nextMatch++;
-//             if (this.nextMatch === this.prompt.length) {
-//                 // We've encountered a prompt.
-//                 // Dispatch the next line in the script.
-//                 if (this.scriptLine < this.script.length) {
-//                     this.iStream.write(this.script[this.scriptLine++]);
-//                 }
-
-//                 // Reset the state machine.
-//                 this.nextMatch = undefined;
-//             }
-//         } else {
-//             // Character didn't match patter. Reset state machine.
-//             this.nextMatch = undefined;
-//         }
-//     }
-// }
-
-// class Handshake {
-//     iStream: stream.Writable;
-//     oStream: stream.Readable;
-//     prompt: string;
-//     script: string[];
-
-//     fragments: string[] = [];
-
-//     // Position of next character to match in the prompt.
-//     // An undefined value means we're looking for the beginning of a line
-//     // before comparing with characters in the prompt.
-//     // Initialize to zero initially to allow prompts at the first
-//     // character position in the stream.
-//     nextMatch: number | undefined = 0;
-
-//     // Index of the nextscript line to execute.
-//     scriptLine = 0;
-
-function handshake(
-    // iStream: stream.Writable,
-    // oStream: stream.Readable,
-    program: ChildProcessWithoutNullStreams,
+///////////////////////////////////////////////////////////////////////////////
+//
+// scriptHandshake()
+//
+// REPL commands processing is asynchrnous. When dispatching commands from a
+// script, the command output will often be interleaved. The code in
+// scriptHandshake() waits for a prompt before dispatching the next command.
+// This ensures that only one command is running at any time.
+//
+///////////////////////////////////////////////////////////////////////////////
+function scriptHandshake(
+    executable: string,
+    args: string[],
     prompt: string,
     script: string[]
 ): Promise<string[]> {
-    return new Promise<string[]>( (resolve, reject) => {
+    return new Promise<string[]>((resolve, reject) => {
+        const program = spawn(executable, args);
+
         const iStream = program.stdin;
         const oStream = program.stdout;
 
+        // Storage for strings from oStream's 'data' event.
         const fragments: string[] = [];
 
         // Position of next character to match in the prompt.
@@ -120,21 +44,16 @@ function handshake(
         let scriptLine = 0;
 
         function process(c: string) {
-            // console.log(`process(${c})`);
-            // if (nextMatch === undefined) {
             if (c === '\n' || c === '\r') {
                 // We're at the beginning of a line.
                 // Start comparing with the first character of the prompt.
                 nextMatch = 0;
-                // }
             } else if (nextMatch !== undefined && c === prompt[nextMatch]) {
-                // console.log(`match(${c})`);
                 nextMatch++;
                 if (nextMatch === prompt.length) {
                     // We've encountered a prompt.
                     // Dispatch the next line in the script.
                     if (scriptLine < script.length) {
-                        // console.log(`dispatch "${script[scriptLine]}`);
                         iStream.write(script[scriptLine++] + '\n');
                     } else {
                         iStream.end();
@@ -144,16 +63,15 @@ function handshake(
                     nextMatch = undefined;
                 }
             } else {
-                // Character didn't match patter. Reset state machine.
+                // Character didn't match pattern. Reset state machine.
                 nextMatch = undefined;
             }
         }
 
         oStream.on('data', (data: Buffer) => {
-            // TODO: REVIEW: can a unicode codepoint be split across two
-            // buffers?
+            // TODO: REVIEW: BUGBUG: can a unicode codepoint be split across
+            // two buffers?
             const text = data.toString('utf8');
-            // console.log(`stdout: "${text}"`);
             fragments.push(text);
             for (const c of text) {
                 process(c);
@@ -176,42 +94,40 @@ function handshake(
     });
 }
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// parseMarkdown()
+//
+// Parses markdown file into interleaved sequence of text blocks and code
+// blocks (delimited by ~~~).
+//
+///////////////////////////////////////////////////////////////////////////////
+function parseMarkdown(
+    text: string
+): { textBlocks: string[][]; codeBlocks: string[][] } {
+    const input = new PeekableSequence(text.split(/\r?\n/g).values());
+    const textBlocks: string[][] = [];
+    const codeBlocks: string[][] = [];
 
+    parseRoot();
 
-class Parser {
-    textBlocks: string[][] = [];
-    codeBlocks: string[][] = [];
-    input: PeekableSequence<string> | undefined;
+    return {
+        textBlocks,
+        codeBlocks,
+    };
 
-    constructor(text: string) {
-    }
-
-    parse(text: string): { textBlocks: string[][], codeBlocks: string[][] } {
-        this.input = new PeekableSequence(text.split(/\r?\n/g).values());
-        this.textBlocks = [];
-        this.codeBlocks = [];
-
-        this.parseRoot();
-
-        return {
-            textBlocks: this.textBlocks,
-            codeBlocks: this.codeBlocks,
-        };
-    }
-
-    parseRoot() {
-        while (!this.input!.atEOS()) {
-            this.parseTextBlock();
+    function parseRoot() {
+        while (!input!.atEOS()) {
+            parseTextBlock();
         }
     }
 
-    parseTextBlock() {
+    function parseTextBlock() {
         const textBlock: string[] = [];
-        const input = this.input!;
         let lastLine = '';
         while (!input.atEOS()) {
             if (input.peek() === '~~~') {
-                const block = this.parseCodeBlock();
+                const block = parseCodeBlock();
                 if (lastLine !== '[//]: # (shell)') {
                     textBlock.push('~~~');
                     for (const line of block) {
@@ -220,7 +136,7 @@ class Parser {
                     textBlock.push('~~~');
                     lastLine = '';
                 } else {
-                    this.codeBlocks.push(block);
+                    codeBlocks.push(block);
                     break;
                 }
             } else {
@@ -228,13 +144,12 @@ class Parser {
                 textBlock.push(lastLine);
             }
         }
-        this.textBlocks.push(textBlock);
+        textBlocks.push(textBlock);
     }
 
-    parseCodeBlock(): string[] {
+    function parseCodeBlock(): string[] {
         const lines: string[] = [];
 
-        const input = this.input!;
         input.skip('~~~');
         while (!input.atEOS() && input.peek() !== '~~~') {
             lines.push(input.get());
@@ -251,8 +166,7 @@ class Parser {
 
 async function updateMarkdown(text: string) {
     // Split markdown into alternating text block and code sections.
-    const parser = new Parser(text);
-    const { textBlocks, codeBlocks } = parser.parse(text);
+    const { textBlocks, codeBlocks } = parseMarkdown(text);
 
     // Make a script by extracting shell input from code blocks.
     const scriptLines = makeScript(codeBlocks);
@@ -290,78 +204,22 @@ function makeScript(codeBlocks: string[][]) {
 }
 
 async function runScript(scriptLines: string[]): Promise<string[]> {
-    // TODO: pull executable from markdown file
-    const outputText = await run(
+    // TODO: pull executable name and args from markdown file
+    const outputText = await scriptHandshake(
         'node.exe',
-        ['../shortorder/build/samples/repl.js',
-         '-x',
-         '-d=..\\shortorder\\samples\\menu',
+        [
+            '../shortorder/build/samples/repl.js',
+            '-x',
+            '-d=..\\shortorder\\samples\\menu',
         ],
         '% ',
         scriptLines
     );
 
-    // Group the captured output into code block sections.
-    // const outputLines = stripAnsi(outputText).split(/\r?\n/g);
-
     const outputLines = outputText.map(stripAnsi);
-    // const outputLines = outputText;
 
     return outputLines;
 }
-
-function run(
-    executable: string,
-    args: string[],
-    prompt: string,
-    script: string[]
-): Promise<string[]> {
-    const program = spawn(executable, args);
-    return handshake(program, prompt, script);
-    // return new Promise<string[]>(async (resolve, reject) => {
-    //     const program = spawn(executable, args);
-
-
-    //     for (const line of script) {
-    //         await sleep(1000);
-    //         program.stdin.write(line + '\n', 'utf8');
-    //     }
-
-    //     // TODO: make exit command configurable.
-    //     // Write blank line to exit repl.
-    //     program.stdin.write('\n');
-
-    //     const output: string[] = [];
-    //     program.stdout.on('data', (data: Buffer) => {
-    //         // console.log(`STDOUT: ${data}`);
-    //         output.push(data.toString('utf8'));
-    //     });
-
-    //     program.stderr.on('data', (data: Buffer) => {
-    //         console.error(`stderr: ${data.toString('utf8')}`);
-
-    //         // TODO: should we capture stderr output?
-    //     });
-
-    //     program.on('close', (code: number) => {
-    //         console.log(`child process exited with code ${code}`);
-
-    //         // const chunks = output.join('').split(prompt);
-    //         const lines = output.join('').split(/\r?\n/g);
-    //         const complete: string[] = [];
-    //         let i = 0;
-    //         for (const line of lines) {
-    //             if (line.startsWith(prompt)) {
-    //                 complete.push(`${prompt}${script[i++]}`);
-    //             } else {
-    //                 complete.push(line);
-    //             }
-    //         }
-    //         resolve(complete);
-    //     });
-    // });
-}
-
 
 function makeOutputSections(lines: string[]) {
     const outputSections: string[][] = [];
@@ -376,7 +234,7 @@ function makeOutputSections(lines: string[]) {
         }
     }
     // NOTE: it's ok that we're dropping the last section because it is just
-    // the Shell shutting down at the end of input.
+    // the output from the REPL shutting down at the end of input.
 
     return outputSections;
 }
@@ -408,33 +266,35 @@ function interleaveTextAndCodeBlocks(
     return finalLines;
 }
 
-function usage() {
-    // TODO: implement
-    console.log('TBD: show usage here');
-}
-
 async function main() {
+    // TODO: get executable and params (e.g. -d, -x) from markdown
+    const args = minimist(process.argv.slice(2));
 
-    // TODO: use minimist for args.
-    // TODO: -d argument
-    // TODO: -x argument
-    // TODO: app.fail(), app.exit()
-    // TODO: -h, usage()
-
-    if (process.argv.length !== 3) {
-        usage();
-        return 1;
+    if (args.h || args.help) {
+        showUsage();
+        return succeed(false);
     }
 
-    const originalFile = path.resolve(process.argv[2]);
+    const inFile = args._[0];
+    let outFile = args._[1];
+
+    if (!inFile) {
+        const message = 'Expected an <input file>.';
+        return fail(message, true);
+    }
+
+    const originalFile = path.resolve(inFile);
     if (!fs.existsSync(originalFile)) {
-        console.log(`Cannot find file ${originalFile}.`);
-        return 1;
+        const message = `Cannot find file ${originalFile}.`;
+        return fail(message, false);
     }
 
-    const outfile = path.join(
-        path.dirname(originalFile),
-        path.basename(originalFile, path.extname(originalFile)) + '.out.md');
+    if (!outFile) {
+        outFile = path.join(
+            path.dirname(originalFile),
+            path.basename(originalFile, path.extname(originalFile)) + '.out.md'
+        );
+    }
 
     // // Backup original file.
     // const backupFile = originalFile + '.old';
@@ -448,13 +308,69 @@ async function main() {
     const updatedText = await updateMarkdown(text);
     // fs.writeFileSync(originalFile, updatedText, 'utf8');
 
-    console.log(`Writing to ${outfile}`);
+    console.log(`Writing to ${outFile}`);
     // fs.writeFileSync(outfile, updatedText, 'utf8');
 
     console.log('=======================================');
     console.log(updatedText);
 
-    return 0;
+    return succeed(true);
+}
+
+function showUsage() {
+    const program = path.basename(process.argv[1]);
+
+    const usage: Section[] = [
+        {
+            header: 'Tutorial Builder',
+            content:
+                'This utility uses a markdown file as a template for ' +
+                'generating documentation by rerunning commands inside of ' +
+                'markdown code blocks.',
+        },
+        {
+            header: 'Usage',
+            content: [
+                `node ${program} <input file> [output file] [...options]`,
+            ],
+        },
+        {
+            header: 'Options',
+            optionList: [
+                {
+                    name: 'help',
+                    alias: 'h',
+                    description: 'Print help message',
+                    type: Boolean,
+                },
+            ],
+        },
+    ];
+
+    console.log(commandLineUsage(usage));
+}
+
+function fail(message: string, displayUsage = false) {
+    console.log(' ');
+    console.log(message);
+
+    if (displayUsage) {
+        showUsage();
+    } else {
+        console.log('Use the -h flag for help.');
+    }
+    console.log(' ');
+    console.log('Aborting');
+    console.log(' ');
+    process.exit(1);
+}
+
+export function succeed(succeeded: boolean) {
+    if (succeeded) {
+        process.exit(0);
+    } else {
+        process.exit(1);
+    }
 }
 
 main();

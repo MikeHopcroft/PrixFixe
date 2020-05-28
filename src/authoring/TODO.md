@@ -3,11 +3,14 @@
 * Documentation for new tools
   * Make tutorial_builder available to short-order
   * Documentation build
-    * Readline based repl
     * Ability to record any program - not just repl
-    * REPL
+      * Pull executable name and parameters from markdown.
+      * Pass regular expression for prompt? How will process() work?
+    * x REPL
     * Analysis of repair cost metrics
-    * General template based system?
+    * Integrate documentation generation with build
+    * Readline based repl
+    * . General template based system?
   * short-order
     * README.md
     * repl

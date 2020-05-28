@@ -204,7 +204,7 @@ function loadAndCombineTestSuites(
                     comment: testFile,
                     tests: [s],
                 });
-            }   
+            }
         }
     } catch (err) {
         if (err.code === 'ENOENT' || err.code === 'EISDIR') {
@@ -225,10 +225,7 @@ function filterTestSuites(
 ): GenericSuite<ValidationStep<TextTurn>> {
     if (testId !== undefined) {
         console.log(`Running test with id=${testId}.`);
-        suite = filterSuite(
-            suite,
-            test => testId === test.id
-        );
+        suite = filterSuite(suite, test => testId === test.id);
     } else if (suiteExpressionText) {
         console.log(
             `Running tests matching suite expression: ${suiteExpressionText}`
@@ -371,7 +368,8 @@ class Application {
                         name: 'b',
                         alias: 'b',
                         type: Boolean,
-                        description: 'Brief mode - just print utterances. Do not run tests.',
+                        description:
+                            'Brief mode - just print utterances. Do not run tests.',
                     },
                     {
                         name: 'd',
@@ -428,7 +426,8 @@ class Application {
                     {
                         name: 't',
                         alias: 't',
-                        typeLabel: '{underline <snowball | metaphone | hybrid >}',
+                        typeLabel:
+                            '{underline <snowball | metaphone | hybrid >}',
                         description: 'Reserved for short-order term model.',
                     },
                 ],
@@ -440,7 +439,9 @@ class Application {
         if (this.processorFactory.count() > 0) {
             console.log('Available Processors:');
             for (const processor of this.processorFactory.processors()) {
-                console.log(`  "-v=${processor.name}": ${processor.description}`);
+                console.log(
+                    `  "-v=${processor.name}": ${processor.description}`
+                );
                 // TODO: list expected data files for each processor.
             }
         } else {
