@@ -1,15 +1,38 @@
 # TODO List
 
-* x Verify expected vs observed parameter order in scoreSuite
-* Rationalize formatting.ts and markdown.ts
-* test_runner_main2.ts and evaluate.ts should share evaluate function.
-* test_runner_main2.ts markdown output
-* test_runner_main2.ts verbose mode and other command-line flags
-* Remove directory mode from test_runner_main2. Preserve suite hierarchy.
-* Markdown rendering should indicate pass/fail status if available
 * Documentation for new tools
-* Deprecate old tools
+  * Make tutorial_builder available to short-order
+  * Documentation build
+    * Readline based repl
+    * Ability to record any program - not just repl
+    * REPL
+    * Analysis of repair cost metrics
+    * General template based system?
+  * short-order
+    * README.md
+    * repl
+    * test_runner
+    * confusion_matrix
+    * stemmer_confusion
+  * prix-fixe
+    * README.md
+    * samples
+    * evaluate
+    * filter_suite
+    * markdown
+    * menu_filter
+    * test_runner2
+* Rationalize formatting.ts and markdown.ts
+* test_runner_main2.ts markdown output
+* Test measurements should be able to record crashes/exceptions
+  * Update test_runner2.js to handle exceptions
 * Merge into master
+* Deprecate old tools
+* x Verify expected vs observed parameter order in scoreSuite
+* x test_runner_main2.ts and evaluate.ts should share evaluate function.
+* x test_runner_main2.ts verbose mode and other command-line flags
+* x Remove directory mode from test_runner_main2. Preserve suite hierarchy.
+* x Markdown rendering should indicate pass/fail status if available
 * Test matrix generator for modify
   * make [that|target] [with] [attribute|option|product]
   * change [that|target] to [attribute|option|product]
@@ -24,17 +47,15 @@
   * x May want to refactor PassFail to take suite string
 * better documentation for apps/authoring/test_suite2
 * test_runner_main2
-  * factor out scoring code for use by file comparison tool !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  * combine aggregate.ts and pass_fail.ts, convert from print to format !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  * x factor out scoring code for use by file comparison tool
+  * combine aggregate.ts and pass_fail.ts, convert from print to format 
   * x Summarize pass/fail rates by suite
   * Fix: console.log(`repair algorithm: ${measures.notes}`); - measures.notes is '' in test_runner2.
-  * Work on tree of tests, instead of flat list !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  * x Work on tree of tests, instead of flat list 
   * Write results
-    * Text
+    * x Text
     * Markdown
   * Option to rebase tests
-  * Test measurements should be able to record crashes/exceptions
-    * Update test_runner2.js to handle exceptions
   * x Better repair function messages
 * short-order repl .tokenize command should print scores
 * figure out how to share prix-fixe apps

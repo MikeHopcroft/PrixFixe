@@ -99,7 +99,8 @@
     "minimist": "^1.2.0",
     "munkres-js": "^1.2.2",
     "number-to-words": "^1.2.4",
-    "recursive-readdir": "^2.2.2"
+    "recursive-readdir": "^2.2.2",
+    "strip-ansi": "^6.0.0"
   },
   "prettier": {
     "tabWidth": 4,

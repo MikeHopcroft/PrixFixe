@@ -247,6 +247,13 @@ class ReplCore implements IRepl {
 
         // Load REPL history from file.
         if (fs.existsSync(historyFile)) {
+            // tslint:disable-next-line:no-any
+            if ((repl as any).history === undefined) {
+                // This check and initialization is needed for running
+                // via spawn.
+                // tslint:disable-next-line:no-any
+                (repl as any).history = [];
+            }
             fs.readFileSync(historyFile)
                 .toString()
                 // Split on \n (linux) or \r\n (windows)
@@ -556,11 +563,15 @@ class ReplCore implements IRepl {
             callback: (err: Error | null, result: any) => void
         ) {
             console.log();
-
             if (line === '\n') {
                 repl.close();
             } else {
-                await processInputLine(line);
+                if (!line.startsWith('#')) {
+                    // TODO: BUGBUG: might want to put comment handling into
+                    // processInputLine, since it handles multiple lines.
+                    // Line is not a comment. Process it.
+                    await processInputLine(line);
+                }
                 callback(null, '');
             }
         }

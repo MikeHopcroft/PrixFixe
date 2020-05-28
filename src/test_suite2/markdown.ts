@@ -42,12 +42,21 @@ function renderTestAsMarkdown(
     fragments.push(test.comment);
     fragments.push('~~~');
 
-    // TODO: this assumes there is only one step.
-    const step = test.steps[0];
-    if ('measures' in step) {
-        const status = step.measures.complete ? 'PASSED' : 'FAILED';
+    if ('measures' in test.steps[0]) {
+        const repairCost = test.steps.reduce(
+            (p, c) => {
+                if ('measures' in c) {
+                    return p + c.measures.repairs!.cost;
+                } else {
+                    return p;
+                }
+            },
+            0
+        );
+        const status = repairCost === 0 ? 'PASSED' : 'FAILED';
         fragments.push(`Status: ${status}`);
     }
+    
     renderTestAsText(fragments, test);
     fragments.push('~~~');
 }

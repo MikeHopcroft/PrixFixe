@@ -5,7 +5,6 @@ import { enumerateTestCases } from './filter';
 import {
     AnyTurn,
     GenericCase,
-    GenericSuite,
     LogicalValidationSuite,
     LogicalScoredSuite,
     ScoredStep,
