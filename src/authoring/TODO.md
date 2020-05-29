@@ -1,8 +1,9 @@
 # TODO List
 
+* samples/menu/root.yaml
 * Remove samples/menu/bugs.md
 * Repair cost document generator
-* Remove old samples
+* x Remove old samples
 * repl_main.ts
   * Convert to command-line-usage
 * test_suite_tools.md
