@@ -21,6 +21,7 @@ In order to use `prix-fixe` you must have
 
 ~~~
 % git clone git@github.com:MikeHopcroft/PrixFixe.git
+% cd PrixFixe
 % npm run install
 % npm run compile
 ~~~

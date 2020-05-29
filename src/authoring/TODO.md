@@ -1,5 +1,6 @@
 # TODO List
 
+* Remove samples/menu/bugs.md
 * Repair cost document generator
 * Remove old samples
 * repl_main.ts

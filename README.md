@@ -6,10 +6,10 @@
 * An API for constructing and manipulating orders
 * A repair cost metric for comparing orders
 * Tools for testing natural language systems that generate orders
-* A sample menu
+* A sample menu for testing purposes
 
 `prix-fixe` is currently in the earliest stages of development, so documentation is sparse, and the code stability is uneven. If you are interested in taking a look, we recommend starting with the
-[Interactive Menu Explorer Tutorial]((documentation/repl.md)).
+[Interactive Menu Explorer Tutorial](documentation/repl.md).
 
 ## Building Prix-Fixe
 
@@ -21,6 +21,7 @@ In order to use `prix-fixe` you must have
 
 ~~~
 % git clone git@github.com:MikeHopcroft/PrixFixe.git
+% cd PrixFixe
 % npm run install
 % npm run compile
 ~~~
@@ -39,8 +40,8 @@ In order to use `prix-fixe` you must have
   * [Testing Methodology](documentation/test_suite_tools.md)
   * [Calculating Repair Cost](documentation/repair_cost.md)
   * [Test Suite File Format](documentation/test_suite_format.md)
-  * [filter-suite.js tool](documentation/test_suite_tools.md#filter-suite)
-  * [evaluate.js tool](documentation/test_suite_tools.md#evaluate.md)
+  * [filter-suite.js tool](documentation/test_suite_tools.md#filter-suite-tool)
+  * [evaluate.js tool](documentation/test_suite_tools.md#evaluate-tool)
   * [expected.yaml](samples/tests/expected.yaml) - sample test suite
   * [observed.yaml](samples/tests/observed.yaml) - ficticious output from a natural language processing system.
   * [regression.yaml](samples/tests/regression.yaml) - suite of cases covering a wide variety of ordering scenarios.
