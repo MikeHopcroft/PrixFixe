@@ -1,0 +1,280 @@
+tests:
+  - id: 0
+    suites: sample
+    comment: '## All nine tests are the same.'
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 1
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 2
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 3
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 4
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 5
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 6
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 7
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []
+  - id: 8
+    suites: sample
+    comment: All nine tests are the same.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: '201'
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: '4800'
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: '2102'
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: '6700'
+                  children: []

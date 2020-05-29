@@ -1,16 +1,15 @@
 # Prix-Fixe [![Build Status](https://travis-ci.com/MikeHopcroft/PrixFixe.svg?branch=master)](https://travis-ci.com/MikeHopcroft/PrixFixe) [![Coverage Status](https://coveralls.io/repos/github/MikeHopcroft/PrixFixe/badge.svg?branch=master)](https://coveralls.io/github/MikeHopcroft/PrixFixe?branch=master)
 
-`Prix-Fixe` is an experimental system for constructing and validating restaurant orders. `Prix-Fixe` includes
+`prix-fixe` is an experimental package of tools and algorithms for constructing restaurant orders and evaluating natural language systems that generate orders. `prix-fixe` includes
 * Tools for authoring menus
-* An interactive menu explorer tool
-* An API for constructing and manipulating orders.
+* An interactive menu explorer
+* An API for constructing and manipulating orders
+* A repair cost metric for comparing orders
+* Tools for testing natural language systems that generate orders
 * A sample menu
 
-## Try Prix-Fixe
-
-`prix-fixe` is currently in the earliest stages of development, so documentation is sparse, and the code stability is uneven.
-
-If you are interested in taking a look, you can clone the repo on GitHub or install [prix-fixe](https://www.npmjs.com/package/prix-fixe) with npm.
+`prix-fixe` is currently in the earliest stages of development, so documentation is sparse, and the code stability is uneven. If you are interested in taking a look, we recommend starting with the
+[Interactive Menu Explorer Tutorial]((documentation/repl.md)).
 
 ## Building Prix-Fixe
 
@@ -26,21 +25,25 @@ In order to use `prix-fixe` you must have
 % npm run compile
 ~~~
 
-## Sample Applications and Data
+## Documentation, Tools and Samples
 
-`prix-fixe` includes the following samples:
+`prix-fixe` includes the following applications, samples, and tutorials:
 * Menu
-  * [Interactive Menu Explorer](documentation/repl.md)
+  * [Menu Concepts](documentation/menu_concepts.md)
+  * [Menu File Format](documentation/menu_format.md)
+  * [Interactive Menu Explorer Tutorial](documentation/repl.md)
   * [Sample Restaurant Menu](documentation/sample_menu.md)
+* CartOps
+  * [API Overview](documentation/api_overview.md)
 * Test Suite
-  * [Overview](documentation/test_suite_tools.md)
-  * [filter-suite.js](documentation/test_suite_tools.md#filter-suite)
-  * [evaluate.js](documentation/test_suite_tools.md#evaluate.md)
-
-## Documentation
-
-* [Menu Concepts](documentation/menu_concepts.md)
-* [API Overview](documentation/api_overview.md)
+  * [Testing Methodology](documentation/test_suite_tools.md)
+  * [Calculating Repair Cost](documentation/repair_cost.md)
+  * [Test Suite File Format](documentation/test_suite_format.md)
+  * [filter-suite.js tool](documentation/test_suite_tools.md#filter-suite)
+  * [evaluate.js tool](documentation/test_suite_tools.md#evaluate.md)
+  * [expected.yaml](samples/tests/expected.yaml) - sample test suite
+  * [observed.yaml](samples/tests/observed.yaml) - ficticious output from a natural language processing system.
+  * [regression.yaml](samples/tests/regression.yaml) - suite of cases covering a wide variety of ordering scenarios.
 
 ## Contributing
 Interested in contributing? Read more [here](contributing.md).

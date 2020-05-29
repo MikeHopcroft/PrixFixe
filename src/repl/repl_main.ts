@@ -35,6 +35,7 @@ export function replMain(extensions: IReplExtensionFactory[]) {
     runRepl(dataPath, extensions, useCreateWorld2);
 }
 
+// TODO: convert this to command-line-usage
 function showUsage() {
     const program = path.basename(process.argv[1]);
 

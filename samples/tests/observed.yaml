@@ -1,0 +1,280 @@
+tests:
+  - id: 0
+    suites: sample
+    comment: Observed cart is identical to expected cart.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 1
+    suites: sample
+    comment: Products are out of order.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+            - quantity: 1
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+  - id: 2
+    suites: sample
+    comment: Product SKU is wrong because generic product is wrong.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall mocha
+              sku: "401"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 3
+    suites: sample
+    comment: Product SKU is wrong because one or more attributes are wrong.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: iced venti latte
+              sku: "205"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 4
+    suites: sample
+    comment: Product quantity is wrong
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 5
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 5
+    suites: sample
+    comment: Options out of order.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 6
+    suites: sample
+    comment: Option SKU wrong because generic option is wrong.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 2
+                  name: cinnamon syrup
+                  sku: "1502"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 7
+    suites: sample
+    comment: Option SKU wrong because one or more attributes are wrong.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 1
+                  name: extra foam
+                  sku: "4803"
+                  children: []
+                - quantity: 2
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []
+  - id: 8
+    suites: sample
+    comment: Option quantity wrong.
+    steps:
+      - turns:
+          - speaker: employee
+            transcription: >-
+              ok i've added a tall latte no foam with two pumps of vanilla
+              and an apple bran muffin warmed
+        cart:
+          items:
+            - quantity: 1
+              name: tall latte
+              sku: "201"
+              children:
+                - quantity: 1
+                  name: no foam
+                  sku: "4800"
+                  children: []
+                - quantity: 5
+                  name: vanilla syrup
+                  sku: "2102"
+                  children: []
+            - quantity: 1
+              name: apple bran muffin
+              sku: "10000"
+              children:
+                - quantity: 1
+                  name: warmed
+                  sku: "6700"
+                  children: []

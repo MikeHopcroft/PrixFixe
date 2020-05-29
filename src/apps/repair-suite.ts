@@ -56,6 +56,7 @@ function main() {
                 throw new TypeError(`repairSuite: Duplicate name ${s.name}`);
             }
             nameToSKU.set(s.name, s.sku);
+            console.log(`${s.name}: ${s.sku}`);
         }
 
         // Load the input test suite.
@@ -145,8 +146,8 @@ function replaceSKUsInText(text: string, skus: number[]) {
 function replaceSKUsInLines(lines: string[], skus: number[]) {
     let i = 0;
     return lines.map(line => {
-        if (line.match(/^(\s*sku: ')\d+('\s*)$/)) {
-            line = line.replace(/^(\s*sku: ')\d+('\s*)$/, `$1${skus[i++]}$2`);
+        if (line.match(/^(\s*sku: ['"])\d+(['"]\s*)$/)) {
+            line = line.replace(/^(\s*sku: ['"])\d+(['"]\s*)$/, `$1${skus[i++]}$2`);
         }
         return line;
     });

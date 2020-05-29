@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
+import { createWorld2 } from '../authoring';
 import { createWorld } from '../processors';
 
 import {
@@ -40,7 +41,7 @@ function main() {
 
     let dataPath: string | undefined;
 
-    if (!args.x) {
+    if (!args.s) {
         dataPath = process.env.PRIX_FIXE_DATA;
         if (args.d) {
             dataPath = args.d;
@@ -58,7 +59,8 @@ function main() {
             observedFile,
             scoredFile,
             dataPath,
-            args.v === true
+            args.v === true,
+            args.x === true
         );
     } catch (e) {
         handleError(e);
@@ -70,7 +72,8 @@ function evaluate(
     observedFile: string,
     ouputFile: string | undefined,
     dataPath: string | undefined,
-    verbose: boolean
+    verbose: boolean,
+    experimental: boolean
 ) {
     console.log('Comparing');
     console.log(`  expected validation suite: ${expectedFile}`);
@@ -93,12 +96,22 @@ function evaluate(
 
     if (dataPath) {
         // Load the world, which provides the AttributeInfo and ICatalog.
-        const world = createWorld(dataPath);
-        repairs = createMenuBasedRepairFunction(
-            world.attributeInfo,
-            world.catalog
-        );
-        notes = 'Menu-based repairs';
+        if (experimental) {
+            console.log(`createWorld2()`);
+            const world = createWorld2(dataPath);
+            repairs = createMenuBasedRepairFunction(
+                world.attributeInfo,
+                world.catalog
+            );
+            notes = 'Menu-based repairs, createWorld2';    
+        } else {
+            const world = createWorld(dataPath);
+            repairs = createMenuBasedRepairFunction(
+                world.attributeInfo,
+                world.catalog
+            );
+            notes = 'Menu-based repairs';   
+        }
     } else {
         repairs = createSimpleRepairFunction();
         notes = 'Simple repairs';
@@ -189,8 +202,8 @@ function showUsage() {
                     type: Boolean,
                 },
                 {
-                    name: 'x',
-                    alias: 'x',
+                    name: 's',
+                    alias: 's',
                     description:
                         `Use simple repair cost scoring that doesn't require menu files.\n` +
                         'The -d option and PRIX_FIXE_DATA_PATH are not required when using -x.',
@@ -200,6 +213,12 @@ function showUsage() {
                     name: 'verbose',
                     alias: 'v',
                     description: 'Print out failing test cases',
+                    type: Boolean,
+                },
+                {
+                    name: 'experimental',
+                    alias: 'x',
+                    description: 'Use experimental createWorld2()',
                     type: Boolean,
                 },
                 {

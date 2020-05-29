@@ -1,5 +1,15 @@
 # TODO List
 
+* Repair cost document generator
+* Remove old samples
+* repl_main.ts
+  * Convert to command-line-usage
+* test_suite_tools.md
+  * Explanatory text
+  * Workflow diagram
+  * unix syntax
+  * Use tutorial_builder
+  * -a flag for evaluate
 * Get rid of genericEntityFactory() and specificEntityFactory()
 * Documentation for new tools
   * Make tutorial_builder available to short-order
