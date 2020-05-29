@@ -1,5 +1,6 @@
 # TODO List
 
+* Get rid of genericEntityFactory() and specificEntityFactory()
 * Documentation for new tools
   * Make tutorial_builder available to short-order
   * Documentation build

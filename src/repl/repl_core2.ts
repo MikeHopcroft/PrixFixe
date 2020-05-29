@@ -396,6 +396,7 @@ class ReplCore implements IRepl {
                         if (p.name === name) {
                             found = true;
                             console.log(`Switched to ${p.name} processor.`);
+                            processor = p.processor;
                             break;
                         }
                     }

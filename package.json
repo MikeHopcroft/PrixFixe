@@ -23,7 +23,8 @@
     "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "test": "mocha"
+    "test": "mocha",
+    "docs": "node build/src/apps/tutorial_builder.js c:/temp/template.md"
   },
   "nyc": {
     "exclude": [

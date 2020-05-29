@@ -84,7 +84,15 @@ function scriptHandshake(
             let i = 0;
             for (const line of lines) {
                 if (line.startsWith(prompt)) {
-                    linesWithPrompts.push(`${prompt}${script[i++]}`);
+                    let text = script[i++];
+                    if (text === '#') {
+                        // Special case: a single character comment
+                        // instructs the system to print out the prompt
+                        // with no text afterwards.
+                        text = '';
+                    }
+                    linesWithPrompts.push(`${prompt}${text}`);
+                    linesWithPrompts.push(line.slice(prompt.length));
                 } else {
                     linesWithPrompts.push(line);
                 }
@@ -208,7 +216,8 @@ async function runScript(scriptLines: string[]): Promise<string[]> {
     const outputText = await scriptHandshake(
         'node.exe',
         [
-            '../shortorder/build/samples/repl.js',
+            // '../shortorder/build/samples/repl.js',
+            'build/samples/repl.js',
             '-x',
             '-d=..\\shortorder\\samples\\menu',
         ],
@@ -309,7 +318,7 @@ async function main() {
     // fs.writeFileSync(originalFile, updatedText, 'utf8');
 
     console.log(`Writing to ${outFile}`);
-    // fs.writeFileSync(outfile, updatedText, 'utf8');
+    fs.writeFileSync(outFile, updatedText, 'utf8');
 
     console.log('=======================================');
     console.log(updatedText);

@@ -1,14 +1,13 @@
-import * as replServer from 'repl';
-
 import {
     IRepl,
+    IReplExtension,
     IReplExtensionFactory,
     prixFixeReplExtensionFactory,
     ReplProcessor,
     replMain,
+    simpleReplExtensionFactory,
     State,
     World,
-    IReplExtension,
 } from '../src';
 
 // Sample ReplExtension that registers one command and provides a Processor
@@ -21,7 +20,7 @@ class NopReplExtension implements IReplExtension {
     createProcessor(): ReplProcessor | null {
         return {
             name: 'nop',
-            description: 'Sample processor that leaves the State unchanged.',
+            description: 'Simple processor that leaves the State unchanged.',
             processor: async (text: string, state: State): Promise<State> =>
                 state,
         };
@@ -46,7 +45,11 @@ export const nopReplExtensionFactory: IReplExtensionFactory = {
 
 // Sample application that configures and runs the REPL.
 function go() {
-    replMain([nopReplExtensionFactory, prixFixeReplExtensionFactory]);
+    replMain([
+        // nopReplExtensionFactory,
+        prixFixeReplExtensionFactory,
+        simpleReplExtensionFactory,
+    ]);
 }
 
 go();

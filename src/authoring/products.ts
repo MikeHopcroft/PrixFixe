@@ -8,6 +8,7 @@ import {
     OPTION,
     SKU,
     SpecificTypedEntity,
+    specificEntityFactory,
 } from '../catalog';
 
 import { IIndex, IndexedDimension } from './attributes';
@@ -296,15 +297,17 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
     for (const f of context.forms) {
         const key = makeKey(generic.pid, f);
         const sku = builder.nextSKU();
-        const specific: SpecificTypedEntity = {
-            kind: MENUITEM,
-            name: [
-                ...namePrefixFromForm(context.dimensions, f, false),
-                generic.name,
-            ].join(' '),
-            sku,
-            key,
-        };
+        const specific: SpecificTypedEntity = specificEntityFactory(
+            {
+                name: [
+                    ...namePrefixFromForm(context.dimensions, f, false),
+                    generic.name,
+                ].join(' '),
+                sku,
+                key,
+            },
+            kind
+        );
         builder.specifics.push(specific);
     }
     builder.getContext().skus.gap();
