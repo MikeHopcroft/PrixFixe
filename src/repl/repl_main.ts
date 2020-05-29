@@ -38,9 +38,10 @@ export function replMain(extensions: IReplExtensionFactory[]) {
 function showUsage() {
     const program = path.basename(process.argv[1]);
 
+    console.log('Interactive Menu Explorer');
     console.log('Read-Eval-Print-Loop (REPL)');
     console.log('');
-    console.log('An interactive utterance processor.');
+    console.log('An interactive tool for exploring menus and processing utterances.');
     console.log('');
     console.log(`Usage: node ${program} [-d datapath] [-h|help|?]`);
     console.log('');
