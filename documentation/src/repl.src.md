@@ -182,7 +182,7 @@ We start the test with the `.newtest` command and then use `.step` to record the
 [//]: # (shell)
 ~~~
 % .newtest
-% .step hi um i'd like a tall iced flat white
+% .step hi um i'd like a tall flat white
 ~~~
 
 Now we have to construct the cart for this step:

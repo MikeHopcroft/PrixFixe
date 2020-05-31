@@ -1,10 +1,25 @@
 # TODO List
 
+* repl_main.ts
+  * Convert to command-line-usage
+* x Remove samples/menu/bugs.md - put these cases in regression.yaml
+* test-runner.js
+  * Update to use testRunnerMain2()
+  * Rename application
+* test_suite_tools.md
+  * Explanatory text
+  * Workflow diagram
+  * unix syntax
+  * Use tutorial_builder
+  * -a flag for evaluate
+* cleanup .vscode
 * version
   * merge prixfix master
   * publish version
   * merge shortorder master
   * take new prixfixe
+  * menu_concepts.md
+    * Update
 * repairs.md
   * x inkscape diagrams
   * x correct SKUs and names
@@ -13,17 +28,8 @@
   * x correct SKUs and names
   * Link from main page
 * x samples/menu/menu.yaml
-* Remove samples/menu/bugs.md - put these cases in regression.yaml
 * Document generator for repair cost!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 * x Remove old samples
-* repl_main.ts
-  * Convert to command-line-usage
-* test_suite_tools.md
-  * Explanatory text
-  * Workflow diagram
-  * unix syntax
-  * Use tutorial_builder
-  * -a flag for evaluate
 * Get rid of genericEntityFactory() and specificEntityFactory()
 * Documentation for new tools
   * Make tutorial_builder available to short-order

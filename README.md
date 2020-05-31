@@ -2,11 +2,11 @@
 
 `prix-fixe` is an experimental package of tools and algorithms for constructing restaurant orders and evaluating natural language systems that generate orders. `prix-fixe` includes
 * Tools for authoring menus
-* An interactive menu explorer
-* An API for constructing and manipulating orders
-* A repair cost metric for comparing orders
-* Tools for testing natural language systems that generate orders
-* A sample menu for testing purposes
+* An [interactive menu explorer](documentation/repl.md)
+* An [API](documentation/api_overview.md) for constructing and manipulating orders
+* A [repair cost metric](documentation/measures.md) for comparing orders
+* [Tools](documentation/test_suite_tools.md) for testing natural language systems that generate orders
+* A [sample menu](documentation/sample_menu.md) for testing purposes
 
 `prix-fixe` is currently in the earliest stages of development, so documentation is sparse, and the code stability is uneven. If you are interested in taking a look, we recommend starting with the
 [Interactive Menu Explorer Tutorial](documentation/repl.md).
@@ -36,6 +36,10 @@ In order to use `prix-fixe` you must have
   * [Sample Restaurant Menu](documentation/sample_menu.md)
 * CartOps
   * [API Overview](documentation/api_overview.md)
+  * CartOps
+  * Catalog
+  * AttributeInfo
+  * RuleChecker
 * Test Suite
   * [Testing Methodology](documentation/test_suite_tools.md)
   * [Measures](documentation/measures.md)
@@ -43,10 +47,12 @@ In order to use `prix-fixe` you must have
   * [Test Suite File Format](documentation/test_suite_format.md)
   * [filter-suite.js tool](documentation/test_suite_tools.md#filter-suite-tool)
   * [evaluate.js tool](documentation/test_suite_tools.md#evaluate-tool)
-  * [expected.yaml](samples/tests/expected.yaml) - sample test suite
+  * [test-runner.js tool](broken-link)
+  * [expected.yaml](samples/tests/expected.yaml) - sample validation suite
   * [observed.yaml](samples/tests/observed.yaml) - ficticious output from a natural language processing system.
   * [regression.yaml](samples/tests/regression.yaml) - suite of cases covering a wide variety of ordering scenarios.
-
+  * [examples](documentation/examples.md)
+  
 ## Contributing
 Interested in contributing? Read more [here](contributing.md).
 
