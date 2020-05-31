@@ -1,5 +1,17 @@
 # TODO List
 
+* version
+  * merge prixfix master
+  * publish version
+  * merge shortorder master
+  * take new prixfixe
+* repairs.md
+  * x inkscape diagrams
+  * x correct SKUs and names
+  * Link from main page
+* measures.md
+  * x correct SKUs and names
+  * Link from main page
 * x samples/menu/menu.yaml
 * Remove samples/menu/bugs.md - put these cases in regression.yaml
 * Document generator for repair cost!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

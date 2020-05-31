@@ -38,6 +38,7 @@ In order to use `prix-fixe` you must have
   * [API Overview](documentation/api_overview.md)
 * Test Suite
   * [Testing Methodology](documentation/test_suite_tools.md)
+  * [Measures](documentation/measures.md)
   * [Calculating Repair Cost](documentation/repair_cost.md)
   * [Test Suite File Format](documentation/test_suite_format.md)
   * [filter-suite.js tool](documentation/test_suite_tools.md#filter-suite-tool)
