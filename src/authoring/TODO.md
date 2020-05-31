@@ -1,8 +1,8 @@
 # TODO List
 
-* samples/menu/root.yaml
-* Remove samples/menu/bugs.md
-* Repair cost document generator
+* x samples/menu/menu.yaml
+* Remove samples/menu/bugs.md - put these cases in regression.yaml
+* Document generator for repair cost!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 * x Remove old samples
 * repl_main.ts
   * Convert to command-line-usage
@@ -16,7 +16,7 @@
 * Documentation for new tools
   * Make tutorial_builder available to short-order
   * Documentation build
-    * Ability to record any program - not just repl
+    * Ability to record any program - not just repl!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       * Pull executable name and parameters from markdown.
       * Pass regular expression for prompt? How will process() work?
     * x REPL

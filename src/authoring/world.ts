@@ -1,5 +1,3 @@
-import * as yaml from 'js-yaml';
-import * as fs from 'fs';
 import * as path from 'path';
 
 import { AttributeInfo, DimensionAndTensorDescription } from '../attributes';
@@ -16,11 +14,7 @@ import { processRules } from './rules';
 export function createWorld2(dataPath: string): World {
     console.log('CreateWorld2');
 
-    const catalogFile = path.join(dataPath, 'coffee.yaml');
-    // const catalogFile = path.join(dataPath, 'catalog.yaml');
-
-    // const root = yaml.safeLoad(fs.readFileSync(catalogFile, 'utf8'));
-    // const spec = validate(catalogSpecType, root);
+    const catalogFile = path.join(dataPath, 'menu.yaml');
     const spec = loadCatalog(catalogFile);
 
     const dimensions = processDimensions(spec.dimensions);

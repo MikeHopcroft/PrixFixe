@@ -12,15 +12,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -28,7 +28,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 1
     suites: sample
@@ -43,15 +43,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -59,7 +59,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 2
     suites: sample
@@ -74,15 +74,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -90,7 +90,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 3
     suites: sample
@@ -105,15 +105,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -121,7 +121,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 4
     suites: sample
@@ -136,15 +136,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -152,7 +152,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 5
     suites: sample
@@ -167,15 +167,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -183,7 +183,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 6
     suites: sample
@@ -198,15 +198,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -214,7 +214,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 7
     suites: sample
@@ -229,15 +229,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -245,7 +245,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
   - id: 8
     suites: sample
@@ -260,15 +260,15 @@ tests:
           items:
             - quantity: 1
               name: tall latte
-              sku: '201'
+              sku: '601'
               children:
                 - quantity: 1
                   name: no foam
-                  sku: '4800'
+                  sku: '5200'
                   children: []
                 - quantity: 2
                   name: vanilla syrup
-                  sku: '2102'
+                  sku: '2502'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -276,5 +276,5 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
