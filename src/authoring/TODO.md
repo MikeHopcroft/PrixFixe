@@ -1,5 +1,9 @@
 # TODO List
 
+* tutorial_builder
+  * clean up
+  * finish repair
+  * test with real documentation
 * repl_main.ts
   * Convert to command-line-usage
 * test-runner.js

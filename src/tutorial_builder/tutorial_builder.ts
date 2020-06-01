@@ -1,9 +1,4 @@
 import { spawnSync } from 'child_process';
-import * as commandLineUsage from 'command-line-usage';
-import { Section } from 'command-line-usage';
-import * as fs from 'fs';
-import * as minimist from 'minimist';
-import * as path from 'path';
 import stripAnsi = require('strip-ansi');
 
 import {
@@ -16,7 +11,7 @@ import {
 
 import { scriptHandshake } from './script_handshake';
 
-async function updateMarkdown(text: string) {
+export async function updateMarkdown(text: string) {
     let blocks = parseMarkdown(text);
 
     blocks = processRepair(blocks);
@@ -176,112 +171,134 @@ function trimTrailingBlankLines(lines: string[]) {
     }
 }
 
-async function main() {
-    // TODO: get executable and params (e.g. -d, -x) from markdown
-    const args = minimist(process.argv.slice(2));
 
-    if (args.h || args.help) {
-        showUsage();
-        return succeed(false);
-    }
+// main();
 
-    const inFile = args._[0];
-    let outFile = args._[1];
+// async function processFileOrFolder(
+//     inPath: string,
+//     outPath: string | undefined,
+//     recursive: boolean
+// ) {
+//     // TODO: catch file not found (ENOENT)?
+//     const inIsDir = fs.lstatSync(inPath).isDirectory();
 
-    if (!inFile) {
-        const message = 'Expected an <input file>.';
-        return fail(message, true);
-    }
+//     if (outPath === undefined) {
+//         if (inIsDir) {
+//             outPath = inPath;
+//         } else {
+//             outPath = path.dirname(inPath);
+//         }
+//     }
 
-    const originalFile = path.resolve(inFile);
-    if (!fs.existsSync(originalFile)) {
-        const message = `Cannot find file ${originalFile}.`;
-        return fail(message, false);
-    }
+//     const outIsDir = fs.lstatSync(outPath).isDirectory();
 
-    if (!outFile) {
-        outFile = path.join(
-            path.dirname(originalFile),
-            path.basename(originalFile, path.extname(originalFile)) + '.out.md'
-        );
-    }
+//     if (inIsDir && outIsDir) {
+//         // Process all files from inDir to outDir.
+//         let files: string[];
+//         if (recursive) {
+//             files = await recursiveReaddir(inPath);
+//         } else {
+//             files = fs.readdirSync(inPath);
+//         }
 
-    // // Backup original file.
-    // const backupFile = originalFile + '.old';
-    // console.log(`Copying ${originalFile} to ${backupFile}.`);
-    // fs.copyFileSync(originalFile, backupFile);
+//         for (const inFile of files) {
+//             if (inFile.match(/\.src\.md$/)) {
+//                 const outFile = rename(inFile, outPath);
+//                 // console.log(`${inFile} => ${outFile}`);
+//                 convertFile(inFile, outFile);
+//             }
+//         }
+//     } else if (outIsDir) {
+//         // Process one file from inDir to outDir
+//         if (inPath.match(/\.src\.md$/)) {
+//             const outFile = rename(inPath, outPath);
+//             // console.log(`${inPath} => ${outFile}`);
+//             convertFile(inPath, outFile);
+//         } else {
+//             const message = `File ${inPath} does not end in .src.md`;
+//             throw new TypeError(message);
+//         }
+//     } else if (inIsDir) {
+//         const message = `Cannot process directory ${
+//             inPath
+//         } to single output file ${
+//             outPath
+//         }`;
+//         throw new TypeError(message);
+//     } else {
+//         // Process one file to another
+//         const inFile = path.resolve(inPath);
+//         const outFile = path.resolve(outPath);
+//         convertFile(inPath, outFile);
 
-    // console.log(`Updating from ${backupFile} to ${originalFile}.`);
-    // const text = fs.readFileSync(backupFile, 'utf8');
+//         // if (inFile === outFile) {
+//         //     const message = `Input file cannot be the same as output file`;
+//         //     throw new TypeError(message);
+//         // }
+//         // console.log(`${inFile} => ${outFile}`);
+//     }
+// }
 
-    const text = fs.readFileSync(originalFile, 'utf8');
-    const updatedText = await updateMarkdown(text);
-    // fs.writeFileSync(originalFile, updatedText, 'utf8');
+// function convertFile(inFile: string, outFile: string) {
+//     const inPath = path.resolve(inFile);
+//     const outPath = path.resolve(outFile);
 
-    console.log(`Writing to ${outFile}`);
-    // console.log(updatedText);
-    // fs.writeFileSync(outFile, updatedText, 'utf8');
+//     if (!inPath.match(/\.src\.md$/)) {
+//         const message = `File ${inPath} does not end with .src.md`;
+//         throw new TypeError(message);
+//     }
 
-    console.log('=======================================');
-    console.log(updatedText);
+//     if (outPath.match(/\.src\.md$/)) {
+//         const message = `File ${outPath} cannot end with .src.md`;
+//         throw new TypeError(message);
+//     }
 
-    return succeed(true);
-}
+//     if (inPath === outPath) {
+//         const message = `Input file ${inPath} cannot be the same as output file`;
+//         throw new TypeError(message);
+//     }
 
-function showUsage() {
-    const program = path.basename(process.argv[1]);
+//     console.log(`Converting: ${inFile} => ${outFile}`);
+// }
 
-    const usage: Section[] = [
-        {
-            header: 'Tutorial Builder',
-            content:
-                'This utility uses a markdown file as a template for ' +
-                'generating documentation by rerunning commands inside of ' +
-                'markdown code blocks.',
-        },
-        {
-            header: 'Usage',
-            content: [
-                `node ${program} <input file> [output file] [...options]`,
-            ],
-        },
-        {
-            header: 'Options',
-            optionList: [
-                {
-                    name: 'help',
-                    alias: 'h',
-                    description: 'Print help message',
-                    type: Boolean,
-                },
-            ],
-        },
-    ];
+// // function processFolder(inFolder: string, outFolder: string, recursive: boolean) {
 
-    console.log(commandLineUsage(usage));
-}
+// // }
 
-function fail(message: string, displayUsage = false) {
-    console.log(' ');
-    console.log(message);
+// function rename(fileName: string, outDir: string): string {
+//     // console.log(`${filename}:`);
+//     // console.log(`  resolved: ${path.resolve(filename)}`);
+//     // console.log(`  dirname: ${path.dirname(filename)}`);
+//     // console.log(`  basename: ${path.basename(filename)}`);
+//     // console.log(`  extname: ${path.extname(filename)}`);
 
-    if (displayUsage) {
-        showUsage();
-    } else {
-        console.log('Use the -h flag for help.');
-    }
-    console.log(' ');
-    console.log('Aborting');
-    console.log(' ');
-    process.exit(1);
-}
+//     const baseName = path.basename(fileName);
+//     const outFile = baseName.replace(/(\.src\.md)$/, '.md');
+//     const outPath = path.join(outDir, outFile);
 
-export function succeed(succeeded: boolean) {
-    if (succeeded) {
-        process.exit(0);
-    } else {
-        process.exit(1);
-    }
-}
+//     // console.log(`  outpath: ${outPath}`);
 
-main();
+//     return outPath;
+// }
+
+// function go() {
+//     // const paths = [
+//     //     'd:\\git\\foobar\\test.src.md',
+//     //     '~/mike/documentation.test.src.md',
+//     //     'dir1/dir2/foo.test.md',
+//     //     '/usr/tmp/foo.md',
+//     //     'dir1/dir2/foo',
+//     //     '../dir1/dir2/foo',
+//     // ];
+
+//     // for (const path of paths) {
+//     //     rename(path, '/tmp/mike');
+//     // }
+//     processFileOrFolder('documentation/src', 'documentation', false);
+//     processFileOrFolder('documentation/src', 'c:\\temp\\', false);
+//     processFileOrFolder('documentation/src', undefined, false);
+//     processFileOrFolder('documentation/src/repl.src.md', 'documentation', false);
+//     // processFileOrFolder('documentation/repl.md', 'documentation', false);
+// }
+
+// go();
