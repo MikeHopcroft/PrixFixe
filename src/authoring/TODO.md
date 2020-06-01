@@ -2,7 +2,6 @@
 
 * repl_main.ts
   * Convert to command-line-usage
-* x Remove samples/menu/bugs.md - put these cases in regression.yaml
 * test-runner.js
   * Update to use testRunnerMain2()
   * Rename application
@@ -27,14 +26,15 @@
 * measures.md
   * x correct SKUs and names
   * Link from main page
+* Document generator for repair cost!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+* x Remove samples/menu/bugs.md - put these cases in regression.yaml
 * x samples/menu/menu.yaml
-* Document generator for repair cost!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 * x Remove old samples
 * Get rid of genericEntityFactory() and specificEntityFactory()
 * Documentation for new tools
   * Make tutorial_builder available to short-order
   * Documentation build
-    * Ability to record any program - not just repl!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    * Ability to record any program - not just repl!!!!!!!!!!!!!!!!!!!!!!!!
       * Pull executable name and parameters from markdown.
       * Pass regular expression for prompt? How will process() work?
     * x REPL
