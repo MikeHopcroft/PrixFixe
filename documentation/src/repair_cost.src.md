@@ -55,8 +55,8 @@ When the observed and expected products have different generic forms, the cost o
 Let's look at an example. Suppose the observed cart contains
 [//]: # (repair)
 ~~~
-1 apple bran muffin (10000)
-    1 warmed (200)
+1 apple bran muffin (100009)
+    1 warmed (2009)
 1 tall latte (601)
     1 no foam (5200)
     5 vanilla syrup (2502)

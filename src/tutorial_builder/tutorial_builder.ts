@@ -11,18 +11,25 @@ import {
 
 import { scriptHandshake } from './script_handshake';
 
-export async function updateMarkdown(text: string) {
+export async function updateMarkdown(
+    nameToSKU: Map<string, number>,
+    text: string
+) {
     let blocks = parseMarkdown(text);
 
-    blocks = processRepair(blocks);
+    blocks = processRepair(nameToSKU, blocks);
     blocks = await processRepl(blocks);
     blocks = await processSpawn(blocks);
+    blocks = processWarnings(blocks);
 
     return combine(blocks);
 }
 
-function processRepair(blocks: AnyBlock[]): AnyBlock[] {
-    const re = /(\s*\d+\s+(.+)\s+\()(\d+(?:\.\d+))(\)\s*)/;
+function processRepair(
+    nameToSKU: Map<string, number>,
+    blocks: AnyBlock[]
+): AnyBlock[] {
+    const re = /(\s*\d+\s+(.+)\s+\()(\d+(?:\.\d+)?)(\)\s*)/;
 
     function replacer(
         match: string,
@@ -31,7 +38,15 @@ function processRepair(blocks: AnyBlock[]): AnyBlock[] {
         sku: string,
         right: string
     ) {
-        return left + 'SKU=' + sku + right;
+        const newSKU = nameToSKU.get(name);
+        if (!newSKU) {
+            const message = `Unknown product "${name}"`;
+            throw new TypeError(message);
+        }
+        if (sku !== newSKU.toString()) {
+            console.log(`${name}: ${sku} => ${newSKU}`);
+        }
+        return left + newSKU + right;
     }
 
     return blocks.map(block => {
@@ -109,6 +124,20 @@ async function processSpawn(blocks: AnyBlock[]): Promise<AnyBlock[]> {
                 ostream,
                 `~~~`,
             ]);
+        } else {
+            return block;
+        }
+    });
+}
+
+function processWarnings(blocks: AnyBlock[]): AnyBlock[] {
+    return blocks.map(block => {
+        if (block.type === CodeBlockType.WARNING) {
+            console.log(`WARNING: the following block may need manual fixup:`);
+            for (const line of block.lines) {
+                console.log('  ' + line);
+            }
+            return createBlock('verbatim', block.lines);
         } else {
             return block;
         }

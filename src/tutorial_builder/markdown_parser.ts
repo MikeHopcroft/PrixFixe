@@ -7,6 +7,7 @@ export enum CodeBlockType {
     REPL,
     SPAWN,
     VERBATIM,
+    WARNING,
 }
 
 export interface CodeBlock {
@@ -32,11 +33,16 @@ export interface VerbatimBlock extends CodeBlock {
     type: CodeBlockType.VERBATIM;
 }
 
+export interface WarningBlock extends CodeBlock {
+    type: CodeBlockType.WARNING;
+}
+
 export type AnyBlock =
     RepairBlock |
     ReplBlock |
     SpawnBlock |
-    VerbatimBlock;
+    VerbatimBlock |
+    WarningBlock;
 
 export function createBlock(info: string, lines: string[]): AnyBlock {
     const terms = info.trim().split(/\s+/);
@@ -73,6 +79,13 @@ export function createBlock(info: string, lines: string[]): AnyBlock {
         case 'verbatim': {
             const block: VerbatimBlock = {
                 type: CodeBlockType.VERBATIM,
+                lines,
+            };
+            return block;
+        }
+        case 'warning': {
+            const block: WarningBlock = {
+                type: CodeBlockType.WARNING,
                 lines,
             };
             return block;

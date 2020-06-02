@@ -30,19 +30,11 @@ In order to use `prix-fixe` you must have
 Use the `node` command to start up the menu explorer. The sample menu will be loaded by default. You can use the `-d` command-line argument to load a different menu.
 
 
-[//]: # (shell)
 ~~~
+$ node build/samples/repl.js -x
 Using experimental createWorld2()
-CreateWorld2
-Reading ..\shortorder\samples\menu\coffee.yaml
-Loading D:\git\menubot\shortorder\samples\menu\coffee.yaml
-Reading bakery.yaml
-Loading D:\git\menubot\shortorder\samples\menu\bakery.yaml
 Loaded prix-fixe extension.
 Loaded simple extension.
-create processor
-  Registering simple processor: Sample processor that supports add and remove.
-Current processor is Sample processor that supports add and remove..
 
 Welcome to the PrixFixe REPL.
 Type your order below.
@@ -56,37 +48,31 @@ Type .help for information on commands.
 We're in the Read-Eval-Print-Loop (REPL) and can type commands after the prompt. 
 Let's take a look at the menu. We can use the `.products` command to display the list of products in the menu:
 
-[//]: # (shell)
 ~~~
-
-
 % .products
-cappuccino (1)
-flat white (2)
-latte (3)
-latte macchiato (4)
-mocha (5)
-chai latte (6)
-espresso (100)
-lungo (101)
-ristretto (102)
-macchiato (103)
-americano (200)
-dark roast coffee (201)
 apple bran muffin (2000)
 blueberry muffin (2001)
 lemon poppyseed muffin (2002)
+cappuccino (300)
+flat white (301)
+latte (302)
+latte macchiato (303)
+mocha (304)
+chai latte (305)
+espresso (400)
+lungo (401)
+ristretto (402)
+macchiato (403)
+americano (500)
+dark roast coffee (501)
  
 % 
 ~~~
-Each product name is followed by its product id or `PID`. We drilldown on the specifics of a product by including its `PID` in the `.products` command. Let's look at the `latte` whose `PID` is `3`:
+Each product name is followed by its product id or `PID`. We drilldown on the specifics of a product by including its `PID` in the `.products` command. Let's look at the `latte` whose `PID` is `302`:
 
-[//]: # (shell)
 ~~~
-
-
-% .products 3
-latte (3)
+% .products 302
+latte (302)
   Aliases:
     caffe latte
     latte
@@ -114,77 +100,77 @@ latte (3)
         large
         venti
   Specifics:
-    short latte (3:0:0, 200)
-    tall latte (3:0:1, 201)
-    grande latte (3:0:2, 202) <== default
-    iced tall latte (3:1:1, 203)
-    iced grande latte (3:1:2, 204)
-    iced venti latte (3:1:3, 205)
+    short latte (302:0:0, 600)
+    tall latte (302:0:1, 601)
+    grande latte (302:0:2, 602) <== default
+    iced tall latte (302:1:1, 603)
+    iced grande latte (302:1:2, 604)
+    iced venti latte (302:1:3, 605)
   Options for grande latte:
-    almond milk (506)
-    almond syrup (300)
-    buttered rum syrup (301)
-    caramel syrup (302)
-    cinnamon (700)
-    cinnamon syrup (303)
-    coconut milk (504)
-    decaf (404)
-    dry (804)
-    eggnog (508)
-    equal (900)
-    foam (701)
-    for here cup (800)
-    half caf (402)
-    hazelnut syrup (304)
-    honey (901)
-    ice (702)
-    lid (801)
-    nonfat milk (503)
-    nutmeg (703)
-    oat milk (507)
-    one percent milk (502)
-    one third caf (403)
-    orange syrup (305)
-    peppermint syrup (306)
-    raspberry syrup (307)
-    regular (400)
-    soy milk (505)
-    splenda (902)
-    sugar (903)
-    sugar in the raw (904)
-    sweet n low (905)
-    to go (803)
-    toffee syrup (308)
-    two percent milk (501)
-    two thirds caf (401)
-    vanilla syrup (309)
-    water (705)
-    wet (805)
-    whipped cream (704)
-    whole milk (500)
-    with room (802)
+    almond milk (806)
+    almond syrup (600)
+    buttered rum syrup (601)
+    caramel syrup (602)
+    cinnamon (1000)
+    cinnamon syrup (603)
+    coconut milk (804)
+    decaf (704)
+    dry (1104)
+    eggnog (808)
+    equal (1200)
+    foam (1001)
+    for here cup (1100)
+    half caf (702)
+    hazelnut syrup (604)
+    honey (1201)
+    ice (1002)
+    lid (1101)
+    nonfat milk (803)
+    nutmeg (1003)
+    oat milk (807)
+    one percent milk (802)
+    one third caf (703)
+    orange syrup (605)
+    peppermint syrup (606)
+    raspberry syrup (607)
+    regular (700)
+    soy milk (805)
+    splenda (1202)
+    sugar (1203)
+    sugar in the raw (1204)
+    sweet n low (1205)
+    to go (1103)
+    toffee syrup (608)
+    two percent milk (801)
+    two thirds caf (701)
+    vanilla syrup (609)
+    water (1005)
+    wet (1105)
+    whipped cream (1004)
+    whole milk (800)
+    with room (1102)
   Exclusion Set 0
-    whole milk (500)
-    two percent milk (501)
-    one percent milk (502)
-    nonfat milk (503)
-    coconut milk (504)
-    soy milk (505)
-    almond milk (506)
-    oat milk (507)
-    eggnog (508)
+    whole milk (800)
+    two percent milk (801)
+    one percent milk (802)
+    nonfat milk (803)
+    coconut milk (804)
+    soy milk (805)
+    almond milk (806)
+    oat milk (807)
+    eggnog (808)
   Exclusion Set 1
-    regular (400)
-    two thirds caf (401)
-    half caf (402)
-    one third caf (403)
-    decaf (404)
+    regular (700)
+    two thirds caf (701)
+    half caf (702)
+    one third caf (703)
+    decaf (704)
   Exclusion Set 2
-    for here cup (800)
-    to go (803)
+    for here cup (1100)
+    to go (1103)
   Exclusion Set 3
-    dry (804)
-    wet (805)
+    dry (1104)
+    wet (1105)
 % 
 ~~~
 
@@ -195,14 +181,11 @@ This command returned a huge amount of information. Let's go through it section-
 * **Options** - This is the list of options that are legal for the product. We can examine any of the options with the `.options` command.
 * **Exclusion Sets** - Some options are mutually exclusive. In this case, a latte can only specify one type of milk, one caffeine level. It can be for here or to go and it can be wet or dry.
 
-Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `701`:
+Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `1001`:
 
-[//]: # (shell)
 ~~~
-
-
-% .options 701
-foam (701)
+% .options 1001
+foam (1001)
   Aliases:
     foam
   Attributes:
@@ -234,10 +217,10 @@ foam (701)
         lots of
         more
   Specifics:
-    no foam (701:0, 4800)
-    light foam (701:1, 4801)
-    foam (701:2, 4802) <== default
-    extra foam (701:3, 4803)
+    no foam (1001:0, 5200)
+    light foam (1001:1, 5201)
+    foam (1001:2, 5202) <== default
+    extra foam (1001:3, 5203)
   Options for foam:
 % 
 ~~~
@@ -245,44 +228,41 @@ We can see that the `foam` option is a bit simpler than the `latte` product, but
 
 Note that we can also use the `.aliases`, `.exclusions`, and `.specifics` commands if we only want to see a slice of information about a product or an option:
 
-[//]: # (shell)
 ~~~
-
-
-% .aliases 3
-latte (3)
+% .aliases 302
+latte (302)
   Aliases:
     caffe latte
     latte
-% .specifics 701
+% .specifics 1001
   Specifics:
-    no foam (701:0, 4800)
-    light foam (701:1, 4801)
-    foam (701:2, 4802) <== default
-    extra foam (701:3, 4803)
-% .exclusions 201
+    no foam (1001:0, 5200)
+    light foam (1001:1, 5201)
+    foam (1001:2, 5202) <== default
+    extra foam (1001:3, 5203)
+% .exclusions 501
   Exclusion Set 0
-    whole milk (500)
-    two percent milk (501)
-    one percent milk (502)
-    nonfat milk (503)
-    coconut milk (504)
-    soy milk (505)
-    almond milk (506)
-    oat milk (507)
-    eggnog (508)
+    whole milk (800)
+    two percent milk (801)
+    one percent milk (802)
+    nonfat milk (803)
+    coconut milk (804)
+    soy milk (805)
+    almond milk (806)
+    oat milk (807)
+    eggnog (808)
   Exclusion Set 1
-    regular (400)
-    two thirds caf (401)
-    half caf (402)
-    one third caf (403)
-    decaf (404)
+    regular (700)
+    two thirds caf (701)
+    half caf (702)
+    one third caf (703)
+    decaf (704)
   Exclusion Set 2
-    for here cup (800)
-    to go (803)
+    for here cup (1100)
+    to go (1103)
   Exclusion Set 3
-    dry (804)
-    wet (805)
+    dry (1104)
+    wet (1105)
 ~~~
 
 ## Building Orders
@@ -293,27 +273,24 @@ add [one|two|three] <specific product name>
 
 Here are some examples:
 
-[//]: # (shell)
 ~~~
-
-
 % add two iced grande latte
 
-  2 iced grande latte (204)                  3:1:2
+  2 iced grande latte (604)                302:1:2
 
 
 
 % add light foam
 
-  2 iced grande latte (204)                  3:1:2
-    1 light foam (4801)                      701:1
+  2 iced grande latte (604)                302:1:2
+    1 light foam (5201)                     1001:1
 
 
 
 % add apple bran muffin
 
-  2 iced grande latte (204)                  3:1:2
-    1 light foam (4801)                      701:1
+  2 iced grande latte (604)                302:1:2
+    1 light foam (5201)                     1001:1
   1 apple bran muffin (10000)                 2000
 ~~~
 
@@ -324,13 +301,10 @@ remove <specific product name>
 
 Here are some examples:
 
-[//]: # (shell)
 ~~~
-
-
 % remove light foam
 
-  2 iced grande latte (204)                  3:1:2
+  2 iced grande latte (604)                302:1:2
   1 apple bran muffin (10000)                 2000
 
 
@@ -353,28 +327,25 @@ Here are some examples:
 ## Measuring Repair Cost
 The `Menu Explorer` can calculate the repair cost to convert an observed cart into an expected cart. To use this feature, you must first construct an expected cart:
 
-[//]: # (shell)
 ~~~
-
-
 % add two iced tall mocha
 
-  2 iced tall mocha (403)                    5:1:1
+  2 iced tall mocha (803)                  304:1:1
 
 
 
 % add decaf
 
-  2 iced tall mocha (403)                    5:1:1
-    1 decaf (2600)                             404
+  2 iced tall mocha (803)                  304:1:1
+    1 decaf (3000)                             704
 
 
 
 % add three vanilla syrup
 
-  2 iced tall mocha (403)                    5:1:1
-    1 decaf (2600)                             404
-    3 vanilla syrup (2102)                   309:2
+  2 iced tall mocha (803)                  304:1:1
+    1 decaf (3000)                             704
+    3 vanilla syrup (2502)                   609:2
 
 
 
@@ -384,25 +355,18 @@ Expected cart set
 
 The `.score` command compares the current cart with the expected cart. Right now the carts are the same:
 
-[//]: # (shell)
 ~~~
-
-
 % .score
 Carts are identical
- 
 ~~~
 
 Let's see what happens if we delete vanilla syrup from the cart and then score:
 
-[//]: # (shell)
 ~~~
-
-
 % remove decaf
 
-  2 iced tall mocha (403)                    5:1:1
-    3 vanilla syrup (2102)                   309:2
+  2 iced tall mocha (803)                  304:1:1
+    3 vanilla syrup (2502)                   609:2
 
 
 
@@ -410,25 +374,21 @@ Let's see what happens if we delete vanilla syrup from the cart and then score:
 Carts are different.
 Total repairs: 1
   0:   id(11): insert default item(decaf)
- 
 ~~~
 
 Now let's change the quantity of the vanilla syrup:
 
-[//]: # (shell)
 ~~~
-
-
 % remove vanilla syrup
 
-  2 iced tall mocha (403)                    5:1:1
+  2 iced tall mocha (803)                  304:1:1
 
 
 
 % add two vanilla syrup
 
-  2 iced tall mocha (403)                    5:1:1
-    2 vanilla syrup (2102)                   309:2
+  2 iced tall mocha (803)                  304:1:1
+    2 vanilla syrup (2502)                   609:2
 
 
 
@@ -437,15 +397,11 @@ Carts are different.
 Total repairs: 2
   0:   id(13): change item(vanilla syrup) quantity to 3
   1:   id(16): insert default item(decaf)
- 
 ~~~
 
 Now let's use the `.reset` command to remove everything from the cart and then add a muffin:
 
-[//]: # (shell)
 ~~~
-
-
 % .reset
 Cart has been reset.
 % add apple bran muffin
@@ -465,7 +421,6 @@ Total repairs: 8
   5:   id(19): insert default item(vanilla syrup)
   6:   id(19): make item(vanilla syrup) quantity 3
   7:   id(20): insert default item(decaf)
- 
 ~~~
 
 ## Authoring Test Cases
@@ -480,89 +435,74 @@ The `Menu Explorer` includes commands for authoring test suites that can be used
 
 Let's create the test for the following three-step order:
 * _"hi um i'd ah like a tall flat white"_
-* _"actually can you make that iced"_
+* _"actually can you make that iced and decaf"_
 * _"and get me a warm bran muffin that's all"_
 
 We start the test with the `.newtest` command and then use `.step` to record the text.
 
-[//]: # (shell)
 ~~~
-
-
 % .newtest
 Creating new yaml test.
 Cart has been reset.
-% .step hi um i'd like a tall iced flat white
+% .step hi um i'd like a tall flat white
 ~~~
 
 Now we have to construct the cart for this step:
 
-[//]: # (shell)
 ~~~
-
-
 % add tall flat white
 
-  1 tall flat white (101)                    2:0:1
+  1 tall flat white (501)                  301:0:1
 ~~~
 
 In the second step, we have to do a bit more work to update the cart:
 
-[//]: # (shell)
 ~~~
-
-
 % .step actually can you make that iced and decaf
-  1 tall flat white (101)                    2:0:1
+  1 tall flat white (501)                  301:0:1
 
 
 % .reset
 Cart has been reset.
 % add iced tall flat white
 
-  1 iced tall flat white (103)               2:1:1
+  1 iced tall flat white (503)             301:1:1
 
 
 
 % add decaf
 
-  1 iced tall flat white (103)               2:1:1
-    1 decaf (2600)                             404
+  1 iced tall flat white (503)             301:1:1
+    1 decaf (3000)                             704
 ~~~
 
 Here's the third step:
 
-[//]: # (shell)
 ~~~
-
-
 % .step and get me a warm bran muffin that's all
-  1 iced tall flat white (103)               2:1:1
-    1 decaf (2600)                             404
+  1 iced tall flat white (503)             301:1:1
+    1 decaf (3000)                             704
 
 
 % add apple bran muffin
 
-  1 iced tall flat white (103)               2:1:1
-    1 decaf (2600)                             404
+  1 iced tall flat white (503)             301:1:1
+    1 decaf (3000)                             704
   1 apple bran muffin (10000)                 2000
 
 
 
 % add warmed
 
-  1 iced tall flat white (103)               2:1:1
-    1 decaf (2600)                             404
+  1 iced tall flat white (503)             301:1:1
+    1 decaf (3000)                             704
   1 apple bran muffin (10000)                 2000
-    1 warmed (6700)                           1200
+    1 warmed (200)                             100
 ~~~
 
 Now let's add some suite tags and a comment and then generate the YAML:
 
-[//]: # (shell)
 ~~~
-
-
 % .suites standard example
 Suites set to "standard example"
 % .comment a simple, three-step order
@@ -581,12 +521,12 @@ tests:
     steps:
       - turns:
           - speaker: speaker
-            transcription: hi um i'd like a tall iced flat white
+            transcription: hi um i'd like a tall flat white
         cart:
           items:
             - quantity: 1
               name: tall flat white
-              sku: '101'
+              sku: '501'
               children: []
       - turns:
           - speaker: speaker
@@ -595,11 +535,11 @@ tests:
           items:
             - quantity: 1
               name: iced tall flat white
-              sku: '103'
+              sku: '503'
               children:
                 - quantity: 1
                   name: decaf
-                  sku: '2600'
+                  sku: '3000'
                   children: []
       - turns:
           - speaker: speaker
@@ -608,11 +548,11 @@ tests:
           items:
             - quantity: 1
               name: iced tall flat white
-              sku: '103'
+              sku: '503'
               children:
                 - quantity: 1
                   name: decaf
-                  sku: '2600'
+                  sku: '3000'
                   children: []
             - quantity: 1
               name: apple bran muffin
@@ -620,7 +560,7 @@ tests:
               children:
                 - quantity: 1
                   name: warmed
-                  sku: '6700'
+                  sku: '200'
                   children: []
 ~~~
 
@@ -628,6 +568,8 @@ Once you have a YAML test suite, you can use it with the `filter_suite` and
 `evaluate` commands.
 
 ## Extending the Menu Explorer
+
+THIS SECTION IS STILL A WORK IN PROGRESS
 
 We've seen that the `Menu Explorer` includes a rudamentary text processor that supports adding and removing products and options.
 
@@ -647,12 +589,6 @@ A `State` consists of a `Cart`, which holds a seqeunce of `ItemInstance` trees. 
  */
 export type UID = number;
 
-/**
- * An instance of an item in the shopping cart.
- *
- * @designNote The UID should be added when new ItemInstances are created, using
- * the `nextId()` function in id_generator.ts.
- */
 export interface ItemInstance {
     uid: UID;
     key: Key;
@@ -660,15 +596,6 @@ export interface ItemInstance {
     children: ItemInstance[];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Cart
-//
-///////////////////////////////////////////////////////////////////////////////
-/**
- * A shopping cart consists of a sequence of ItemInstances. Items appear in the
- * sequence in the order they were added to the cart.
- */
 export interface Cart {
     items: ItemInstance[];
 }
@@ -678,5 +605,6 @@ export interface State {
 }
 ~~~
 
-TODO: Explain how to provide the processor.
-TODO: Use convenience method that creates the factory and repl extension.
+TODO:
+* Explain how to provide the processor.
+* Use convenience method that creates the factory and repl extension.

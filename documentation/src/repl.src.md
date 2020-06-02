@@ -21,6 +21,7 @@ In order to use `prix-fixe` you must have
 
 ~~~
 % git clone git@github.com:MikeHopcroft/PrixFixe.git
+% cd PrixFixe
 % npm run install
 % npm run compile
 ~~~
@@ -31,7 +32,7 @@ Use the `node` command to start up the menu explorer. The sample menu will be lo
 
 [//]: # (repl)
 ~~~
-$ node build/samples/repl.js
+$ node build/samples/repl.js -x
 
 Loaded prix-fixe extension.
 Loaded short-order extension.
