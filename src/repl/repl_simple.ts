@@ -28,10 +28,10 @@ class SimpleReplExtension implements IReplExtension {
     }
 
     createProcessor(): ReplProcessor | null {
-        console.log('create processor');
+        // console.log('create processor');
         return {
             name: 'simple',
-            description: 'Sample processor that supports add and remove.',
+            description: 'Simple processor that supports add and remove.',
             processor: async (text: string, state: State): Promise<State> => {
                 const add = text.match(/\s*add(\s+(one|two|three))?\s+(.+)/);
                 

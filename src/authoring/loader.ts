@@ -29,7 +29,7 @@ class CatalogBuilder {
     context: string[] = [process.cwd()];
 
     process(filename: string) {
-        console.log(`Reading ${filename}`);
+        // console.log(`Reading ${filename}`);
 
         // Resolve filename relative to previous file.
         const resolved: string = path.resolve(
@@ -37,7 +37,7 @@ class CatalogBuilder {
             filename
         );
 
-        console.log(`Loading ${resolved}`);
+        // console.log(`Loading ${resolved}`);
         const root = yaml.safeLoad(fs.readFileSync(resolved, 'utf8'));
         const catalog = validate(partialCatalogSpecType, root);
 

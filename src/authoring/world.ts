@@ -12,7 +12,7 @@ import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
 
 export function createWorld2(dataPath: string): World {
-    console.log('CreateWorld2');
+    // console.log('CreateWorld2');
 
     const catalogFile = path.join(dataPath, 'menu.yaml');
     const spec = loadCatalog(catalogFile);

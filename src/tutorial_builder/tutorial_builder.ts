@@ -40,7 +40,6 @@ function processRepair(blocks: AnyBlock[]): AnyBlock[] {
                 if (i < 2 || i === block.lines.length - 1) {
                     return line;
                 } else {
-                    // return 'REPAIRED: ' + line;
                     return line.replace(re, replacer);
                 }
             });
@@ -67,10 +66,28 @@ async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
     let i = 0;
     return blocks.map(block => {
         if (block.type === CodeBlockType.REPL) {
-            return createBlock(
-                'verbatim',
-                ['~~~', ...outputSections[i++], '~~~']
-            );
+            if (
+                i === 0 &&
+                replBlocks[i].lines.length >= 3 && 
+                replBlocks[i].lines[2].startsWith('$')
+            ) {
+                // First block starts with command to invoke repl.
+                return createBlock(
+                    'verbatim',
+                    [
+                        '~~~',
+                        replBlocks[i].lines[2],
+                        ...outputSections[i++],
+                        '~~~',
+                    ]
+                );
+            } else {
+                const s = outputSections[i];
+                return createBlock(
+                    'verbatim',
+                    ['~~~', ...outputSections[i++], '~~~']
+                );
+            }
         } else {
             return block;
         }
@@ -151,154 +168,34 @@ function makeOutputSections(lines: string[]) {
     let currentSection: string[] = [];
     for (const line of lines) {
         if (line.includes('#SECTION')) {
-            trimTrailingBlankLines(currentSection);
             outputSections.push(currentSection);
             currentSection = [];
         } else {
             currentSection.push(line);
         }
     }
+
+    for (const section of outputSections) {
+        trimLeadingBlankLines(section);
+        trimTrailingBlankLines(section);
+    }
+
     // NOTE: it's ok that we're dropping the last section because it is just
     // the output from the REPL shutting down at the end of input.
 
     return outputSections;
 }
 
-function trimTrailingBlankLines(lines: string[]) {
+function trimLeadingBlankLines(lines: string[]) {
     // Remove trailing blank lines.
-    while (lines.length > 1 && lines[lines.length - 1] === '') {
-        lines.pop();
+    while (lines.length > 0 && lines[0].trim() === '') {
+        lines.shift();
     }
 }
 
-
-// main();
-
-// async function processFileOrFolder(
-//     inPath: string,
-//     outPath: string | undefined,
-//     recursive: boolean
-// ) {
-//     // TODO: catch file not found (ENOENT)?
-//     const inIsDir = fs.lstatSync(inPath).isDirectory();
-
-//     if (outPath === undefined) {
-//         if (inIsDir) {
-//             outPath = inPath;
-//         } else {
-//             outPath = path.dirname(inPath);
-//         }
-//     }
-
-//     const outIsDir = fs.lstatSync(outPath).isDirectory();
-
-//     if (inIsDir && outIsDir) {
-//         // Process all files from inDir to outDir.
-//         let files: string[];
-//         if (recursive) {
-//             files = await recursiveReaddir(inPath);
-//         } else {
-//             files = fs.readdirSync(inPath);
-//         }
-
-//         for (const inFile of files) {
-//             if (inFile.match(/\.src\.md$/)) {
-//                 const outFile = rename(inFile, outPath);
-//                 // console.log(`${inFile} => ${outFile}`);
-//                 convertFile(inFile, outFile);
-//             }
-//         }
-//     } else if (outIsDir) {
-//         // Process one file from inDir to outDir
-//         if (inPath.match(/\.src\.md$/)) {
-//             const outFile = rename(inPath, outPath);
-//             // console.log(`${inPath} => ${outFile}`);
-//             convertFile(inPath, outFile);
-//         } else {
-//             const message = `File ${inPath} does not end in .src.md`;
-//             throw new TypeError(message);
-//         }
-//     } else if (inIsDir) {
-//         const message = `Cannot process directory ${
-//             inPath
-//         } to single output file ${
-//             outPath
-//         }`;
-//         throw new TypeError(message);
-//     } else {
-//         // Process one file to another
-//         const inFile = path.resolve(inPath);
-//         const outFile = path.resolve(outPath);
-//         convertFile(inPath, outFile);
-
-//         // if (inFile === outFile) {
-//         //     const message = `Input file cannot be the same as output file`;
-//         //     throw new TypeError(message);
-//         // }
-//         // console.log(`${inFile} => ${outFile}`);
-//     }
-// }
-
-// function convertFile(inFile: string, outFile: string) {
-//     const inPath = path.resolve(inFile);
-//     const outPath = path.resolve(outFile);
-
-//     if (!inPath.match(/\.src\.md$/)) {
-//         const message = `File ${inPath} does not end with .src.md`;
-//         throw new TypeError(message);
-//     }
-
-//     if (outPath.match(/\.src\.md$/)) {
-//         const message = `File ${outPath} cannot end with .src.md`;
-//         throw new TypeError(message);
-//     }
-
-//     if (inPath === outPath) {
-//         const message = `Input file ${inPath} cannot be the same as output file`;
-//         throw new TypeError(message);
-//     }
-
-//     console.log(`Converting: ${inFile} => ${outFile}`);
-// }
-
-// // function processFolder(inFolder: string, outFolder: string, recursive: boolean) {
-
-// // }
-
-// function rename(fileName: string, outDir: string): string {
-//     // console.log(`${filename}:`);
-//     // console.log(`  resolved: ${path.resolve(filename)}`);
-//     // console.log(`  dirname: ${path.dirname(filename)}`);
-//     // console.log(`  basename: ${path.basename(filename)}`);
-//     // console.log(`  extname: ${path.extname(filename)}`);
-
-//     const baseName = path.basename(fileName);
-//     const outFile = baseName.replace(/(\.src\.md)$/, '.md');
-//     const outPath = path.join(outDir, outFile);
-
-//     // console.log(`  outpath: ${outPath}`);
-
-//     return outPath;
-// }
-
-// function go() {
-//     // const paths = [
-//     //     'd:\\git\\foobar\\test.src.md',
-//     //     '~/mike/documentation.test.src.md',
-//     //     'dir1/dir2/foo.test.md',
-//     //     '/usr/tmp/foo.md',
-//     //     'dir1/dir2/foo',
-//     //     '../dir1/dir2/foo',
-//     // ];
-
-//     // for (const path of paths) {
-//     //     rename(path, '/tmp/mike');
-//     // }
-//     processFileOrFolder('documentation/src', 'documentation', false);
-//     processFileOrFolder('documentation/src', 'c:\\temp\\', false);
-//     processFileOrFolder('documentation/src', undefined, false);
-//     processFileOrFolder('documentation/src/repl.src.md', 'documentation', false);
-//     // processFileOrFolder('documentation/repl.md', 'documentation', false);
-// }
-
-// go();
+function trimTrailingBlankLines(lines: string[]) {
+    // Remove trailing blank lines.
+    while (lines.length > 1 && lines[lines.length - 1].trim() === '') {
+        lines.pop();
+    }
+}

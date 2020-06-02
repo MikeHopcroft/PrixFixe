@@ -198,9 +198,9 @@ class ReplCore implements IRepl {
 
             const processor = extension.createProcessor();
             if (processor) {
-                console.log(
-                    `  Registering ${processor.name} processor: ${processor.description}`
-                );
+                // console.log(
+                //     `  Registering ${processor.name} processor: ${processor.description}`
+                // );
                 processors.push(processor);
             }
         }
@@ -209,7 +209,7 @@ class ReplCore implements IRepl {
         let processor: Processor | undefined = undefined;
         if (processors.length > 0) {
             processor = processors[0].processor;
-            console.log(`Current processor is ${processors[0].description}.`);
+            // console.log(`Current processor is ${processors[0].description}.`);
         } else {
             console.log(`No processor registered.`);
         }

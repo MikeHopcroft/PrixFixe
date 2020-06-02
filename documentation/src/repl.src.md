@@ -55,11 +55,11 @@ Let's take a look at the menu. We can use the `.products` command to display the
 % .products
 % #
 ~~~
-Each product name is followed by its product id or `PID`. We drilldown on the specifics of a product by including its `PID` in the `.products` command. Let's look at the `latte` whose `PID` is `3`:
+Each product name is followed by its product id or `PID`. We drilldown on the specifics of a product by including its `PID` in the `.products` command. Let's look at the `latte` whose `PID` is `302`:
 
 [//]: # (repl)
 ~~~
-% .products 3
+% .products 302
 % #
 ~~~
 
@@ -70,11 +70,11 @@ This command returned a huge amount of information. Let's go through it section-
 * **Options** - This is the list of options that are legal for the product. We can examine any of the options with the `.options` command.
 * **Exclusion Sets** - Some options are mutually exclusive. In this case, a latte can only specify one type of milk, one caffeine level. It can be for here or to go and it can be wet or dry.
 
-Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `701`:
+Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `1001`:
 
 [//]: # (repl)
 ~~~
-% .options 701
+% .options 1001
 % #
 ~~~
 We can see that the `foam` option is a bit simpler than the `latte` product, but it still has an attribute to specify the amount.
@@ -83,9 +83,9 @@ Note that we can also use the `.aliases`, `.exclusions`, and `.specifics` comman
 
 [//]: # (repl)
 ~~~
-% .aliases 3
-% .specifics 701
-% .exclusions 201
+% .aliases 302
+% .specifics 1001
+% .exclusions 501
 ~~~
 
 ## Building Orders
@@ -174,7 +174,7 @@ The `Menu Explorer` includes commands for authoring test suites that can be used
 
 Let's create the test for the following three-step order:
 * _"hi um i'd ah like a tall flat white"_
-* _"actually can you make that iced"_
+* _"actually can you make that iced and decaf"_
 * _"and get me a warm bran muffin that's all"_
 
 We start the test with the `.newtest` command and then use `.step` to record the text.
@@ -225,6 +225,8 @@ Once you have a YAML test suite, you can use it with the `filter_suite` and
 
 ## Extending the Menu Explorer
 
+THIS SECTION IS STILL A WORK IN PROGRESS
+
 We've seen that the `Menu Explorer` includes a rudamentary text processor that supports adding and removing products and options.
 
 We can easily extend the `Menu Explorer` to use a more sophisticated, custom text processor, perhaps based on machine learning and language models.
@@ -243,12 +245,6 @@ A `State` consists of a `Cart`, which holds a seqeunce of `ItemInstance` trees. 
  */
 export type UID = number;
 
-/**
- * An instance of an item in the shopping cart.
- *
- * @designNote The UID should be added when new ItemInstances are created, using
- * the `nextId()` function in id_generator.ts.
- */
 export interface ItemInstance {
     uid: UID;
     key: Key;
@@ -256,15 +252,6 @@ export interface ItemInstance {
     children: ItemInstance[];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//
-// Cart
-//
-///////////////////////////////////////////////////////////////////////////////
-/**
- * A shopping cart consists of a sequence of ItemInstances. Items appear in the
- * sequence in the order they were added to the cart.
- */
 export interface Cart {
     items: ItemInstance[];
 }
@@ -274,5 +261,6 @@ export interface State {
 }
 ~~~
 
-TODO: Explain how to provide the processor.
-TODO: Use convenience method that creates the factory and repl extension.
+TODO:
+* Explain how to provide the processor.
+* Use convenience method that creates the factory and repl extension.

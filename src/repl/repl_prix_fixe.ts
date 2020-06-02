@@ -121,6 +121,7 @@ function displayMenu(world: World, line: string, kind?: MENUITEM | OPTION) {
         describeGeneric(world, pid);
     } else {
         console.log(`Unknown item "${line}".`);
+        console.log(' ');
     }
 }
 

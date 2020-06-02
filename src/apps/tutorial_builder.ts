@@ -136,7 +136,7 @@ function parseMarkdown(
         while (!input.atEOS()) {
             if (input.peek() === '~~~') {
                 const block = parseCodeBlock();
-                if (lastLine !== '[//]: # (shell)') {
+                if (lastLine !== '[//]: # (repl)') {
                     textBlock.push('~~~');
                     for (const line of block) {
                         textBlock.push(line);

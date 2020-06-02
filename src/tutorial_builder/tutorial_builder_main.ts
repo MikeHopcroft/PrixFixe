@@ -32,7 +32,6 @@ async function main() {
         args.d === true
     );
 
-    console.log('done');
     return succeed(true);
 }
 
