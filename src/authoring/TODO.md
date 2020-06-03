@@ -1,5 +1,6 @@
 # TODO List
 
+* Document aliases mini language
 * .products/.options/.menu command should mark hidden attributes
 * extra line after .aliases/.specifics/.exclusions/.reset
 * empty cart in REPL uses lots of white space
