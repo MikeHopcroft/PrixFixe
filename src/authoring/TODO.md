@@ -1,8 +1,12 @@
 # TODO List
 
+* .products/.options/.menu command should mark hidden attributes
+* extra line after .aliases/.specifics/.exclusions/.reset
+* empty cart in REPL uses lots of white space
+* "make item quantity" => "change item quantity from x to y"
 * tutorial_builder
   * clean up
-  * finish repair
+  * x finish repair
   * test with real documentation
 * repl_main.ts
   * Convert to command-line-usage
@@ -39,7 +43,7 @@
   * Make tutorial_builder available to short-order
   * Documentation build
     * Ability to record any program - not just repl!!!!!!!!!!!!!!!!!!!!!!!!
-      * Pull executable name and parameters from markdown.
+      * x Pull executable name and parameters from markdown.
       * Pass regular expression for prompt? How will process() work?
     * x REPL
     * Analysis of repair cost metrics
