@@ -145,7 +145,7 @@ class RuleChecker2 implements IRuleChecker {
         child: string
     ): (existing: string) => boolean {
         const pPID = AttributeInfo.pidFromKey(parent);
-        const children = new Set<PID>();
+        // const children = new Set<PID>();
 
         // Exclusion sets associated with the parrent.
         const allExclusionSets = this.exclusion.get(pPID);
@@ -158,6 +158,11 @@ class RuleChecker2 implements IRuleChecker {
 
         return (existing: string) => {
             const ePID = AttributeInfo.pidFromKey(existing);
+            if (cPID === ePID) {
+                // There is already a child with this PID, so adding another
+                // violates mutual-exclusivity with respect to attributes.
+                return false;
+            }
             for (const es of allExclusionSets) {
                 if (es.has(cPID) && es.has(ePID)) {
                     return false;
