@@ -42,7 +42,9 @@ function showUsage() {
     console.log('Interactive Menu Explorer');
     console.log('Read-Eval-Print-Loop (REPL)');
     console.log('');
-    console.log('An interactive tool for exploring menus and processing utterances.');
+    console.log(
+        'An interactive tool for exploring menus and processing utterances.'
+    );
     console.log('');
     console.log(`Usage: node ${program} [-d datapath] [-h|help|?]`);
     console.log('');

@@ -206,11 +206,7 @@ async function processFileOrFolder(
             throw new TypeError(message);
         }
     } else if (inIsDir) {
-        const message = `Cannot process directory ${
-            inPath
-        } to single output file ${
-            outPath
-        }`;
+        const message = `Cannot process directory ${inPath} to single output file ${outPath}`;
         throw new TypeError(message);
     } else {
         // Process one file to another
@@ -248,7 +244,6 @@ async function convertFile(
     } else {
         console.log(`Converting: ${inFile} => ${outFile}`);
     }
-
 
     const text = fs.readFileSync(inFile, 'utf8');
     const updatedText = await updateMarkdown(nameToSKU, text);

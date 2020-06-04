@@ -11,7 +11,7 @@ import {
 import { ICatalog, MENUITEM, SpecificTypedEntity } from '../catalog';
 import { ItemInstance, ICartOps } from '../cart';
 
-// Sample ReplExtension that provides a Processor 
+// Sample ReplExtension that provides a Processor
 class SimpleReplExtension implements IReplExtension {
     // world: World;
     private readonly catalog: ICatalog;
@@ -34,7 +34,7 @@ class SimpleReplExtension implements IReplExtension {
             description: 'Simple processor that supports add and remove.',
             processor: async (text: string, state: State): Promise<State> => {
                 const add = text.match(/\s*add(\s+(one|two|three))?\s+(.+)/);
-                
+
                 if (add) {
                     let quantity = 1;
                     if (add[2]) {
@@ -60,13 +60,24 @@ class SimpleReplExtension implements IReplExtension {
 
                         if (specific.kind === MENUITEM) {
                             // Adding a new product.
-                            const cart = this.cartOps.addToCart(state.cart, item);
+                            const cart = this.cartOps.addToCart(
+                                state.cart,
+                                item
+                            );
                             return { ...state, cart };
                         } else if (state.cart.items.length > 0) {
                             // Adding an option to an existing product.
-                            const parent = state.cart.items[state.cart.items.length - 1];
-                            const newParent = this.cartOps.addToItemWithReplacement(parent, item, true);
-                            const cart = this.cartOps.replaceInCart(state.cart, newParent);
+                            const parent =
+                                state.cart.items[state.cart.items.length - 1];
+                            const newParent = this.cartOps.addToItemWithReplacement(
+                                parent,
+                                item,
+                                true
+                            );
+                            const cart = this.cartOps.replaceInCart(
+                                state.cart,
+                                newParent
+                            );
                             return { ...state, cart };
                         }
                     }
@@ -79,8 +90,8 @@ class SimpleReplExtension implements IReplExtension {
                     if (specific) {
                         for (const item of this.cartOps.findByKey(
                             state.cart,
-                            specific.key)
-                        ) {
+                            specific.key
+                        )) {
                             // Remove the first matching item.
                             const cart = this.cartOps.removeFromCart(
                                 state.cart,
@@ -97,8 +108,7 @@ class SimpleReplExtension implements IReplExtension {
         };
     }
 
-    registerCommands(repl: IRepl): void {
-    }
+    registerCommands(repl: IRepl): void {}
 }
 
 export const simpleReplExtensionFactory: IReplExtensionFactory = {

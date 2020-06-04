@@ -83,25 +83,23 @@ async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
         if (block.type === CodeBlockType.REPL) {
             if (
                 i === 0 &&
-                replBlocks[i].lines.length >= 3 && 
+                replBlocks[i].lines.length >= 3 &&
                 replBlocks[i].lines[2].startsWith('$')
             ) {
                 // First block starts with command to invoke repl.
-                return createBlock(
-                    'verbatim',
-                    [
-                        '~~~',
-                        replBlocks[i].lines[2],
-                        ...outputSections[i++],
-                        '~~~',
-                    ]
-                );
+                return createBlock('verbatim', [
+                    '~~~',
+                    replBlocks[i].lines[2],
+                    ...outputSections[i++],
+                    '~~~',
+                ]);
             } else {
                 const s = outputSections[i];
-                return createBlock(
-                    'verbatim',
-                    ['~~~', ...outputSections[i++], '~~~']
-                );
+                return createBlock('verbatim', [
+                    '~~~',
+                    ...outputSections[i++],
+                    '~~~',
+                ]);
             }
         } else {
             return block;
@@ -112,10 +110,7 @@ async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
 async function processSpawn(blocks: AnyBlock[]): Promise<AnyBlock[]> {
     return blocks.map(block => {
         if (block.type === CodeBlockType.SPAWN) {
-            const program = spawnSync(
-                block.executable,
-                block.args
-            );
+            const program = spawnSync(block.executable, block.args);
             const ostream = program.stdout;
 
             return createBlock('verbatim', [
@@ -178,11 +173,7 @@ async function runScript(scriptLines: string[]): Promise<string[]> {
     // TODO: pull executable name and args from markdown file
     const outputText = await scriptHandshake(
         'node.exe',
-        [
-            'build/samples/repl.js',
-            '-x',
-            '-d=..\\shortorder\\samples\\menu',
-        ],
+        ['build/samples/repl.js', '-x', '-d=..\\shortorder\\samples\\menu'],
         '% ',
         scriptLines
     );

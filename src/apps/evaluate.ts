@@ -103,14 +103,14 @@ function evaluate(
                 world.attributeInfo,
                 world.catalog
             );
-            notes = 'Menu-based repairs, createWorld2';    
+            notes = 'Menu-based repairs, createWorld2';
         } else {
             const world = createWorld(dataPath);
             repairs = createMenuBasedRepairFunction(
                 world.attributeInfo,
                 world.catalog
             );
-            notes = 'Menu-based repairs';   
+            notes = 'Menu-based repairs';
         }
     } else {
         repairs = createSimpleRepairFunction();

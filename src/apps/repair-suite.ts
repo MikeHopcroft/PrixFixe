@@ -147,7 +147,10 @@ function replaceSKUsInLines(lines: string[], skus: number[]) {
     let i = 0;
     return lines.map(line => {
         if (line.match(/^(\s*sku: ['"])\d+(['"]\s*)$/)) {
-            line = line.replace(/^(\s*sku: ['"])\d+(['"]\s*)$/, `$1${skus[i++]}$2`);
+            line = line.replace(
+                /^(\s*sku: ['"])\d+(['"]\s*)$/,
+                `$1${skus[i++]}$2`
+            );
         }
         return line;
     });

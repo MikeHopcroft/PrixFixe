@@ -38,11 +38,11 @@ export interface WarningBlock extends CodeBlock {
 }
 
 export type AnyBlock =
-    RepairBlock |
-    ReplBlock |
-    SpawnBlock |
-    VerbatimBlock |
-    WarningBlock;
+    | RepairBlock
+    | ReplBlock
+    | SpawnBlock
+    | VerbatimBlock
+    | WarningBlock;
 
 export function createBlock(info: string, lines: string[]): AnyBlock {
     const terms = info.trim().split(/\s+/);
@@ -104,9 +104,7 @@ export function createBlock(info: string, lines: string[]): AnyBlock {
 // blocks (delimited by ~~~).
 //
 ///////////////////////////////////////////////////////////////////////////////
-export function parseMarkdown(
-    text: string
-): AnyBlock[] {
+export function parseMarkdown(text: string): AnyBlock[] {
     const input = new PeekableSequence(text.split(/\r?\n/g).values());
     const blocks: AnyBlock[] = [];
 
@@ -149,7 +147,7 @@ export function parseMarkdown(
     }
 
     function parseCode(header?: string): AnyBlock {
-        const lines: string[] = [ ];
+        const lines: string[] = [];
 
         if (header) {
             lines.push(header);

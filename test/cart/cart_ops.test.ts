@@ -198,12 +198,14 @@ describe('CartOps', () => {
 
             cart = ops.replaceInCart(cart, coffeeWithoutWhippedCream);
             assert.deepEqual(cart.items, [
-                { 
+                {
                     ...cart.items[0],
-                    children: [{
-                        ...whippedCreamItem,
-                        quantity: 2,
-                    }],
+                    children: [
+                        {
+                            ...whippedCreamItem,
+                            quantity: 2,
+                        },
+                    ],
                 },
             ]);
         });
