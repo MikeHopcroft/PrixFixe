@@ -1,5 +1,9 @@
 # TODO List
 
+* Figure out 2 vs 4 space tabs in VSCode
+* Test runner compare with baseline feature
+* Test runner suppress details (show only summary)
+* Convert ProcessOneDemo to replace testCase.run() with code from test_suite2
 * Document aliases mini language
 * .products/.options/.menu command should mark hidden attributes
 * extra line after .aliases/.specifics/.exclusions/.reset

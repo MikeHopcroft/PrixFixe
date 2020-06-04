@@ -2764,3 +2764,100 @@ tests:
                       name: ice
                       sku: '5302'
                       children: []
+
+      - id: 1028
+        suites: 'extras bug disfluency'
+        comment: 'Disfluency prevents order'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: Hi um i'd like a ah a latte with vanilla syrup
+            cart:
+              items:
+                - quantity: 1
+                  name: grande latte
+                  sku: '602'
+                  children:
+                    - quantity: 1
+                      name: vanilla syrup
+                      sku: '2502'
+                      children: []
+      - id: 1029
+        suites: 'extras bug'
+        comment: 'Should not add a second muffin'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: i'd like a muffin
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children: []
+          - turns:
+              - speaker: speaker
+                transcription: and can you warm the muffin
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children:
+                    - quantity: 1
+                      name: warmed
+                      sku: '200'
+                      children: []
+
+      - id: 1030
+        suites: 'extras bug'
+        comment: 'option-as-verb should warm the muffin'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: i'd like a muffin
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children: []
+          - turns:
+              - speaker: speaker
+                transcription: warm that
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children:
+                    - quantity: 1
+                      name: warmed
+                      sku: '200'
+                      children: []
+      - id: 1031
+        suites: 'extras bug'
+        comment: 'option-as-verb should slice the muffin'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: add a muffin
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children: []
+          - turns:
+              - speaker: speaker
+                transcription: slice the muffin
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children:
+                    - quantity: 1
+                      name: cut in half
+                      sku: '300'
+                      children: []
