@@ -84,7 +84,8 @@ export interface ICartOps {
 
     addToItemWithReplacement(
         parent: ItemInstance,
-        child: ItemInstance
+        child: ItemInstance,
+        combineQuantities: boolean
     ): ItemInstance;
 
     ///////////////////////////////////////////////////////////////////////////

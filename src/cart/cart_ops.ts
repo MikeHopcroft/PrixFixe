@@ -61,7 +61,8 @@ export class CartOps implements ICartOps {
 
     addToItemWithReplacement(
         parent: ItemInstance,
-        child: ItemInstance
+        child: ItemInstance,
+        combineQuantities: boolean
     ): ItemInstance {
         let inserted = false;
         const f = this.ruleChecker.getPairwiseMutualExclusionPredicate(
@@ -75,7 +76,14 @@ export class CartOps implements ICartOps {
             } else {
                 if (!inserted) {
                     inserted = true;
-                    newChildren.push(child);
+                    if (combineQuantities) {
+                        newChildren.push({
+                            ...child,
+                            quantity: child.quantity + c.quantity,
+                        });
+                    } else {
+                        newChildren.push(child);
+                    }
                 }
             }
         }

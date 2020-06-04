@@ -65,7 +65,7 @@ class SimpleReplExtension implements IReplExtension {
                         } else if (state.cart.items.length > 0) {
                             // Adding an option to an existing product.
                             const parent = state.cart.items[state.cart.items.length - 1];
-                            const newParent = this.cartOps.addToItemWithReplacement(parent, item);
+                            const newParent = this.cartOps.addToItemWithReplacement(parent, item, true);
                             const cart = this.cartOps.replaceInCart(state.cart, newParent);
                             return { ...state, cart };
                         }

@@ -1353,7 +1353,7 @@ tests:
                   name: grande flat white
                   sku: '502'
                   children:
-                    - quantity: 2
+                    - quantity: 5
                       name: equal
                       sku: '6302'
                       children: []

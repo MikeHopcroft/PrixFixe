@@ -138,7 +138,8 @@ describe('CartOps', () => {
             const original = { ...smallVanillaConeItem };
             const modified = ops.addToItemWithReplacement(
                 original,
-                smallCoffeeItem
+                smallCoffeeItem,
+                false
             );
 
             // Look for the correct change.
@@ -166,7 +167,8 @@ describe('CartOps', () => {
 
             const coffeeWithoutWhippedCream = ops.addToItemWithReplacement(
                 coffeeWithWhippedCream,
-                noWhippedCreamItem
+                noWhippedCreamItem,
+                false
             );
 
             cart = ops.replaceInCart(cart, coffeeWithoutWhippedCream);
@@ -174,7 +176,40 @@ describe('CartOps', () => {
                 { ...cart.items[0], children: [noWhippedCreamItem] },
             ]);
         });
+
+        it('Add to ItemInstance With Replacement (combineQuantities)', () => {
+            let cart: Cart = { items: [] };
+
+            const coffeeWithWhippedCream = ops.addToItem(
+                smallCoffeeItem,
+                whippedCreamItem
+            );
+
+            cart = ops.addToCart(cart, coffeeWithWhippedCream);
+            assert.deepEqual(cart.items, [
+                { ...cart.items[0], children: [whippedCreamItem] },
+            ]);
+
+            const coffeeWithoutWhippedCream = ops.addToItemWithReplacement(
+                coffeeWithWhippedCream,
+                whippedCreamItem,
+                true
+            );
+
+            cart = ops.replaceInCart(cart, coffeeWithoutWhippedCream);
+            assert.deepEqual(cart.items, [
+                { 
+                    ...cart.items[0],
+                    children: [{
+                        ...whippedCreamItem,
+                        quantity: 2,
+                    }],
+                },
+            ]);
+        });
     });
+
+    // TODO: test case for combineQuantities
 
     ///////////////////////////////////////////////////////////////////////////
     //
