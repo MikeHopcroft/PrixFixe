@@ -47,105 +47,105 @@ import { TestCase, TestSuite } from './test_suite';
 let errorCount = 0;
 
 function verifyTestStep(
-    step: TestStep,
-    catalog: ICatalog,
-    rules: IRuleChecker
+  step: TestStep,
+  catalog: ICatalog,
+  rules: IRuleChecker
 ): TestStep {
-    let fixedSomething = false;
-    const lines: TestLineItem[] = [];
-    const cart = step.cart;
-    let currentLine = 0;
+  let fixedSomething = false;
+  const lines: TestLineItem[] = [];
+  const cart = step.cart;
+  let currentLine = 0;
+
+  while (currentLine < cart.length) {
+    const parent = cart[currentLine++];
+    lines.push(parent);
+    //        const f = rules.getIncrementalMutualExclusionPredicate(parent.key);
 
     while (currentLine < cart.length) {
-        const parent = cart[currentLine++];
-        lines.push(parent);
-        //        const f = rules.getIncrementalMutualExclusionPredicate(parent.key);
+      const child = cart[currentLine];
+      if (child.indent === 0) {
+        break;
+      }
 
-        while (currentLine < cart.length) {
-            const child = cart[currentLine];
-            if (child.indent === 0) {
-                break;
-            }
+      currentLine++;
 
-            currentLine++;
+      // TODO: check for incorrect name - fixup if possible
+      // TODO: check for mutual exclusion
+      // if (!f(child.key)) {
+      if (!rules.isValidChild(parent.key, child.key)) {
+        errorCount++;
+        console.log(
+          // TODO: print out more information here, like the name of the
+          // parent and child.
+          `${errorCount}: "${child.key}" cannot be a child of "${parent.key}"`
+        );
 
-            // TODO: check for incorrect name - fixup if possible
-            // TODO: check for mutual exclusion
-            // if (!f(child.key)) {
-            if (!rules.isValidChild(parent.key, child.key)) {
-                errorCount++;
-                console.log(
-                    // TODO: print out more information here, like the name of the
-                    // parent and child.
-                    `${errorCount}: "${child.key}" cannot be a child of "${parent.key}"`
-                );
+        fixedSomething = true;
 
-                fixedSomething = true;
-
-                // TODO: make the fix here.
-                // TODO: mark suites with invalid if fix cannot be made
-                lines.push(child);
-            } else {
-                lines.push(child);
-            }
-        }
+        // TODO: make the fix here.
+        // TODO: mark suites with invalid if fix cannot be made
+        lines.push(child);
+      } else {
+        lines.push(child);
+      }
     }
+  }
 
-    if (fixedSomething) {
-        return { ...step, cart: lines };
-    } else {
-        return step;
-    }
+  if (fixedSomething) {
+    return { ...step, cart: lines };
+  } else {
+    return step;
+  }
 }
 
 function verifyTestCase(
-    test: TestCase,
-    catalog: ICatalog,
-    rules: IRuleChecker
+  test: TestCase,
+  catalog: ICatalog,
+  rules: IRuleChecker
 ): TestCase {
-    let fixedSomething = false;
-    const steps: TestStep[] = [];
+  let fixedSomething = false;
+  const steps: TestStep[] = [];
 
-    for (const step of test.steps) {
-        const step2 = verifyTestStep(step, catalog, rules);
+  for (const step of test.steps) {
+    const step2 = verifyTestStep(step, catalog, rules);
 
-        if (step !== step2) {
-            fixedSomething = true;
-            steps.push(step2);
-        } else {
-            steps.push(step);
-        }
-    }
-
-    if (fixedSomething) {
-        return new TestCase(test.id, test.suites, test.comment, steps);
+    if (step !== step2) {
+      fixedSomething = true;
+      steps.push(step2);
     } else {
-        return test;
+      steps.push(step);
     }
+  }
+
+  if (fixedSomething) {
+    return new TestCase(test.id, test.suites, test.comment, steps);
+  } else {
+    return test;
+  }
 }
 
 export function verifyTestSuite(
-    suite: TestSuite,
-    catalog: ICatalog,
-    rules: IRuleChecker
+  suite: TestSuite,
+  catalog: ICatalog,
+  rules: IRuleChecker
 ): TestSuite {
-    let fixedSomething = false;
-    const tests: TestCase[] = [];
+  let fixedSomething = false;
+  const tests: TestCase[] = [];
 
-    for (const test of suite.tests) {
-        const test2 = verifyTestCase(test, catalog, rules);
+  for (const test of suite.tests) {
+    const test2 = verifyTestCase(test, catalog, rules);
 
-        if (test !== test2) {
-            fixedSomething = true;
-            tests.push(test2);
-        } else {
-            tests.push(test);
-        }
-    }
-
-    if (fixedSomething) {
-        return new TestSuite(tests);
+    if (test !== test2) {
+      fixedSomething = true;
+      tests.push(test2);
     } else {
-        return suite;
+      tests.push(test);
     }
+  }
+
+  if (fixedSomething) {
+    return new TestSuite(tests);
+  } else {
+    return suite;
+  }
 }

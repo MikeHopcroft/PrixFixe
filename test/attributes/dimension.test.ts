@@ -11,22 +11,22 @@ import { caffeines } from '../shared';
 //
 ///////////////////////////////////////////////////////////////////////////
 describe('Dimension', () => {
-    it('Constructor', () => {
-        const anyDimensionId: DID = 123;
-        const dimension = new Dimension(
-            anyDimensionId,
-            'caffeines',
-            caffeines.values()
-        );
+  it('Constructor', () => {
+    const anyDimensionId: DID = 123;
+    const dimension = new Dimension(
+      anyDimensionId,
+      'caffeines',
+      caffeines.values()
+    );
 
-        assert.equal(dimension.did, anyDimensionId);
-        assert.deepEqual(dimension.attributes, caffeines);
-    });
+    assert.equal(dimension.did, anyDimensionId);
+    assert.deepEqual(dimension.attributes, caffeines);
+  });
 
-    it('No attributes', () => {
-        const anyDimensionId = 123;
-        const f = () => new Dimension(anyDimensionId, 'empty', [].values());
+  it('No attributes', () => {
+    const anyDimensionId = 123;
+    const f = () => new Dimension(anyDimensionId, 'empty', [].values());
 
-        assert.throws(f, `expect at least one attribute`);
-    });
+    assert.throws(f, `expect at least one attribute`);
+  });
 });

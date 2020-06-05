@@ -12,43 +12,43 @@ import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
 
 export function createWorld2(dataPath: string): World {
-    // console.log('CreateWorld2');
+  // console.log('CreateWorld2');
 
-    const catalogFile = path.join(dataPath, 'menu.yaml');
-    const spec = loadCatalog(catalogFile);
+  const catalogFile = path.join(dataPath, 'menu.yaml');
+  const spec = loadCatalog(catalogFile);
 
-    const dimensions = processDimensions(spec.dimensions);
-    const tensors = processTensors(dimensions, spec.tensors);
-    const attributes: DimensionAndTensorDescription = {
-        dimensions: [...dimensions.values()].map(d => d.dimension),
-        tensors: [...tensors.values()],
-    };
+  const dimensions = processDimensions(spec.dimensions);
+  const tensors = processTensors(dimensions, spec.tensors);
+  const attributes: DimensionAndTensorDescription = {
+    dimensions: [...dimensions.values()].map(d => d.dimension),
+    tensors: [...tensors.values()],
+  };
 
-    const builder = new GroupBuilder(dimensions, tensors);
-    processGroups(builder, spec.catalog);
-    const catalog = Catalog.fromEntities(
-        builder.generics.values(),
-        builder.specifics.values()
-    );
+  const builder = new GroupBuilder(dimensions, tensors);
+  processGroups(builder, spec.catalog);
+  const catalog = Catalog.fromEntities(
+    builder.generics.values(),
+    builder.specifics.values()
+  );
 
-    const attributeInfo = new AttributeInfo(catalog, attributes);
+  const attributeInfo = new AttributeInfo(catalog, attributes);
 
-    // TODO: reintroduce Cookbook
-    const cookbook = new Cookbook({
-        products: [],
-        options: [],
-    });
+  // TODO: reintroduce Cookbook
+  const cookbook = new Cookbook({
+    products: [],
+    options: [],
+  });
 
-    const ruleChecker = processRules(builder.tagsToPIDs, spec.rules);
+  const ruleChecker = processRules(builder.tagsToPIDs, spec.rules);
 
-    const cartOps = new CartOps(attributeInfo, catalog, ruleChecker);
+  const cartOps = new CartOps(attributeInfo, catalog, ruleChecker);
 
-    return {
-        attributes,
-        attributeInfo,
-        cartOps,
-        catalog,
-        cookbook,
-        ruleChecker,
-    };
+  return {
+    attributes,
+    attributeInfo,
+    cartOps,
+    catalog,
+    cookbook,
+    ruleChecker,
+  };
 }

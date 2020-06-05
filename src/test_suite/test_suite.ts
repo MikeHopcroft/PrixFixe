@@ -10,13 +10,13 @@ import { testOrderFromCart } from '../repl';
 import { YAMLValidationError } from '../utilities';
 
 import {
-    TestLineItem,
-    TestCounts,
-    TestOrder,
-    XmlNode,
-    YamlTestCase,
-    TestStep,
-    CorrectionLevel,
+  TestLineItem,
+  TestCounts,
+  TestOrder,
+  XmlNode,
+  YamlTestCase,
+  TestStep,
+  CorrectionLevel,
 } from './interfaces';
 
 import { printStatistics, StatisticsAggregator } from './statistics_aggregator';
@@ -41,260 +41,254 @@ const UNVERIFIED = 'unverified';
 
 // Holds the results of one TestCase run.
 export class Result {
-    // TestCase that generated this Result.
-    readonly test: TestCase;
+  // TestCase that generated this Result.
+  readonly test: TestCase;
 
-    // The sequence of Orders produced by the test run.
-    readonly observed: TestOrder[];
+  // The sequence of Orders produced by the test run.
+  readonly observed: TestOrder[];
 
-    // Determination of the success of the test case.
-    readonly passed: boolean;
+  // Determination of the success of the test case.
+  readonly passed: boolean;
 
-    readonly exception: string | undefined;
+  readonly exception: string | undefined;
 
-    // Latency in milliseconds.
-    readonly latencyMS: number;
+  // Latency in milliseconds.
+  readonly latencyMS: number;
 
-    constructor(
-        test: TestCase,
-        observed: TestOrder[],
-        passed: boolean,
-        exception: string | undefined,
-        latencyMS: number
-    ) {
-        this.test = test;
-        this.observed = observed;
-        this.passed = passed;
-        this.exception = exception;
-        this.latencyMS = latencyMS;
+  constructor(
+    test: TestCase,
+    observed: TestOrder[],
+    passed: boolean,
+    exception: string | undefined,
+    latencyMS: number
+  ) {
+    this.test = test;
+    this.observed = observed;
+    this.passed = passed;
+    this.exception = exception;
+    this.latencyMS = latencyMS;
+  }
+
+  rebase(): YamlTestCase {
+    const t = this.test;
+    let suites = t.suites;
+
+    // If this test case failed,
+    // Add the 'unverified' suite to mark this test as having expected
+    // output that has not yet been verified as correct. After generating
+    // a test suite, the user should verify and correct the expected
+    // output for each case, and then remove the 'unverified' mark.
+    if (!this.passed && !t.suites.includes(UNVERIFIED)) {
+      suites = suites.concat(UNVERIFIED);
     }
 
-    rebase(): YamlTestCase {
-        const t = this.test;
-        let suites = t.suites;
+    return {
+      suites: suites.join(' '),
+      comment: t.comment,
+      steps: t.steps,
+    };
+  }
 
-        // If this test case failed,
-        // Add the 'unverified' suite to mark this test as having expected
-        // output that has not yet been verified as correct. After generating
-        // a test suite, the user should verify and correct the expected
-        // output for each case, and then remove the 'unverified' mark.
-        if (!this.passed && !t.suites.includes(UNVERIFIED)) {
-            suites = suites.concat(UNVERIFIED);
-        }
+  toString(isomorphic = false, correctionLevel = CorrectionLevel.Scoped) {
+    let stringValue = '';
+    const suites = this.test.suites.join(' ');
+    const passFail = this.passed ? 'PASSED' : 'FAILED';
+    const exception = this.exception ? ' *** EXCEPTION THROWN ***' : '';
+    stringValue += `${this.test.id} - ${passFail}${exception}\n`;
+    stringValue += `  Comment: ${this.test.comment}\n`;
+    stringValue += `  Suites: ${suites}\n`;
 
-        return {
-            suites: suites.join(' '),
-            comment: t.comment,
-            steps: t.steps,
-        };
-    }
+    if (this.exception) {
+      stringValue += `  Exception message: "${this.exception}"\n`;
+      for (const [index, step] of this.test.steps.entries()) {
+        const input = getYamlInputText(step, correctionLevel);
+        stringValue += `  Utterance ${index}: "${input}"\n`;
+      }
+    } else {
+      this.test.steps.forEach((step, index) => {
+        const input = getYamlInputText(step, correctionLevel);
+        const observed = this.observed[index];
+        const expected = step;
 
-    toString(isomorphic = false, correctionLevel = CorrectionLevel.Scoped) {
-        let stringValue = '';
-        const suites = this.test.suites.join(' ');
-        const passFail = this.passed ? 'PASSED' : 'FAILED';
-        const exception = this.exception ? ' *** EXCEPTION THROWN ***' : '';
-        stringValue += `${this.test.id} - ${passFail}${exception}\n`;
-        stringValue += `  Comment: ${this.test.comment}\n`;
-        stringValue += `  Suites: ${suites}\n`;
+        stringValue += `  Utterance ${index}: "${input}"\n`;
 
-        if (this.exception) {
-            stringValue += `  Exception message: "${this.exception}"\n`;
-            for (const [index, step] of this.test.steps.entries()) {
-                const input = getYamlInputText(step, correctionLevel);
-                stringValue += `  Utterance ${index}: "${input}"\n`;
-            }
+        if (isomorphic) {
+          stringValue += getDifferencesTextCanonical(observed, expected);
         } else {
-            this.test.steps.forEach((step, index) => {
-                const input = getYamlInputText(step, correctionLevel);
-                const observed = this.observed[index];
-                const expected = step;
-
-                stringValue += `  Utterance ${index}: "${input}"\n`;
-
-                if (isomorphic) {
-                    stringValue += getDifferencesTextCanonical(
-                        observed,
-                        expected
-                    );
-                } else {
-                    stringValue += getDifferencesText(observed, expected);
-                }
-            });
+          stringValue += getDifferencesText(observed, expected);
         }
-        return stringValue;
+      });
     }
+    return stringValue;
+  }
 
-    toJUnitXml(
-        isomorphic = false,
-        correctionLevel: CorrectionLevel = CorrectionLevel.Scoped
-    ): XmlNode {
-        const testCase = this.test.toJUnitXml();
+  toJUnitXml(
+    isomorphic = false,
+    correctionLevel: CorrectionLevel = CorrectionLevel.Scoped
+  ): XmlNode {
+    const testCase = this.test.toJUnitXml();
 
-        testCase.attrs.time = (this.latencyMS / 1.0e3).toFixed(3);
-        if (!this.passed) {
-            testCase.children = new Array<XmlNode>();
-            let failureMessage = '';
-            if (this.exception) {
-                failureMessage = this.exception;
-            } else {
-                failureMessage = this.toString(isomorphic, correctionLevel);
-            }
+    testCase.attrs.time = (this.latencyMS / 1.0e3).toFixed(3);
+    if (!this.passed) {
+      testCase.children = new Array<XmlNode>();
+      let failureMessage = '';
+      if (this.exception) {
+        failureMessage = this.exception;
+      } else {
+        failureMessage = this.toString(isomorphic, correctionLevel);
+      }
 
-            testCase.children.push({
-                name: 'failure',
-                attrs: {
-                    message: 'failure',
-                },
-                children: jsontoxml.escape(failureMessage),
-            });
-        }
-        return testCase;
+      testCase.children.push({
+        name: 'failure',
+        attrs: {
+          message: 'failure',
+        },
+        children: jsontoxml.escape(failureMessage),
+      });
     }
+    return testCase;
+  }
 }
 
 export class AggregatedResults {
-    suites: { [suite: string]: TestCounts } = {};
-    results: Result[] = [];
-    passCount = 0;
-    failCount = 0;
-    statistics = new StatisticsAggregator();
-    correctionLevel: CorrectionLevel = CorrectionLevel.Scoped;
+  suites: { [suite: string]: TestCounts } = {};
+  results: Result[] = [];
+  passCount = 0;
+  failCount = 0;
+  statistics = new StatisticsAggregator();
+  correctionLevel: CorrectionLevel = CorrectionLevel.Scoped;
 
-    recordResult(result: Result): void {
-        const test = result.test;
-        const passed = result.passed;
+  recordResult(result: Result): void {
+    const test = result.test;
+    const passed = result.passed;
 
-        // Update pass/run counts for each suite associated with this test.
-        for (const suite of test.suites) {
-            if (!(suite in this.suites)) {
-                this.suites[suite] = { passCount: 0, runCount: 0 };
-            }
-            const counts = this.suites[suite];
-            counts.runCount++;
-            if (passed) {
-                counts.passCount++;
-            }
-        }
-
-        this.results.push(result);
-
-        if (passed) {
-            this.passCount++;
-        } else {
-            this.failCount++;
-        }
-
-        this.statistics.record(result.latencyMS);
+    // Update pass/run counts for each suite associated with this test.
+    for (const suite of test.suites) {
+      if (!(suite in this.suites)) {
+        this.suites[suite] = { passCount: 0, runCount: 0 };
+      }
+      const counts = this.suites[suite];
+      counts.runCount++;
+      if (passed) {
+        counts.passCount++;
+      }
     }
 
-    toString(showPassedCases = false, isomorphic = false) {
-        let stringValue = '';
-        if (this.results.find(result => !result.passed)) {
-            if (showPassedCases) {
-                stringValue += 'Passing and failing tests:\n';
-            } else {
-                stringValue += 'Failing tests:\n';
-            }
-        } else {
-            stringValue += 'All tests passed.\n\n';
-        }
+    this.results.push(result);
 
-        for (const result of this.results) {
-            if (!result.passed || showPassedCases) {
-                stringValue += result.toString(
-                    isomorphic,
-                    this.correctionLevel
-                );
-                stringValue += '\n';
-            }
-        }
+    if (passed) {
+      this.passCount++;
+    } else {
+      this.failCount++;
+    }
 
-        stringValue += 'Suites:\n';
-        const suites = [...Object.entries(this.suites)].sort((a, b) =>
-            a[0].localeCompare(b[0])
-        );
-        for (const [suite, counts] of suites) {
-            const rate = (counts.passCount / counts.runCount).toFixed(3);
-            stringValue += `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
-        }
+    this.statistics.record(result.latencyMS);
+  }
+
+  toString(showPassedCases = false, isomorphic = false) {
+    let stringValue = '';
+    if (this.results.find(result => !result.passed)) {
+      if (showPassedCases) {
+        stringValue += 'Passing and failing tests:\n';
+      } else {
+        stringValue += 'Failing tests:\n';
+      }
+    } else {
+      stringValue += 'All tests passed.\n\n';
+    }
+
+    for (const result of this.results) {
+      if (!result.passed || showPassedCases) {
+        stringValue += result.toString(isomorphic, this.correctionLevel);
         stringValue += '\n';
-
-        const rate = (this.passCount / this.results.length).toFixed(3);
-        stringValue += `Overall: ${this.passCount}/${this.results.length} (${rate})\n`;
-        stringValue += '\n';
-
-        stringValue += `Failed: ${this.failCount}\n`;
-
-        return stringValue;
+      }
     }
 
-    print(showPassedCases = false, isomorphic = false) {
-        console.log(this.toString(showPassedCases, isomorphic));
-        console.log();
-        this.printLatencyStatistics();
+    stringValue += 'Suites:\n';
+    const suites = [...Object.entries(this.suites)].sort((a, b) =>
+      a[0].localeCompare(b[0])
+    );
+    for (const [suite, counts] of suites) {
+      const rate = (counts.passCount / counts.runCount).toFixed(3);
+      stringValue += `  ${suite}: ${counts.passCount}/${counts.runCount} (${rate})\n`;
     }
+    stringValue += '\n';
 
-    toJUnitXml(): string {
-        const output = { testsuites: [] as XmlNode[] };
+    const rate = (this.passCount / this.results.length).toFixed(3);
+    stringValue += `Overall: ${this.passCount}/${this.results.length} (${rate})\n`;
+    stringValue += '\n';
 
-        output.testsuites = Object.keys(this.suites).map(suite => ({
-            name: 'testsuite',
-            attrs: {
-                name: suite,
-            },
-            children: this.results
-                .filter(r => r.test.suites.includes(suite))
-                .map(r => r.toJUnitXml(false, this.correctionLevel)),
-        }));
+    stringValue += `Failed: ${this.failCount}\n`;
 
-        return jsontoxml(output, {
-            indent: ' ',
-            prettyPrint: true,
-            xmlHeader: true,
-        });
+    return stringValue;
+  }
+
+  print(showPassedCases = false, isomorphic = false) {
+    console.log(this.toString(showPassedCases, isomorphic));
+    console.log();
+    this.printLatencyStatistics();
+  }
+
+  toJUnitXml(): string {
+    const output = { testsuites: [] as XmlNode[] };
+
+    output.testsuites = Object.keys(this.suites).map(suite => ({
+      name: 'testsuite',
+      attrs: {
+        name: suite,
+      },
+      children: this.results
+        .filter(r => r.test.suites.includes(suite))
+        .map(r => r.toJUnitXml(false, this.correctionLevel)),
+    }));
+
+    return jsontoxml(output, {
+      indent: ' ',
+      prettyPrint: true,
+      xmlHeader: true,
+    });
+  }
+
+  printLatencyStatistics() {
+    const summary = this.statistics.computeStatistics([
+      0.5,
+      0.9,
+      0.95,
+      0.99,
+      0.999,
+    ]);
+    if (summary) {
+      printStatistics('Latency', 'ms', summary);
     }
+  }
 
-    printLatencyStatistics() {
-        const summary = this.statistics.computeStatistics([
-            0.5,
-            0.9,
-            0.95,
-            0.99,
-            0.999,
-        ]);
-        if (summary) {
-            printStatistics('Latency', 'ms', summary);
-        }
-    }
-
-    rebase(): YamlTestCases {
-        return this.results.map(result => result.rebase());
-    }
+  rebase(): YamlTestCases {
+    return this.results.map(result => result.rebase());
+  }
 }
 
 function getDifferencesText(observed: TestOrder, expected: TestStep): string {
-    const o = observed.cart;
-    const e = expected.cart;
-    const n = Math.max(o.length, e.length);
+  const o = observed.cart;
+  const e = expected.cart;
+  const n = Math.max(o.length, e.length);
 
-    let differencesText = '';
-    for (let i = 0; i < n; ++i) {
-        const ovalue = i < o.length ? formatLine(o[i]) : 'BLANK';
-        const evalue = i < e.length ? formatLine(e[i]) : 'BLANK';
-        const equality = ovalue === evalue ? '===' : '!==';
-        const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
-        differencesText += `    "${evalue}" ${equality} "${ovalue}" - ${ok}\n`;
-    }
-    return differencesText;
+  let differencesText = '';
+  for (let i = 0; i < n; ++i) {
+    const ovalue = i < o.length ? formatLine(o[i]) : 'BLANK';
+    const evalue = i < e.length ? formatLine(e[i]) : 'BLANK';
+    const equality = ovalue === evalue ? '===' : '!==';
+    const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
+    differencesText += `    "${evalue}" ${equality} "${ovalue}" - ${ok}\n`;
+  }
+  return differencesText;
 }
 
 export function explainDifferences(observed: TestOrder, expected: TestStep) {
-    console.log(getDifferencesText(observed, expected));
+  console.log(getDifferencesText(observed, expected));
 }
 
 function formatLine(line: TestLineItem) {
-    return `${line.indent}/${line.quantity}/${line.name}/${line.key}`;
+  return `${line.indent}/${line.quantity}/${line.name}/${line.key}`;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -306,116 +300,116 @@ function formatLine(line: TestLineItem) {
 //
 ///////////////////////////////////////////////////////////////////////////////
 export class TestCase {
-    id: number;
-    suites: string[];
-    comment: string;
-    steps: TestStep[];
+  id: number;
+  suites: string[];
+  comment: string;
+  steps: TestStep[];
 
-    constructor(
-        id: number,
-        suites: string[],
-        comment: string,
-        steps: TestStep[]
-    ) {
-        this.id = id;
-        this.suites = suites;
-        this.comment = comment;
-        this.steps = steps;
-    }
+  constructor(
+    id: number,
+    suites: string[],
+    comment: string,
+    steps: TestStep[]
+  ) {
+    this.id = id;
+    this.suites = suites;
+    this.comment = comment;
+    this.steps = steps;
+  }
 
-    async run(
-        processor: Processor,
-        catalog: ICatalog,
-        correctionLevel: CorrectionLevel,
-        isomorphic = false,
-        evaluateIntermediate = true
-    ): Promise<Result> {
-        const orders = [];
-        let succeeded = true;
-        let exception: string | undefined = undefined;
+  async run(
+    processor: Processor,
+    catalog: ICatalog,
+    correctionLevel: CorrectionLevel,
+    isomorphic = false,
+    evaluateIntermediate = true
+  ): Promise<Result> {
+    const orders = [];
+    let succeeded = true;
+    let exception: string | undefined = undefined;
 
-        let state: State = { cart: { items: [] } };
+    let state: State = { cart: { items: [] } };
 
-        // TODO: figure out how to remove the type assertion to any.
-        // tslint:disable-next-line:no-any
-        const start = (process.hrtime as any).bigint();
+    // TODO: figure out how to remove the type assertion to any.
+    // tslint:disable-next-line:no-any
+    const start = (process.hrtime as any).bigint();
 
-        try {
-            for (const [i, step] of this.steps.entries()) {
-                // Get input text based on scope
-                const input = getYamlInputText(step, correctionLevel);
+    try {
+      for (const [i, step] of this.steps.entries()) {
+        // Get input text based on scope
+        const input = getYamlInputText(step, correctionLevel);
 
-                // Run the parser
-                state = await processor(input, state);
+        // Run the parser
+        state = await processor(input, state);
 
-                // Convert the Cart to an Order
-                const observed = testOrderFromCart(state.cart, catalog);
-                orders.push(observed);
+        // Convert the Cart to an Order
+        const observed = testOrderFromCart(state.cart, catalog);
+        orders.push(observed);
 
-                if (
-                    succeeded &&
-                    (evaluateIntermediate || i === this.steps.length - 1)
-                ) {
-                    // Compare observed Orders
-                    const expected = this.steps[i];
-                    succeeded = isomorphic
-                        ? ordersAreEqualCanonical(observed, expected)
-                        : ordersAreEqual(observed, expected);
-                }
-            }
-        } catch (e) {
-            succeeded = false;
-            if (e instanceof Error) {
-                exception = e.message;
-            } else {
-                exception = 'Unknown exception.';
-            }
+        if (
+          succeeded &&
+          (evaluateIntermediate || i === this.steps.length - 1)
+        ) {
+          // Compare observed Orders
+          const expected = this.steps[i];
+          succeeded = isomorphic
+            ? ordersAreEqualCanonical(observed, expected)
+            : ordersAreEqual(observed, expected);
         }
-
-        // TODO: figure out how to remove the type assertion to any.
-        // tslint:disable-next-line:no-any
-        const end = (process.hrtime as any).bigint();
-
-        return new Result(
-            this,
-            orders,
-            succeeded,
-            exception,
-            Number(end - start) / 1.0e6
-        );
+      }
+    } catch (e) {
+      succeeded = false;
+      if (e instanceof Error) {
+        exception = e.message;
+      } else {
+        exception = 'Unknown exception.';
+      }
     }
 
-    toJUnitXml() {
-        return {
-            name: 'testcase',
-            attrs: {
-                classname: this.suites,
-                name: this.comment,
-            },
-        } as XmlNode;
-    }
+    // TODO: figure out how to remove the type assertion to any.
+    // tslint:disable-next-line:no-any
+    const end = (process.hrtime as any).bigint();
+
+    return new Result(
+      this,
+      orders,
+      succeeded,
+      exception,
+      Number(end - start) / 1.0e6
+    );
+  }
+
+  toJUnitXml() {
+    return {
+      name: 'testcase',
+      attrs: {
+        classname: this.suites,
+        name: this.comment,
+      },
+    } as XmlNode;
+  }
 }
 
 function ordersAreEqual(observed: TestOrder, expected: TestStep): boolean {
-    if (observed.cart.length !== expected.cart.length) {
-        return false;
+  if (observed.cart.length !== expected.cart.length) {
+    return false;
+  }
+
+  for (let i = 0; i < expected.cart.length; ++i) {
+    const o = observed.cart[i];
+    const e = expected.cart[i];
+
+    if (
+      o.indent !== e.indent ||
+      o.quantity !== e.quantity ||
+      o.key !== e.key ||
+      o.name !== e.name
+    ) {
+      return false;
     }
+  }
 
-    for (let i = 0; i < expected.cart.length; ++i) {
-        const o = observed.cart[i];
-        const e = expected.cart[i];
-
-        if (
-            o.indent !== e.indent ||
-            o.quantity !== e.quantity ||
-            o.key !== e.key ||
-            o.name !== e.name
-        ) {
-            return false;
-        }
-    }
-
-    return true;
+  return true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -425,122 +419,122 @@ function ordersAreEqual(observed: TestOrder, expected: TestStep): boolean {
 //
 ///////////////////////////////////////////////////////////////////////////////
 function formatLineCanonical(prefix: string, line: TestLineItem) {
-    return `${prefix} / ${line.indent}:${line.quantity}:${line.name}:${line.key}`;
+  return `${prefix} / ${line.indent}:${line.quantity}:${line.name}:${line.key}`;
 }
 
 function canonicalize(order: TestOrder): string[] {
-    let topLevelCounter = 0;
-    let lastTopLevel = '';
-    const canonical: string[] = [];
+  let topLevelCounter = 0;
+  let lastTopLevel = '';
+  const canonical: string[] = [];
 
-    for (const line of order.cart) {
-        if (line.indent === 0) {
-            lastTopLevel = formatLineCanonical(String(topLevelCounter), line);
-            ++topLevelCounter;
-            canonical.push(lastTopLevel);
-        } else {
-            const text = formatLineCanonical(lastTopLevel, line);
-            canonical.push(text);
-        }
+  for (const line of order.cart) {
+    if (line.indent === 0) {
+      lastTopLevel = formatLineCanonical(String(topLevelCounter), line);
+      ++topLevelCounter;
+      canonical.push(lastTopLevel);
+    } else {
+      const text = formatLineCanonical(lastTopLevel, line);
+      canonical.push(text);
     }
+  }
 
-    canonical.sort();
+  canonical.sort();
 
-    return canonical;
+  return canonical;
 }
 
 export function ordersAreEqualCanonical(
-    expected: TestOrder,
-    observed: TestOrder
+  expected: TestOrder,
+  observed: TestOrder
 ) {
-    if (observed.cart.length !== expected.cart.length) {
-        return false;
-    }
+  if (observed.cart.length !== expected.cart.length) {
+    return false;
+  }
 
-    const e = canonicalize(expected);
-    const o = canonicalize(observed);
+  const e = canonicalize(expected);
+  const o = canonicalize(observed);
 
-    let allok = true;
+  let allok = true;
 
-    for (let i = 0; i < o.length; ++i) {
-        const ovalue = i < o.length ? o[i] : 'BLANK';
-        const evalue = i < e.length ? e[i] : 'BLANK';
-        const equality = ovalue === evalue ? '===' : '!==';
-        const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
-        allok = allok && ovalue === evalue;
-    }
+  for (let i = 0; i < o.length; ++i) {
+    const ovalue = i < o.length ? o[i] : 'BLANK';
+    const evalue = i < e.length ? e[i] : 'BLANK';
+    const equality = ovalue === evalue ? '===' : '!==';
+    const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
+    allok = allok && ovalue === evalue;
+  }
 
-    return allok;
+  return allok;
 }
 
 function getDifferencesTextCanonical(expected: TestOrder, observed: TestStep) {
-    const e = canonicalize(expected);
-    const o = canonicalize(observed);
+  const e = canonicalize(expected);
+  const o = canonicalize(observed);
 
-    let allok = true;
-    let differencesText = '';
-    for (let i = 0; i < o.length; ++i) {
-        const ovalue = i < o.length ? o[i] : 'BLANK';
-        const evalue = i < e.length ? e[i] : 'BLANK';
-        const equality = ovalue === evalue ? '===' : '!==';
-        const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
-        allok = allok && ovalue === evalue;
-        differencesText += `    "${evalue}" ${equality} "${ovalue}" - ${ok}\n`;
-    }
+  let allok = true;
+  let differencesText = '';
+  for (let i = 0; i < o.length; ++i) {
+    const ovalue = i < o.length ? o[i] : 'BLANK';
+    const evalue = i < e.length ? e[i] : 'BLANK';
+    const equality = ovalue === evalue ? '===' : '!==';
+    const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
+    allok = allok && ovalue === evalue;
+    differencesText += `    "${evalue}" ${equality} "${ovalue}" - ${ok}\n`;
+  }
 
-    return { differencesText, allok };
+  return { differencesText, allok };
 }
 
 export function explainDifferencesCanonical(
-    expected: TestOrder,
-    observed: TestStep
+  expected: TestOrder,
+  observed: TestStep
 ) {
-    const differences = getDifferencesTextCanonical(expected, observed);
-    console.log(differences.differencesText);
-    return differences.allok;
+  const differences = getDifferencesTextCanonical(expected, observed);
+  console.log(differences.differencesText);
+  return differences.allok;
 }
 
 export function getYamlInputText(
-    step: TestStep,
-    correctionLevel: CorrectionLevel
+  step: TestStep,
+  correctionLevel: CorrectionLevel
 ): string {
-    let text: string;
-    switch (correctionLevel) {
-        case CorrectionLevel.Raw:
-            text = step.rawSTT;
-            break;
-        case CorrectionLevel.STT:
-            text = step.correctedSTT || step.rawSTT;
-            break;
-        case CorrectionLevel.Scoped:
-        default:
-            // The default is to use the highest level of correction
-            text = step.correctedScope || step.correctedSTT || step.rawSTT;
-            break;
-    }
-    return text;
+  let text: string;
+  switch (correctionLevel) {
+    case CorrectionLevel.Raw:
+      text = step.rawSTT;
+      break;
+    case CorrectionLevel.STT:
+      text = step.correctedSTT || step.rawSTT;
+      break;
+    case CorrectionLevel.Scoped:
+    default:
+      // The default is to use the highest level of correction
+      text = step.correctedScope || step.correctedSTT || step.rawSTT;
+      break;
+  }
+  return text;
 }
 
 const correctionLevelToField: string[] = [
-    'rawSTT',
-    'correctedSTT',
-    'correctedScope',
+  'rawSTT',
+  'correctedSTT',
+  'correctedScope',
 ];
 
 export function getCorrectLevelFields(level: CorrectionLevel) {
-    return correctionLevelToField.slice(0, level + 1);
+  return correctionLevelToField.slice(0, level + 1);
 }
 
 export function getCorrectionLevel(level: string): CorrectionLevel | undefined {
-    if (level === 'raw') {
-        return CorrectionLevel.Raw;
-    } else if (level === 'stt') {
-        return CorrectionLevel.STT;
-    } else if (level === 'scoped') {
-        return CorrectionLevel.Scoped;
-    } else {
-        return undefined;
-    }
+  if (level === 'raw') {
+    return CorrectionLevel.Raw;
+  } else if (level === 'stt') {
+    return CorrectionLevel.STT;
+  } else if (level === 'scoped') {
+    return CorrectionLevel.Scoped;
+  } else {
+    return undefined;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -557,177 +551,177 @@ export function getCorrectionLevel(level: string): CorrectionLevel | undefined {
 export type YamlTestCases = YamlTestCase[];
 
 export class TestSuite {
-    readonly tests: TestCase[] = [];
+  readonly tests: TestCase[] = [];
 
-    // typescript-json-schema tsconfig.json YamlTestCases --required
-    static fromYamlString(yamlText: string) {
-        const schemaForTestCases = {
-            $schema: 'http://json-schema.org/draft-07/schema#',
-            definitions: {
-                Cart: {
-                    properties: {
-                        indent: {
-                            type: 'number',
-                        },
-                        quantity: {
-                            type: 'number',
-                        },
-                        key: {
-                            type: 'string',
-                        },
-                        name: {
-                            type: 'string',
-                        },
-                    },
-                    required: ['indent', 'key', 'name', 'quantity'],
-                    type: 'object',
-                },
-                TestSteps: {
-                    properties: {
-                        rawSTT: {
-                            type: 'string',
-                        },
-                        correctedSTT: {
-                            type: 'string',
-                        },
-                        correctedScope: {
-                            type: 'string',
-                        },
-                        cart: {
-                            items: {
-                                $ref: '#/definitions/Cart',
-                            },
-                            type: 'array',
-                        },
-                    },
-                    required: ['rawSTT', 'cart'],
-                    type: 'object',
-                },
-                YamlTestCase: {
-                    properties: {
-                        suites: {
-                            type: 'string',
-                        },
-                        comment: {
-                            type: 'string',
-                        },
-                        steps: {
-                            items: {
-                                $ref: '#/definitions/TestSteps',
-                            },
-                            type: 'array',
-                        },
-                    },
-                    required: ['suites', 'comment', 'steps'],
-                    type: 'object',
-                },
+  // typescript-json-schema tsconfig.json YamlTestCases --required
+  static fromYamlString(yamlText: string) {
+    const schemaForTestCases = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      definitions: {
+        Cart: {
+          properties: {
+            indent: {
+              type: 'number',
             },
-            items: {
-                $ref: '#/definitions/YamlTestCase',
+            quantity: {
+              type: 'number',
             },
-            type: 'array',
+            key: {
+              type: 'string',
+            },
+            name: {
+              type: 'string',
+            },
+          },
+          required: ['indent', 'key', 'name', 'quantity'],
+          type: 'object',
+        },
+        TestSteps: {
+          properties: {
+            rawSTT: {
+              type: 'string',
+            },
+            correctedSTT: {
+              type: 'string',
+            },
+            correctedScope: {
+              type: 'string',
+            },
+            cart: {
+              items: {
+                $ref: '#/definitions/Cart',
+              },
+              type: 'array',
+            },
+          },
+          required: ['rawSTT', 'cart'],
+          type: 'object',
+        },
+        YamlTestCase: {
+          properties: {
+            suites: {
+              type: 'string',
+            },
+            comment: {
+              type: 'string',
+            },
+            steps: {
+              items: {
+                $ref: '#/definitions/TestSteps',
+              },
+              type: 'array',
+            },
+          },
+          required: ['suites', 'comment', 'steps'],
+          type: 'object',
+        },
+      },
+      items: {
+        $ref: '#/definitions/YamlTestCase',
+      },
+      type: 'array',
+    };
+
+    const ajv = new AJV({ jsonPointers: true });
+    const validator = ajv.compile(schemaForTestCases);
+    const yamlRoot = yaml.safeLoad(yamlText) as YamlTestCase[];
+
+    if (!validator(yamlRoot)) {
+      const message = 'yaml data does not conform to schema.';
+      debug(message);
+      debug(validator.errors);
+      const output = betterAjvErrors(
+        schemaForTestCases,
+        yamlRoot,
+        validator.errors,
+        { format: 'cli', indent: 1 }
+      );
+      throw new YAMLValidationError(message, output || []);
+    }
+
+    const tests = yamlRoot.map((test, index) => {
+      return new TestCase(
+        index,
+        test.suites.split(/\s+/),
+        test.comment,
+        test.steps
+      );
+    });
+
+    return new TestSuite(tests);
+  }
+
+  // Generate a collection of yamlTestCase records from an array of input
+  // lines, each of which provides the input to a test case. Uses the
+  // observed output as the expected output.
+  static async fromInputLines(
+    processor: Processor,
+    catalog: ICatalog,
+    speechToTextSimulator: SpeechToTextSimulator,
+    lines: string[],
+    suites: string[],
+    comment: string
+  ): Promise<YamlTestCase[]> {
+    // Generate a test case for each input line.
+    // Use speechToTextFilter to clean up each input line.
+    let counter = 0;
+    const tests = [];
+    for (const rawLine of lines) {
+      const line = rawLine.trim();
+      if (line.length > 0) {
+        const step: TestStep = {
+          rawSTT: speechToTextSimulator(line),
+          cart: [],
         };
-
-        const ajv = new AJV({ jsonPointers: true });
-        const validator = ajv.compile(schemaForTestCases);
-        const yamlRoot = yaml.safeLoad(yamlText) as YamlTestCase[];
-
-        if (!validator(yamlRoot)) {
-            const message = 'yaml data does not conform to schema.';
-            debug(message);
-            debug(validator.errors);
-            const output = betterAjvErrors(
-                schemaForTestCases,
-                yamlRoot,
-                validator.errors,
-                { format: 'cli', indent: 1 }
-            );
-            throw new YAMLValidationError(message, output || []);
-        }
-
-        const tests = yamlRoot.map((test, index) => {
-            return new TestCase(
-                index,
-                test.suites.split(/\s+/),
-                test.comment,
-                test.steps
-            );
-        });
-
-        return new TestSuite(tests);
+        tests.push(new TestCase(counter++, suites, comment, [step]));
+      }
     }
 
-    // Generate a collection of yamlTestCase records from an array of input
-    // lines, each of which provides the input to a test case. Uses the
-    // observed output as the expected output.
-    static async fromInputLines(
-        processor: Processor,
-        catalog: ICatalog,
-        speechToTextSimulator: SpeechToTextSimulator,
-        lines: string[],
-        suites: string[],
-        comment: string
-    ): Promise<YamlTestCase[]> {
-        // Generate a test case for each input line.
-        // Use speechToTextFilter to clean up each input line.
-        let counter = 0;
-        const tests = [];
-        for (const rawLine of lines) {
-            const line = rawLine.trim();
-            if (line.length > 0) {
-                const step: TestStep = {
-                    rawSTT: speechToTextSimulator(line),
-                    cart: [],
-                };
-                tests.push(new TestCase(counter++, suites, comment, [step]));
-            }
-        }
+    // Create a TestSuite from the TestCases, and then run it to collect
+    // the observed output.
+    const suite = new TestSuite(tests);
+    const results = await suite.run(processor, catalog, allSuites);
 
-        // Create a TestSuite from the TestCases, and then run it to collect
-        // the observed output.
-        const suite = new TestSuite(tests);
-        const results = await suite.run(processor, catalog, allSuites);
+    // Generate a yamlTestCase from each Result, using the observed output
+    // for the expected output.
+    return results.rebase();
+  }
 
-        // Generate a yamlTestCase from each Result, using the observed output
-        // for the expected output.
-        return results.rebase();
+  constructor(tests: TestCase[]) {
+    this.tests = tests;
+  }
+
+  *filteredTests(suiteFilter: SuitePredicate): IterableIterator<TestCase> {
+    for (const test of this.tests) {
+      if (suiteFilter(test.suites)) {
+        yield test;
+      }
+    }
+  }
+
+  async run(
+    processor: Processor,
+    catalog: ICatalog,
+    suiteFilter: SuitePredicate,
+    correctionLevel: CorrectionLevel = CorrectionLevel.Scoped,
+    isomorphic = false,
+    evaluateIntermediate = true
+  ): Promise<AggregatedResults> {
+    const aggregator = new AggregatedResults();
+    aggregator.correctionLevel = correctionLevel;
+
+    for (const test of this.filteredTests(suiteFilter)) {
+      aggregator.recordResult(
+        await test.run(
+          processor,
+          catalog,
+          correctionLevel,
+          isomorphic,
+          evaluateIntermediate
+        )
+      );
     }
 
-    constructor(tests: TestCase[]) {
-        this.tests = tests;
-    }
-
-    *filteredTests(suiteFilter: SuitePredicate): IterableIterator<TestCase> {
-        for (const test of this.tests) {
-            if (suiteFilter(test.suites)) {
-                yield test;
-            }
-        }
-    }
-
-    async run(
-        processor: Processor,
-        catalog: ICatalog,
-        suiteFilter: SuitePredicate,
-        correctionLevel: CorrectionLevel = CorrectionLevel.Scoped,
-        isomorphic = false,
-        evaluateIntermediate = true
-    ): Promise<AggregatedResults> {
-        const aggregator = new AggregatedResults();
-        aggregator.correctionLevel = correctionLevel;
-
-        for (const test of this.filteredTests(suiteFilter)) {
-            aggregator.recordResult(
-                await test.run(
-                    processor,
-                    catalog,
-                    correctionLevel,
-                    isomorphic,
-                    evaluateIntermediate
-                )
-            );
-        }
-
-        return aggregator;
-    }
+    return aggregator;
+  }
 }

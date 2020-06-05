@@ -1,21 +1,21 @@
 import {
-    AID,
-    AttributeDescription,
-    DimensionAndTensorDescription,
-    Catalog,
-    CID,
-    DID,
-    Dimension,
-    GenericTypedEntity,
-    Key,
-    TensorDescription,
-    MENUITEM,
-    OPTION,
-    PID,
-    RuleChecker,
-    RuleConfig,
-    SpecificTypedEntity,
-    DimensionDescription,
+  AID,
+  AttributeDescription,
+  DimensionAndTensorDescription,
+  Catalog,
+  CID,
+  DID,
+  Dimension,
+  GenericTypedEntity,
+  Key,
+  TensorDescription,
+  MENUITEM,
+  OPTION,
+  PID,
+  RuleChecker,
+  RuleConfig,
+  SpecificTypedEntity,
+  DimensionDescription,
 } from '../../src/';
 
 // A PID that is not indexed in any data structure in this file. For testing
@@ -34,56 +34,56 @@ export const unknownKey: Key = '9999:9:9:9';
 export const genericConePID: PID = 8000;
 export const coneCID: CID = 100;
 export const genericCone: GenericTypedEntity = {
-    pid: genericConePID,
-    cid: coneCID,
-    name: 'cone',
-    aliases: ['cone', 'ice cream [cone]'],
-    defaultKey: '8000:0:0',
-    tensor: 1,
-    kind: MENUITEM,
+  pid: genericConePID,
+  cid: coneCID,
+  name: 'cone',
+  aliases: ['cone', 'ice cream [cone]'],
+  defaultKey: '8000:0:0',
+  tensor: 1,
+  kind: MENUITEM,
 };
 
 export const genericCoffeePID: PID = 9000;
 export const coffeeCID: CID = 200;
 export const genericCoffee: GenericTypedEntity = {
-    pid: genericCoffeePID,
-    cid: coffeeCID,
-    name: 'coffee',
-    aliases: ['coffee'],
-    defaultKey: '9000:0:0:0',
-    tensor: 2,
-    kind: MENUITEM,
+  pid: genericCoffeePID,
+  cid: coffeeCID,
+  name: 'coffee',
+  aliases: ['coffee'],
+  defaultKey: '9000:0:0:0',
+  tensor: 2,
+  kind: MENUITEM,
 };
 
 export const genericMilkPID = 5000;
 export const milkCID: CID = 500;
 export const genericMilk: GenericTypedEntity = {
-    pid: genericMilkPID,
-    cid: milkCID,
-    name: 'milk',
-    aliases: ['milk'],
-    defaultKey: '5000:1',
-    tensor: 2,
-    kind: MENUITEM,
+  pid: genericMilkPID,
+  cid: milkCID,
+  name: 'milk',
+  aliases: ['milk'],
+  defaultKey: '5000:1',
+  tensor: 2,
+  kind: MENUITEM,
 };
 
 export const genericWhippedPID = 2000;
 export const whippedCID: CID = 600;
 export const genericWhipped: GenericTypedEntity = {
-    pid: genericWhippedPID,
-    cid: whippedCID,
-    name: 'whip',
-    aliases: ['whip', 'whipped cream'],
-    defaultKey: '2000:1',
-    tensor: 3,
-    kind: OPTION,
+  pid: genericWhippedPID,
+  cid: whippedCID,
+  name: 'whip',
+  aliases: ['whip', 'whipped cream'],
+  defaultKey: '2000:1',
+  tensor: 3,
+  kind: OPTION,
 };
 
 export const genericItems: GenericTypedEntity[] = [
-    genericCone,
-    genericCoffee,
-    genericMilk,
-    genericWhipped,
+  genericCone,
+  genericCoffee,
+  genericMilk,
+  genericWhipped,
 ];
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -95,16 +95,16 @@ export const sizeSmall: AID = 0;
 export const sizeMedium: AID = 1;
 
 export const sizes: AttributeDescription[] = [
-    {
-        aid: sizeSmall,
-        name: 'small',
-        aliases: ['small'],
-    },
-    {
-        aid: sizeMedium,
-        name: 'medium',
-        aliases: ['medium'],
-    },
+  {
+    aid: sizeSmall,
+    name: 'small',
+    aliases: ['small'],
+  },
+  {
+    aid: sizeMedium,
+    name: 'medium',
+    aliases: ['medium'],
+  },
 ];
 
 export const flavorVanilla: AID = 2;
@@ -112,53 +112,53 @@ export const flavorChocolate: AID = 3;
 export const flavorForbidden: AID = 666;
 
 export const flavors: AttributeDescription[] = [
-    {
-        aid: flavorVanilla,
-        name: 'vanilla',
-        aliases: ['vanilla'],
-    },
-    {
-        aid: flavorChocolate,
-        name: 'chocolate',
-        aliases: ['chocolate'],
-    },
-    {
-        aid: flavorForbidden,
-        name: 'forbiddenFruit',
-        aliases: ['forbidden'],
-    },
+  {
+    aid: flavorVanilla,
+    name: 'vanilla',
+    aliases: ['vanilla'],
+  },
+  {
+    aid: flavorChocolate,
+    name: 'chocolate',
+    aliases: ['chocolate'],
+  },
+  {
+    aid: flavorForbidden,
+    name: 'forbiddenFruit',
+    aliases: ['forbidden'],
+  },
 ];
 
 export const temperatureHot: AID = 4;
 export const temperatureCold: AID = 5;
 
 export const temperatures: AttributeDescription[] = [
-    {
-        aid: temperatureHot,
-        name: 'hot',
-        aliases: ['hot'],
-    },
-    {
-        aid: temperatureCold,
-        name: 'cold',
-        aliases: ['colr', ' iced'],
-    },
+  {
+    aid: temperatureHot,
+    name: 'hot',
+    aliases: ['hot'],
+  },
+  {
+    aid: temperatureCold,
+    name: 'cold',
+    aliases: ['colr', ' iced'],
+  },
 ];
 
 export const caffeineRegular: AID = 6;
 export const caffeineDecaf: AID = 7;
 
 export const caffeines: AttributeDescription[] = [
-    {
-        aid: caffeineRegular,
-        name: 'regular',
-        aliases: ['regular'],
-    },
-    {
-        aid: caffeineDecaf,
-        name: 'decaf',
-        aliases: ['decaf', 'unleaded'],
-    },
+  {
+    aid: caffeineRegular,
+    name: 'regular',
+    aliases: ['regular'],
+  },
+  {
+    aid: caffeineDecaf,
+    name: 'decaf',
+    aliases: ['decaf', 'unleaded'],
+  },
 ];
 
 export const quantityNo: AID = 8;
@@ -167,26 +167,26 @@ export const quantityRegular: AID = 10;
 export const quantityExtra: AID = 11;
 
 export const quantities: AttributeDescription[] = [
-    {
-        aid: quantityNo,
-        name: 'no',
-        aliases: ['no', 'without'],
-    },
-    {
-        aid: quantityLight,
-        name: 'light',
-        aliases: ['light'],
-    },
-    {
-        aid: quantityRegular,
-        name: 'regular',
-        aliases: ['regular'],
-    },
-    {
-        aid: quantityExtra,
-        name: 'extra',
-        aliases: ['extra'],
-    },
+  {
+    aid: quantityNo,
+    name: 'no',
+    aliases: ['no', 'without'],
+  },
+  {
+    aid: quantityLight,
+    name: 'light',
+    aliases: ['light'],
+  },
+  {
+    aid: quantityRegular,
+    name: 'regular',
+    aliases: ['regular'],
+  },
+  {
+    aid: quantityExtra,
+    name: 'extra',
+    aliases: ['extra'],
+  },
 ];
 
 // export const milkWhole: AID = 8;
@@ -219,51 +219,51 @@ export const caffeine: DID = 3;
 export const quantity: DID = 4;
 
 export const sizeDimensionDescription: DimensionDescription = {
-    did: size,
-    name: 'sizes',
-    attributes: sizes,
+  did: size,
+  name: 'sizes',
+  attributes: sizes,
 };
 
 export const flavorDimensionDescription: DimensionDescription = {
-    did: flavor,
-    name: 'flavors',
-    attributes: flavors,
+  did: flavor,
+  name: 'flavors',
+  attributes: flavors,
 };
 
 export const temperatureDimensionDescription: DimensionDescription = {
-    did: temperature,
-    name: 'temperatures',
-    attributes: temperatures,
+  did: temperature,
+  name: 'temperatures',
+  attributes: temperatures,
 };
 
 export const caffieneDimensionDescription: DimensionDescription = {
-    did: caffeine,
-    name: 'caffiene',
-    attributes: caffeines,
+  did: caffeine,
+  name: 'caffiene',
+  attributes: caffeines,
 };
 
 export const quantityDimensionDescription: DimensionDescription = {
-    did: quantity,
-    name: 'quantity',
-    attributes: quantities,
+  did: quantity,
+  name: 'quantity',
+  attributes: quantities,
 };
 
 export const softServeTensorDescription: TensorDescription = {
-    tid: 1,
-    name: 'soft serve',
-    dimensions: [size, flavor],
+  tid: 1,
+  name: 'soft serve',
+  dimensions: [size, flavor],
 };
 
 export const coffeeTensorDescription: TensorDescription = {
-    tid: 2,
-    name: 'coffee',
-    dimensions: [size, temperature, caffeine],
+  tid: 2,
+  name: 'coffee',
+  dimensions: [size, temperature, caffeine],
 };
 
 export const toppingTensorDescription: TensorDescription = {
-    tid: 3,
-    name: 'topping',
-    dimensions: [quantity],
+  tid: 3,
+  name: 'topping',
+  dimensions: [quantity],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -273,31 +273,31 @@ export const toppingTensorDescription: TensorDescription = {
 ///////////////////////////////////////////////////////////////////////////////
 export const sizeDimension = new Dimension(size, 'sizes', sizes.values());
 export const flavorDimension = new Dimension(
-    flavor,
-    'flavors',
-    flavors.values()
+  flavor,
+  'flavors',
+  flavors.values()
 );
 export const temperatureDimension = new Dimension(
-    temperature,
-    'temeperatures',
-    temperatures.values()
+  temperature,
+  'temeperatures',
+  temperatures.values()
 );
 export const caffeineDimension = new Dimension(
-    caffeine,
-    'caffeines',
-    caffeines.values()
+  caffeine,
+  'caffeines',
+  caffeines.values()
 );
 export const quantityDimension = new Dimension(
-    quantity,
-    'quantities',
-    quantities.values()
+  quantity,
+  'quantities',
+  quantities.values()
 );
 
 export const softServeDimensions = [sizeDimension, flavorDimension];
 export const coffeeDimensions = [
-    sizeDimension,
-    temperatureDimension,
-    caffeineDimension,
+  sizeDimension,
+  temperatureDimension,
+  caffeineDimension,
 ];
 export const toppingDimensions = [quantityDimension];
 
@@ -307,23 +307,23 @@ export const toppingDimensions = [quantityDimension];
 //
 ///////////////////////////////////////////////////////////////////////////////
 export const emptyAttributes: DimensionAndTensorDescription = {
-    dimensions: [],
-    tensors: [],
+  dimensions: [],
+  tensors: [],
 };
 
 export const smallWorldAttributes: DimensionAndTensorDescription = {
-    dimensions: [
-        sizeDimensionDescription,
-        flavorDimensionDescription,
-        temperatureDimensionDescription,
-        caffieneDimensionDescription,
-        quantityDimensionDescription,
-    ],
-    tensors: [
-        softServeTensorDescription,
-        coffeeTensorDescription,
-        toppingTensorDescription,
-    ],
+  dimensions: [
+    sizeDimensionDescription,
+    flavorDimensionDescription,
+    temperatureDimensionDescription,
+    caffieneDimensionDescription,
+    quantityDimensionDescription,
+  ],
+  tensors: [
+    softServeTensorDescription,
+    coffeeTensorDescription,
+    toppingTensorDescription,
+  ],
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -332,31 +332,31 @@ export const smallWorldAttributes: DimensionAndTensorDescription = {
 //
 ///////////////////////////////////////////////////////////////////////////////
 export const smallVanillaCone: SpecificTypedEntity = {
-    sku: 8001,
-    name: 'small vanilla cone',
-    key: '8000:0:0',
-    kind: MENUITEM,
+  sku: 8001,
+  name: 'small vanilla cone',
+  key: '8000:0:0',
+  kind: MENUITEM,
 };
 
 export const smallChocolateCone: SpecificTypedEntity = {
-    sku: 8002,
-    name: 'small chocolate cone',
-    key: '8000:0:1',
-    kind: MENUITEM,
+  sku: 8002,
+  name: 'small chocolate cone',
+  key: '8000:0:1',
+  kind: MENUITEM,
 };
 
 export const mediumVanillaCone: SpecificTypedEntity = {
-    sku: 8003,
-    name: 'medium vanilla cone',
-    key: '8000:1:0',
-    kind: MENUITEM,
+  sku: 8003,
+  name: 'medium vanilla cone',
+  key: '8000:1:0',
+  kind: MENUITEM,
 };
 
 export const mediumChocolateCone: SpecificTypedEntity = {
-    sku: 8004,
-    name: 'medium chocolate cone',
-    key: '8000:1:1',
-    kind: MENUITEM,
+  sku: 8004,
+  name: 'medium chocolate cone',
+  key: '8000:1:1',
+  kind: MENUITEM,
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -365,130 +365,130 @@ export const mediumChocolateCone: SpecificTypedEntity = {
 //
 ///////////////////////////////////////////////////////////////////////////////
 export const smallCoffee: SpecificTypedEntity = {
-    sku: 9001,
-    name: 'small coffee',
-    key: '9000:0:0:0',
-    kind: MENUITEM,
+  sku: 9001,
+  name: 'small coffee',
+  key: '9000:0:0:0',
+  kind: MENUITEM,
 };
 
 export const smallDecafCoffee: SpecificTypedEntity = {
-    sku: 9002,
-    name: 'small coffee',
-    key: '9000:0:0:1',
-    kind: MENUITEM,
+  sku: 9002,
+  name: 'small coffee',
+  key: '9000:0:0:1',
+  kind: MENUITEM,
 };
 
 export const smallIcedCoffee: SpecificTypedEntity = {
-    sku: 9003,
-    name: 'small coffee',
-    key: '9000:0:1:0',
-    kind: MENUITEM,
+  sku: 9003,
+  name: 'small coffee',
+  key: '9000:0:1:0',
+  kind: MENUITEM,
 };
 
 export const smallIcedDecafCoffee: SpecificTypedEntity = {
-    sku: 9004,
-    name: 'small coffee',
-    key: '9000:0:1:1',
-    kind: MENUITEM,
+  sku: 9004,
+  name: 'small coffee',
+  key: '9000:0:1:1',
+  kind: MENUITEM,
 };
 
 export const mediumCoffee: SpecificTypedEntity = {
-    sku: 9005,
-    name: 'medium coffee',
-    key: '9000:1:0:0',
-    kind: MENUITEM,
+  sku: 9005,
+  name: 'medium coffee',
+  key: '9000:1:0:0',
+  kind: MENUITEM,
 };
 
 export const mediumDecafCoffee: SpecificTypedEntity = {
-    sku: 9006,
-    name: 'medium decaf coffee',
-    key: '9000:1:0:1',
-    kind: MENUITEM,
+  sku: 9006,
+  name: 'medium decaf coffee',
+  key: '9000:1:0:1',
+  kind: MENUITEM,
 };
 
 export const mediumIcedCoffee: SpecificTypedEntity = {
-    sku: 9007,
-    name: 'medium iced coffee',
-    key: '9000:1:1:0',
-    kind: MENUITEM,
+  sku: 9007,
+  name: 'medium iced coffee',
+  key: '9000:1:1:0',
+  kind: MENUITEM,
 };
 
 export const mediumIcedDecafCoffee: SpecificTypedEntity = {
-    sku: 9008,
-    name: 'medium iced decaf coffee',
-    key: '9000:1:1:1',
-    kind: MENUITEM,
+  sku: 9008,
+  name: 'medium iced decaf coffee',
+  key: '9000:1:1:1',
+  kind: MENUITEM,
 };
 
 export const wholeMilk: SpecificTypedEntity = {
-    sku: 5000,
-    name: 'whole milk',
-    key: '5000:0',
-    kind: OPTION,
+  sku: 5000,
+  name: 'whole milk',
+  key: '5000:0',
+  kind: OPTION,
 };
 
 export const twoMilk: SpecificTypedEntity = {
-    sku: 5001,
-    name: 'two percent milk',
-    key: '5000:1',
-    kind: OPTION,
+  sku: 5001,
+  name: 'two percent milk',
+  key: '5000:1',
+  kind: OPTION,
 };
 
 export const zeroMilk: SpecificTypedEntity = {
-    sku: 5002,
-    name: 'fat free milk',
-    key: '5000:2',
-    kind: OPTION,
+  sku: 5002,
+  name: 'fat free milk',
+  key: '5000:2',
+  kind: OPTION,
 };
 
 export const soyMilk: SpecificTypedEntity = {
-    sku: 5003,
-    name: 'soy milk',
-    key: '5000:3',
-    kind: OPTION,
+  sku: 5003,
+  name: 'soy milk',
+  key: '5000:3',
+  kind: OPTION,
 };
 
 export const noWhippedCream: SpecificTypedEntity = {
-    sku: 2000,
-    name: 'with no whipped cream',
-    key: '2000:0',
-    kind: OPTION,
+  sku: 2000,
+  name: 'with no whipped cream',
+  key: '2000:0',
+  kind: OPTION,
 };
 
 export const lightWhippedCream: SpecificTypedEntity = {
-    sku: 2001,
-    name: 'with light whipped cream',
-    key: '2000:1',
-    kind: OPTION,
+  sku: 2001,
+  name: 'with light whipped cream',
+  key: '2000:1',
+  kind: OPTION,
 };
 
 export const whippedCream: SpecificTypedEntity = {
-    sku: 2002,
-    name: 'with whipped cream',
-    key: '2000:2',
-    kind: OPTION,
+  sku: 2002,
+  name: 'with whipped cream',
+  key: '2000:2',
+  kind: OPTION,
 };
 
 export const specificItems: SpecificTypedEntity[] = [
-    smallVanillaCone,
-    smallChocolateCone,
-    mediumVanillaCone,
-    mediumChocolateCone,
-    smallCoffee,
-    smallDecafCoffee,
-    smallIcedCoffee,
-    smallIcedDecafCoffee,
-    mediumCoffee,
-    mediumDecafCoffee,
-    mediumIcedCoffee,
-    mediumIcedDecafCoffee,
-    wholeMilk,
-    twoMilk,
-    zeroMilk,
-    soyMilk,
-    noWhippedCream,
-    lightWhippedCream,
-    whippedCream,
+  smallVanillaCone,
+  smallChocolateCone,
+  mediumVanillaCone,
+  mediumChocolateCone,
+  smallCoffee,
+  smallDecafCoffee,
+  smallIcedCoffee,
+  smallIcedDecafCoffee,
+  mediumCoffee,
+  mediumDecafCoffee,
+  mediumIcedCoffee,
+  mediumIcedDecafCoffee,
+  wholeMilk,
+  twoMilk,
+  zeroMilk,
+  soyMilk,
+  noWhippedCream,
+  lightWhippedCream,
+  whippedCream,
 ];
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -497,8 +497,8 @@ export const specificItems: SpecificTypedEntity[] = [
 //
 ///////////////////////////////////////////////////////////////////////////////
 export const smallWorldCatalog = Catalog.fromEntities(
-    genericItems.values(),
-    specificItems.values()
+  genericItems.values(),
+  specificItems.values()
 );
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -507,24 +507,24 @@ export const smallWorldCatalog = Catalog.fromEntities(
 //
 ///////////////////////////////////////////////////////////////////////////////
 export const smallWorldRules: RuleConfig = {
-    rules: [
-        {
-            partialKey: '9000', // All coffees
-            validCategoryMap: {
-                '500': {
-                    validOptions: [5000],
-                    qtyInfo: {
-                        '': { defaultQty: 1, minQty: 1, maxQty: 1 },
-                    },
-                },
-            },
-            exclusionZones: { 500: [5000] }, // Milk is exclusive
-            specificExceptions: [],
+  rules: [
+    {
+      partialKey: '9000', // All coffees
+      validCategoryMap: {
+        '500': {
+          validOptions: [5000],
+          qtyInfo: {
+            '': { defaultQty: 1, minQty: 1, maxQty: 1 },
+          },
         },
-    ],
+      },
+      exclusionZones: { 500: [5000] }, // Milk is exclusive
+      specificExceptions: [],
+    },
+  ],
 };
 
 export const smallWorldRuleChecker = new RuleChecker(
-    smallWorldRules,
-    smallWorldCatalog.getGenericMap()
+  smallWorldRules,
+  smallWorldCatalog.getGenericMap()
 );

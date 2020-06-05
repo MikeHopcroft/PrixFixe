@@ -2,92 +2,92 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import {
-    AttributeInfo,
-    attributesFromYamlString,
-    CartOps,
-    Catalog,
-    catalogFromYamlString,
-    cookbookFromYamlFile,
-    DimensionAndTensorDescription,
-    ICartOps,
-    ICatalog,
-    ICookbook,
-    IRuleChecker,
-    loadRuleConfig,
-    MENUITEM,
-    OPTION,
-    RuleChecker,
+  AttributeInfo,
+  attributesFromYamlString,
+  CartOps,
+  Catalog,
+  catalogFromYamlString,
+  cookbookFromYamlFile,
+  DimensionAndTensorDescription,
+  ICartOps,
+  ICatalog,
+  ICookbook,
+  IRuleChecker,
+  loadRuleConfig,
+  MENUITEM,
+  OPTION,
+  RuleChecker,
 } from '..';
 
 export interface World {
-    attributeInfo: AttributeInfo;
-    attributes: DimensionAndTensorDescription;
-    cartOps: ICartOps;
-    catalog: ICatalog;
-    cookbook: ICookbook;
-    ruleChecker: IRuleChecker;
+  attributeInfo: AttributeInfo;
+  attributes: DimensionAndTensorDescription;
+  cartOps: ICartOps;
+  catalog: ICatalog;
+  cookbook: ICookbook;
+  ruleChecker: IRuleChecker;
 }
 
 export function createWorld(dataPath: string): World {
-    // TODO: should these be path.resolve?
-    const attributesFile = path.join(dataPath, 'attributes.yaml');
-    const cookbookFile = path.join(dataPath, 'cookbook.yaml');
-    const productsFile = path.join(dataPath, 'products.yaml');
-    const optionsFile = path.join(dataPath, 'options.yaml');
-    const rulesFile = path.join(dataPath, 'rules.yaml');
+  // TODO: should these be path.resolve?
+  const attributesFile = path.join(dataPath, 'attributes.yaml');
+  const cookbookFile = path.join(dataPath, 'cookbook.yaml');
+  const productsFile = path.join(dataPath, 'products.yaml');
+  const optionsFile = path.join(dataPath, 'options.yaml');
+  const rulesFile = path.join(dataPath, 'rules.yaml');
 
-    const world = setup(
-        attributesFile,
-        cookbookFile,
-        productsFile,
-        optionsFile,
-        rulesFile
-    );
+  const world = setup(
+    attributesFile,
+    cookbookFile,
+    productsFile,
+    optionsFile,
+    rulesFile
+  );
 
-    return world;
+  return world;
 }
 
 export function setup(
-    attributesFile: string,
-    cookbookFile: string,
-    productsFile: string,
-    optionsFile: string,
-    rulesFile: string
+  attributesFile: string,
+  cookbookFile: string,
+  productsFile: string,
+  optionsFile: string,
+  rulesFile: string
 ): World {
-    // Load items from menu data.
-    const products = catalogFromYamlString(
-        fs.readFileSync(productsFile, 'utf8'),
-        MENUITEM
-    );
-    const options = catalogFromYamlString(
-        fs.readFileSync(optionsFile, 'utf8'),
-        OPTION
-    );
-    const catalog = Catalog.fromCatalog(products);
-    catalog.merge(options);
+  // Load items from menu data.
+  const products = catalogFromYamlString(
+    fs.readFileSync(productsFile, 'utf8'),
+    MENUITEM
+  );
+  const options = catalogFromYamlString(
+    fs.readFileSync(optionsFile, 'utf8'),
+    OPTION
+  );
+  const catalog = Catalog.fromCatalog(products);
+  catalog.merge(options);
 
-    // Create the AttributeInfo instance.
-    const attributes = attributesFromYamlString(
-        fs.readFileSync(attributesFile, 'utf8')
-    );
-    const attributeInfo = new AttributeInfo(catalog, attributes);
+  // Create the AttributeInfo instance.
+  const attributes = attributesFromYamlString(
+    fs.readFileSync(attributesFile, 'utf8')
+  );
+  const attributeInfo = new AttributeInfo(catalog, attributes);
 
-    const cookbook = cookbookFromYamlFile(cookbookFile);
+  const cookbook = cookbookFromYamlFile(cookbookFile);
 
-    const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
-    const ruleChecker: IRuleChecker = new RuleChecker(
-        ruleConfig,
-        catalog.getGenericMap()
-    );
+  const ruleConfig = loadRuleConfig(fs.readFileSync(rulesFile, 'utf8'));
+  const ruleChecker: IRuleChecker = new RuleChecker(
+    ruleConfig,
+    catalog.getGenericMap()
+  );
 
-    const cart = new CartOps(attributeInfo, catalog, ruleChecker);
+  const cart = new CartOps(attributeInfo, catalog, ruleChecker);
 
-    return {
-        attributeInfo,
-        attributes,
-        cartOps: cart,
-        catalog,
-        cookbook,
-        ruleChecker,
-    };
+  return {
+    attributeInfo,
+    attributes,
+    cartOps: cart,
+    catalog,
+    cookbook,
+    ruleChecker,
+  };
 }

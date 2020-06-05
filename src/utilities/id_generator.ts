@@ -1,7 +1,7 @@
 export class IDGenerator {
-    private nextIdValue = 1;
+  private nextIdValue = 1;
 
-    nextId() {
-        return this.nextIdValue++;
-    }
+  nextId() {
+    return this.nextIdValue++;
+  }
 }

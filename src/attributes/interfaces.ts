@@ -8,25 +8,25 @@ import { TID } from '../catalog';
 export type AID = number;
 
 export interface AttributeDescription {
-    aid: AID;
-    name: string;
-    aliases: string[];
-    hidden?: boolean;
+  aid: AID;
+  name: string;
+  aliases: string[];
+  hidden?: boolean;
 }
 
 export interface DimensionDescription {
-    did: DID;
-    name: string;
-    attributes: AttributeDescription[];
+  did: DID;
+  name: string;
+  attributes: AttributeDescription[];
 }
 
 export interface TensorDescription {
-    tid: TID;
-    name: string;
-    dimensions: DID[];
+  tid: TID;
+  name: string;
+  dimensions: DID[];
 }
 
 export interface DimensionAndTensorDescription {
-    dimensions: DimensionDescription[];
-    tensors: TensorDescription[];
+  dimensions: DimensionDescription[];
+  tensors: TensorDescription[];
 }

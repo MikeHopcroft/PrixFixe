@@ -14,42 +14,42 @@ import { DiffResults, treeDiff } from './tree_diff';
 // }
 
 export function createMenuBasedRepairFunction(
-    attributeInfo: AttributeInfo,
-    catalog: ICatalog
+  attributeInfo: AttributeInfo,
+  catalog: ICatalog
 ): RepairFunction {
-    const repairs = new MenuBasedRepairs(
-        attributeInfo,
-        catalog,
-        bipartiteMatchingDiff
-    );
-    return (
-        observed: LogicalCart,
-        expected: LogicalCart
-    ): DiffResults<string> => {
-        const o = cartFromlogicalCart(cartSort(observed), catalog);
-        const e = cartFromlogicalCart(cartSort(expected), catalog);
-        return repairs.repairCart(o, e);
-    };
+  const repairs = new MenuBasedRepairs(
+    attributeInfo,
+    catalog,
+    bipartiteMatchingDiff
+  );
+  return (
+    observed: LogicalCart,
+    expected: LogicalCart
+  ): DiffResults<string> => {
+    const o = cartFromlogicalCart(cartSort(observed), catalog);
+    const e = cartFromlogicalCart(cartSort(expected), catalog);
+    return repairs.repairCart(o, e);
+  };
 }
 
 export function createSimpleRepairFunction(): RepairFunction {
-    const repairs = new SimpleRepairs(bipartiteMatchingDiff);
-    return (
-        observed: LogicalCart,
-        expected: LogicalCart
-    ): DiffResults<string> => {
-        return repairs.repairCart(cartSort(observed), cartSort(expected));
-    };
+  const repairs = new SimpleRepairs(bipartiteMatchingDiff);
+  return (
+    observed: LogicalCart,
+    expected: LogicalCart
+  ): DiffResults<string> => {
+    return repairs.repairCart(cartSort(observed), cartSort(expected));
+  };
 }
 
 export function createNaNRepairFunction(): RepairFunction {
-    return (
-        observed: LogicalCart,
-        expected: LogicalCart
-    ): DiffResults<string> => {
-        return {
-            cost: NaN,
-            edits: [],
-        };
+  return (
+    observed: LogicalCart,
+    expected: LogicalCart
+  ): DiffResults<string> => {
+    return {
+      cost: NaN,
+      edits: [],
     };
+  };
 }

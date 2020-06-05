@@ -38,7 +38,7 @@ export type Key = string;
  * A catch-all type.
  */
 export interface Entity {
-    name: string;
+  name: string;
 }
 
 /**
@@ -48,12 +48,12 @@ export interface Entity {
  * specific product like a `small iced latte`.
  */
 export interface GenericEntity extends Entity {
-    pid: PID;
-    cid: CID; // While knowing a menu item's category may not help us,
-    // it would be nice to have all entities have the same
-    aliases: string[];
-    tensor: TID;
-    defaultKey: Key;
+  pid: PID;
+  cid: CID; // While knowing a menu item's category may not help us,
+  // it would be nice to have all entities have the same
+  aliases: string[];
+  tensor: TID;
+  defaultKey: Key;
 }
 
 /**
@@ -61,8 +61,8 @@ export interface GenericEntity extends Entity {
  * `whipped cream` or `small coffee`.
  */
 export interface SpecificEntity extends Entity {
-    sku: SKU;
-    key: Key;
+  sku: SKU;
+  key: Key;
 }
 
 /**
@@ -91,7 +91,7 @@ export type OPTION = typeof OPTION;
  * parent to other items (such as options).
  */
 export interface MenuItem extends Entity {
-    kind: MENUITEM;
+  kind: MENUITEM;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -102,7 +102,7 @@ export interface MenuItem extends Entity {
  * example of an Option would be a sauce or a drizzle.
  */
 export interface Option extends Entity {
-    kind: OPTION;
+  kind: OPTION;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,28 +113,28 @@ export interface Option extends Entity {
 //   other words, we will have `kind=OPTION` when loading `option.yaml`.
 ///////////////////////////////////////////////////////////////////////////////
 export const genericEntityFactory = (entity: GenericEntity, kind: symbol) => {
-    return entityTyper(entity, kind) as GenericTypedEntity;
+  return entityTyper(entity, kind) as GenericTypedEntity;
 };
 
 export const specificEntityFactory = (entity: SpecificEntity, kind: symbol) => {
-    return entityTyper(entity, kind) as SpecificTypedEntity;
+  return entityTyper(entity, kind) as SpecificTypedEntity;
 };
 
 export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
-    switch (kind) {
-        case MENUITEM:
-            return {
-                ...entity,
-                kind: MENUITEM,
-            } as MenuItem;
-        case OPTION:
-            return {
-                ...entity,
-                kind: OPTION,
-            } as Option;
-        default:
-            throw TypeError('Unknown Type sent to `entityTyper`');
-    }
+  switch (kind) {
+    case MENUITEM:
+      return {
+        ...entity,
+        kind: MENUITEM,
+      } as MenuItem;
+    case OPTION:
+      return {
+        ...entity,
+        kind: OPTION,
+      } as Option;
+    default:
+      throw TypeError('Unknown Type sent to `entityTyper`');
+  }
 }
 
 // NOTE: disabling tslint rule locally because TSLint only offers the choice of
@@ -143,25 +143,25 @@ export function entityTyper(entity: Entity, kind: symbol): TypedEntity {
 // classes, but not interfaces that are POJO structs.
 // tslint:disable-next-line:interface-name
 export interface ICatalog {
-    hasPID(pid: PID): boolean;
+  hasPID(pid: PID): boolean;
 
-    hasSKU(sku: SKU): boolean;
+  hasSKU(sku: SKU): boolean;
 
-    getGeneric(pid: PID): GenericTypedEntity;
+  getGeneric(pid: PID): GenericTypedEntity;
 
-    getGenericForKey(key: Key): GenericTypedEntity;
+  getGenericForKey(key: Key): GenericTypedEntity;
 
-    getGenericMap(): Map<PID, GenericTypedEntity>;
+  getGenericMap(): Map<PID, GenericTypedEntity>;
 
-    genericEntities(): IterableIterator<GenericTypedEntity>;
+  genericEntities(): IterableIterator<GenericTypedEntity>;
 
-    hasKey(key: Key): boolean;
+  hasKey(key: Key): boolean;
 
-    getSpecific(key: Key): SpecificTypedEntity;
+  getSpecific(key: Key): SpecificTypedEntity;
 
-    getSpecificFromSKU(sku: string): SpecificTypedEntity;
+  getSpecificFromSKU(sku: string): SpecificTypedEntity;
 
-    getSpecificsForGeneric(pid: PID): IterableIterator<Key>;
+  getSpecificsForGeneric(pid: PID): IterableIterator<Key>;
 
-    specificEntities(): IterableIterator<SpecificTypedEntity>;
+  specificEntities(): IterableIterator<SpecificTypedEntity>;
 }

@@ -8,187 +8,182 @@ import { createWorld2 } from '../authoring';
 import { createWorld } from '../processors';
 
 import {
-    createMenuBasedRepairFunction,
-    createSimpleRepairFunction,
-    fail,
-    formatScoredSuite,
-    handleError,
-    loadLogicalValidationSuite,
-    RepairFunction,
-    scoreSuite,
-    succeed,
-    writeYAML,
-    FormatScoredSuiteOptions,
+  createMenuBasedRepairFunction,
+  createSimpleRepairFunction,
+  fail,
+  formatScoredSuite,
+  handleError,
+  loadLogicalValidationSuite,
+  RepairFunction,
+  scoreSuite,
+  succeed,
+  writeYAML,
+  FormatScoredSuiteOptions,
 } from '../test_suite2';
 
 function main() {
-    dotenv.config();
+  dotenv.config();
 
-    const args = minimist(process.argv.slice(2));
+  const args = minimist(process.argv.slice(2));
 
-    if (args.h || args.help) {
-        showUsage();
-        return succeed(false);
+  if (args.h || args.help) {
+    showUsage();
+    return succeed(false);
+  }
+
+  if (args._.length !== 3 && args._.length !== 2) {
+    return fail('Error: expected two or three command line parameters.');
+  }
+
+  const expectedFile = args._[0];
+  const observedFile = args._[1];
+  const scoredFile = args._[2];
+
+  let dataPath: string | undefined;
+
+  if (!args.s) {
+    dataPath = process.env.PRIX_FIXE_DATA;
+    if (args.d) {
+      dataPath = args.d;
     }
-
-    if (args._.length !== 3 && args._.length !== 2) {
-        return fail('Error: expected two or three command line parameters.');
+    if (dataPath === undefined) {
+      const message =
+        'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
+      return fail(message);
     }
+  }
 
-    const expectedFile = args._[0];
-    const observedFile = args._[1];
-    const scoredFile = args._[2];
-
-    let dataPath: string | undefined;
-
-    if (!args.s) {
-        dataPath = process.env.PRIX_FIXE_DATA;
-        if (args.d) {
-            dataPath = args.d;
-        }
-        if (dataPath === undefined) {
-            const message =
-                'Use -d flag or PRIX_FIXE_DATA environment variable to specify data path';
-            return fail(message);
-        }
-    }
-
-    try {
-        evaluate(
-            expectedFile,
-            observedFile,
-            scoredFile,
-            dataPath,
-            args.v === true,
-            args.x === true
-        );
-    } catch (e) {
-        handleError(e);
-    }
+  try {
+    evaluate(
+      expectedFile,
+      observedFile,
+      scoredFile,
+      dataPath,
+      args.v === true,
+      args.x === true
+    );
+  } catch (e) {
+    handleError(e);
+  }
 }
 
 function evaluate(
-    expectedFile: string,
-    observedFile: string,
-    ouputFile: string | undefined,
-    dataPath: string | undefined,
-    verbose: boolean,
-    experimental: boolean
+  expectedFile: string,
+  observedFile: string,
+  ouputFile: string | undefined,
+  dataPath: string | undefined,
+  verbose: boolean,
+  experimental: boolean
 ) {
-    console.log('Comparing');
-    console.log(`  expected validation suite: ${expectedFile}`);
-    console.log(`  observed validation suite: ${observedFile}`);
-    console.log(' ');
+  console.log('Comparing');
+  console.log(`  expected validation suite: ${expectedFile}`);
+  console.log(`  observed validation suite: ${observedFile}`);
+  console.log(' ');
 
-    if (dataPath) {
-        console.log(`Computing repair cost with menu files from ${dataPath}.`);
+  if (dataPath) {
+    console.log(`Computing repair cost with menu files from ${dataPath}.`);
+  } else {
+    console.log(`Using simple repair costs that don't require menu files.`);
+  }
+  console.log(' ');
+
+  // Load the expected validation suite.
+  const expectedSuite = loadLogicalValidationSuite(expectedFile);
+  const observedSuite = loadLogicalValidationSuite(observedFile);
+
+  let repairs: RepairFunction;
+  let notes: string;
+
+  if (dataPath) {
+    // Load the world, which provides the AttributeInfo and ICatalog.
+    if (experimental) {
+      console.log(`createWorld2()`);
+      const world = createWorld2(dataPath);
+      repairs = createMenuBasedRepairFunction(
+        world.attributeInfo,
+        world.catalog
+      );
+      notes = 'Menu-based repairs, createWorld2';
     } else {
-        console.log(`Using simple repair costs that don't require menu files.`);
+      const world = createWorld(dataPath);
+      repairs = createMenuBasedRepairFunction(
+        world.attributeInfo,
+        world.catalog
+      );
+      notes = 'Menu-based repairs';
     }
-    console.log(' ');
+  } else {
+    repairs = createSimpleRepairFunction();
+    notes = 'Simple repairs';
+  }
 
-    // Load the expected validation suite.
-    const expectedSuite = loadLogicalValidationSuite(expectedFile);
-    const observedSuite = loadLogicalValidationSuite(observedFile);
+  const scoredSuite = scoreSuite(observedSuite, expectedSuite, repairs, notes);
 
-    let repairs: RepairFunction;
-    let notes: string;
+  const options: FormatScoredSuiteOptions = {
+    showPassing: false,
+    showFailing: verbose,
+    showBySuite: true,
+    showMeasures: true,
+  };
 
-    if (dataPath) {
-        // Load the world, which provides the AttributeInfo and ICatalog.
-        if (experimental) {
-            console.log(`createWorld2()`);
-            const world = createWorld2(dataPath);
-            repairs = createMenuBasedRepairFunction(
-                world.attributeInfo,
-                world.catalog
-            );
-            notes = 'Menu-based repairs, createWorld2';
-        } else {
-            const world = createWorld(dataPath);
-            repairs = createMenuBasedRepairFunction(
-                world.attributeInfo,
-                world.catalog
-            );
-            notes = 'Menu-based repairs';
-        }
-    } else {
-        repairs = createSimpleRepairFunction();
-        notes = 'Simple repairs';
-    }
+  const lines: string[] = [];
+  formatScoredSuite(lines, scoredSuite, options);
+  for (const line of lines) {
+    console.log(line);
+  }
 
-    const scoredSuite = scoreSuite(
-        observedSuite,
-        expectedSuite,
-        repairs,
-        notes
-    );
+  if (ouputFile) {
+    console.log(`Writing scored suite to ${ouputFile}`);
+    writeYAML(ouputFile, scoredSuite);
+  }
 
-    const options: FormatScoredSuiteOptions = {
-        showPassing: false,
-        showFailing: verbose,
-        showBySuite: true,
-        showMeasures: true,
-    };
+  console.log('Scoring complete');
+  console.log('');
 
-    const lines: string[] = [];
-    formatScoredSuite(lines, scoredSuite, options);
-    for (const line of lines) {
-        console.log(line);
-    }
-
-    if (ouputFile) {
-        console.log(`Writing scored suite to ${ouputFile}`);
-        writeYAML(ouputFile, scoredSuite);
-    }
-
-    console.log('Scoring complete');
-    console.log('');
-
-    return succeed(true);
+  return succeed(true);
 }
 
 function showUsage() {
-    const program = path.basename(process.argv[1]);
+  const program = path.basename(process.argv[1]);
 
-    const usage: Section[] = [
+  const usage: Section[] = [
+    {
+      header: 'Suite evaluation tool',
+      content: `This utility computes perfect cart, complete cart, and repair cost metrics.`,
+    },
+    {
+      header: 'Usage',
+      content: [
+        `node ${program} <expected file> <observed file > [output file] [...options]`,
+      ],
+    },
+    {
+      header: 'Required Parameters',
+      content: [
         {
-            header: 'Suite evaluation tool',
-            content: `This utility computes perfect cart, complete cart, and repair cost metrics.`,
+          name: '<expected file>',
+          summary:
+            'Path to a LogicalValidationSuite file with the expected carts.',
         },
         {
-            header: 'Usage',
-            content: [
-                `node ${program} <expected file> <observed file > [output file] [...options]`,
-            ],
+          name: '<observed file>',
+          summary:
+            'Path to a LogicalValidationSuite file with the observed carts.',
         },
         {
-            header: 'Required Parameters',
-            content: [
-                {
-                    name: '<expected file>',
-                    summary:
-                        'Path to a LogicalValidationSuite file with the expected carts.',
-                },
-                {
-                    name: '<observed file>',
-                    summary:
-                        'Path to a LogicalValidationSuite file with the observed carts.',
-                },
-                {
-                    name: '<output file>',
-                    summary:
-                        'Path where the LogicalScoredSuite file will be written. This file is made by adding a measures field to each step in the observed suite.',
-                },
-            ],
+          name: '<output file>',
+          summary:
+            'Path where the LogicalScoredSuite file will be written. This file is made by adding a measures field to each step in the observed suite.',
         },
+      ],
+    },
+    {
+      header: 'Options',
+      optionList: [
         {
-            header: 'Options',
-            optionList: [
-                {
-                    name: 'datapath',
-                    alias: 'd',
-                    description: `Path to prix-fixe data files used for menu-based repairs.\n
+          name: 'datapath',
+          alias: 'd',
+          description: `Path to prix-fixe data files used for menu-based repairs.\n
                 - attributes.yaml
                 - cookbook.yaml
                 - intents.yaml
@@ -199,39 +194,39 @@ function showUsage() {
                 - stopwords.yaml
                 - units.yaml\n
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
-                    type: Boolean,
-                },
-                {
-                    name: 's',
-                    alias: 's',
-                    description:
-                        `Use simple repair cost scoring that doesn't require menu files.\n` +
-                        'The -d option and PRIX_FIXE_DATA_PATH are not required when using -x.',
-                    type: Boolean,
-                },
-                {
-                    name: 'verbose',
-                    alias: 'v',
-                    description: 'Print out failing test cases',
-                    type: Boolean,
-                },
-                {
-                    name: 'experimental',
-                    alias: 'x',
-                    description: 'Use experimental createWorld2()',
-                    type: Boolean,
-                },
-                {
-                    name: 'help',
-                    alias: 'h',
-                    description: 'Print help message',
-                    type: Boolean,
-                },
-            ],
+          type: Boolean,
         },
-    ];
+        {
+          name: 's',
+          alias: 's',
+          description:
+            `Use simple repair cost scoring that doesn't require menu files.\n` +
+            'The -d option and PRIX_FIXE_DATA_PATH are not required when using -x.',
+          type: Boolean,
+        },
+        {
+          name: 'verbose',
+          alias: 'v',
+          description: 'Print out failing test cases',
+          type: Boolean,
+        },
+        {
+          name: 'experimental',
+          alias: 'x',
+          description: 'Use experimental createWorld2()',
+          type: Boolean,
+        },
+        {
+          name: 'help',
+          alias: 'h',
+          description: 'Print help message',
+          type: Boolean,
+        },
+      ],
+    },
+  ];
 
-    console.log(commandLineUsage(usage));
+  console.log(commandLineUsage(usage));
 }
 
 main();

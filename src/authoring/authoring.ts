@@ -1,33 +1,33 @@
 import { hidden } from 'ansi-styles';
 
 function cross1<A, B, C>(
-    f: (a: A, b: B, c: C) => void,
-    a: A,
-    b: B,
-    c: C
+  f: (a: A, b: B, c: C) => void,
+  a: A,
+  b: B,
+  c: C
 ): void {
-    const x: Parameters<typeof f> = [a, b, c];
-    f.apply(undefined, [a, b, c]);
+  const x: Parameters<typeof f> = [a, b, c];
+  f.apply(undefined, [a, b, c]);
 }
 
 function cross2<A, B, C>(
-    f: (a: A, b: B, c: C) => void,
-    a: A | A[],
-    b: B | B[],
-    c: C | C[]
+  f: (a: A, b: B, c: C) => void,
+  a: A | A[],
+  b: B | B[],
+  c: C | C[]
 ): void {
-    // const x = arguments[0];
-    const a1 = a instanceof Array ? a : [a];
-    const b1 = b instanceof Array ? b : [b];
-    const c1 = c instanceof Array ? c : [c];
+  // const x = arguments[0];
+  const a1 = a instanceof Array ? a : [a];
+  const b1 = b instanceof Array ? b : [b];
+  const c1 = c instanceof Array ? c : [c];
 
-    for (const a2 of a1) {
-        for (const b2 of b1) {
-            for (const c2 of c1) {
-                f.apply(undefined, [a2, b2, c2]);
-            }
-        }
+  for (const a2 of a1) {
+    for (const b2 of b1) {
+      for (const c2 of c1) {
+        f.apply(undefined, [a2, b2, c2]);
+      }
     }
+  }
 }
 
 // function foo<T extends Function>(f: T) {
@@ -39,23 +39,23 @@ function cross2<A, B, C>(
 // }
 
 function cross3<A, B, C>(
-    f: (a: A, b: B, c: C) => void,
-    a: A | A[],
-    b: B | B[],
-    c: C | C[]
+  f: (a: A, b: B, c: C) => void,
+  a: A | A[],
+  b: B | B[],
+  c: C | C[]
 ): void {
-    // const x = arguments[0];
-    const a1 = a instanceof Array ? a : [a];
-    const b1 = b instanceof Array ? b : [b];
-    const c1 = c instanceof Array ? c : [c];
+  // const x = arguments[0];
+  const a1 = a instanceof Array ? a : [a];
+  const b1 = b instanceof Array ? b : [b];
+  const c1 = c instanceof Array ? c : [c];
 
-    for (const a2 of a1) {
-        for (const b2 of b1) {
-            for (const c2 of c1) {
-                f.apply(undefined, [a2, b2, c2]);
-            }
-        }
+  for (const a2 of a1) {
+    for (const b2 of b1) {
+      for (const c2 of c1) {
+        f.apply(undefined, [a2, b2, c2]);
+      }
     }
+  }
 }
 
 // // tslint:disable-next-line:no-any
@@ -72,7 +72,7 @@ function cross3<A, B, C>(
 // }
 
 function print(a: string, b: number, c: boolean) {
-    console.log(`a: ${a}, b: ${b}, c: ${c}`);
+  console.log(`a: ${a}, b: ${b}, c: ${c}`);
 }
 
 cross2(print, ['hello', 'world'], [1, 2, 3], [true, false]);
@@ -110,19 +110,19 @@ cross2(print, ['hello', 'world'], [1, 2, 3], [true, false]);
 // const p = tuple(1, 'hi', true);
 
 function* merge<A, B>(a: A | A[], b: B | B[]): IterableIterator<A & B> {
-    const a1 = a instanceof Array ? a : [a];
-    const b1 = b instanceof Array ? b : [b];
+  const a1 = a instanceof Array ? a : [a];
+  const b1 = b instanceof Array ? b : [b];
 
-    for (const a2 of a1) {
-        for (const b2 of b1) {
-            yield { ...a2, ...b2 };
-        }
+  for (const a2 of a1) {
+    for (const b2 of b1) {
+      yield { ...a2, ...b2 };
     }
+  }
 }
 
 const catalog = merge({ tensor: 5 }, [
-    { name: 'latte', sku: 3 },
-    { name: 'americano', sku: 3 },
+  { name: 'latte', sku: 3 },
+  { name: 'americano', sku: 3 },
 ]);
 
 console.log(JSON.stringify([...catalog], null, 4));

@@ -6,63 +6,63 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 
 import {
-    CombinedTurn,
-    fail,
-    handleError,
-    loadLogicalValidationSuite,
-    succeed,
+  CombinedTurn,
+  fail,
+  handleError,
+  loadLogicalValidationSuite,
+  succeed,
 } from '../test_suite2';
 
 import { renderSuiteAsMarkdown } from '../test_suite2/markdown';
 
 function main() {
-    dotenv.config();
+  dotenv.config();
 
-    const args = minimist(process.argv.slice(2));
+  const args = minimist(process.argv.slice(2));
 
-    if (args.h || args.help) {
-        showUsage();
-        return succeed(false);
-    }
+  if (args.h || args.help) {
+    showUsage();
+    return succeed(false);
+  }
 
-    if (args._.length !== 2) {
-        return fail('Error: expected two command line parameters.');
-    }
+  if (args._.length !== 2) {
+    return fail('Error: expected two command line parameters.');
+  }
 
-    const inFile = args._[0];
-    const outFile = args._[1];
+  const inFile = args._[0];
+  const outFile = args._[1];
 
-    try {
-        console.log(`Reading suite from ${inFile}.`);
-        const inputSuite = loadLogicalValidationSuite<CombinedTurn>(inFile);
+  try {
+    console.log(`Reading suite from ${inFile}.`);
+    const inputSuite = loadLogicalValidationSuite<CombinedTurn>(inFile);
 
-        const lines = renderSuiteAsMarkdown(inputSuite);
+    const lines = renderSuiteAsMarkdown(inputSuite);
 
-        console.log(`Writing markdown to ${outFile}.`);
-        fs.writeFileSync(outFile, lines);
-    } catch (e) {
-        handleError(e);
-    }
+    console.log(`Writing markdown to ${outFile}.`);
+    fs.writeFileSync(outFile, lines);
+  } catch (e) {
+    handleError(e);
+  }
 
-    console.log('Markdown generation complete.');
-    return succeed(true);
+  console.log('Markdown generation complete.');
+  return succeed(true);
 }
 
 function showUsage() {
-    const program = path.basename(process.argv[1]);
+  const program = path.basename(process.argv[1]);
 
-    const usage: Section[] = [
-        {
-            header: 'Format test suite as markdown',
-            content: `This utility formats a test suite as markdown.`,
-        },
-        {
-            header: 'Usage',
-            content: [`node ${program} <input file> <output file>`],
-        },
-    ];
+  const usage: Section[] = [
+    {
+      header: 'Format test suite as markdown',
+      content: `This utility formats a test suite as markdown.`,
+    },
+    {
+      header: 'Usage',
+      content: [`node ${program} <input file> <output file>`],
+    },
+  ];
 
-    console.log(commandLineUsage(usage));
+  console.log(commandLineUsage(usage));
 }
 
 main();

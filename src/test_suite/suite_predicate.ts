@@ -30,110 +30,110 @@ export const allSuites: SuitePredicate = (suites: string[]) => true;
 //   '!a'
 //
 export function suitePredicate(text: string): SuitePredicate {
-    // Tokenize the input string.
-    // The result should be an array of suite names, and symbols '(', ')', '&',
-    // '|', and '!'.
-    const re = new RegExp('([\\s+|\\&\\|\\!\\(\\)])');
-    const tokens = text
-        .split(re)
-        .map(x => x.trim())
-        .filter(x => x.length > 0);
+  // Tokenize the input string.
+  // The result should be an array of suite names, and symbols '(', ')', '&',
+  // '|', and '!'.
+  const re = new RegExp('([\\s+|\\&\\|\\!\\(\\)])');
+  const tokens = text
+    .split(re)
+    .map(x => x.trim())
+    .filter(x => x.length > 0);
 
-    // Create a stream of tokens.
-    const input = new PeekableSequence<string>(tokens.values());
+  // Create a stream of tokens.
+  const input = new PeekableSequence<string>(tokens.values());
 
-    return parseDisjunction(input);
+  return parseDisjunction(input);
 }
 
 // CONJUNCTION [| DISJUNCTION]*
 function parseDisjunction(input: PeekableSequence<string>): SuitePredicate {
-    const children: SuitePredicate[] = [parseConjunction(input)];
-    while (!input.atEOS()) {
-        if (input.peek() === ')') {
-            break;
-        } else if (input.peek() === '|') {
-            input.get();
-            children.push(parseConjunction(input));
-        } else {
-            const message = "Expected '&' or '|' operator";
-            throw TypeError(message);
-        }
-    }
-
-    if (children.length === 1) {
-        return children[0];
+  const children: SuitePredicate[] = [parseConjunction(input)];
+  while (!input.atEOS()) {
+    if (input.peek() === ')') {
+      break;
+    } else if (input.peek() === '|') {
+      input.get();
+      children.push(parseConjunction(input));
     } else {
-        return (suites: string[]) => {
-            for (const child of children) {
-                if (child(suites)) {
-                    return true;
-                }
-            }
-            return false;
-        };
+      const message = "Expected '&' or '|' operator";
+      throw TypeError(message);
     }
+  }
+
+  if (children.length === 1) {
+    return children[0];
+  } else {
+    return (suites: string[]) => {
+      for (const child of children) {
+        if (child(suites)) {
+          return true;
+        }
+      }
+      return false;
+    };
+  }
 }
 
 // UNARY [& CONJUNCTION]*
 function parseConjunction(input: PeekableSequence<string>): SuitePredicate {
-    const children: SuitePredicate[] = [parseUnary(input)];
-    while (!input.atEOS()) {
-        if (input.peek() === ')') {
-            break;
-        } else if (input.peek() === '&') {
-            input.get();
-            children.push(parseConjunction(input));
-        } else {
-            break;
-        }
-    }
-
-    if (children.length === 1) {
-        return children[0];
+  const children: SuitePredicate[] = [parseUnary(input)];
+  while (!input.atEOS()) {
+    if (input.peek() === ')') {
+      break;
+    } else if (input.peek() === '&') {
+      input.get();
+      children.push(parseConjunction(input));
     } else {
-        return (suites: string[]) => {
-            for (const child of children) {
-                if (!child(suites)) {
-                    return false;
-                }
-            }
-            return true;
-        };
+      break;
     }
+  }
+
+  if (children.length === 1) {
+    return children[0];
+  } else {
+    return (suites: string[]) => {
+      for (const child of children) {
+        if (!child(suites)) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
 }
 
 // TERM | !TERM
 function parseUnary(input: PeekableSequence<string>): SuitePredicate {
-    if (input.nextIs('!')) {
-        input.get();
-        const unary = parseUnary(input);
-        return (suites: string[]) => !unary(suites);
-    } else if (input.nextIs('(')) {
-        input.get();
-        const unary = parseDisjunction(input);
-        if (!input.nextIs(')')) {
-            const message = "Expected ')'";
-            throw TypeError(message);
-        }
-        input.get();
-        return unary;
-    } else {
-        return parseTerm(input);
+  if (input.nextIs('!')) {
+    input.get();
+    const unary = parseUnary(input);
+    return (suites: string[]) => !unary(suites);
+  } else if (input.nextIs('(')) {
+    input.get();
+    const unary = parseDisjunction(input);
+    if (!input.nextIs(')')) {
+      const message = "Expected ')'";
+      throw TypeError(message);
     }
+    input.get();
+    return unary;
+  } else {
+    return parseTerm(input);
+  }
 }
 
 // TERM
 function parseTerm(input: PeekableSequence<string>): SuitePredicate {
-    if (!input.atEOS()) {
-        const next = input.peek();
-        if (['&', '|', '!', '(', ')'].includes(next)) {
-            const message = `Unexpected operator "${next}"`;
-            throw TypeError(message);
-        }
-        const suite = input.get();
-        return (suites: string[]) => suites.includes(suite);
-    } else {
-        const message = 'Expected a suite';
-        throw TypeError(message);
+  if (!input.atEOS()) {
+    const next = input.peek();
+    if (['&', '|', '!', '(', ')'].includes(next)) {
+      const message = `Unexpected operator "${next}"`;
+      throw TypeError(message);
     }
+    const suite = input.get();
+    return (suites: string[]) => suites.includes(suite);
+  } else {
+    const message = 'Expected a suite';
+    throw TypeError(message);
+  }
 }

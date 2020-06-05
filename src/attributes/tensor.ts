@@ -7,6 +7,6 @@ import { Dimension } from './dimension';
  * which corresponds to a set of Attributes. Used to generate entity keys.
  */
 export interface Tensor {
-    readonly tid: TID;
-    readonly dimensions: Dimension[];
+  readonly tid: TID;
+  readonly dimensions: Dimension[];
 }
