@@ -176,10 +176,10 @@ latte (302)
 
 This command returned a huge amount of information. Let's go through it section-by-section:
 * **Aliases** - this is a list of word tuples that represent ways of saying the name of the product. Note that aliases cannot always be inferred from the product's formal name. Sometimes products have alterntive names that don't have any apparent relationship to formt name. An example would be a `"House Special"`, which might be the same as a `"Petaluma Chicken Sandwich"`.
-* **Attributes** - This is the set of attributes whose values specify the `SKU` of the fully configured product. Attributes are organized into dimensions, and each attribute specifies a number of aliases. This example shows six attributes, organized into two dimensions (`coffee_temperature` and `coffee_size`).
-* **Specifics** - This is the list of fully configured versions of the product. Note that not all combinations of attributes are legal. In this example, the `short iced` and `venti hot` forms are not legal. Note that one of the specific forms is the default form that is implied when no attributes are specified. Each specific form is followed by its `KEY` and then its `SKU`. The `KEY` combines the `PID` with coordinates into the attribute tensor. For example, the `"short latte"` has `KEY=3:0:0`, implying `PID=3` and `hot` and `short`. Its `SKU` is `200`.
+* **Attributes** - This is the set of attributes whose values specify the `SKU` of the fully configured product. Attributes are organized into dimensions, and each attribute specifies a number of aliases. This example shows six attributes, organized into two dimensions, corresponding to temperature and size.
+* **Specifics** - This is the list of fully configured versions of the product. Note that not all combinations of attributes are legal. In this example, the `short iced` and `venti hot` forms are not legal. Note that `grande latte` is the default form that is implied when no attributes are specified. Each specific form is followed by its `KEY` and then its `SKU`. The `KEY` combines the `PID` with coordinates into the attribute tensor. For example, the `"short latte"` has `KEY=3:0:0`, implying `PID=3` and `hot` and `short`. Its `SKU` is `600`.
 * **Options** - This is the list of options that are legal for the product. We can examine any of the options with the `.options` command.
-* **Exclusion Sets** - Some options are mutually exclusive. In this case, a latte can only specify one type of milk, one caffeine level. It can be for here or to go and it can be wet or dry.
+* **Exclusion Sets** - Some options are mutually exclusive. In this case, a latte can only specify one type of milk and one caffeine level. It can be for here or to go and it can be either wet or dry.
 
 Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `1001`:
 
@@ -265,8 +265,8 @@ latte (302)
     wet (1105)
 ~~~
 
-## Building Orders
-The `Menu Explorer` comes with a rudamentory text processor that can be used to put together orders, which serve as a building block for test suites. The text processor supports the following syntax for adding a product to the order or adding an option to the most recently added product:
+## Forming Orders
+The `Menu Explorer` provides a rudamentory text processor that can be used to put together orders, which serve as a building block for test suites. The text processor supports the following syntax for adding a product to the order or adding an option to the most recently added product:
 ~~~
 add [one|two|three] <specific product name>
 ~~~
@@ -325,7 +325,7 @@ Here are some examples:
 ~~~
 
 ## Measuring Repair Cost
-The `Menu Explorer` can calculate the repair cost to convert an observed cart into an expected cart. To use this feature, you must first construct an expected cart:
+The `Menu Explorer` can calculate the repair cost to convert an observed cart into an expected cart. To use this feature, you must first construct an expected cart and then record it with the `.expect` command:
 
 ~~~
 % add two iced tall mocha
@@ -360,7 +360,7 @@ The `.score` command compares the current cart with the expected cart. Right now
 Carts are identical
 ~~~
 
-Let's see what happens if we delete vanilla syrup from the cart and then score:
+Let's see what happens if we remove the defac from the cart and then score:
 
 ~~~
 % remove decaf
@@ -424,14 +424,15 @@ Total repairs: 8
 ~~~
 
 ## Authoring Test Cases
-The `Menu Explorer` includes commands for authoring test suites that can be used to evaluate `text-to-order` systems. The process involves the following steps:
-* Use the `.newtest` command to start a test.
-* For each step in the conversation
-  * Use the `.step` command to record the text input.
-  * Use the `add` and `remove` syntax, along with the `.reset` and `.undo` commands to construct the expected cart.
-* Optionally use the `.suites` command to tag the test with suite names.
-* Optionally use the `.comment` command to add a text comment to the test.
-* Use the `.yaml` command to print out the YAML representation of the test.
+The `Menu Explorer` includes commands for authoring test suites that can be used to [evaluate `text-to-order`](./test_suite_tools.md) systems. The process involves the following steps:
+
+1. Use the `.newtest` command to start a test.
+1. For each step in the conversation
+    * Use the `.step` command to record the text input.
+    * Use the `add` and `remove` syntax, along with the `.reset` and `.undo` commands to construct the expected cart.
+1. Optionally use the `.suites` command to tag the test with suite names.
+1. Optionally use the `.comment` command to add a text comment to the test.
+1. Use the `.yaml` command to print out the YAML representation of the test.
 
 Let's create the test for the following three-step order:
 * _"hi um i'd ah like a tall flat white"_

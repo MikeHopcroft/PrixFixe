@@ -21,6 +21,9 @@ tests:
       We encourage you to try these examples in the short-order REPL yourself.
       You can also run these examples as part of the regression suite.
 
+      The cases in this file are available in the
+      [regression.yaml](regression.yaml) suite.
+
       ## Adding Items
     tests:
       - id: 0
@@ -826,12 +829,13 @@ tests:
         suites: 'placeholder'
         comment: |
           ### Removing Options
-          placeholder
+          This is a placeholder test used as a reminder to add in the full
+          set of cases for removing options.
         steps:
           - turns:
               - speaker: speaker
                 transcription: >-
-                  This is a placeholder test.
+                  This is a placeholder test that is designed to fail.
             cart:
               items:
                 - quantity: 1
@@ -2000,7 +2004,10 @@ tests:
                       name: buttered rum syrup
                       sku: '1702'
                       children: []
-  - comment: '## extras'
+  - comment: |
+      ## Extras
+      These are extra regression cases associated with bugs discovered
+      while testing.
     tests:
       - id: 1000
         suites: 'extras disfluencies'

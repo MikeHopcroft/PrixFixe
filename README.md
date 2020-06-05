@@ -7,6 +7,7 @@
 * A [repair cost metric](documentation/measures.md) for comparing orders
 * [Tools](documentation/test_suite_tools.md) for testing natural language systems that generate orders
 * A [sample menu](documentation/sample_menu.md) for testing purposes
+* A [regression suite](samples/tests/regression.md) for evaluating natural language processing systems.
 
 `prix-fixe` is currently in the earliest stages of development, so documentation is sparse, and the code stability is uneven. If you are interested in taking a look, we recommend starting with the
 [Interactive Menu Explorer Tutorial](documentation/repl.md).
