@@ -64,9 +64,12 @@ export function logicalScoredSuite<TURN extends AnyTurn>(
   // tslint:disable-next-line:no-any
   root: any
 ): LogicalScoredSuite<TURN> {
+  // DESIGN NOTE: need to use two-step validation process here because schema
+  // exporter doesn't create a ref for LogicalScoredSuite<TURN>.
+  const validationSuite = logicalValidationSuite(root);
   return validate<TURN, LogicalScoredSuite<TURN>>(
-    '#/definitions/LogicalScoredSuite<TURN>',
-    root
+    '#/definitions/AggregatedMeasuresField',
+    validationSuite
   ) as LogicalScoredSuite<TURN>;
 }
 
@@ -75,7 +78,7 @@ export function logicalTestSuite<TURN extends AnyTurn>(
   root: any
 ): LogicalTestSuite<TURN> {
   return validate<TURN, LogicalTestSuite<TURN>>(
-    '#/definitions/LogicalScoredSuite<TURN>',
+    '#/definitions/LogicalTestSuite<TURN>',
     root
   ) as LogicalTestSuite<TURN>;
 }
@@ -95,15 +98,15 @@ function validate<TURN extends AnyTurn, SUITE extends GenericSuite<Step<TURN>>>(
   // tslint:disable-next-line:no-any
   root: any
 ): SUITE {
-  const ajv = new AJV({ jsonPointers: true });
-  const validator = ajv.compile(anySuiteSchema);
+  const validator = new AJV().addSchema(anySuiteSchema);
 
-  if (!ajv.validate(schemaRef, root)) {
+  if (!validator.validate(schemaRef, root)) {
     const message = 'yaml data does not conform to schema.';
-    const output = betterAjvErrors(anySuiteSchema, root, ajv.errors, {
+    const output = betterAjvErrors(anySuiteSchema, root, validator.errors, {
       format: 'cli',
       indent: 1,
     });
+    console.log(JSON.stringify(output, null, 4));
     throw new YAMLValidationError(message, output || []);
   }
 

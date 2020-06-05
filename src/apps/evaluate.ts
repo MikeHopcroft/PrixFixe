@@ -120,6 +120,7 @@ function evaluate(
   const scoredSuite = scoreSuite(observedSuite, expectedSuite, repairs, notes);
 
   const options: FormatScoredSuiteOptions = {
+    showDetails: true,
     showPassing: false,
     showFailing: verbose,
     showBySuite: true,

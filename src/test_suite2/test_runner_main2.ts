@@ -23,14 +23,21 @@ import { formatScoredSuite, FormatScoredSuiteOptions } from './formatting';
 
 import {
   AnyTurn,
+  GenericCase,
   GenericSuite,
   LogicalValidationSuite,
+  ScoredStep,
   TextTurn,
   ValidationStep,
   LogicalScoredSuite,
 } from './interfaces';
 
-import { loadLogicalValidationSuite, writeYAML } from './loaders';
+import {
+  loadLogicalScoredSuite,
+  loadLogicalValidationSuite,
+  writeYAML,
+} from './loaders';
+
 import { logicalCartFromCart } from './logical_cart';
 import { createMenuBasedRepairFunction } from './repair_functions';
 import { scoreSuite } from './scoring';
@@ -71,7 +78,9 @@ export async function testRunnerMain2(
   }
   console.log(`data path = ${dataPath}`);
 
-  const briefMode = args.b === true;
+  const baselineFile = args.baseline;
+  const showDetails = args.details === 'false' ? false : true;
+  const dryRunMode = args.dryrun === true;
   // const markdown = args['m'] === true;
 
   let testId: number | undefined;
@@ -104,7 +113,7 @@ export async function testRunnerMain2(
   // Filter suite by test case id or suite expression, if specified.
   suite = filterTestSuites(app, suite, testId, suiteExpressionText);
 
-  if (briefMode) {
+  if (dryRunMode) {
     // In brief mode, don't actually run the tests.
     // Just display the input text.
     displayBriefView(suite);
@@ -124,11 +133,13 @@ export async function testRunnerMain2(
     // Display results.
     const lines: string[] = [];
     const options: FormatScoredSuiteOptions = {
+      showDetails,
       showPassing: args.a === true,
       showFailing: true,
       showBySuite: true,
       showMeasures: true,
     };
+
     formatScoredSuite(lines, scored, options);
     for (const line of lines) {
       console.log(line);
@@ -138,6 +149,13 @@ export async function testRunnerMain2(
     if (outputFile) {
       console.log(`Writing to "${outputFile}"`);
       writeYAML(outputFile, scored);
+    }
+
+    if (baselineFile) {
+      console.log(`Baseline: "${baselineFile}"`);
+      console.log(' ');
+      const baseline = loadLogicalScoredSuite(baselineFile);
+      compareScoredSuites(baseline, scored);
     }
 
     // Successful exit.
@@ -329,6 +347,69 @@ async function runTests(
   return scored;
 }
 
+function compareScoredSuites(
+  baseline: LogicalScoredSuite<AnyTurn>,
+  current: LogicalScoredSuite<AnyTurn>
+) {
+  let bp = 0;
+  let cp = 0;
+  let missingTests = 0;
+  let newTests = 0;
+
+  const bIdToTest = new Map<number, GenericCase<ScoredStep<AnyTurn>>>();
+  for (const test of enumerateTestCases(baseline)) {
+    bIdToTest.set(test.id, test);
+  }
+
+  const cIdToTest = new Map<number, GenericCase<ScoredStep<AnyTurn>>>();
+  for (const test of enumerateTestCases(current)) {
+    cIdToTest.set(test.id, test);
+  }
+
+  for (const b of bIdToTest.values()) {
+    const br = b.steps.reduce((p, c) => p + c.measures.repairs!.cost, 0);
+    if (br === 0) {
+      bp++;
+    }
+    const bText = br === 0 ? 'OK' : `FAILED(${br})`;
+
+    const c = cIdToTest.get(b.id);
+    if (c) {
+      const cr = c.steps.reduce((p, c) => p + c.measures.repairs!.cost, 0);
+      if (cr === 0) {
+        cp++;
+      }
+      const cText = cr === 0 ? 'OK' : `FAILED(${cr})`;
+
+      if (br !== cr) {
+        console.log(`${b.id}: ${bText} => ${cText}`);
+      }
+    } else {
+      ++missingTests;
+      console.log(`${b.id}: REMOVED(${bText})`);
+    }
+  }
+
+  for (const c of cIdToTest.values()) {
+    const b = bIdToTest.get(c.id);
+    if (!b) {
+      ++newTests;
+      const cr = c.steps.reduce((p, c) => p + c.measures.repairs!.cost, 0);
+      const cText = cr === 0 ? 'OK' : `FAILED(${cr})`;
+      console.log(`${c.id}: NEW(${cText})`);
+    }
+  }
+
+  console.log(' ');
+  console.log(`Baseline passing tests: ${bp}`);
+  console.log(`Current passing tests: ${cp}`);
+  console.log(`Delta: ${cp - bp}`);
+
+  console.log(' ');
+  console.log(`Missing tests: ${missingTests}`);
+  console.log(`New tests: ${newTests}`);
+}
+
 class Application {
   private readonly processorFactory: TestProcessors;
 
@@ -363,11 +444,20 @@ class Application {
             description: 'Print results for all tests, passing and failing.',
           },
           {
-            name: 'b',
-            alias: 'b',
+            name: 'baseline',
+            typeLabel: '{underline file}',
+            description: 'Compare with ScoredSuite baseline.',
+          },
+          {
+            name: 'details',
+            type: Boolean,
+            description: 'Print test case details. Defaults to true',
+          },
+          {
+            name: 'dryrun',
             type: Boolean,
             description:
-              'Brief mode - just print utterances. Do not run tests.',
+              'Dryrun mode - just print utterances. Do not run tests.',
           },
           {
             name: 'd',
@@ -398,6 +488,14 @@ class Application {
               'Run the test case with id={underline N}. ' +
               'Note that the -n flag overrides the -s flag.',
           },
+          // {
+          //   name: 'output',
+          //   alias: 'o',
+          //   typeLabel: '{underline output file}',
+          //   type: Boolean,
+          //   description:
+          //     'Write ScoredSuite to file',
+          // },
           {
             name: 'p',
             alias: 'p',

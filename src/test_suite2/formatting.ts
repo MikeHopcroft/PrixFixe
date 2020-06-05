@@ -5,6 +5,7 @@ import { PassFailRates } from './pass_fail_rates';
 import { renderCart } from './markdown';
 
 export interface FormatScoredSuiteOptions {
+  showDetails: boolean;
   showPassing: boolean;
   showFailing: boolean;
   showMeasures: boolean;
@@ -15,6 +16,7 @@ export function formatScoredSuite(
   fragments: string[],
   scored: LogicalScoredSuite<AnyTurn>,
   options: FormatScoredSuiteOptions = {
+    showDetails: true,
     showPassing: false,
     showFailing: true,
     showMeasures: true,
@@ -33,34 +35,39 @@ export function formatScoredSuite(
 
     const passing = repairCost === 0;
 
-    if ((passing && options.showPassing) || (!passing && options.showFailing)) {
-      // TODO: line formatter handles indent for multi-line
-      fragments.push(`${test.id}: ${test.comment}`);
-      for (const [index, step] of test.steps.entries()) {
-        const { repairs } = step.measures;
-        const status = repairs!.cost > 0 ? 'NEEDS REPAIRS' : 'OK';
-        fragments.push(`  step ${index}: ${status}`);
+    if (options.showDetails) {
+      if (
+        (passing && options.showPassing) ||
+        (!passing && options.showFailing)
+      ) {
+        // TODO: line formatter handles indent for multi-line
+        fragments.push(`${test.id}: ${test.comment}`);
+        for (const [index, step] of test.steps.entries()) {
+          const { repairs } = step.measures;
+          const status = repairs!.cost > 0 ? 'NEEDS REPAIRS' : 'OK';
+          fragments.push(`  step ${index}: ${status}`);
 
-        for (const turn of step.turns) {
-          if ('transcription' in turn) {
-            fragments.push(`    ${turn.speaker}: ${turn.transcription}`);
+          for (const turn of step.turns) {
+            if ('transcription' in turn) {
+              fragments.push(`    ${turn.speaker}: ${turn.transcription}`);
+            }
+          }
+          fragments.push(' ');
+
+          const lines: string[] = [];
+          renderCart(lines, step.cart);
+          for (const line of lines) {
+            fragments.push('    ' + line);
+          }
+
+          fragments.push(' ');
+          for (const edit of repairs!.steps) {
+            fragments.push(`    ${edit}`);
           }
         }
         fragments.push(' ');
-
-        const lines: string[] = [];
-        renderCart(lines, step.cart);
-        for (const line of lines) {
-          fragments.push('    ' + line);
-        }
-
-        fragments.push(' ');
-        for (const edit of repairs!.steps) {
-          fragments.push(`    ${edit}`);
-        }
+        fragments.push('---------------------------------------');
       }
-      fragments.push(' ');
-      fragments.push('---------------------------------------');
     }
   }
 
