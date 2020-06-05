@@ -36,7 +36,7 @@ In order to use `prix-fixe` you must have
   * [Interactive Menu Explorer Tutorial](documentation/repl.md)
   * [Sample Restaurant Menu](documentation/sample_menu.md)
 * CartOps
-  * [API Overview](documentation/api_overview.md)
+  * [API Overview](documentation/api_overview.md) - COMING SOON
   * CartOps
   * Catalog
   * AttributeInfo
@@ -45,7 +45,7 @@ In order to use `prix-fixe` you must have
   * [Testing Methodology](documentation/test_suite_tools.md)
   * [Measures](documentation/measures.md)
   * [Calculating Repair Cost](documentation/repair_cost.md)
-  * [Test Suite File Format](documentation/test_suite_format.md)
+  * [Test Suite File Format](documentation/test_suite_format.md) - DRAFT
   * [filter-suite.js tool](documentation/test_suite_tools.md#filter-suite-tool)
   * [evaluate.js tool](documentation/test_suite_tools.md#evaluate-tool)
   * [test-runner.js tool](documentation/test_runner_tool.md)
@@ -53,7 +53,7 @@ In order to use `prix-fixe` you must have
   * [observed.yaml](samples/tests/observed.yaml) - ficticious output from a natural language processing system. Used in [Measures](documentation/measures.md).
   * [regression.md](samples/tests/regression.md) - description of regression suite
   * [regression.yaml](samples/tests/regression.yaml) - suite of cases covering a wide variety of ordering scenarios.
-  * [examples](samples/tests/regression.md)
+  * [Example orders](samples/tests/regression.md)
   
 ## Contributing
 Interested in contributing? Read more [here](contributing.md).
