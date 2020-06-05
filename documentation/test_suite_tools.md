@@ -2,11 +2,31 @@
 
 ## Methodology
 
-* Test Suite
-* Validation Suite
-* Scored Suite
+`prix-fixe` makes use of three `TestSuite` variants:
+* **TesteSuite** - this is a suite with all of the `cart` fields removed. It serves as input to a natural language processor that is under evaluation.
+* **ValidationSuite** - this is a `TestSuite` that also includes the expected carts. It serves as both an answer key, and the format by which a natural language processor returns its results. `ValidationSuites` are sometimes used to provide training examples.
+* **ScoredSuite** - this is a `ValidationSuite`, marked up with scoring information. The scoring information comes from comparing a `ValidationSuite` of expected carts with another containing carts produced by a natural language processor.
 
-Add a diagram of the workflow.
+Scoring markup includes information about three measures:
+* **perfect** - whether the expected and observed carts match perfectly
+* **complete** - whether the expected and observed carts contain the same products in different arrangments
+* **repair cost** - the sequence of steps required to convert the observed cart into the expected cart.
+
+Please see [Measures](measures.md) and [Repair Cost](repair_cost) for more information on scoring. See [Test Suite Format](test_suite_format) for more information on the test suite file format.
+
+The testing workflow involves two personas:
+* Author - typically a data scientist who curates a collection of test cases in a `ValidationSuite`.
+* Candidate - the natural language processing system being evaluated.
+
+The following diagram shows the testing workflow.
+
+![Workflow](./workflow.svg)
+
+### Workflow
+1. Test author produces a ValidationSuite that provides the inputs (either transcriptions of links to audio files) and the expected carts. This could be a [hand-authored regression suite](../samples/tests/regression.yaml) or it could be a set of cases curated from labeled data collected from real-world scenarios.
+2. Use the `filter-suite.js` tool to strip the carts from the `ValidationSuite` to produce a `TestSuite`.
+3. `Candidate System` uses natural languaging processing to annotate `TestSuite` with proposed `Carts`, producing a new `ValidationSuite`.
+4. Use the `evaluate.js` tool to compare the original `ValidationSuite`, containing the expected carts with the `Candidate's` `ValidationSuite` that contains observed carts. This process annotates the `Candidate's` suite with `Measures`, producing a `ScoredSuite`.
 
 ## Filter Suite Tool
 
@@ -28,8 +48,9 @@ Options
   -a, --a               Remove the audio field from each turn.
   -c, --c               Remove the cart field from each step.
   -t, --t               Remove the transcription field from each turn.
-  -s, --s suiteFilter   Boolean expression of suites to retain.Can use suite
-                        names, !, &, |, and parentheses.
+  -s, --s suiteFilter   Boolean expression of suites to retain. Can use suite
+                        names, !, &, |, and parentheses. Default is to retain
+                        all suites.
   -h, --help            Print help message
 ~~~
 

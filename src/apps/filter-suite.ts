@@ -136,8 +136,9 @@ function showUsage() {
           alias: 's',
           typeLabel: '{underline suiteFilter}',
           description:
-            'Boolean expression of suites to retain.' +
-            'Can use suite names, !, &, |, and parentheses.',
+            'Boolean expression of suites to retain. ' +
+            'Can use suite names, !, &, |, and parentheses. ' +
+            'Default is to retain all cases.',
         },
         {
           name: 'help',
