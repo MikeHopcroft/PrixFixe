@@ -1,4 +1,4 @@
-# Title
+# Example Orders
 This file catalogs examples of menu ordering scenarios working in
 [short-order](https://github.com/MikeHopcroft/ShortOrder).
 In order to better illustrate the `add`, `remove`, and `modify`

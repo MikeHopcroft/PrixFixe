@@ -1,5 +1,8 @@
 # TODO List
 
+* sort out whether prix-fixe and short-order have the correct menu files
+  * Why are bakery PIDs higher than coffee PIDs?
+  * measures.md seems to have the wrong PIDs (e.g latte is 600)
 * token-flow, prix-fixe, short-order ecosystem notes
 * Markdown version of regression suite
 * . Figure out 2 vs 4 space tabs in VSCode
