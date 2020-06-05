@@ -23,10 +23,10 @@ The following diagram shows the testing workflow.
 ![Workflow](./workflow.svg)
 
 ### Workflow
-1. Test author produces a ValidationSuite that provides the inputs (either transcriptions of links to audio files) and the expected carts. This could be a [hand-authored regression suite](../samples/tests/regression.yaml) or it could be a set of cases curated from labeled data collected from real-world scenarios.
+1. Test author produces a ValidationSuite that provides the inputs (either transcriptions or links to audio files) and the expected carts. This could be a [hand-authored regression suite](../samples/tests/regression.yaml) or it could be a set of cases curated from labeled data collected from real-world scenarios.
 2. Use the `filter-suite.js` tool to strip the carts from the `ValidationSuite` to produce a `TestSuite`.
-3. `Candidate System` uses natural languaging processing to annotate `TestSuite` with proposed `Carts`, producing a new `ValidationSuite`.
-4. Use the `evaluate.js` tool to compare the original `ValidationSuite`, containing the expected carts with the `Candidate's` `ValidationSuite` that contains observed carts. This process annotates the `Candidate's` suite with `Measures`, producing a `ScoredSuite`.
+3. `Candidate System` uses natural languaging processing to annotate the `TestSuite` with proposed `Carts,` producing a new `ValidationSuite`.
+4. Use the `evaluate.js` tool to compare the original `ValidationSuite`, containing the expected carts, with the `Candidate's` `ValidationSuite` that contains observed carts. This process annotates the `Candidate's` suite with `Measures`, producing a `ScoredSuite`.
 
 ## Filter Suite Tool
 

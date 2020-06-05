@@ -1,6 +1,8 @@
 # TODO List
 
-* Figure out 2 vs 4 space tabs in VSCode
+* token-flow, prix-fixe, short-order ecosystem notes
+* Markdown version of regression suite
+* . Figure out 2 vs 4 space tabs in VSCode
 * Test runner compare with baseline feature
 * Test runner suppress details (show only summary)
 * Convert ProcessOneDemo to replace testCase.run() with code from test_suite2
@@ -20,13 +22,14 @@
   * Rename application
 * test_suite_tools.md
   * Explanatory text
-  * Workflow diagram
+  * x Workflow diagram
   * unix syntax
   * Use tutorial_builder
   * -a flag for evaluate
+  * Build from documentation/src
 * cleanup .vscode
 * version
-  * merge prixfix master
+  * x merge prixfix master
   * publish version
   * merge shortorder master
   * take new prixfixe
