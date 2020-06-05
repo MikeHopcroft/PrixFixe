@@ -197,9 +197,9 @@ function loadAndCombineTestSuites(
             };
             for (const testFile of testFiles) {
                 console.log(`Reading ${testFile}`);
-                const s: LogicalValidationSuite<
-                    TextTurn
-                > = loadLogicalValidationSuite(testFile);
+                const s: LogicalValidationSuite<TextTurn> = loadLogicalValidationSuite(
+                    testFile
+                );
                 suite.tests.push({
                     comment: testFile,
                     tests: [s],
