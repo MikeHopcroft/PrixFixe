@@ -75,17 +75,16 @@ export function formatScoredSuite(
   if (options.showMeasures) {
     formatAggregateMeasures(fragments, scored.measures);
     fragments.push(' ');
-  }
 
-  if (options.showBySuite) {
-    fragments.push('Case pass rate by suite:');
-    const lines = passFailRates.format();
-    for (const line of lines) {
-      fragments.push('  ' + line);
+    if (options.showBySuite) {
+      fragments.push('Case pass rate by suite:');
+      const lines = passFailRates.format();
+      for (const line of lines) {
+        fragments.push('  ' + line);
+      }
     }
+    fragments.push('---------------------------------------');
   }
-
-  fragments.push('---------------------------------------');
 
   fragments.push('');
   fragments.push('');

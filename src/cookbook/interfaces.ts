@@ -1,4 +1,3 @@
-import { ItemInstance } from '../cart';
 import { Key } from '../catalog';
 
 export type RID = number;

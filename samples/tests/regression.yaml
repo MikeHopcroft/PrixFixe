@@ -359,7 +359,7 @@ tests:
           - turns:
               - speaker: speaker
                 transcription: >-
-                  we want an light whipped no foam mocha with extra hazelnut and
+                  we want a light whipped no foam mocha with extra hazelnut and
                   cinnamon
             cart:
               items:

@@ -134,10 +134,10 @@ export async function testRunnerMain2(
     const lines: string[] = [];
     const options: FormatScoredSuiteOptions = {
       showDetails,
-      showPassing: args.a === true,
+      showPassing: args.a === true || args.n,
       showFailing: true,
       showBySuite: true,
-      showMeasures: true,
+      showMeasures: args.n ? false : true,
     };
 
     formatScoredSuite(lines, scored, options);

@@ -166,7 +166,7 @@ speaker: can i have an espresso with no nutmeg
 ~~~
 Multiple leading and trailing attributed options
 ~~~
-speaker: we want an light whipped no foam mocha with extra hazelnut and cinnamon
+speaker: we want a light whipped no foam mocha with extra hazelnut and cinnamon
 
   1 grande mocha (802)                         802
     1 light whipped cream (5501)              5501

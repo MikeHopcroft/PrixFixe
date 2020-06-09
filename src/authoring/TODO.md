@@ -1,5 +1,8 @@
 # TODO List
 
+
+* cleanup launch.json in all three projects
+* Remove cases "i don't want foo", "i want no foo", "make that with no foo"
 * sort out whether prix-fixe and short-order have the correct menu files
   * Why are bakery PIDs higher than coffee PIDs?
   * measures.md seems to have the wrong PIDs (e.g latte is 600)
