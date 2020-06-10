@@ -1915,7 +1915,7 @@ tests:
                   sku: '603'
                   children: []
       - id: 65
-        suites: 'regression multiple weak not-implemented'
+        suites: 'regression multiple'
         comment: 'add then remove in same utterance'
         steps:
           - turns:
@@ -2096,6 +2096,7 @@ tests:
                       name: no sugar
                       sku: '6600'
                       children: []
+      # TODO: another removal by product class is to remove cheese.
       - id: 1007
         suites: 'extras remove not-implemented'
         comment: 'remove by product class'
@@ -2156,8 +2157,11 @@ tests:
                 #   sku: '202'
                 #   children: []
       - id: 1003
-        suites: 'extras bug spec-issue'
-        comment: 'should not add a second whipped cream - or should it'
+        suites: 'extras add modify spec-issue'
+        comment: |
+          Should not add a second whipped cream - or should it?
+          This is the difference between "I want", which is like
+          "make that" and "add".
         steps:
           - turns:
               - speaker: speaker
@@ -2190,7 +2194,7 @@ tests:
                       sku: '5502'
                       children: []
       - id: 1004
-        suites: 'extras bug'
+        suites: 'regression remove implicit'
         comment: 'should remove the whipped cream'
         steps:
           - turns:
@@ -2214,13 +2218,9 @@ tests:
                 - quantity: 1
                   name: grande latte
                   sku: '602'
-                  children:
-                    - quantity: 1
-                      name: whipped cream
-                      sku: '5502'
-                      children: []
+                  children: []
       - id: 1005
-        suites: 'extras remove not-implemented'
+        suites: 'regression remove implicit'
         comment: |
           Should remove the vanilla - says not implemented.
           parseRemoveOptionFromImplicit() not implemented.
@@ -2246,11 +2246,7 @@ tests:
                 - quantity: 1
                   name: grande latte
                   sku: '602'
-                  children:
-                    - quantity: 1
-                      name: vanilla syrup
-                      sku: '2502'
-                      children: []                
+                  children: []
       - id: 1008
         suites: 'regression add bug'
         comment: 'can we have a product x'
@@ -2288,7 +2284,7 @@ tests:
                   sku: '602'
                   children: []
       - id: 1010
-        suites: 'extras ambiguous'
+        suites: 'extras ambiguous not-implemented'
         comment: |
           Change option on one of two items.
           This is ambiguous. Shortest edit distance heuristic
@@ -2325,7 +2321,7 @@ tests:
                   sku: '502'
                   children: []
       - id: 1011
-        suites: 'extras remove implicit not-implemented'
+        suites: 'regression remove implicit'
         comment: |
           Remove options.
           parseRemoveOptionFromImplicit() not implemented.
@@ -2463,7 +2459,9 @@ tests:
                       children: []
       - id: 1018
         suites: 'extras add multiple bug'
-        comment: 'multi-step should add room to coffee'
+        comment: |
+          Multi-step should add room to coffee.
+          Instead adds it to the espresso.
         steps:
           - turns:
               - speaker: speaker
@@ -2672,7 +2670,7 @@ tests:
                       sku: '5800'
                       children: []
       - id: 1024
-        suites: extras remove implicit not-implemented
+        suites: regression remove implicit
         comment: |
           Should remove the splenda.
           parseRemoveOptionFromImplicit() not implemented.
@@ -2787,7 +2785,7 @@ tests:
                       children: []
 
       - id: 1028
-        suites: 'extras bug disfluencies'
+        suites: 'extras bug disfluencies not-implemented'
         comment: 'Disfluency prevents order'
         steps:
           - turns:
@@ -2804,8 +2802,9 @@ tests:
                       sku: '2502'
                       children: []
       - id: 1029
-        suites: 'extras bug option-as-verb'
-        comment: 'Should not add a second muffin'
+        suites: 'extras bug option-as-verb not-implemented'
+        comment: |
+          Should not remove the muffin
         steps:
           - turns:
               - speaker: speaker
@@ -2831,7 +2830,7 @@ tests:
                       children: []
 
       - id: 1030
-        suites: 'extras implicit bug option-as-verb'
+        suites: 'extras implicit option-as-verb not-implemented'
         comment: 'option-as-verb should warm the muffin'
         steps:
           - turns:
@@ -2857,7 +2856,7 @@ tests:
                       sku: '200'
                       children: []
       - id: 1031
-        suites: 'extras bug option-as-verb'
+        suites: 'extras option-as-verb not-implemented'
         comment: 'option-as-verb should slice the muffin'
         steps:
           - turns:
@@ -2955,4 +2954,9 @@ tests:
                       name: sugar
                       sku: '6602'
                       children: []
-                      
+# Removing when target is recipe
+#   "remove the double double"
+# Modifying when target is recipe
+#   "make that double double iced"
+# Attributes for recipe
+#   "I want an iced double double"

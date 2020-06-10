@@ -367,7 +367,6 @@ rules:
       - toppings
   - parents: [coffee_drinks, espresso_drinks, latte_drinks]
     exclusive: [milks, caffeines, here-or-to-go, wet-or-dry]
-# recipes: []
 recipes:
   - name: double double
     aliases: [double double]
