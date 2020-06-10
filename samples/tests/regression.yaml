@@ -511,7 +511,7 @@ tests:
                   sku: '10000'
                   children: []
       - id: 29
-        suites: 'regression add multiple complex bug'
+        suites: 'regression add multiple complex ambiguous'
         comment: 'Add a comma-separated list of products with attributes and options'
         steps:
           - turns:
@@ -903,15 +903,15 @@ tests:
                 - quantity: 1
                   name: grande latte
                   sku: '602'
+                  children: []
+                - quantity: 1
+                  name: doppio espresso
+                  sku: '1001'
                   children:
                     - quantity: 1
                       name: extra vanilla syrup
                       sku: '2503'
                       children: []
-                - quantity: 1
-                  name: doppio espresso
-                  sku: '1001'
-                  children: []
       - id: 45.2
         suites: 'regression modify'
         comment: 'make that a triple'
@@ -2097,7 +2097,7 @@ tests:
                       sku: '6600'
                       children: []
       - id: 1007
-        suites: 'extras remove bug'
+        suites: 'extras remove not-implemented'
         comment: 'remove by product class'
         steps:
           - turns:
@@ -2123,8 +2123,8 @@ tests:
                   sku: '1502'
                   children: []
       - id: 1002
-        suites: 'extras add'
-        comment: ''
+        suites: 'extras add ambiguous'
+        comment: 'chai latte can be a chai latte and a latte or just a latte'
         steps:
           - turns:
               - speaker: speaker
@@ -2156,8 +2156,8 @@ tests:
                 #   sku: '202'
                 #   children: []
       - id: 1003
-        suites: 'extras bug'
-        comment: 'should not add a second whipped cream'
+        suites: 'extras bug spec-issue'
+        comment: 'should not add a second whipped cream - or should it'
         steps:
           - turns:
               - speaker: speaker
@@ -2220,8 +2220,10 @@ tests:
                       sku: '5502'
                       children: []
       - id: 1005
-        suites: 'extras'
-        comment: 'should remove the vanilla - says not implemented'
+        suites: 'extras remove not-implemented'
+        comment: |
+          Should remove the vanilla - says not implemented.
+          parseRemoveOptionFromImplicit() not implemented.
         steps:
           - turns:
               - speaker: speaker
@@ -2286,8 +2288,11 @@ tests:
                   sku: '602'
                   children: []
       - id: 1010
-        suites: 'extras'
-        comment: 'change option on one of two items'
+        suites: 'extras ambiguous'
+        comment: |
+          Change option on one of two items.
+          This is ambiguous. Shortest edit distance heuristic
+          might be appropriate here.
         steps:
           - turns:
               - speaker: speaker
@@ -2320,8 +2325,10 @@ tests:
                   sku: '502'
                   children: []
       - id: 1011
-        suites: 'extras remove'
-        comment: 'Remove option'
+        suites: 'extras remove implicit not-implemented'
+        comment: |
+          Remove options.
+          parseRemoveOptionFromImplicit() not implemented.
         steps:
           - turns:
               - speaker: speaker
@@ -2346,7 +2353,7 @@ tests:
                   sku: '602'
                   children: []
       - id: 1012
-        suites: 'extras add bug'
+        suites: 'extras add bug regression'
         comment: 'Should add a latte'
         steps:
           - turns:
@@ -2360,7 +2367,7 @@ tests:
                   children: []
       # 1013 was a dupe of 1012
       - id: 1014
-        suites: 'extras'
+        suites: 'extras regression'
         comment: 'multi-step order product then modify'
         steps:
           - turns:
@@ -2386,7 +2393,7 @@ tests:
                       sku: '200'
                       children: []
       - id: 1015
-        suites: 'extras'
+        suites: 'extras regression'
         comment: 'room for cream should not add cream'
         steps:
           - turns:
@@ -2403,7 +2410,7 @@ tests:
                       sku: '5900'
                       children: []
       - id: 1016
-        suites: 'extras'
+        suites: 'extras regression'
         comment: 'room for cream should not add cream'
         steps:
           - turns:
@@ -2429,7 +2436,7 @@ tests:
                       sku: '5900'
                       children: []
       - id: 1017
-        suites: 'extras'
+        suites: 'extras regression'
         comment: 'multi-step add option with product name afterwards'
         steps:
           - turns:
@@ -2455,7 +2462,7 @@ tests:
                       sku: '5900'
                       children: []
       - id: 1018
-        suites: 'extras multiple bug'
+        suites: 'extras add multiple bug'
         comment: 'multi-step should add room to coffee'
         steps:
           - turns:
@@ -2489,7 +2496,7 @@ tests:
                   sku: '1001'
                   children: []
       - id: 1019
-        suites: 'extras bug'
+        suites: 'extras regression'
         comment: 'adds togo to the wrong item'
         steps:
           - turns:
@@ -2606,7 +2613,9 @@ tests:
                       children: []
       - id: 1022
         suites: 'extras bug'
-        comment: 'should add whole milk creamer to coffee. Question: what about the half and half?'
+        comment: |
+          Should add whole milk creamer to coffee.
+          Question: what about the half and half?'
         steps:
           - turns:
               - speaker: speaker
@@ -2616,7 +2625,11 @@ tests:
                 - quantity: 1
                   name: grande latte
                   sku: '602'
-                  children: []
+                  children:
+                    - quantity: 1
+                      name: nonfat milk
+                      sku: '3400'
+                      children: []
                 - quantity: 1
                   name: grande dark roast coffee
                   sku: '1502'
@@ -2625,13 +2638,12 @@ tests:
                       name: half and half
                       sku: '4900'
                       children: []
-                    - quantity: 1
-                      name: whole milk creamer
-                      sku: '4000'
-                      children: []
       - id: 1023
-        suites: 'extras bug'
-        comment: 'should only add one lid'
+        suites: 'extras regression'
+        comment: |
+          Should only add one lid.
+          This may pass for the wrong reason.
+          See 1003, which is the same case, but fails.
         steps:
           - turns:
               - speaker: speaker
@@ -2660,8 +2672,10 @@ tests:
                       sku: '5800'
                       children: []
       - id: 1024
-        suites: extras remove bug
-        comment: should remove the splenda
+        suites: extras remove implicit not-implemented
+        comment: |
+          Should remove the splenda.
+          parseRemoveOptionFromImplicit() not implemented.
         steps:
           - turns:
               - speaker: speaker
@@ -2687,7 +2701,7 @@ tests:
                   children: []
 
       - id: 1025
-        suites: extras bug
+        suites: extras regression
         comment: shoud put no foam on second drink
         steps:
           - turns:
@@ -2773,7 +2787,7 @@ tests:
                       children: []
 
       - id: 1028
-        suites: 'extras bug disfluency'
+        suites: 'extras bug disfluencies'
         comment: 'Disfluency prevents order'
         steps:
           - turns:
@@ -2790,7 +2804,7 @@ tests:
                       sku: '2502'
                       children: []
       - id: 1029
-        suites: 'extras bug'
+        suites: 'extras bug option-as-verb'
         comment: 'Should not add a second muffin'
         steps:
           - turns:
@@ -2817,7 +2831,7 @@ tests:
                       children: []
 
       - id: 1030
-        suites: 'extras bug'
+        suites: 'extras implicit bug option-as-verb'
         comment: 'option-as-verb should warm the muffin'
         steps:
           - turns:
@@ -2843,7 +2857,7 @@ tests:
                       sku: '200'
                       children: []
       - id: 1031
-        suites: 'extras bug'
+        suites: 'extras bug option-as-verb'
         comment: 'option-as-verb should slice the muffin'
         steps:
           - turns:
@@ -2870,7 +2884,7 @@ tests:
                       children: []
 
       - id: 1032
-        suites: 'extras recipes'
+        suites: 'extras recipes regression'
         comment: 'double shot'
         steps:
           - turns:
@@ -2887,7 +2901,7 @@ tests:
                       sku: '6902'
                       children: []
       - id: 1033
-        suites: 'extras recipes'
+        suites: 'extras recipes regression'
         comment: 'double latte vs double espress'
         steps:
           - turns:
@@ -2921,7 +2935,7 @@ tests:
                   sku: '1001'
                   children: []
       - id: 1034
-        suites: 'extras recipes'
+        suites: 'extras recipes regression'
         comment: 'coffee one and one'
         steps:
           - turns:
