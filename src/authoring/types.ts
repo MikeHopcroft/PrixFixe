@@ -123,6 +123,34 @@ export type AnyRule = t.TypeOf<typeof anyRuleType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+// Recipes
+//
+///////////////////////////////////////////////////////////////////////////////
+export interface ItemTemplateSpec {
+  name: string;
+  quantity: number;
+  children: ItemTemplateSpec[];
+}
+
+export const itemTemplateSpecType: t.Type<ItemTemplateSpec> = t.recursion(
+  'ItemTemplateSpec',
+  () =>
+    t.type({
+      name: t.string,
+      quantity: t.number,
+      children: t.array(itemTemplateSpecType),
+    })
+);
+
+export const recipeSpecType = t.type({
+  name: t.string,
+  aliases: t.array(t.string),
+  items: t.array(itemTemplateSpecType),
+});
+export type RecipeSpec = t.TypeOf<typeof recipeSpecType>;
+
+///////////////////////////////////////////////////////////////////////////////
+//
 // Catalog
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -131,6 +159,7 @@ export const catalogSpecType = t.type({
   tensors: t.array(tensorSpecType),
   catalog: t.array(groupSpecType),
   rules: t.array(anyRuleType),
+  recipes: t.array(recipeSpecType),
 });
 export type CatalogSpec = t.TypeOf<typeof catalogSpecType>;
 

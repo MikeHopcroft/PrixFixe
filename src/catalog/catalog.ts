@@ -12,6 +12,7 @@ import {
 export class Catalog implements ICatalog {
   private mapGeneric = new Map<PID, GenericTypedEntity>();
   private mapSpecific = new Map<Key, SpecificTypedEntity>();
+  private nameToKey = new Map<string, Key>();
   private pidToKeys = new Map<PID, Key[]>();
   private skuToKey = new Map<SKU, Key>();
 
@@ -70,12 +71,17 @@ export class Catalog implements ICatalog {
         keys.push(item.key);
       }
 
+      // Add SKU to key mapping
       if (this.skuToKey.has(item.sku)) {
         throw TypeError(`Catalog: encountered duplicate sku ${item.sku}.`);
       }
-
-      // Add SKU to key mapping
       this.skuToKey.set(item.sku, item.key);
+
+      // Add name to key mapping
+      if (this.nameToKey.has(item.name)) {
+        throw TypeError(`Catalog: encountered duplicate name "${item.name}".`);
+      }
+      this.nameToKey.set(item.name, item.key);
     }
   }
 
@@ -130,6 +136,16 @@ export class Catalog implements ICatalog {
       throw TypeError(`Catalog.get(): cannot find key=${key}`);
     }
     return item;
+  }
+
+  getSpecificFromName(name: string): SpecificTypedEntity {
+    const key = this.nameToKey.get(name);
+    if (key) {
+      return this.getSpecific(key);
+    } else {
+      const message = `Catalog.getSpecificFromName: unknown name "${name}".`;
+      throw TypeError(message);
+    }
   }
 
   getSpecificFromSKU(sku: string): SpecificTypedEntity {

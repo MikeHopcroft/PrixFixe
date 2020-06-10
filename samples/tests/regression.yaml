@@ -2868,3 +2868,77 @@ tests:
                       name: cut in half
                       sku: '300'
                       children: []
+
+      - id: 1032
+        suites: 'extras recipes'
+        comment: 'double shot'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: add a double shot latte
+            cart:
+              items:
+                - quantity: 1
+                  name: grande latte
+                  sku: '602'
+                  children:
+                    - quantity: 2
+                      name: espresso shot
+                      sku: '6902'
+                      children: []
+      - id: 1033
+        suites: 'extras recipes'
+        comment: 'double latte vs double espress'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: add a double latte
+            cart:
+              items:
+                - quantity: 1
+                  name: grande latte
+                  sku: '602'
+                  children:
+                    - quantity: 2
+                      name: espresso shot
+                      sku: '6902'
+                      children: []
+          - turns:
+              - speaker: speaker
+                transcription: add a double espresso
+            cart:
+              items:
+                - quantity: 1
+                  name: grande latte
+                  sku: '602'
+                  children:
+                    - quantity: 2
+                      name: espresso shot
+                      sku: '6902'
+                      children: []
+                - quantity: 1
+                  name: doppio espresso
+                  sku: '1001'
+                  children: []
+      - id: 1034
+        suites: 'extras recipes'
+        comment: 'coffee one and one'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: i'll have a coffee one and one
+            cart:
+              items:
+                - quantity: 1
+                  name: grande dark roast coffee
+                  sku: '1502'
+                  children:
+                    - quantity: 1
+                      name: half and half
+                      sku: '4900'
+                      children: []
+                    - quantity: 1
+                      name: sugar
+                      sku: '6602'
+                      children: []
+                      

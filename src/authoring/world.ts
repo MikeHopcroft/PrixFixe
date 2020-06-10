@@ -10,6 +10,7 @@ import { processDimensions, processTensors } from './attributes';
 import { loadCatalog } from './loader';
 import { processGroups, GroupBuilder } from './products';
 import { processRules } from './rules';
+import { processRecipes } from './recipes';
 
 export function createWorld2(dataPath: string): World {
   // console.log('CreateWorld2');
@@ -33,11 +34,7 @@ export function createWorld2(dataPath: string): World {
 
   const attributeInfo = new AttributeInfo(catalog, attributes);
 
-  // TODO: reintroduce Cookbook
-  const cookbook = new Cookbook({
-    products: [],
-    options: [],
-  });
+  const cookbook = processRecipes(catalog, spec.recipes);
 
   const ruleChecker = processRules(builder.tagsToPIDs, spec.rules);
 

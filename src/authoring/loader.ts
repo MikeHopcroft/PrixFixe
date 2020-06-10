@@ -12,6 +12,7 @@ import {
   partialCatalogSpecType,
   PartialCatalogSpec,
   TensorSpec,
+  RecipeSpec,
 } from './types';
 
 export function loadCatalog(filename: string): CatalogSpec {
@@ -21,12 +22,13 @@ export function loadCatalog(filename: string): CatalogSpec {
 }
 
 class CatalogBuilder {
-  dimensions: DimensionSpec[] = [];
-  tensors: TensorSpec[] = [];
-  catalog: GroupSpec[] = [];
-  rules: AnyRule[] = [];
+  private readonly dimensions: DimensionSpec[] = [];
+  private readonly tensors: TensorSpec[] = [];
+  private readonly catalog: GroupSpec[] = [];
+  private readonly rules: AnyRule[] = [];
+  private readonly recipes: RecipeSpec[] = [];
 
-  context: string[] = [process.cwd()];
+  private readonly context: string[] = [process.cwd()];
 
   process(filename: string) {
     // console.log(`Reading ${filename}`);
@@ -52,7 +54,7 @@ class CatalogBuilder {
     }
   }
 
-  merge(c: PartialCatalogSpec) {
+  private merge(c: PartialCatalogSpec) {
     if (c.dimensions) {
       this.dimensions.push(...c.dimensions);
     }
@@ -65,6 +67,9 @@ class CatalogBuilder {
     if (c.rules) {
       this.rules.push(...c.rules);
     }
+    if (c.recipes) {
+      this.recipes.push(...c.recipes);
+    }
   }
 
   build(): CatalogSpec {
@@ -73,6 +78,7 @@ class CatalogBuilder {
       tensors: this.tensors,
       catalog: this.catalog,
       rules: this.rules,
+      recipes: this.recipes,
     };
 
     return c;
