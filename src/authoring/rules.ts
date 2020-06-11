@@ -190,8 +190,12 @@ class RuleChecker2 implements IRuleChecker {
       const newExclusionSets: Array<Set<PID>> = [];
       for (const es of allExclusionSets) {
         if (activeExclusionSets.has(es)) {
-          // New child conflicts with an existing child.
-          return !es.has(cPID);
+          if (es.has(cPID)) {
+            // New child conflicts with an existing child.
+            return false;
+          }
+          // // New child conflicts with an existing child.
+          // return !es.has(cPID);
         } else if (es.has(cPID)) {
           // No conflict. Save exclusion set for later.
           newExclusionSets.push(es);

@@ -2129,7 +2129,7 @@ tests:
         steps:
           - turns:
               - speaker: speaker
-                transcription: i want a tall latte a short latte macchiato and a venti chai latte
+                transcription: i want a tall latte a short latte macchiato and a venti chai latte iced
             cart:
               items:
                 - quantity: 1
@@ -2139,6 +2139,10 @@ tests:
                 - quantity: 1
                   name: short latte macchiato
                   sku: '700'
+                  children: []
+                - quantity: 1
+                  name: venti iced chai latte
+                  sku: '905'
                   children: []
                 # - quantity: 1
                 #   name: short latte

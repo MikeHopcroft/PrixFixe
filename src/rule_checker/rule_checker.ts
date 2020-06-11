@@ -191,6 +191,7 @@ export class RuleChecker implements IRuleChecker {
         const childCID = predicate(childPID);
         if (childCID > -1) {
           if (exclusionCIDs.has(childCID)) {
+            // This seems ok vs code in authoring/rules.ts
             return false;
           } else {
             thisChildCIDs.add(childCID);
