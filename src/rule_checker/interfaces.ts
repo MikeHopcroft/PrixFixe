@@ -114,6 +114,8 @@ export interface IRuleChecker {
    */
   isValidQuantity(parent: Key, child: Key, qty: number): boolean;
 
+  getQuantityInfo(parent: Key, child: Key): QuantityInformation | undefined;
+
   /**
    * Gets the exclusion groups associated with a generic PID.
    *

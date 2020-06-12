@@ -1,9 +1,9 @@
 # TODO List
 
-* Add water as a product to the menu to show ambiguity with option.
-  e.g. "get me a latte with water" - two drinks or one with water added?
 * Singleton options, like the milks and the caffination levels
   * Fuzzer support as well.
+* Add water as a product to the menu to show ambiguity with option.
+  e.g. "get me a latte with water" - two drinks or one with water added?
 * cleanup launch.json in all three projects
 * Remove cases "i don't want foo", "i want no foo", "make that with no foo"
 * sort out whether prix-fixe and short-order have the correct menu files

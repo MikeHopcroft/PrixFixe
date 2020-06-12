@@ -219,10 +219,7 @@ export class RuleChecker implements IRuleChecker {
     };
   }
 
-  private getQuanitityInfo = (
-    par: Key,
-    child: Key
-  ): QuantityInformation | undefined => {
+  getQuantityInfo = (par: Key, child: Key): QuantityInformation | undefined => {
     // First, check if theres a fully qualified key with a wildcard
     const fullyQualifiedKeyMap = this.quantityTensor[par];
 
@@ -263,7 +260,7 @@ export class RuleChecker implements IRuleChecker {
 
   // See `IRuleChecker` for docs.
   getDefaultQuantity = (par: Key, child: Key): number => {
-    const quantityInfo = this.getQuanitityInfo(par, child);
+    const quantityInfo = this.getQuantityInfo(par, child);
 
     if (quantityInfo) {
       return quantityInfo.defaultQty;
@@ -274,7 +271,7 @@ export class RuleChecker implements IRuleChecker {
 
   // See `IRuleChecker` for docs.
   isValidQuantity = (par: Key, child: Key, qty: number): boolean => {
-    const quantityInfo = this.getQuanitityInfo(par, child);
+    const quantityInfo = this.getQuantityInfo(par, child);
 
     if (quantityInfo) {
       const result = qty >= quantityInfo.minQty && qty <= quantityInfo.maxQty;

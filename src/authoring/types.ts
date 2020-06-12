@@ -108,10 +108,19 @@ export type GroupSpec = t.TypeOf<typeof groupSpecType>;
 // Rules
 //
 ///////////////////////////////////////////////////////////////////////////////
-const parentChildRuleType = t.type({
-  parents: t.array(t.string),
-  children: t.array(t.string),
-});
+const parentChildRuleType = t.intersection([
+  t.type({
+    parents: t.array(t.string),
+    children: t.array(t.string),
+  }),
+  t.partial({
+    info: t.type({
+      defaultQty: t.number,
+      minQty: t.number,
+      maxQty: t.number,
+    }),
+  }),
+]);
 
 const exclusiveRuleType = t.type({
   parents: t.array(t.string),

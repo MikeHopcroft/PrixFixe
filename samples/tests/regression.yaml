@@ -2964,3 +2964,5 @@ tests:
 #   "make that double double iced"
 # Attributes for recipe
 #   "I want an iced double double"
+# Removing a quantity of an item
+#   "Remove two of the lattes"

@@ -1,6 +1,6 @@
 import { AttributeInfo } from '../attributes';
 import { PID } from '../catalog';
-import { IRuleChecker } from '../rule_checker';
+import { IRuleChecker, QuantityInformation } from '../rule_checker';
 
 import { AnyRule, Key } from './types';
 
@@ -12,7 +12,13 @@ export function processRules(
 
   for (const rule of rules) {
     if ('children' in rule) {
-      processParentChild(ruleChecker, tagsToPIDs, rule.parents, rule.children);
+      processParentChild(
+        ruleChecker,
+        tagsToPIDs,
+        rule.parents,
+        rule.children,
+        rule.info
+      );
     } else {
       processExclusions(ruleChecker, tagsToPIDs, rule.parents, rule.exclusive);
     }
@@ -25,7 +31,8 @@ function processParentChild(
   rules: RuleChecker2,
   tagsToPIDs: Map<string, PID[]>,
   parentTags: string[],
-  childrenTags: string[]
+  childrenTags: string[],
+  info: QuantityInformation | undefined
 ) {
   const parents = new Set<PID>();
   for (const tag of parentTags) {
@@ -46,6 +53,7 @@ function processParentChild(
   for (const p of parents) {
     for (const c of children) {
       rules.addChild(p, c);
+      rules.addQuantityInfo(p, c, info);
     }
   }
 }
@@ -87,6 +95,7 @@ class RuleChecker2 implements IRuleChecker {
   private readonly emptySet = new Set<PID>();
   private readonly validChildren = new Map<PID, Set<PID>>();
   private readonly exclusion = new Map<PID, Array<Set<PID>>>();
+  private readonly quantityInfo = new Map<PID, Map<PID, QuantityInformation>>();
 
   constructor() {}
 
@@ -107,6 +116,21 @@ class RuleChecker2 implements IRuleChecker {
       exclusions.push(exclusionSet);
     } else {
       this.exclusion.set(parent, [exclusionSet]);
+    }
+  }
+
+  addQuantityInfo(
+    parent: PID,
+    child: PID,
+    info: QuantityInformation | undefined
+  ) {
+    if (info) {
+      const children = this.quantityInfo.get(parent);
+      if (children) {
+        children.set(child, info);
+      } else {
+        this.quantityInfo.set(parent, new Map([[child, info]]));
+      }
     }
   }
 
@@ -135,7 +159,6 @@ class RuleChecker2 implements IRuleChecker {
     child: string
   ): (existing: string) => boolean {
     const pPID = AttributeInfo.pidFromKey(parent);
-    // const children = new Set<PID>();
 
     // Exclusion sets associated with the parrent.
     const allExclusionSets = this.exclusion.get(pPID);
@@ -194,8 +217,6 @@ class RuleChecker2 implements IRuleChecker {
             // New child conflicts with an existing child.
             return false;
           }
-          // // New child conflicts with an existing child.
-          // return !es.has(cPID);
         } else if (es.has(cPID)) {
           // No conflict. Save exclusion set for later.
           newExclusionSets.push(es);
@@ -219,6 +240,20 @@ class RuleChecker2 implements IRuleChecker {
 
   isValidQuantity(parent: string, child: string, qty: number): boolean {
     throw new Error('Method not implemented.');
+  }
+
+  getQuantityInfo(
+    parent: string,
+    child: string
+  ): QuantityInformation | undefined {
+    const pPID = AttributeInfo.pidFromKey(parent);
+    const children = this.quantityInfo.get(pPID);
+    if (children) {
+      const cPID = AttributeInfo.pidFromKey(child);
+      return children.get(cPID);
+    }
+
+    return undefined;
   }
 
   getExclusionGroups(pid: PID): Array<Set<PID>> {
