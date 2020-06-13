@@ -27,11 +27,9 @@ export interface AttributeCoordinate {
  */
 export class AttributeInfo {
   private readonly catalog: Catalog;
-  private readonly dimensionIdToDimension = new Map<DID, Dimension>();
-  private readonly attributeIdToCoordinate = new Map<
-    AID,
-    AttributeCoordinate
-  >();
+  private readonly nameToDimension = new Map<string, Dimension>();
+  private readonly didToDimension = new Map<DID, Dimension>();
+  private readonly aidToCoordinate = new Map<AID, AttributeCoordinate>();
   private readonly tensorIdToTensor = new Map<TID, Tensor>();
   private readonly aidToDescription = new Map<AID, AttributeDescription>();
 
@@ -59,7 +57,7 @@ export class AttributeInfo {
     for (const tensor of attributes.tensors) {
       const dimensions: Dimension[] = [];
       for (const did of tensor.dimensions) {
-        const dimension = this.dimensionIdToDimension.get(did);
+        const dimension = this.didToDimension.get(did);
         if (!dimension) {
           const message = `unknown dimension id ${did}.`;
           throw TypeError(message);
@@ -74,19 +72,25 @@ export class AttributeInfo {
    * Indexes a Dimension and its Attributes.
    */
   private addDimension(dimension: Dimension) {
-    if (this.dimensionIdToDimension.has(dimension.did)) {
+    if (this.didToDimension.has(dimension.did)) {
       const message = `found duplicate dimension id ${dimension.did}.`;
       throw new TypeError(message);
     }
-    this.dimensionIdToDimension.set(dimension.did, dimension);
+    this.didToDimension.set(dimension.did, dimension);
+
+    if (this.nameToDimension.has(dimension.name)) {
+      const message = `found duplicate dimension name "${dimension.name}".`;
+      throw new TypeError(message);
+    }
+    this.nameToDimension.set(dimension.name, dimension);
 
     let position = 0;
     for (const attribute of dimension.attributes) {
-      if (this.attributeIdToCoordinate.has(attribute.aid)) {
+      if (this.aidToCoordinate.has(attribute.aid)) {
         const message = `found duplicate attribute pid ${attribute.aid}.`;
         throw new TypeError(message);
       }
-      this.attributeIdToCoordinate.set(attribute.aid, {
+      this.aidToCoordinate.set(attribute.aid, {
         dimension,
         position,
       });
@@ -96,12 +100,25 @@ export class AttributeInfo {
   }
 
   getDimension(did: DID): Dimension {
-    const dimension = this.dimensionIdToDimension.get(did);
+    const dimension = this.didToDimension.get(did);
     if (dimension === undefined) {
       const message = `Unknown dimension id ${did}.`;
       throw TypeError(message);
     }
     return dimension;
+  }
+
+  getDimensionFromName(name: string): Dimension {
+    const dimension = this.nameToDimension.get(name);
+    if (dimension === undefined) {
+      const message = `Unknown dimension name "${name}".`;
+      throw TypeError(message);
+    }
+    return dimension;
+  }
+
+  dimensions() {
+    return this.nameToDimension.values();
   }
 
   getAttribute(aid: AID): AttributeDescription {
@@ -130,7 +147,7 @@ export class AttributeInfo {
    * (e.g. `0 ==> small`).
    */
   getAttributeCoordinates(aid: AID): AttributeCoordinate {
-    const coordinate = this.attributeIdToCoordinate.get(aid);
+    const coordinate = this.aidToCoordinate.get(aid);
     if (coordinate === undefined) {
       const message = `Unknown attribute id ${aid}.`;
       throw TypeError(message);

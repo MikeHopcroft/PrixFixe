@@ -7,9 +7,7 @@ import {
   Dimension,
   Tensor,
   TID,
-  PID,
   AttributeInfo,
-  TensorEntityBuilder,
   UID,
 } from '../../src/';
 
@@ -89,9 +87,17 @@ describe('AttributeInfo', () => {
 
     // Attempt adding an attribute with a duplicate pid.
     const uniqueId: UID = softServeDimensions[0].did + 1;
-    const sizesDimension = new Dimension(uniqueId, 'sizes', sizes.values());
-    const f2 = () => info['addDimension'](sizesDimension);
+    const sizesDimension2 = new Dimension(uniqueId, 'sizes2', sizes.values());
+    const f2 = () => info['addDimension'](sizesDimension2);
     assert.throws(f2, `found duplicate attribute pid 0.`);
+
+    const sizesDimension3 = new Dimension(
+      uniqueId + 1,
+      'sizes',
+      sizes.values()
+    );
+    const f3 = () => info['addDimension'](sizesDimension3);
+    assert.throws(f3, `found duplicate dimension name "sizes".`);
   });
 
   it('addTensor()', () => {
