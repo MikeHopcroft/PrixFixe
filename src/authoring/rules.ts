@@ -6,9 +6,10 @@ import { AnyRule, Key } from './types';
 
 export function processRules(
   tagsToPIDs: Map<string, PID[]>,
+  pidsToUnits: Map<PID, string>,
   rules: AnyRule[]
 ): IRuleChecker {
-  const ruleChecker = new RuleChecker2();
+  const ruleChecker = new RuleChecker2(pidsToUnits);
 
   for (const rule of rules) {
     if ('children' in rule) {
@@ -96,8 +97,11 @@ class RuleChecker2 implements IRuleChecker {
   private readonly validChildren = new Map<PID, Set<PID>>();
   private readonly exclusion = new Map<PID, Array<Set<PID>>>();
   private readonly quantityInfo = new Map<PID, Map<PID, QuantityInformation>>();
+  private readonly pidsToUnits = new Map<PID, string>();
 
-  constructor() {}
+  constructor(pidsToUnits: Map<PID, string>) {
+    this.pidsToUnits = pidsToUnits;
+  }
 
   addChild(parent: PID, child: PID) {
     // console.log(`rules.addChild(${parent}, ${child})`);
@@ -259,5 +263,13 @@ class RuleChecker2 implements IRuleChecker {
   getExclusionGroups(pid: PID): Array<Set<PID>> {
     const groups = this.exclusion.get(pid);
     return groups || [];
+  }
+
+  getUnits(pid: PID): string {
+    const units = this.pidsToUnits.get(pid);
+    if (units) {
+      return units;
+    }
+    return '';
   }
 }

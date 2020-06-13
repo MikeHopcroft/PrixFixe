@@ -286,4 +286,8 @@ export class RuleChecker implements IRuleChecker {
     // NOTE: this feature is not implemented for RuleChecker.
     return [];
   }
+
+  getUnits(pid: PID): string {
+    throw new Error('Method not implemented.');
+  }
 }

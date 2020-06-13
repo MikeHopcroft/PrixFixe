@@ -110,7 +110,7 @@ function displayMenu(world: World, line: string, kind?: MENUITEM | OPTION) {
   if (line.length === 0) {
     // No Key or PID was specified. Print out name of all of the
     // MENUITEM generics.
-    printCatalog(world.catalog, kind);
+    printCatalog(world, kind);
   } else if (line.indexOf(':') !== -1) {
     // This is a specific entity. Just print out its options.
     const key = line.trim();
@@ -132,12 +132,17 @@ export const prixFixeReplExtensionFactory: IReplExtensionFactory = {
 };
 
 export function printCatalog(
-  catalog: ICatalog,
+  world: World,
   kind: MENUITEM | OPTION | undefined
 ) {
-  for (const item of catalog.genericEntities()) {
+  for (const item of world.catalog.genericEntities()) {
     if (!kind || item.kind === kind) {
-      console.log(`${item.name} (${item.pid})`);
+      const units = world.ruleChecker.getUnits(item.pid);
+      if (units) {
+        console.log(`${item.name} (${item.pid}) - "${units}"`);
+      } else {
+        console.log(`${item.name} (${item.pid})`);
+      }
     }
   }
   console.log(' ');

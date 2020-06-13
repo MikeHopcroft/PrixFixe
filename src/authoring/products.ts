@@ -6,13 +6,13 @@ import {
   GenericTypedEntity,
   MENUITEM,
   OPTION,
+  PID,
   SKU,
   SpecificTypedEntity,
   specificEntityFactory,
 } from '../catalog';
 
 import { IIndex, IndexedDimension } from './attributes';
-import { PID } from '../catalog';
 import { InvalidParameterError } from './errors';
 
 import {
@@ -45,6 +45,7 @@ class Context {
 
   tags = new Set<string>();
   type = ItemType.PRODUCT;
+  units = '';
 
   constructor(builder: GroupBuilder) {
     // DESIGN NOTE: initializes this.tensor, this.dimensions, this.forms,
@@ -76,7 +77,7 @@ class Context {
   }
 
   extend(builder: GroupBuilder, group: ContextSpec): Context {
-    const { tensor, forms, pid, sku, tags, type } = group;
+    const { tensor, forms, pid, sku, tags, type, units } = group;
     const defaultForm = group.default;
 
     // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
@@ -125,6 +126,10 @@ class Context {
       context.type = type;
     }
 
+    if (units !== undefined) {
+      context.units = units;
+    }
+
     return context;
   }
 
@@ -166,6 +171,7 @@ export class GroupBuilder {
   readonly generics: GenericTypedEntity[] = [];
   readonly specifics: SpecificTypedEntity[] = [];
   readonly tagsToPIDs = new Map<string, PID[]>();
+  readonly pidsToUnits = new Map<PID, string>();
 
   readonly tensors: IIndex<TID, TensorDescription>;
   readonly dimensions: IIndex<DID, IndexedDimension>;
@@ -288,6 +294,11 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
     } else {
       builder.tagsToPIDs.set(tag, [pid]);
     }
+  }
+
+  // Index units
+  if (context.units) {
+    builder.pidsToUnits.set(pid, context.units);
   }
 
   // Create specifics

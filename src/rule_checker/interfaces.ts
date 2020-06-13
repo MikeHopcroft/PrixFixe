@@ -123,4 +123,6 @@ export interface IRuleChecker {
    *
    */
   getExclusionGroups(pid: PID): Array<Set<PID>>;
+
+  getUnits(pid: PID): string;
 }

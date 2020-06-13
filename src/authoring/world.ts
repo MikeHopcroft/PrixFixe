@@ -36,7 +36,11 @@ export function createWorld2(dataPath: string): World {
 
   const cookbook = processRecipes(catalog, spec.recipes);
 
-  const ruleChecker = processRules(builder.tagsToPIDs, spec.rules);
+  const ruleChecker = processRules(
+    builder.tagsToPIDs,
+    builder.pidsToUnits,
+    spec.rules
+  );
 
   const cartOps = new CartOps(attributeInfo, catalog, ruleChecker);
 

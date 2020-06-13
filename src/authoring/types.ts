@@ -79,6 +79,7 @@ const contextSpecType = t.partial({
   forms: t.array(formSpecType),
   tags: t.array(t.string),
   type: ItemTypeType,
+  units: t.string,
 });
 export type ContextSpec = t.TypeOf<typeof contextSpecType>;
 
