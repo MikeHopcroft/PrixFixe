@@ -1,13 +1,16 @@
 import {
+  AID,
   AttributeDescription,
-  DimensionAndTensorDescription,
+  DID,
   DimensionDescription,
   TensorDescription,
 } from '../attributes';
 
+import { TID } from '../catalog';
+
 import { InvalidParameterError, ValidationError } from './errors';
 
-import { AID, DID, DimensionSpec, TID, TensorSpec } from './types';
+import { DimensionSpec, TensorSpec } from './types';
 
 export interface HasName {
   name: string;

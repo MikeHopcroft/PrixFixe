@@ -1,9 +1,6 @@
 import * as t from 'io-ts';
 
-export type AID = number;
-export type DID = number;
-export type Key = string;
-export type TID = number;
+import { Role } from '../catalog';
 
 export const WILDCARD = '*';
 
@@ -62,6 +59,9 @@ export enum ItemType {
 // tslint:disable-next-line:variable-name
 const ItemTypeType = createEnum<ItemType>(ItemType, 'ItemType');
 
+// tslint:disable-next-line:variable-name
+const RoleType = createEnum<Role>(Role, 'Role');
+
 const includeFormType = t.type({
   include: t.array(t.string),
 });
@@ -80,6 +80,7 @@ const contextSpecType = t.partial({
   tags: t.array(t.string),
   type: ItemTypeType,
   units: t.string,
+  role: RoleType,
 });
 export type ContextSpec = t.TypeOf<typeof contextSpecType>;
 

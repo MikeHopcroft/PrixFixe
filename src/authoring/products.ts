@@ -1,29 +1,29 @@
-import { DimensionDescription, TensorDescription } from '../attributes';
+import { DID, DimensionDescription, TensorDescription } from '../attributes';
 
 import {
   GenericEntity,
   genericEntityFactory,
   GenericTypedEntity,
+  Key,
   MENUITEM,
   OPTION,
   PID,
+  Role,
   SKU,
   SpecificTypedEntity,
   specificEntityFactory,
+  TID,
 } from '../catalog';
 
 import { IIndex, IndexedDimension } from './attributes';
 import { InvalidParameterError } from './errors';
 
 import {
-  DID,
   ContextSpec,
   FormSpec,
   GroupSpec,
   ItemSpec,
   ItemType,
-  Key,
-  TID,
   WILDCARD,
 } from './types';
 
@@ -46,6 +46,7 @@ class Context {
   tags = new Set<string>();
   type = ItemType.PRODUCT;
   units = '';
+  role = Role.ANY;
 
   constructor(builder: GroupBuilder) {
     // DESIGN NOTE: initializes this.tensor, this.dimensions, this.forms,
@@ -77,7 +78,7 @@ class Context {
   }
 
   extend(builder: GroupBuilder, group: ContextSpec): Context {
-    const { tensor, forms, pid, sku, tags, type, units } = group;
+    const { tensor, forms, pid, sku, tags, type, units, role } = group;
     const defaultForm = group.default;
 
     // https://stackoverflow.com/questions/41474986/how-to-clone-a-javascript-es6-class-instance
@@ -122,12 +123,23 @@ class Context {
       }
     }
 
+    // TODO: can we use destructuring to copy all of the properties not handled
+    // specially? Challenge is that we're copying the instance of a class, not
+    // a POJO. Advantage is that the code would be less brittle because it
+    // would be impossible to accidentally forget to copy a property.
+    //
+    // https://stackoverflow.com/questions/43011742/how-to-omit-specific-properties-from-an-object-in-javascript/43011802
+    //
     if (type !== undefined) {
       context.type = type;
     }
 
     if (units !== undefined) {
       context.units = units;
+    }
+
+    if (role !== undefined) {
+      context.role = role;
     }
 
     return context;
@@ -281,6 +293,10 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
     aliases: item.aliases,
     tensor: context.tensor.tid,
     defaultKey,
+    fuzzerHints: {
+      role: context.role,
+      units: context.units,
+    },
   };
   const kind = context.type === ItemType.PRODUCT ? MENUITEM : OPTION;
   const generic = genericEntityFactory(entity, kind);
@@ -296,6 +312,7 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
     }
   }
 
+  // TODO: remove indexing of units.
   // Index units
   if (context.units) {
     builder.pidsToUnits.set(pid, context.units);

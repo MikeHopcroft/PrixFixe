@@ -36,14 +36,16 @@ dimensions:
       - name: doppio
         aliases:
           - doppio
-          - (double,two) [shot]
+          # - (double,two) [shot]
+          - double [shot]
+          - two shot
       - name: triple
         aliases:
           - triple [shot]
           - three shot
       - name: quad
         aliases:
-          - "quad [shot]"
+          - "(quad,quadruple) [shot]"
           - four shot
   - name: option_quantity
     attributes:
@@ -51,7 +53,7 @@ dimensions:
         aliases: 
           - 'no'
           - without
-          - none      # Consider removing this alias. Bad for fuzzer.
+          # - none      # Consider removing this alias. Bad for fuzzer.
           - with no
       - name: light
         aliases:
@@ -178,10 +180,11 @@ catalog:
             - "vanilla [syrup]"
     - tags: [caffeines]
       tensor: none
+      role: applied
       items:
         - name: regular
           aliases:
-            - regular
+            - regular caffeine
             - "[fully] caffeinated"
             - full caf
         - name: two thirds caf
@@ -353,6 +356,7 @@ catalog:
             - sweet n low
             - pink (packet,sweetener)
         - name: espresso shot
+          units: extra
           aliases:
             - shot
 rules:

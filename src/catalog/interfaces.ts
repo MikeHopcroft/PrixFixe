@@ -30,9 +30,32 @@ export type SKU = number;
  * first dimesnion is a generic product's PID, and any other dimensions
  * determine which attributes are added.
  *
- * @example '6122757:0:4'
+ * @example
+ *   short latte (302:0:0, 600)
+ *   tall latte (302:0:1, 601)
+ *   grande latte (302:0:2, 602) <== default
+ *   iced tall latte (302:1:1, 603)
+ *   iced grande latte (302:1:2, 604)
+ *   iced venti latte (302:1:3, 605)
  */
 export type Key = string;
+
+export enum Role {
+  // NOTE: CHARACTERISTIC was previous name for APPLIED.
+  // CHARCTERISTIC = 'characteristic',
+  ANY = 'any',
+  APPLIED = 'applied',
+  COUNTED = 'counted',
+  MEASURED = 'measured',
+}
+
+export interface FuzzerHints {
+  role: Role;
+  units: string;
+  // DESIGN NOTE: quantity info is not per entity.
+  // It is a parent-child characteristic that is
+  // implemented in the rules.
+}
 
 /**
  * A catch-all type.
@@ -54,6 +77,7 @@ export interface GenericEntity extends Entity {
   aliases: string[];
   tensor: TID;
   defaultKey: Key;
+  fuzzerHints: FuzzerHints;
 }
 
 /**

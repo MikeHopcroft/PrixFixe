@@ -1,5 +1,5 @@
-import { DID } from '../attributes';
 import { TID } from '../catalog';
+import { DID } from './dimension';
 
 /**
  * Unique attribute identifier. Attributes are SKU-specifying modifiers that

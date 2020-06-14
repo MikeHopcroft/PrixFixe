@@ -1,8 +1,8 @@
 import { AttributeInfo } from '../attributes';
-import { PID } from '../catalog';
+import { Key, PID } from '../catalog';
 import { IRuleChecker, QuantityInformation } from '../rule_checker';
 
-import { AnyRule, Key } from './types';
+import { AnyRule } from './types';
 
 export function processRules(
   tagsToPIDs: Map<string, PID[]>,

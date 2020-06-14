@@ -1,5 +1,6 @@
 # TODO List
 
+* TODO: remove indexing of units - products.ts, rules.ts
 * Singleton options, like the milks and the caffination levels
   * Fuzzer support as well.
 * Add water as a product to the menu to show ambiguity with option.

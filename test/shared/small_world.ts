@@ -1,21 +1,23 @@
 import {
   AID,
   AttributeDescription,
-  DimensionAndTensorDescription,
   Catalog,
   CID,
   DID,
   Dimension,
+  DimensionAndTensorDescription,
+  DimensionDescription,
+  FuzzerHints,
   GenericTypedEntity,
   Key,
-  TensorDescription,
   MENUITEM,
   OPTION,
   PID,
+  Role,
   RuleChecker,
   RuleConfig,
   SpecificTypedEntity,
-  DimensionDescription,
+  TensorDescription,
 } from '../../src/';
 
 // A PID that is not indexed in any data structure in this file. For testing
@@ -25,6 +27,11 @@ export const unknownPID: PID = 9999;
 // A key that is not indexed in any data structure in this file. For testing
 // error cases.
 export const unknownKey: Key = '9999:9:9:9';
+
+const fuzzerHints: FuzzerHints = {
+  role: Role.ANY,
+  units: '',
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -41,6 +48,7 @@ export const genericCone: GenericTypedEntity = {
   defaultKey: '8000:0:0',
   tensor: 1,
   kind: MENUITEM,
+  fuzzerHints,
 };
 
 export const genericCoffeePID: PID = 9000;
@@ -53,6 +61,7 @@ export const genericCoffee: GenericTypedEntity = {
   defaultKey: '9000:0:0:0',
   tensor: 2,
   kind: MENUITEM,
+  fuzzerHints,
 };
 
 export const genericMilkPID = 5000;
@@ -65,6 +74,7 @@ export const genericMilk: GenericTypedEntity = {
   defaultKey: '5000:1',
   tensor: 2,
   kind: MENUITEM,
+  fuzzerHints,
 };
 
 export const genericWhippedPID = 2000;
@@ -77,6 +87,7 @@ export const genericWhipped: GenericTypedEntity = {
   defaultKey: '2000:1',
   tensor: 3,
   kind: OPTION,
+  fuzzerHints,
 };
 
 export const genericItems: GenericTypedEntity[] = [
