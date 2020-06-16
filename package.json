@@ -19,10 +19,10 @@
     "compile": "tsc -p .",
     "coverage": "nyc mocha -r ts-node/register -r source-map-support/register && nyc report --reporter=text-lcov | coveralls",
     "fix": "gts fix",
-    "posttest": "npm.cmd run check",
+    "posttest": "npm run check",
     "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build",
-    "prepare": "npm.cmd run compile",
-    "pretest": "npm.cmd run compile",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
     "test": "mocha",
     "docs": "node build/src/apps/tutorial_builder.js documentation/src documentation"
   },

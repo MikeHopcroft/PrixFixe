@@ -1,7 +1,7 @@
 # TODO List
 
 * Top
-  * travis build break - npm.cmd not found
+  * x travis build break - npm.cmd not found
   * regression.md
     * x Test case ids
     * x Regenerate
