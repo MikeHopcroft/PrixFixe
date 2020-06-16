@@ -2958,6 +2958,42 @@ tests:
                       name: sugar
                       sku: '6602'
                       children: []
+
+      - id: 1035
+        suites: 'extras bug'
+        comment: 'should add two shots. fuzzerB4:887, 318'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: add a latte and two extra shot
+            cart:
+              items:
+                - quantity: 1
+                  name: grande latte
+                  sku: '602'
+                  children:
+                    - quantity: 2
+                      name: extra espresso shot
+                      sku: '6903'
+                      children: []
+      - id: 1036
+        suites: 'extras bug'
+        comment: 'fuzzerB4:474'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: add latte with two added shot
+            cart:
+              items:
+                - quantity: 1
+                  name: grande latte
+                  sku: '602'
+                  children:
+                    - quantity: 2
+                      name: espresso shot
+                      sku: '6902'
+                      children: []
+
 # Removing when target is recipe
 #   "remove the double double"
 # Modifying when target is recipe

@@ -14,7 +14,7 @@ dimensions:
       - name: short
         aliases:
           - short
-          - "(kid's,child) [size]"
+          - "(kid,kid's,child) [size]"
       - name: tall
         aliases:
           - tall
@@ -36,7 +36,6 @@ dimensions:
       - name: doppio
         aliases:
           - doppio
-          # - (double,two) [shot]
           - double [shot]
           - two shot
       - name: triple
@@ -52,8 +51,12 @@ dimensions:
       - name: "no"
         aliases: 
           - 'no'
+          # TODO: not sure how to avoid without.
+          # Almost want to preprocess input to "with no".
+          # Or have attribute recipes.
           - without
           # - none      # Consider removing this alias. Bad for fuzzer.
+          # TODO: don't need "with" since it is a conjunction
           - with no
       - name: light
         aliases:
@@ -72,6 +75,7 @@ dimensions:
       - name: extra
         aliases:
           - extra
+          - added
           - additional
           - more
           - lots of
@@ -139,12 +143,14 @@ catalog:
           - "[caffe] americano"
       - name: dark roast coffee
         aliases:
+          # TODO: "cup of" should be a unit
           - "[cup of] [house,plain,regular] coffee"
           - "[cup of] (dark roast,drip) [coffee]"
   - type: option
     items:
     - tags: [syrups]
       units: pump
+      role: measured
       tensor: options
       default: [regular]
       items:
@@ -301,6 +307,7 @@ catalog:
       tensor: none
       items:
         - name: for here cup
+          role: applied
           tags: [here-or-to-go]
           aliases:
             - for here [cup]
@@ -311,15 +318,18 @@ catalog:
           aliases:
             - room [for cream]
         - name: to go
+          role: applied
           tags: [here-or-to-go]
           aliases:
             - to go [cup]
             - travelling
         - name: dry
+          role: applied
           tags: [wet-or-dry]
           aliases:
             - dry
         - name: wet
+          role: applied
           tags: [wet-or-dry]
           aliases:
             - wet
@@ -362,6 +372,7 @@ catalog:
 rules:
   - parents: [latte_drinks]
     children: 
+      - milks
       - sweeteners
       - syrups
       - toppings
@@ -370,7 +381,7 @@ rules:
       - caffeines
       - here-or-to-go
       - latte_preparations
-      - milks
+      # - milks
       - wet-or-dry
     info:
       minQty: 1
