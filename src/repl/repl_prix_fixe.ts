@@ -66,6 +66,7 @@ export class PrixFixeReplExtension implements IReplExtension {
           console.log(`Unknown PID "${line}".`);
           console.log('Usage: .aliases <PID>');
         }
+        console.log(' ');
         repl.getReplServer().displayPrompt();
       },
     });
@@ -81,6 +82,7 @@ export class PrixFixeReplExtension implements IReplExtension {
           console.log(`Unknown PID "${line}".`);
           console.log('Usage: .specifics <PID>');
         }
+        console.log(' ');
         repl.getReplServer().displayPrompt();
       },
     });
@@ -96,6 +98,7 @@ export class PrixFixeReplExtension implements IReplExtension {
           console.log(`Unknown PID "${line}".`);
           console.log('Usage: .exclusions <PID>');
         }
+        console.log(' ');
         repl.getReplServer().displayPrompt();
       },
     });
@@ -121,8 +124,8 @@ function displayMenu(world: World, line: string, kind?: MENUITEM | OPTION) {
     describeGeneric(world, pid);
   } else {
     console.log(`Unknown item "${line}".`);
-    console.log(' ');
   }
+  console.log(' ');
 }
 
 export const prixFixeReplExtensionFactory: IReplExtensionFactory = {
@@ -145,7 +148,6 @@ export function printCatalog(
       }
     }
   }
-  console.log(' ');
 }
 
 export function describeSpecific(world: World, key: Key) {

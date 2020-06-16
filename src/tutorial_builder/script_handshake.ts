@@ -44,15 +44,15 @@ export function scriptHandshake(
         nextMatch++;
         if (nextMatch === prompt.length) {
           // We've encountered a prompt.
+          // Reset the state machine.
+          nextMatch = 0;
+
           // Dispatch the next line in the script.
           if (scriptLine < script.length) {
             iStream.write(script[scriptLine++] + '\n');
           } else {
             iStream.end();
           }
-
-          // Reset the state machine.
-          nextMatch = undefined;
         }
       } else {
         // Character didn't match pattern. Reset state machine.

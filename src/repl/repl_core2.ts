@@ -293,6 +293,7 @@ class ReplCore implements IRepl {
       action(text: string) {
         console.log('Creating new yaml test.');
         console.log('Cart has been reset.');
+        console.log(' ');
         const session = stack[stack.length - 1];
         session.reset();
         testCase.clearSteps();
@@ -309,6 +310,11 @@ class ReplCore implements IRepl {
 
         await processInputLine(text);
 
+        // DESIGN NOTE: This console.log() is necessary to generate a newline
+        // in the case of an empty cart so that scriptHandshake() can identify
+        // the prompt.
+        console.log(' ');
+
         repl.displayPrompt();
       },
     });
@@ -318,6 +324,7 @@ class ReplCore implements IRepl {
       action(text: string) {
         testCase.setCommment(text);
         console.log(`Comment set to "${text}"`);
+        console.log(' ');
         repl.displayPrompt();
       },
     });
@@ -327,6 +334,7 @@ class ReplCore implements IRepl {
       action(text: string) {
         testCase.setSpeaker(text);
         console.log(`Speaker set to "${text}"`);
+        console.log(' ');
         repl.displayPrompt();
       },
     });
@@ -336,6 +344,7 @@ class ReplCore implements IRepl {
       action(text: string) {
         testCase.setSuites(text.split(/\s+/));
         console.log(`Suites set to "${text}"`);
+        console.log(' ');
         repl.displayPrompt();
       },
     });
@@ -357,11 +366,8 @@ class ReplCore implements IRepl {
     repl.defineCommand('yaml', {
       help: 'Print the yaml for the current test',
       action(text: string) {
-        repl.displayPrompt();
-
         const yamlTestCases = testCase.createValidationSuite();
         const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
-        console.log(' ');
         console.log(`${style.red.open}`);
         console.log('WARNING: test case expects short-order behavior.');
         console.log('Be sure to manually verify.');
@@ -415,6 +421,7 @@ class ReplCore implements IRepl {
         const session = stack[stack.length - 1];
         testCase.updateStep(session.state());
         console.log('Cart has been reset.');
+        console.log(' ');
         repl.displayPrompt();
       },
     });
@@ -597,20 +604,17 @@ class ReplCore implements IRepl {
 
             const text = speechToTextFilter(line);
             if (text !== line) {
-              console.log(`${style.red.open}`);
-              console.log(
-                '********************************************************'
-              );
+              const stars =
+                '********************************************************';
+              console.log(`${style.red.open}${stars}`);
               console.log(
                 'PLEASE NOTE: your input has been modified to be more'
               );
               console.log('like the output of a speech-to-text system.');
               console.log(`your input: "${line}"`);
               console.log(`modified:   "${text}"`);
-              console.log(
-                '********************************************************'
-              );
-              console.log(`${style.red.close}`);
+              console.log(`${stars}${style.red.close}`);
+              console.log(' ');
             }
 
             const session = stack[stack.length - 1];

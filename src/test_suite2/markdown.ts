@@ -39,7 +39,7 @@ function renderTestAsMarkdown(
   fragments: string[],
   test: GenericCase<MaybeScoredStep>
 ) {
-  fragments.push(test.comment);
+  fragments.push(`**${test.id}:** ${test.comment}`);
   fragments.push('~~~');
 
   if ('measures' in test.steps[0]) {

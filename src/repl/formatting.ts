@@ -7,9 +7,11 @@ import { TestLineItem, TestOrder } from '../test_suite';
 export function displayState(catalog: ICatalog, state: State) {
   const order: TestOrder = testOrderFromCart(state.cart, catalog);
   const orderText = formatOrder(order);
-  console.log(`${style.yellow.open}${orderText}${style.yellow.open}`);
-  console.log();
-  console.log(`${style.reset.open}`);
+  if (order.cart.length > 0) {
+    console.log(
+      `${style.yellow.open}${orderText}${style.yellow.open}${style.reset.open}`
+    );
+  }
 }
 
 export function testOrderFromCart(cart: Cart, catalog: ICatalog): TestOrder {
