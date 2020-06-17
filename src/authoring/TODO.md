@@ -19,6 +19,9 @@
   * menu_concepts.md
     * Update
 * Refactor and cleanup
+  * Unit tests to drive coverage up after
+    * b1703db4 WIP: lots of test_suite2 integration work for short-order (-21.2%)
+    * 3115a976: bipartite_matching_diff.ts (-4.5%)
   * npm audit and dependabot
   * General purpose traverse, map, filter methods for carts and test suites.
   * Also consider async versions.
@@ -31,8 +34,13 @@
   * . Figure out 2 vs 4 space tabs in VSCode
   * Consistent tab spacing.
   * Convert short-order's ProcessOneDemo to replace testCase.run() with code from test_suite2
+  * Remove old test suite code
   * Rationalize formatting.ts and markdown.ts
-  * Deprecate old tools
+  * Deprecate old prix-fixe tools
+    * samples/test_converter.ts
+    * samples/test_suite_demo.ts
+    * Remaining tools in src/apps should at least be documented in README.md
+  * Deprecate old short-order tools
   * console.log(' ') vs console.log('') vs console.log().
     * consider newline() function
   * Investigate keys for null tensor
@@ -44,8 +52,8 @@
 * Singleton options, like the milks and the caffination levels
   * Fuzzer support as well.
 * Regression test
-  * Markdown version of regression suite
-    * Should include test case id.
+  * x Markdown version of regression suite
+    * x Should include test case id.
   * Removal cases: "i don't want foo", "i want no foo", "make that with no foo"
   * "make item quantity" => "change item quantity from x to y"
   * Test matrix generator for modify
@@ -84,7 +92,6 @@
   * test with real documentation
 * test-runner.js
   * Test cases should be able to start with a non-empty cart
-  * x Update to use testRunnerMain2()
   * Rename application - to what?
   * Test measurements should be able to record crashes/exceptions
     * Update test_runner2.js to handle exceptions
@@ -97,6 +104,7 @@
     * Markdown
     * test_runner_main2.ts markdown output
   * Option to rebase tests
+  * x Update to use testRunnerMain2()
   * x factor out scoring code for use by file comparison tool
   * x Summarize pass/fail rates by suite
   * x Work on tree of tests, instead of flat list 
