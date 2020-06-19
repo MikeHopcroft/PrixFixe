@@ -1,7 +1,11 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { IRuleChecker, RuleChecker, RuleConfig } from '../../src/rule_checker';
+import {
+  IRuleChecker,
+  RuleChecker,
+  RuleConfig,
+} from '../../src/core/rule_checker';
 
 import {
   Key,
@@ -13,7 +17,7 @@ import {
   GenericEntity,
   GenericTypedEntity,
   genericEntityFactory,
-} from '../../src/catalog/interfaces';
+} from '../../src/core/catalog/interfaces';
 
 const genericTypedEntityFactory = (
   pid: PID,

@@ -7,7 +7,9 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
 
-import { createWorld, Processor, World } from '../processors';
+import { Processor } from '../core/processors';
+import { World } from '../core/world';
+import { createWorld } from '../processors';
 
 import { createMarkdown } from './print_markdown';
 import { allSuites, suitePredicate } from './suite_predicate';

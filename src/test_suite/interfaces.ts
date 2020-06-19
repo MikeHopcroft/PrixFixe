@@ -1,4 +1,4 @@
-import { Key } from '../catalog';
+import { Key } from '../core/catalog';
 
 // Stores aggregations related to test runs by suite or priority.
 export interface TestCounts {

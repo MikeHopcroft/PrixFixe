@@ -8,8 +8,8 @@ import {
   World,
 } from '..';
 
-import { ICatalog, MENUITEM, SpecificTypedEntity } from '../catalog';
-import { ItemInstance, ICartOps } from '../cart';
+import { ICatalog, MENUITEM, SpecificTypedEntity } from '../core/catalog';
+import { ItemInstance, ICartOps } from '../core/cart';
 
 // Sample ReplExtension that provides a Processor
 class SimpleReplExtension implements IReplExtension {

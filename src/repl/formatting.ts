@@ -1,7 +1,7 @@
 import * as style from 'ansi-styles';
-import { Cart, ItemInstance } from '../cart';
-import { ICatalog } from '../catalog';
-import { State } from '../processors';
+import { Cart, ItemInstance } from '../core/cart';
+import { ICatalog } from '../core/catalog';
+import { State } from '../core/processors';
 import { TestLineItem, TestOrder } from '../test_suite';
 
 export function displayState(catalog: ICatalog, state: State) {

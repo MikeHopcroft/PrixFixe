@@ -1,5 +1,13 @@
 # TODO List
 
+* Browser
+  * Replace ajv with io-ts
+  * Consider offering schema files
+  * Factor into core and node directories
+  * Factor testsuite and testsuite2 into core and node
+  * Factor World from createWorld, createWorld2
+  * Factor utiltiies into core and node
+
 * Top
   * x travis build break - npm.cmd not found
   * regression.md
@@ -8,14 +16,14 @@
     * Documentation build script
   * README.md for fuzzer directory
   * Publish prix-fixe version
-  * Short-order
-    * Take prix-fixe version
-    * Merge to master
+  * x Short-order
+    * x Take prix-fixe version
+    * x Merge to master
 * version
   * x merge prix-fixe master
-  * publish prix-fixe version
-  * merge shortorder master
-  * short-order take new prixfixe
+  * x publish prix-fixe version
+  * x merge shortorder master
+  * x short-order take new prixfixe
   * menu_concepts.md
     * Update
 * Refactor and cleanup

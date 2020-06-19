@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
-import { createWorld2 } from '../authoring';
+import { createWorld2 } from '../core/authoring';
 import { createWorld } from '../processors';
 
 import {

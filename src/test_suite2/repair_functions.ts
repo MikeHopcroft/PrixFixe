@@ -1,7 +1,7 @@
-import { AttributeInfo } from '../attributes';
+import { AttributeInfo } from '../core/attributes';
 import { bipartiteMatchingDiff } from './bipartite_matching_diff';
 import { cartSort } from './cart_sort';
-import { ICatalog } from '../catalog';
+import { ICatalog } from '../core/catalog';
 import { LogicalCart } from './interfaces';
 import { cartFromlogicalCart } from './logical_cart';
 import { MenuBasedRepairs } from './menu_based_repairs';

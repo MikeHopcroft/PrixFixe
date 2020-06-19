@@ -1,6 +1,7 @@
 import * as replServer from 'repl';
 
-import { Processor, State, World } from '../processors';
+import { Processor, State } from '../core/processors';
+import { World } from '../core/world';
 
 export interface ReplProcessor {
   // Name used two switch processors vis the REPL's .processor command.

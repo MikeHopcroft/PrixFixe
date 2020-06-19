@@ -3,7 +3,7 @@ import * as betterAjvErrors from 'better-ajv-errors';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 
-import { YAMLValidationError } from '../utilities';
+import { YAMLValidationError } from '../core/utilities';
 
 import {
   AnyTurn,

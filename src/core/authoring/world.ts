@@ -4,7 +4,7 @@ import { AttributeInfo, DimensionAndTensorDescription } from '../attributes';
 import { CartOps } from '../cart';
 import { Catalog } from '../catalog';
 import { Cookbook } from '../cookbook';
-import { World } from '../processors';
+import { World } from '../world';
 
 import { processDimensions, processTensors } from './attributes';
 import { loadCatalog } from './loader';

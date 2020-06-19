@@ -1,5 +1,5 @@
-import { ICatalog } from '../catalog';
-import { IRuleChecker } from '../rule_checker';
+import { ICatalog } from '../core/catalog';
+import { IRuleChecker } from '../core/rule_checker';
 
 import { TestLineItem, TestStep } from './interfaces';
 

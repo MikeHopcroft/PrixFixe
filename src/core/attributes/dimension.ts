@@ -1,4 +1,4 @@
-import { AttributeDescription } from '../';
+import { AttributeDescription } from './interfaces';
 
 export type DID = number;
 

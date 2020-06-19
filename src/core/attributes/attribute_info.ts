@@ -1,7 +1,6 @@
-import { DID } from '../attributes';
 import { Catalog, Key, TID, PID } from '../catalog';
 
-import { Dimension } from './dimension';
+import { DID, Dimension } from './dimension';
 
 import {
   AID,

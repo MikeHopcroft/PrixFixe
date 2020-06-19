@@ -6,8 +6,9 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
 
-import { createWorld2 } from '../authoring/world';
-import { Processor, State, World } from '../processors';
+import { createWorld2 } from '../core/authoring/world';
+import { Processor, State } from '../core/processors';
+import { World } from '../core/world';
 
 import { suitePredicate } from '../test_suite/suite_predicate';
 import { TestProcessors } from '../test_suite/test_processors';

@@ -6,7 +6,7 @@ import * as yaml from 'js-yaml';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
-import { ICatalog } from '../catalog';
+import { ICatalog } from '../core/catalog';
 import { createWorld } from '../processors';
 
 import { TestLineItem } from '../test_suite';

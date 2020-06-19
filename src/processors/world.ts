@@ -8,25 +8,13 @@ import {
   Catalog,
   catalogFromYamlString,
   cookbookFromYamlFile,
-  DimensionAndTensorDescription,
-  ICartOps,
-  ICatalog,
-  ICookbook,
   IRuleChecker,
   loadRuleConfig,
   MENUITEM,
   OPTION,
   RuleChecker,
+  World,
 } from '..';
-
-export interface World {
-  attributeInfo: AttributeInfo;
-  attributes: DimensionAndTensorDescription;
-  cartOps: ICartOps;
-  catalog: ICatalog;
-  cookbook: ICookbook;
-  ruleChecker: IRuleChecker;
-}
 
 export function createWorld(dataPath: string): World {
   // TODO: should these be path.resolve?

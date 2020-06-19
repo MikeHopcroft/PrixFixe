@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { AttributeInfo } from '../../src/attributes';
+import { AttributeInfo } from '../../src/core/attributes';
 
 import {
   bipartiteMatchingDiff,
@@ -12,7 +12,7 @@ import {
   treeDiff,
 } from '../../src/test_suite2';
 
-import { IDGenerator } from '../../src/utilities';
+import { IDGenerator } from '../../src/core/utilities';
 
 import {
   mediumChocolateCone,

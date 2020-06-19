@@ -1,9 +1,9 @@
 import * as style from 'ansi-styles';
-import * as replServer from 'repl';
+// import * as replServer from 'repl';
 
-import { ICatalog, Key, MENUITEM, PID, OPTION } from '../catalog';
+import { Key, MENUITEM, PID, OPTION } from '../core/catalog';
 
-import { aliasesFromPattern, patternFromExpression } from '../utilities';
+import { aliasesFromPattern, patternFromExpression } from '../core/utilities';
 
 import {
   IRepl,
@@ -12,7 +12,7 @@ import {
   ReplProcessor,
 } from './interfaces';
 
-import { World } from '../processors';
+import { World } from '../core/world';
 
 export class PrixFixeReplExtension implements IReplExtension {
   world: World;

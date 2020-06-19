@@ -4,10 +4,10 @@ import * as Debug from 'debug';
 import * as jsontoxml from 'jsontoxml';
 import * as yaml from 'js-yaml';
 
-import { ICatalog } from '../catalog';
-import { Processor, State } from '../processors';
+import { ICatalog } from '../core/catalog';
+import { Processor, State } from '../core/processors';
 import { testOrderFromCart } from '../repl';
-import { YAMLValidationError } from '../utilities';
+import { YAMLValidationError } from '../core/utilities';
 
 import {
   TestLineItem,

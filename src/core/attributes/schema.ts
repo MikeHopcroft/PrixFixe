@@ -8,7 +8,7 @@ import {
   AttributeDescription,
 } from './interfaces';
 
-import { YAMLValidationError } from '../utilities/';
+import { YAMLValidationError } from '../utilities';
 
 const debug = Debug('so:itemMapFromYamlString');
 

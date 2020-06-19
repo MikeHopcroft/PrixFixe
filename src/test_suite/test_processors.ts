@@ -1,4 +1,5 @@
-import { Processor, World } from '../processors';
+import { Processor } from '../core/processors';
+import { World } from '../core/world';
 
 export interface TestProcessorFactory {
   name: string;

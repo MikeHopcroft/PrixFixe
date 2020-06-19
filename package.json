@@ -3,6 +3,7 @@
   "version": "0.0.53",
   "description": "A rules checking system for validating restaurant orders.",
   "main": "build/src/index.js",
+  "browser": "build/src/bindex.js",
   "types": "build/src/index.d.ts",
   "files": [
     "build/src"
