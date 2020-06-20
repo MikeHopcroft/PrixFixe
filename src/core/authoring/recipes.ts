@@ -1,4 +1,5 @@
 import { ICatalog, MENUITEM, OPTION } from '../catalog';
+
 import {
   Cookbook,
   OptionRecipe,
@@ -7,8 +8,9 @@ import {
   ProductRecipe,
 } from '../cookbook';
 
+import { IdGenerator } from '../utilities';
+
 import { ItemTemplateSpec, RecipeSpec } from './types';
-import { IdGenerator } from './utilities';
 
 export function processRecipes(
   catalog: ICatalog,

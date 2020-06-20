@@ -7,8 +7,8 @@ import {
 } from '../attributes';
 
 import { TID } from '../catalog';
+import { InvalidParameterError, ValidationError } from '../utilities';
 
-import { InvalidParameterError, ValidationError } from './errors';
 import { DimensionSpec, TensorSpec } from './types';
 
 export interface HasName {

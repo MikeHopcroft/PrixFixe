@@ -1,22 +1,29 @@
 import {
-  IDGenerator,
+  ICartOps,
+  ICatalog,
+  IdGenerator,
+  ItemInstance,
+  MENUITEM,
+  SpecificTypedEntity,
+  State,
+  World,
+} from '../core';
+
+import {
   IRepl,
   IReplExtension,
   IReplExtensionFactory,
   ReplProcessor,
-  State,
-  World,
-} from '..';
+} from './interfaces';
 
-import { ICatalog, MENUITEM, SpecificTypedEntity } from '../core/catalog';
-import { ItemInstance, ICartOps } from '../core/cart';
-
+//
 // Sample ReplExtension that provides a Processor
+//
 class SimpleReplExtension implements IReplExtension {
   // world: World;
   private readonly catalog: ICatalog;
   private readonly cartOps: ICartOps;
-  private readonly idGenerator = new IDGenerator();
+  private readonly idGenerator = new IdGenerator();
 
   constructor(world: World) {
     this.catalog = world.catalog;
@@ -52,7 +59,7 @@ class SimpleReplExtension implements IReplExtension {
           const specific = getSpecific(this.catalog, name);
           if (specific) {
             const item: ItemInstance = {
-              uid: this.idGenerator.nextId(),
+              uid: this.idGenerator.next(),
               quantity,
               key: specific.key,
               children: [],

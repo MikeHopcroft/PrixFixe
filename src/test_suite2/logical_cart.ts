@@ -1,6 +1,4 @@
-import { Cart, ItemInstance } from '../core/cart';
-import { ICatalog } from '../core/catalog';
-import { IDGenerator } from '../core/utilities';
+import { Cart, ICatalog, IdGenerator, ItemInstance } from '../core';
 
 import { LogicalCart, LogicalItem } from './interfaces';
 
@@ -38,7 +36,7 @@ export function cartFromlogicalCart(
   };
 }
 
-const idGenerator = new IDGenerator();
+const idGenerator = new IdGenerator();
 
 function itemInstanceFromLogicalItem(
   item: LogicalItem,
@@ -47,7 +45,7 @@ function itemInstanceFromLogicalItem(
   const specific = catalog.getSpecificFromSKU(item.sku);
 
   return {
-    uid: idGenerator.nextId(),
+    uid: idGenerator.next(),
     quantity: item.quantity,
     key: specific.key,
     children: item.children.map(child =>

@@ -1,5 +1,7 @@
 import { isLeft } from 'fp-ts/lib/Either';
-import { Decoder, Errors, ArrayType, IntersectionType, UnionType } from 'io-ts';
+
+import { ArrayType, Decoder, Errors, IntersectionType, UnionType } from 'io-ts';
+
 import * as t from 'io-ts';
 
 import { ValidationError } from './errors';

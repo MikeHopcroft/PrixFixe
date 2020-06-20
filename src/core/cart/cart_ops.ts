@@ -2,7 +2,7 @@ import { AID, AttributeInfo, TensorEntityBuilder } from '../attributes';
 import { Catalog, Key, PID } from '../catalog';
 import { ProductRecipe, OptionRecipe } from '../cookbook';
 import { IRuleChecker } from '../rule_checker';
-import { IDGenerator } from '../utilities';
+import { IdGenerator } from '../utilities';
 
 import {
   Cart,
@@ -22,7 +22,7 @@ export class CartOps implements ICartOps {
   catalog: Catalog;
   ruleChecker: IRuleChecker;
 
-  idGenerator = new IDGenerator();
+  idGenerator = new IdGenerator();
 
   constructor(
     attributeInfo: AttributeInfo,
@@ -356,7 +356,7 @@ export class CartOps implements ICartOps {
     }
 
     return {
-      uid: this.idGenerator.nextId(),
+      uid: this.idGenerator.next(),
       key: builder.getKey(generateRegexKey),
       quantity,
       children: [...children],
@@ -416,7 +416,7 @@ export class CartOps implements ICartOps {
       const options: ItemInstance[] = [];
       for (const option of product.options) {
         options.push({
-          uid: this.idGenerator.nextId(),
+          uid: this.idGenerator.next(),
           key: option.key,
           quantity: option.quantity,
           children: [],
@@ -436,7 +436,7 @@ export class CartOps implements ICartOps {
     const options: ItemInstance[] = [];
     for (const option of recipe.options) {
       options.push({
-        uid: this.idGenerator.nextId(),
+        uid: this.idGenerator.next(),
         key: option.key,
         quantity: option.quantity,
         children: [],

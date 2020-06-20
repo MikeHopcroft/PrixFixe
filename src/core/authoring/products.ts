@@ -15,8 +15,9 @@ import {
   TID,
 } from '../catalog';
 
+import { IdGenerator, InvalidParameterError } from '../utilities';
+
 import { IIndex, IndexedDimension } from './attributes';
-import { InvalidParameterError } from './errors';
 
 import {
   ContextSpec,
@@ -26,8 +27,6 @@ import {
   ItemType,
   WILDCARD,
 } from './types';
-
-import { IdGenerator } from './utilities';
 
 ///////////////////////////////////////////////////////////////////////////////
 //

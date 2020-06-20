@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import 'mocha';
 
 import { AttributeInfo } from '../../src/core/attributes';
+import { IdGenerator } from '../../src/core/utilities';
 
 import {
   bipartiteMatchingDiff,
@@ -9,10 +10,7 @@ import {
   EditOp,
   LogicalCart,
   SimpleRepairs,
-  treeDiff,
 } from '../../src/test_suite2';
-
-import { IDGenerator } from '../../src/core/utilities';
 
 import {
   mediumChocolateCone,
@@ -29,15 +27,7 @@ import {
   wholeMilk,
 } from '../shared';
 
-const attributeInfo = new AttributeInfo(
-  smallWorldCatalog,
-  smallWorldAttributes
-);
-
 const repairs = new SimpleRepairs(bipartiteMatchingDiff);
-// const repairs = new SimpleRepairs(treeDiff);
-
-const idGenerator = new IDGenerator();
 
 const cart0: LogicalCart = { items: [] };
 

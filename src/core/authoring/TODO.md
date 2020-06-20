@@ -2,6 +2,7 @@
 
 * Browser
   * x Remove better-ajv-errors
+  * Replace bindex.ts with core/index.ts
   * Replace ajv with io-ts
   * Reinstate error explanations formerly by better-ajv-errors
   * Consider offering schema files
@@ -11,8 +12,8 @@
   * Factor utiltiies into core and node
   * Where do createWorld() and createWorld2() go? processors seems wrong
   * Deprecate loadCatalogFile() and CatalogBuilder. Replace with async.
-  * Deprecate core/authoring/samples.yaml
-  * Move core/authoring/utilties.ts to core/utilities. Same for errors.ts and validate.ts
+  * x Deprecate core/authoring/samples.yaml
+  * x Move core/authoring/utilties.ts to core/utilities. Same for errors.ts and validate.ts
   * Rework repl to be async.
 
 * Top

@@ -1,6 +1,6 @@
 const pathb = require('path-browserify');
 
-import { validate } from './validate';
+import { validate } from '../utilities';
 
 import {
   AnyRule,
