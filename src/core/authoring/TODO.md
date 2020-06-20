@@ -1,12 +1,19 @@
 # TODO List
 
 * Browser
+  * x Remove better-ajv-errors
   * Replace ajv with io-ts
+  * Reinstate error explanations formerly by better-ajv-errors
   * Consider offering schema files
-  * Factor into core and node directories
+  * x Factor into core and node directories
   * Factor testsuite and testsuite2 into core and node
   * Factor World from createWorld, createWorld2
   * Factor utiltiies into core and node
+  * Where do createWorld() and createWorld2() go? processors seems wrong
+  * Deprecate loadCatalogFile() and CatalogBuilder. Replace with async.
+  * Deprecate core/authoring/samples.yaml
+  * Move core/authoring/utilties.ts to core/utilities. Same for errors.ts and validate.ts
+  * Rework repl to be async.
 
 * Top
   * x travis build break - npm.cmd not found
@@ -27,6 +34,7 @@
   * menu_concepts.md
     * Update
 * Refactor and cleanup
+  * JSDoc comment policy
   * Unit tests to drive coverage up after
     * b1703db4 WIP: lots of test_suite2 integration work for short-order (-21.2%)
     * 3115a976: bipartite_matching_diff.ts (-4.5%)

@@ -1,6 +1,8 @@
 import { AID, AttributeInfo, TensorEntityBuilder } from '../attributes';
 import { Catalog, Key, PID } from '../catalog';
 import { ProductRecipe, OptionRecipe } from '../cookbook';
+import { IRuleChecker } from '../rule_checker';
+import { IDGenerator } from '../utilities';
 
 import {
   Cart,
@@ -9,9 +11,6 @@ import {
   ItemInstance,
   UID,
 } from './interfaces';
-
-import { IRuleChecker } from '../rule_checker';
-import { IDGenerator } from '../utilities';
 
 /**
  * CartOps operates on Carts, ItemInstances, and attributes. Functionality

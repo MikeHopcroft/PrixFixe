@@ -5,11 +5,10 @@ import * as yaml from 'js-yaml';
 import * as replServer from 'repl';
 import { Context } from 'vm';
 
-import { createWorld2 } from '../core/authoring/world';
 import { Cart } from '../core/cart';
 import { ICatalog } from '../core/catalog';
 import { Processor, State } from '../core/processors';
-import { createWorld } from '../processors';
+import { createWorld, createWorld2 } from '../processors';
 
 import {
   AnyTurn,

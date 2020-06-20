@@ -1,8 +1,11 @@
-import { IOutputError } from 'better-ajv-errors';
+// import { IOutputError } from 'better-ajv-errors';
 import ajv = require('ajv');
 
 export class YAMLValidationError extends TypeError {
-  constructor(message: string, ajvErrors: IOutputError[]) {
+  // TODO: remove ajvErrors parameter after moving to io-ts.
+  // tslint:disable-next-line:no-any
+  constructor(message: string, ajvErrors: any[]) {
+    // constructor(message: string, ajvErrors: IOutputError[]) {
     super(message);
 
     // WARNING: changing this name is a breaking API change,

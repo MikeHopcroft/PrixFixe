@@ -6,7 +6,7 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
 
-import { createWorld2 } from '../core/authoring';
+import { createWorld2 } from '../processors';
 import { fail, handleError, succeed } from '../test_suite2';
 import { updateMarkdown } from './tutorial_builder';
 

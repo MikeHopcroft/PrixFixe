@@ -1,4 +1,4 @@
-import { CID, PID, Key } from '../catalog';
+import { PID, Key } from '../catalog';
 
 export interface QuantityInformation {
   defaultQty: number;

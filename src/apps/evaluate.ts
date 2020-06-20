@@ -4,8 +4,7 @@ import * as dotenv from 'dotenv';
 import * as minimist from 'minimist';
 import * as path from 'path';
 
-import { createWorld2 } from '../core/authoring';
-import { createWorld } from '../processors';
+import { createWorld, createWorld2 } from '../processors';
 
 import {
   createMenuBasedRepairFunction,

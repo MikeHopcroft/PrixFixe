@@ -1,5 +1,4 @@
 import * as AJV from 'ajv';
-import * as betterAjvErrors from 'better-ajv-errors';
 import * as YAML from 'js-yaml';
 
 import { RuleConfig } from './interfaces';
@@ -111,13 +110,14 @@ export const validateRuleConfig = (ruleConfig: RuleConfig) => {
     const message = 'validateRuleConfig: Invalid `rules.yaml` config file.';
     console.error(message);
     console.error(ruleConfigValidator.errors);
-    const output = betterAjvErrors(
-      ruleConfigSchema,
-      ruleConfig,
-      ruleConfigValidator.errors,
-      { format: 'cli', indent: 1 }
-    );
-    throw new YAMLValidationError(message, output || []);
+    throw new YAMLValidationError(message, []);
+    // const output = betterAjvErrors(
+    //   ruleConfigSchema,
+    //   ruleConfig,
+    //   ruleConfigValidator.errors,
+    //   { format: 'cli', indent: 1 }
+    // );
+    // throw new YAMLValidationError(message, output || []);
   }
 };
 

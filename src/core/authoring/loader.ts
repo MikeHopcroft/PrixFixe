@@ -1,6 +1,4 @@
-import * as yaml from 'js-yaml';
-import * as fs from 'fs';
-import * as path from 'path';
+const pathb = require('path-browserify');
 
 import { validate } from './validate';
 
@@ -17,35 +15,40 @@ import {
 
 // tslint:disable-next-line:interface-name
 export interface ILoader {
-  push(name: string): Promise<string>;
-  // push(name: string): void;
+  load(name: string, push: boolean): Promise<object>;
   pop(): void;
 }
 
-export class FileLoader implements ILoader {
+export class ObjectLoader implements ILoader {
   private readonly context: string[];
+  private readonly nameToObject: Map<string, object>;
 
-  constructor(root?: string) {
-    this.context = [root || process.cwd()];
+  constructor(objects: Array<[string, object]>) {
+    this.context = ['/'];
+    this.nameToObject = new Map(objects);
   }
 
-  push(name: string): Promise<string> {
+  load(name: string, push: boolean): Promise<object> {
     // Resolve filename relative to previous file.
-    const resolved: string = path.resolve(
+    const resolved: string = pathb.posix.resolve(
       this.context[this.context.length - 1],
       name
     );
 
-    // NOTE: context is not popped when readFile() fails.
-    this.context.push(path.dirname(resolved));
+    if (push) {
+      // NOTE: context is not popped when readFile() fails.
+      this.context.push(pathb.posix.dirname(resolved));
+    }
 
     console.log(`readFile(${resolved})`);
+    const obj = this.nameToObject.get(resolved);
+    if (!obj) {
+      const message = `ObjectLoader: cannot find ${resolved}`;
+      throw new TypeError(message);
+    }
 
-    return new Promise<string>((resolve, reject) => {
-      fs.readFile(resolved, 'utf8', (err, data) => {
-        console.log(`readFile returned: ${err}`);
-        err ? reject(err) : resolve(data);
-      });
+    return new Promise<object>((resolve, reject) => {
+      resolve(obj);
     });
   }
 
@@ -69,9 +72,7 @@ export async function loadCatalogSpec(
 
   async function process(fileName: string) {
     console.log(`Processing ${fileName}`);
-    const text = await loader.push(fileName);
-    // console.log(`text="${text}"`);
-    const root = yaml.safeLoad(text);
+    const root = await loader.load(fileName, true);
     const catalog = validate(partialCatalogSpecType, root);
 
     merge(catalog);
@@ -103,75 +104,5 @@ export async function loadCatalogSpec(
     if (c.recipes) {
       recipes.push(...c.recipes);
     }
-  }
-}
-
-export function loadCatalogFile(filename: string): CatalogSpec {
-  const builder = new CatalogBuilder();
-  builder.process(filename);
-  return builder.build();
-}
-
-class CatalogBuilder {
-  private readonly dimensions: DimensionSpec[] = [];
-  private readonly tensors: TensorSpec[] = [];
-  private readonly catalog: GroupSpec[] = [];
-  private readonly rules: AnyRule[] = [];
-  private readonly recipes: RecipeSpec[] = [];
-
-  private readonly context: string[] = [process.cwd()];
-
-  process(filename: string) {
-    // console.log(`Reading ${filename}`);
-
-    // Resolve filename relative to previous file.
-    const resolved: string = path.resolve(
-      this.context[this.context.length - 1],
-      filename
-    );
-
-    // console.log(`Loading ${resolved}`);
-    const root = yaml.safeLoad(fs.readFileSync(resolved, 'utf8'));
-    const catalog = validate(partialCatalogSpecType, root);
-
-    this.merge(catalog);
-
-    if (catalog.imports !== undefined) {
-      this.context.push(path.dirname(resolved));
-      for (const f of catalog.imports) {
-        this.process(f);
-      }
-      this.context.pop();
-    }
-  }
-
-  private merge(c: PartialCatalogSpec) {
-    if (c.dimensions) {
-      this.dimensions.push(...c.dimensions);
-    }
-    if (c.tensors) {
-      this.tensors.push(...c.tensors);
-    }
-    if (c.catalog) {
-      this.catalog.push(...c.catalog);
-    }
-    if (c.rules) {
-      this.rules.push(...c.rules);
-    }
-    if (c.recipes) {
-      this.recipes.push(...c.recipes);
-    }
-  }
-
-  build(): CatalogSpec {
-    const c: CatalogSpec = {
-      dimensions: this.dimensions,
-      tensors: this.tensors,
-      catalog: this.catalog,
-      rules: this.rules,
-      recipes: this.recipes,
-    };
-
-    return c;
   }
 }

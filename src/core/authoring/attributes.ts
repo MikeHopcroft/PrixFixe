@@ -9,7 +9,6 @@ import {
 import { TID } from '../catalog';
 
 import { InvalidParameterError, ValidationError } from './errors';
-
 import { DimensionSpec, TensorSpec } from './types';
 
 export interface HasName {

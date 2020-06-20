@@ -1,7 +1,7 @@
-import { DID } from '.';
 import { Key, PID } from '../catalog';
 
 import { AttributeInfo } from './attribute_info';
+import { DID } from './dimension';
 import { AID } from './interfaces';
 
 /**
