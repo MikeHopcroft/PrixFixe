@@ -31,7 +31,7 @@ import {
   ReplProcessor,
 } from './interfaces';
 
-import { speechToTextFilter } from './speech_to_text_filter';
+import { speechToTextFilter } from '../core/utilities/speech_to_text_filter';
 
 interface Turn {
   input: string;
