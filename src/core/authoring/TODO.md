@@ -1,6 +1,8 @@
 # TODO List
 
 * Browser
+  * Where does speechToTextFilter belong? Is it in token-flow? Maybe elsewhere?
+  * Locate graph rendering algorithm
   * x Remove better-ajv-errors
   * Replace bindex.ts with core/index.ts
   * Replace ajv with io-ts
@@ -35,6 +37,7 @@
   * menu_concepts.md
     * Update
 * Refactor and cleanup
+  * File naming policy: '-' vs '_'
   * JSDoc comment policy
   * Unit tests to drive coverage up after
     * b1703db4 WIP: lots of test_suite2 integration work for short-order (-21.2%)

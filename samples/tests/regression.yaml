@@ -2775,7 +2775,10 @@ tests:
                       children: []
       - id: 1027
         suites: extras
-        comment: demonstrated an option with the same name as an attribute
+        comment: |
+          Demonstrates an option with the same name as an attributes.
+          This one should add the 'ice' option because 'iced short' is
+          not a legal form.
         steps:
           - turns:
               - speaker: speaker
@@ -2790,6 +2793,21 @@ tests:
                       name: ice
                       sku: '5302'
                       children: []
+      - id: 1027.1
+        suites: extras
+        comment: |
+          Demonstrates an option with the same name as an attributes.
+          This one should use 'iced' attribute.
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: i want a tall iced latte
+            cart:
+              items:
+                - quantity: 1
+                  name: iced tall latte
+                  sku: '603'
+                  children: []
 
       - id: 1028
         suites: 'extras bug disfluencies not-implemented'
@@ -2996,6 +3014,65 @@ tests:
                       name: espresso shot
                       sku: '6902'
                       children: []
+
+      - id: 1037
+        suites: 'extras bug'
+        comment: 'found in web app'
+        steps:
+          - turns:
+              - speaker: speaker
+                transcription: add a muffin with butter
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children:
+                    - quantity: 1
+                      name: butter
+                      sku: '3'
+                      children: []
+          - turns:
+              - speaker: speaker
+                transcription: make that with extra butter
+            cart:
+              items:
+                - quantity: 1
+                  name: apple bran muffin
+                  sku: '10000'
+                  children:
+                    - quantity: 1
+                      name: extra butter
+                      sku: '4'
+                      children: []
+
+# soy creamer and nonfat creamer should be mutually exclusive
+# 6/23/2020
+# 11:53:22 PM: can I get a cup of coffee one and one
+# 11:53:45 PM: add a splash of soy
+# 11:53:52 PM: actually make that nonfat
+
+# Makes a muffin with foam
+# 6/24/2020
+# 12:16:03 AM: hi can I get a grande latte with extra foam
+# 12:16:10 AM: actually make that a decaf and out of muffin
+# 12:16:16 AM: had a muffin please
+# 12:16:21 AM: get me a muffin please
+# 12:16:40 AM: can you make pot latte a flat white and get me a cup of coffee
+# 6/24/2020
+# 12:17:15 AM: can you make that latte a flat white and get me a cup of coffee
+# 12:17:29 AM: start over
+# 12:17:37 AM: hi I'd like a grande iced latte with extra foam
+# 12:17:42 AM: can you make that a decaffeinated muffin
+# Shopping Cart
+# 1 grande flat white (502)
+# 1 extra foam (5203)
+# 1 decaf (3000)
+# 1 apple bran muffin (10000)
+# 1 grande dark roast coffee (1502)
+# 1 grande dark roast coffee (1502)
+# 1 apple bran muffin (10000)
+# 1 extra foam (5203)
 
 # Removing when target is recipe
 #   "remove the double double"
