@@ -11,7 +11,7 @@ import {
 import {
   logicalScoredSuite,
   logicalTestSuite,
-  logicalValidationSuite
+  logicalValidationSuite,
 } from './validators';
 
 ///////////////////////////////////////////////////////////////////////////////

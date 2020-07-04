@@ -23,7 +23,7 @@ import {
   ValidationStep,
 } from '../core/test_suite2';
 
-import { writeYAML } from '../test_suite2'
+import { writeYAML } from '../test_suite2';
 
 interface LegacyCase {
   priority: number;

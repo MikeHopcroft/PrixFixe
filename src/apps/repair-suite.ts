@@ -17,7 +17,7 @@ import {
   enumerateTestCases,
 } from '../core/test_suite2';
 
-import { loadLogicalValidationSuite } from '../test_suite2'
+import { loadLogicalValidationSuite } from '../test_suite2';
 
 function main() {
   dotenv.config();

@@ -18,7 +18,7 @@ import {
   FormatScoredSuiteOptions,
 } from '../core/test_suite2';
 
-import { loadLogicalValidationSuite, writeYAML } from '../test_suite2'
+import { loadLogicalValidationSuite, writeYAML } from '../test_suite2';
 
 function main() {
   dotenv.config();

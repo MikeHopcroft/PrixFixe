@@ -22,7 +22,6 @@ import { World } from '../core/world';
 import { createWorld2 } from '../processors';
 import { suitePredicate, TestProcessors } from '../test_suite';
 
-
 import {
   AnyTurn,
   GenericCase,
