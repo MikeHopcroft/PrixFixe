@@ -12,13 +12,13 @@ import {
   fail,
   formatScoredSuite,
   handleError,
-  loadLogicalValidationSuite,
   RepairFunction,
   scoreSuite,
   succeed,
-  writeYAML,
   FormatScoredSuiteOptions,
-} from '../test_suite2';
+} from '../core/test_suite2';
+
+import { loadLogicalValidationSuite, writeYAML } from '../test_suite2'
 
 function main() {
   dotenv.config();

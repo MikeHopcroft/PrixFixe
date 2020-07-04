@@ -5,5 +5,6 @@ export * from './catalog';
 export * from './cookbook';
 export * from './processors';
 export * from './rule_checker';
+export * from './test_suite2';
 export * from './utilities';
 export * from './world';

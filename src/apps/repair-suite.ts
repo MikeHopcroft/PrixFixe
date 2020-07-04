@@ -11,12 +11,13 @@ import {
   CombinedTurn,
   fail,
   handleError,
-  loadLogicalValidationSuite,
   succeed,
   LogicalCart,
   LogicalItem,
   enumerateTestCases,
-} from '../test_suite2';
+} from '../core/test_suite2';
+
+import { loadLogicalValidationSuite } from '../test_suite2'
 
 function main() {
   dotenv.config();

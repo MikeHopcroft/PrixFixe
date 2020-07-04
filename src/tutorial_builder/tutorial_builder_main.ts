@@ -6,8 +6,9 @@ import * as minimist from 'minimist';
 import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
 
+import { fail, handleError, succeed } from '../core/test_suite2';
 import { createWorld2 } from '../processors';
-import { fail, handleError, succeed } from '../test_suite2';
+
 import { updateMarkdown } from './tutorial_builder';
 
 export async function tutorialBuilderMain() {

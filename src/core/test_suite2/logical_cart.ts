@@ -1,4 +1,6 @@
-import { Cart, ICatalog, IdGenerator, ItemInstance } from '../core';
+import { Cart, ItemInstance } from '../cart';
+import { ICatalog } from '../catalog';
+import { IdGenerator } from '../utilities';
 
 import { LogicalCart, LogicalItem } from './interfaces';
 

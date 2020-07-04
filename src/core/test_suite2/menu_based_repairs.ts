@@ -1,6 +1,6 @@
-import { AttributeInfo } from '../core/attributes';
-import { Cart, ItemInstance } from '../core/cart';
-import { ICatalog } from '../core/catalog';
+import { AttributeInfo } from '../attributes';
+import { Cart, ItemInstance } from '../cart';
+import { ICatalog } from '../catalog';
 
 import {
   DiffResults,

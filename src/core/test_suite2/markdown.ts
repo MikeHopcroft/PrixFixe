@@ -1,4 +1,4 @@
-import { leftJustify, rightJustify } from '..';
+import { leftJustify, rightJustify } from '../utilities';
 
 import {
   GenericCase,

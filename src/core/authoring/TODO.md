@@ -1,8 +1,11 @@
 # TODO List
 
 * Browser
-  * Where does speechToTextFilter belong? Is it in token-flow? Maybe elsewhere?
-  * Locate graph rendering algorithm
+  * New
+    * src/core/test_suite2/filter.ts uses code from src/test_suite/suite_predicate
+    * Delete test_suite
+  * x Where does speechToTextFilter belong? Is it in token-flow? Maybe elsewhere?
+  * x Locate graph rendering algorithm
   * x Remove better-ajv-errors
   * Replace bindex.ts with core/index.ts
   * Replace ajv with io-ts

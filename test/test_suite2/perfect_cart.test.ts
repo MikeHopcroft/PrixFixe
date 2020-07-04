@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { LogicalCart, cartIsPerfect } from '../../src/test_suite2';
+import { LogicalCart, cartIsPerfect } from '../../src/core/test_suite2';
 
 import {
   product1a,

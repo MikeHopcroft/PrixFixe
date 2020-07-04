@@ -9,11 +9,11 @@ import {
   CombinedTurn,
   fail,
   handleError,
-  loadLogicalValidationSuite,
+  renderSuiteAsMarkdown,
   succeed,
-} from '../test_suite2';
+} from '../core/test_suite2';
 
-import { renderSuiteAsMarkdown } from '../test_suite2/markdown';
+import { loadLogicalValidationSuite } from '../test_suite2'
 
 function main() {
   dotenv.config();

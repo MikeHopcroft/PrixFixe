@@ -20,7 +20,7 @@ import {
   scoreSuite,
   TextTurn,
   ValidationStep,
-} from '../test_suite2';
+} from '../core/test_suite2';
 
 import { displayState } from './formatting';
 

@@ -13,11 +13,11 @@ import {
   filterSuite,
   GenericCase,
   handleError,
-  loadLogicalValidationSuite,
   succeed,
   ValidationStep,
-  writeYAML,
-} from '../test_suite2';
+} from '../core/test_suite2';
+
+import { loadLogicalValidationSuite, writeYAML } from '../test_suite2'
 
 function main() {
   dotenv.config();

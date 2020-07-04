@@ -7,21 +7,21 @@ import * as path from 'path';
 import * as recursiveReaddir from 'recursive-readdir';
 
 import { Processor, State } from '../core/processors';
-import { World } from '../core/world';
-
-import { createWorld2 } from '../processors';
-
-import { suitePredicate } from '../test_suite/suite_predicate';
-import { TestProcessors } from '../test_suite/test_processors';
 
 import {
   enumerateTestCases,
   filterSuite,
+  formatScoredSuite,
+  FormatScoredSuiteOptions,
   mapSuiteAsync,
   suitePredicateFilter,
-} from './filter';
+} from '../core/test_suite2';
 
-import { formatScoredSuite, FormatScoredSuiteOptions } from './formatting';
+import { World } from '../core/world';
+
+import { createWorld2 } from '../processors';
+import { suitePredicate, TestProcessors } from '../test_suite';
+
 
 import {
   AnyTurn,
@@ -32,7 +32,7 @@ import {
   TextTurn,
   ValidationStep,
   LogicalScoredSuite,
-} from './interfaces';
+} from '../core/test_suite2/interfaces';
 
 import {
   loadLogicalScoredSuite,
@@ -40,9 +40,9 @@ import {
   writeYAML,
 } from './loaders';
 
-import { logicalCartFromCart } from './logical_cart';
-import { createMenuBasedRepairFunction } from './repair_functions';
-import { scoreSuite } from './scoring';
+import { logicalCartFromCart } from '../core/test_suite2/logical_cart';
+import { createMenuBasedRepairFunction } from '../core/test_suite2/repair_functions';
+import { scoreSuite } from '../core/test_suite2/scoring';
 
 export async function testRunnerMain2(
   title: string,

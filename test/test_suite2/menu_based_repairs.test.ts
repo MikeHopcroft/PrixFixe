@@ -10,7 +10,7 @@ import {
   Edit,
   EditOp,
   MenuBasedRepairs,
-} from '../../src/test_suite2';
+} from '../../src/core/test_suite2';
 
 import {
   mediumChocolateCone,

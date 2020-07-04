@@ -2,6 +2,7 @@ import * as style from 'ansi-styles';
 import { Cart, ItemInstance } from '../core/cart';
 import { ICatalog } from '../core/catalog';
 import { State } from '../core/processors';
+import { leftJustify, rightJustify } from '../core/utilities';
 import { TestLineItem, TestOrder } from '../test_suite';
 
 export function displayState(catalog: ICatalog, state: State) {
@@ -64,27 +65,6 @@ function formatLineItem(item: TestLineItem) {
   const totalWidth = 50;
   const middleWidth = Math.max(0, totalWidth - left.length - right.length);
   const middle = leftJustify(`${item.name} (${item.sku})`, middleWidth);
-  // const middle = leftJustify(item.name + ' ', middleWidth);
 
   return `${left}${middle}${right}`;
-}
-
-export function leftJustify(text: string, width: number) {
-  if (text.length >= width) {
-    return text;
-  } else {
-    const paddingWidth = width - text.length;
-    const padding = new Array(paddingWidth + 1).join(' ');
-    return text + padding;
-  }
-}
-
-export function rightJustify(text: string, width: number) {
-  if (text.length >= width) {
-    return text;
-  } else {
-    const paddingWidth = width - text.length;
-    const padding = new Array(paddingWidth + 1).join(' ');
-    return padding + text;
-  }
 }

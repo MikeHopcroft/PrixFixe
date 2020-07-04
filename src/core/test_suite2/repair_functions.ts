@@ -1,17 +1,14 @@
-import { AttributeInfo } from '../core/attributes';
+import { AttributeInfo } from '../attributes';
+import { ICatalog } from '../catalog';
+
 import { bipartiteMatchingDiff } from './bipartite_matching_diff';
 import { cartSort } from './cart_sort';
-import { ICatalog } from '../core/catalog';
 import { LogicalCart } from './interfaces';
 import { cartFromlogicalCart } from './logical_cart';
 import { MenuBasedRepairs } from './menu_based_repairs';
 import { RepairFunction } from './scoring';
 import { SimpleRepairs } from './simple_repairs';
-import { DiffResults, treeDiff } from './tree_diff';
-
-// function cartSort(cart: LogicalCart) {
-//     return cart;
-// }
+import { DiffResults } from './tree_diff';
 
 export function createMenuBasedRepairFunction(
   attributeInfo: AttributeInfo,
