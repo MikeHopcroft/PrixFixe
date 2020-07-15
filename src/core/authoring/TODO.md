@@ -1,5 +1,12 @@
 # TODO List
 
+* SKU specs
+  * ensure that all SKU specs are used
+  * verify that all SKU specs are legal/allowed.
+  * some mechanism to disable/suppress sku generation.
+    * Now implemented in nextSKU().
+
+
 * Browser
   * New
     * src/core/test_suite2/filter.ts uses code from src/test_suite/suite_predicate

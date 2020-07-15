@@ -102,7 +102,7 @@ export function createWorld2(dataPath: string): World {
     tensors: [...tensors.values()],
   };
 
-  const builder = new GroupBuilder(dimensions, tensors);
+  const builder = new GroupBuilder(dimensions, tensors, spec.skus);
   processGroups(builder, spec.catalog);
   const catalog = Catalog.fromEntities(
     builder.generics.values(),

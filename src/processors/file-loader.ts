@@ -11,6 +11,7 @@ import {
   partialCatalogSpecType,
   PartialCatalogSpec,
   RecipeSpec,
+  SkuSpec,
   TensorSpec,
   validate,
 } from '../core';
@@ -66,6 +67,7 @@ class CatalogBuilder {
   private readonly catalog: GroupSpec[] = [];
   private readonly rules: AnyRule[] = [];
   private readonly recipes: RecipeSpec[] = [];
+  private readonly skus: SkuSpec[] = [];
 
   private readonly context: string[] = [process.cwd()];
 
@@ -109,6 +111,9 @@ class CatalogBuilder {
     if (c.recipes) {
       this.recipes.push(...c.recipes);
     }
+    if (c.skus) {
+      this.skus.push(...c.skus);
+    }
   }
 
   build(): CatalogSpec {
@@ -118,6 +123,7 @@ class CatalogBuilder {
       catalog: this.catalog,
       rules: this.rules,
       recipes: this.recipes,
+      skus: this.skus,
     };
 
     return c;

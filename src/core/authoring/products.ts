@@ -26,6 +26,7 @@ import {
   ItemSpec,
   ItemType,
   WILDCARD,
+  SkuSpec,
 } from './types';
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -192,12 +193,31 @@ export class GroupBuilder {
   private readonly pids = new Set<PID>();
   private readonly skus = new Set<SKU>();
 
+  private readonly nameToSku = new Map<string, SKU>();
+
   constructor(
     dimensions: IIndex<DID, IndexedDimension>,
-    tensors: IIndex<TID, TensorDescription>
+    tensors: IIndex<TID, TensorDescription>,
+    skuSpecs: SkuSpec[]
   ) {
     this.dimensions = dimensions;
     this.tensors = tensors;
+
+    // TODO: ensure that all SKU specs are used.
+    // TODO: verify that all SKU specs are legal/allowed.
+    // TODO: some mechanism to disable/suppress sku generation.
+    for (const spec of skuSpecs) {
+      if (this.nameToSku.has(spec.name)) {
+        const message = `Duplicate name "${spec.name}"`;
+        throw new TypeError(message);
+      }
+      if (this.skus.has(spec.sku)) {
+        const message = `Duplicate sku ${spec.sku}`;
+        throw new TypeError(message);
+      }
+      this.nameToSku.set(spec.name, spec.sku);
+      this.skus.add(spec.sku);
+    }
 
     // WARNING: createTensorContext() relies on this.tensors and
     // this.dimensions.
@@ -218,8 +238,18 @@ export class GroupBuilder {
     return pid;
   }
 
-  nextSKU(): SKU {
-    const sku = this.getContext().skus.next();
+  nextSKU(name: string): SKU {
+    let sku = this.nameToSku.get(name);
+    if (sku !== undefined) {
+      return sku;
+    }
+
+    if (this.nameToSku.size > 0) {
+      const message = `No SKU specified for "${name}"`;
+      throw new TypeError(message);
+    }
+
+    sku = this.getContext().skus.next();
     if (this.skus.has(sku)) {
       const message = `Duplicate sku ${sku}`;
       throw new InvalidParameterError(message);
@@ -320,16 +350,13 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
   // Create specifics
   for (const f of context.forms) {
     const key = makeKey(generic.pid, f);
-    const sku = builder.nextSKU();
+    const name = [
+      ...namePrefixFromForm(context.dimensions, f, false),
+      generic.name,
+    ].join(' ');
+    const sku = builder.nextSKU(name);
     const specific: SpecificTypedEntity = specificEntityFactory(
-      {
-        name: [
-          ...namePrefixFromForm(context.dimensions, f, false),
-          generic.name,
-        ].join(' '),
-        sku,
-        key,
-      },
+      { name, sku, key, },
       kind
     );
     builder.specifics.push(specific);

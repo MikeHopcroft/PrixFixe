@@ -11,6 +11,7 @@ import {
   PartialCatalogSpec,
   TensorSpec,
   RecipeSpec,
+  SkuSpec,
 } from './types';
 
 // tslint:disable-next-line:interface-name
@@ -66,9 +67,10 @@ export async function loadCatalogSpec(
   const catalog: GroupSpec[] = [];
   const rules: AnyRule[] = [];
   const recipes: RecipeSpec[] = [];
+  const skus: SkuSpec[] = [];
 
   await process(name);
-  return { dimensions, tensors, catalog, rules, recipes };
+  return { dimensions, tensors, catalog, rules, recipes, skus };
 
   async function process(fileName: string) {
     console.log(`Processing ${fileName}`);

@@ -162,6 +162,17 @@ export type RecipeSpec = t.TypeOf<typeof recipeSpecType>;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
+// SKUs
+//
+///////////////////////////////////////////////////////////////////////////////
+export const skuSpecType = t.type({
+  name: t.string,
+  sku: t.number,
+});
+export type SkuSpec = t.TypeOf<typeof skuSpecType>;
+
+///////////////////////////////////////////////////////////////////////////////
+//
 // Catalog
 //
 ///////////////////////////////////////////////////////////////////////////////
@@ -171,6 +182,7 @@ export const catalogSpecType = t.type({
   catalog: t.array(groupSpecType),
   rules: t.array(anyRuleType),
   recipes: t.array(recipeSpecType),
+  skus: t.array(skuSpecType),
 });
 export type CatalogSpec = t.TypeOf<typeof catalogSpecType>;
 
