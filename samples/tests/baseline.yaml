@@ -3787,7 +3787,10 @@ tests:
             steps: []
   - id: 1027
     suites: extras
-    comment: demonstrated an option with the same name as an attribute
+    comment: |
+      Demonstrates an option with the same name as an attributes.
+      This one should add the 'ice' option because 'iced short' is
+      not a legal form.
     steps:
       - turns:
           - speaker: speaker
@@ -3811,6 +3814,27 @@ tests:
                 id(661): change item(iced grande latte) attribute "grande" to
                 "short"
               - '  id(663): insert default item(ice)'
+  - id: 1027.1
+    suites: extras
+    comment: |
+      Demonstrates an option with the same name as an attributes.
+      This one should use 'iced' attribute.
+    steps:
+      - turns:
+          - speaker: speaker
+            transcription: i want a tall iced latte
+        cart:
+          items:
+            - quantity: 1
+              name: iced tall latte
+              sku: '603'
+              children: []
+        measures:
+          perfect: true
+          complete: true
+          repairs:
+            cost: 0
+            steps: []
   - id: 1028
     suites: extras bug disfluencies not-implemented
     comment: Disfluency prevents order
@@ -3826,8 +3850,8 @@ tests:
           repairs:
             cost: 2
             steps:
-              - 'id(664): insert default item(grande latte)'
-              - '  id(665): insert default item(vanilla syrup)'
+              - 'id(666): insert default item(grande latte)'
+              - '  id(667): insert default item(vanilla syrup)'
   - id: 1029
     suites: extras bug option-as-verb not-implemented
     comment: |
@@ -3859,8 +3883,8 @@ tests:
           repairs:
             cost: 2
             steps:
-              - 'id(668): insert default item(apple bran muffin)'
-              - '  id(669): insert default item(warmed)'
+              - 'id(670): insert default item(apple bran muffin)'
+              - '  id(671): insert default item(warmed)'
   - id: 1030
     suites: extras implicit option-as-verb not-implemented
     comment: option-as-verb should warm the muffin
@@ -3895,7 +3919,7 @@ tests:
           repairs:
             cost: 1
             steps:
-              - '  id(674): insert default item(warmed)'
+              - '  id(676): insert default item(warmed)'
   - id: 1031
     suites: extras option-as-verb not-implemented
     comment: option-as-verb should slice the muffin
@@ -3930,7 +3954,7 @@ tests:
           repairs:
             cost: 1
             steps:
-              - '  id(679): insert default item(cut in half)'
+              - '  id(681): insert default item(cut in half)'
   - id: 1032
     suites: extras recipes regression
     comment: double shot
@@ -4050,7 +4074,7 @@ tests:
           repairs:
             cost: 1
             steps:
-              - '  id(701): change item(extra espresso shot) quantity to 2'
+              - '  id(703): change item(extra espresso shot) quantity to 2'
   - id: 1036
     suites: extras bug
     comment: 'fuzzerB4:474'
@@ -4074,12 +4098,59 @@ tests:
           repairs:
             cost: 2
             steps:
-              - '  id(705): change item(extra espresso shot) quantity to 2'
-              - '  id(705): change item(extra espresso shot) attribute "extra" to "regular"'
+              - '  id(707): change item(extra espresso shot) quantity to 2'
+              - '  id(707): change item(extra espresso shot) attribute "extra" to "regular"'
+  - id: 1037
+    suites: extras bug
+    comment: found in web app
+    steps:
+      - turns:
+          - speaker: speaker
+            transcription: add a muffin with butter
+        cart:
+          items:
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: butter
+                  sku: '3'
+                  children: []
+        measures:
+          perfect: true
+          complete: true
+          repairs:
+            cost: 0
+            steps: []
+      - turns:
+          - speaker: speaker
+            transcription: make that with extra butter
+        cart:
+          items:
+            - quantity: 1
+              name: apple bran muffin
+              sku: '10000'
+              children:
+                - quantity: 1
+                  name: butter
+                  sku: '3'
+                  children: []
+                - quantity: 1
+                  name: extra butter
+                  sku: '4'
+                  children: []
+        measures:
+          perfect: false
+          complete: false
+          repairs:
+            cost: 1
+            steps:
+              - '  id(715): delete item(butter)'
 measures:
   notes: menu-based
-  totalTests: 117
-  totalSteps: 193
-  perfectSteps: 180
-  completeSteps: 180
-  totalRepairs: 24
+  totalTests: 119
+  totalSteps: 196
+  perfectSteps: 182
+  completeSteps: 182
+  totalRepairs: 25
