@@ -13,7 +13,7 @@ export function logicalCartFromCart(
   };
 }
 
-function logicalItemFromItemInstance(
+export function logicalItemFromItemInstance(
   item: ItemInstance,
   catalog: ICatalog
 ): LogicalItem {

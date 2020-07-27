@@ -356,7 +356,7 @@ function processItem(builder: GroupBuilder, item: ItemSpec) {
     ].join(' ');
     const sku = builder.nextSKU(name);
     const specific: SpecificTypedEntity = specificEntityFactory(
-      { name, sku, key, },
+      { name, sku, key },
       kind
     );
     builder.specifics.push(specific);

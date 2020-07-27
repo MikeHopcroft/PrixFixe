@@ -79,9 +79,12 @@ export class Catalog implements ICatalog {
 
       // Add name to key mapping
       if (this.nameToKey.has(item.name)) {
-        throw TypeError(`Catalog: encountered duplicate name "${item.name}".`);
+        console.log(JSON.stringify(item, null, 2));
+        // throw TypeError(`Catalog: encountered duplicate name "${item.name}".`);
+        console.log(`Catalog: encountered duplicate name "${item.name}".`);
+      } else {
+        this.nameToKey.set(item.name, item.key);
       }
-      this.nameToKey.set(item.name, item.key);
     }
   }
 
