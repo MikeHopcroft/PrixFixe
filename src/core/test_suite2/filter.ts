@@ -21,7 +21,15 @@ export type StepConverter<
   TURN2
 > = (step: STEP1) => STEP2;
 
+export type StepConverterAsync<
+  STEP1 extends ValidationStep<TURN1>,
+  TURN1,
+  STEP2 extends Step<TURN2>,
+  TURN2
+> = (step: STEP1) => Promise<STEP2>;
+
 export type TurnConverter<TURN1, TURN2> = (turn: TURN1) => TURN2;
+export type TurnConverterAsync<TURN1, TURN2> = (turn: TURN1) => Promise<TURN2>;
 
 export function convertSuite<
   SUITE extends GenericSuite<STEP1>,
@@ -42,6 +50,32 @@ export function convertSuite<
       const turns = s.turns.map(turnConverter);
       return { ...s, turns };
     });
+
+    return { ...test, steps };
+  });
+
+  return s2;
+}
+
+export async function convertSuiteAsync<
+  SUITE extends GenericSuite<STEP1>,
+  STEP1 extends ValidationStep<TURN1>,
+  STEP2 extends Step<TURN1>,
+  TURN1,
+  TURN2
+>(
+  suite: SUITE,
+  testCasePredicate: TestCasePredicate<STEP1, TURN1>,
+  stepConverter: StepConverterAsync<ValidationStep<TURN1>, TURN1, STEP2, TURN1>,
+  turnConverter: TurnConverterAsync<TURN1, TURN2>
+): Promise<GenericSuite<Step<TURN2>>> {
+  const s1 = filterSuite(suite, testCasePredicate);
+  const s2 = mapSuiteAsync(s1, async (test: GenericCase<STEP1>) => {
+    const steps = await Promise.all(test.steps.map(async step => {
+      const s = await stepConverter(step);
+      const turns = await Promise.all(s.turns.map(turnConverter));
+      return { ...s, turns };
+    }));
 
     return { ...test, steps };
   });
