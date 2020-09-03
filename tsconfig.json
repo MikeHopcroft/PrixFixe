@@ -4,7 +4,7 @@
     "declaration": true,
     "inlineSources": true,
     "lib": [
-      "es2018"
+      "es2019"
     ],
     "outDir": "build",
     "rootDir": ".",

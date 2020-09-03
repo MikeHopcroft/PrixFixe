@@ -34,6 +34,7 @@ const patterns: Array<[RegExp, string]> = [
   [/\bblt\b/g, 'b l t'],
   [/\bpbj\b/g, 'p b j'], // 'pbj' must come before 'pb' to avoid partial match.
   [/\bpb\b/g, 'p b'],
+  // What about 1st, 2nd, 3rd, 4th, 5th, etc?
 ];
 
 export function speechToTextFilter(input: string): string {

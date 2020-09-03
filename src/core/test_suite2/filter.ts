@@ -28,8 +28,10 @@ export type StepConverterAsync<
   TURN2
 > = (step: STEP1) => Promise<STEP2>;
 
-export type TurnConverter<TURN1, TURN2> = (turn: TURN1) => TURN2;
-export type TurnConverterAsync<TURN1, TURN2> = (turn: TURN1) => Promise<TURN2>;
+export type TurnConverter<TURN1, TURN2> = (turn: TURN1) => TURN2[];
+export type TurnConverterAsync<TURN1, TURN2> = (
+  turn: TURN1
+) => Promise<TURN2[]>;
 
 export function convertSuite<
   SUITE extends GenericSuite<STEP1>,
@@ -47,7 +49,7 @@ export function convertSuite<
   const s2 = mapSuite(s1, (test: GenericCase<STEP1>) => {
     const steps = test.steps.map(step => {
       const s = stepConverter(step);
-      const turns = s.turns.map(turnConverter);
+      const turns = s.turns.map(turnConverter).flat();
       return { ...s, turns };
     });
 
@@ -71,11 +73,22 @@ export async function convertSuiteAsync<
 ): Promise<GenericSuite<Step<TURN2>>> {
   const s1 = filterSuite(suite, testCasePredicate);
   const s2 = mapSuiteAsync(s1, async (test: GenericCase<STEP1>) => {
-    const steps = await Promise.all(test.steps.map(async step => {
-      const s = await stepConverter(step);
-      const turns = await Promise.all(s.turns.map(turnConverter));
-      return { ...s, turns };
-    }));
+    const steps = await Promise.all(
+      test.steps.map(async step => {
+        const s = await stepConverter(step);
+        // Might not want to do all of the turns in parallel.
+        // This might cause a problem with some external services.
+        // const turns = (await Promise.all(s.turns.map(turnConverter))).flat();
+        const turns: TURN2[] = [];
+        for (const turn of s.turns) {
+          const result = await turnConverter(turn);
+          for (const t of result) {
+            turns.push(t);
+          }
+        }
+        return { ...s, turns };
+      })
+    );
 
     return { ...test, steps };
   });
@@ -183,22 +196,22 @@ export function keepCart<TURN>(v: ValidationStep<TURN>): Step<TURN> {
   return v;
 }
 
-export function removeTranscription(turn: CombinedTurn): SpokenTurn {
+export function removeTranscription(turn: CombinedTurn): SpokenTurn[] {
   const { ['transcription']: _, ...filtered } = turn;
-  return filtered;
+  return [filtered];
 }
 
-export function keepTranscription(turn: CombinedTurn): CombinedTurn {
-  return turn;
+export function keepTranscription(turn: CombinedTurn): CombinedTurn[] {
+  return [turn];
 }
 
-export function removeAudio(turn: CombinedTurn): TextTurn {
+export function removeAudio(turn: CombinedTurn): TextTurn[] {
   const { ['audio']: _, ...filtered } = turn;
-  return filtered;
+  return [filtered];
 }
 
-export function keepAudio(turn: CombinedTurn): CombinedTurn {
-  return turn;
+export function keepAudio(turn: CombinedTurn): CombinedTurn[] {
+  return [turn];
 }
 
 export function suitePredicateFilter<STEP extends ValidationStep<TURN>, TURN>(
