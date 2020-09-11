@@ -98,6 +98,7 @@ export async function testRunnerMain2(
   const processorName = args.p;
   const recursive = args.r === true;
   const suiteExpressionText = args.s;
+  const speaker = args.speaker as string | undefined;
 
   const input = args._[0];
   const outputFile = args._[1];
@@ -131,7 +132,8 @@ export async function testRunnerMain2(
       experimental,
       processorFactory,
       processorName,
-      suite
+      suite,
+      speaker
     );
 
     // Display results.
@@ -280,8 +282,13 @@ async function runTests(
   experimental: boolean,
   processorFactory: TestProcessors,
   verify: string | undefined,
-  suite: GenericSuite<ValidationStep<TextTurn>>
+  suite: GenericSuite<ValidationStep<TextTurn>>,
+  speaker: string | undefined
 ): Promise<LogicalScoredSuite<AnyTurn>> {
+  if (speaker !== undefined) {
+    console.log(`Only including turns where speaker is "${speaker}"`);
+  }
+
   //
   // Load the menu.
   //
@@ -332,10 +339,12 @@ async function runTests(
     const steps: typeof test.steps = [];
     for (const step of test.steps) {
       for (const turn of step.turns) {
-        try {
-          state = await processor(turn.transcription, state);
-        } catch (e) {
-          // TODO: record the error here, somehow.
+        if (speaker === undefined || turn.speaker === speaker) {
+          try {
+            state = await processor(turn.transcription, state);
+          } catch (e) {
+            // TODO: record the error here, somehow.
+          }
         }
       }
       const cart = logicalCartFromCart(state.cart, world.catalog);
@@ -527,6 +536,12 @@ class Application {
               'Boolean expression of suites to run.' +
               'Can use suite names, !, &, |, and parentheses.' +
               'Note that the -n flag overrides the -s flag.',
+          },
+          {
+            name: 'speaker',
+            typeLabel: '{underline speaker}',
+            description:
+              'If specified, only include turns from this speaker'
           },
           {
             name: 't',
