@@ -4,6 +4,15 @@ import 'mocha';
 import { aliasesFromPattern } from '../../src/core/utilities/generate_aliases';
 
 describe('Alias Generation', () => {
+  it('should expand plaintext to itself', () => {
+    const pattern = 'helloworld';
+
+    const expected = ['helloworld'];
+
+    const observed = [...aliasesFromPattern(pattern)];
+    assert.deepEqual(observed, expected);
+  });
+
   it('should enumerate optionals', () => {
     const pattern = 'a [b,c] d';
 
@@ -48,6 +57,15 @@ describe('Alias Generation', () => {
       'green marble rolling',
       'green marble',
     ];
+
+    const observed = [...aliasesFromPattern(pattern)];
+    assert.deepEqual(observed, expected);
+  });
+
+  it('should expand recursively', () => {
+    const pattern = '(red,green,[light] blue)';
+
+    const expected = ['red', 'green', 'light blue', 'blue'];
 
     const observed = [...aliasesFromPattern(pattern)];
     assert.deepEqual(observed, expected);

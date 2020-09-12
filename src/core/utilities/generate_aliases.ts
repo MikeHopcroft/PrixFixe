@@ -1,3 +1,133 @@
+function cartesianProduct<T>(arr: T[][]): T[][] {
+  return arr.reduce(
+    (a, b) => {
+      return a
+        .map(x => {
+          return b.map(y => {
+            return x.concat(y);
+          });
+        })
+        .reduce((c, d) => c.concat(d), []);
+    },
+    [[]] as T[][]
+  );
+}
+
+export function* aliasesFromPattern(query: string) {
+  if (!query || query.length === 0) {
+    throw new Error('Tried to parse null or empty string');
+  }
+
+  let i = 0;
+  const currentChar = () => query[i];
+
+  function match(c: string) {
+    const char = currentChar();
+    if (c.includes(char)) {
+      i++;
+      return char;
+    }
+    else if (i >= query.length) {
+      throw new Error(
+        `Ran off the end of the string expecting to find: '${c}', i: ${i}`
+      );
+    } else {
+      throw new Error(
+        `Unexpected character: '${currentChar()}'. Expected '${c}'.`
+      );
+    }
+  }
+
+  //Intrinsics
+  const whitespace = () => match(' ');
+  const letter = () =>
+    match(
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
+      'abcdefghijklmnopqrstuvwxyz' +
+      'ÁáÍíøOóÚúÜüÑñ' +
+      ' '
+    );
+  const token = () => [kleenePlus(letter).join('')];
+  const constant = (s: string) => {
+    for (let i = 0; i < s.length; i++) match(s.charAt(i));
+  };
+  const separator = () => match('|,;');
+
+  //Lists
+  const listGap = () => {
+    separator();
+    kleene(whitespace);
+  };
+  const group = () => kleenePlus(phrase, listGap);
+
+  //Branches
+  function choice(): string[] {
+    constant('(');
+    const contents = group();
+    constant(')');
+    return ([] as string[]).concat(...contents);
+  }
+
+  function optional(): string[] {
+    constant('[');
+    const contents = group();
+    constant(']');
+    const result = ([] as string[]).concat(...contents);
+    result.push('');
+    return result;
+  }
+
+  const term = () => union(choice, optional, token);
+  const phrase = () => cartesianProduct(kleenePlus(term)).map(a => a.join(''));
+  const grammar = () => phrase();
+
+  const results = grammar();
+  if (i !== query.length) {
+    throw new TypeError('Failed expanding alias at index ' + i);
+  }
+
+  yield* aliasesFromPatternHelper(results);
+
+  function kleene<T>(match: () => T, separator?: () => void): T[] {
+    const results: T[] = [];
+    try {
+      while (true) {
+        results.concat(match());
+        if (separator) separator();
+      }
+    } catch (e) {
+      return results;
+    }
+  }
+
+  function kleenePlus<T>(match: () => T, separator?: () => void): T[] {
+    const results: T[] = [];
+    results.push(match());
+    try {
+      while (true) {
+        if (separator) separator();
+        results.push(match());
+      }
+    } catch (e) {
+      return results;
+    }
+  }
+
+  function union<T>(...matches: Array<() => T>) {
+    const backtrackPointer = i;
+    const errors: string[] = [];
+    for (const match of matches) {
+      try {
+        return match();
+      } catch (e) {
+        errors.push(e);
+        i = backtrackPointer;
+      }
+    }
+    throw new Error('Matched none of union:\n- ' + errors.join('\n- '));
+  }
+}
+
 function combine(left: string, right: string) {
   if (left.length === 0) {
     return right;
@@ -9,52 +139,12 @@ function combine(left: string, right: string) {
 }
 
 function* aliasesFromPatternHelper(
-  prefix: string,
-  options: string[][]
+  options: string[]
 ): IterableIterator<string> {
   if (options.length > 0) {
-    for (const option of options[0]) {
-      yield* aliasesFromPatternHelper(
-        combine(prefix, option),
-        options.slice(1)
-      );
+    for (const option of options) {
+      yield option.replace(/\s\s+/g, ' ').trim();
     }
-  } else {
-    yield prefix;
-  }
-}
-
-export function* aliasesFromPattern(query: string) {
-  const m = /(\[[^\]]*\])|(\([^\)]*\))|([^\[^\()]*)/g;
-
-  // Remove leading, trailing, and consecutive spaces.
-  const query2 = query.replace(/\s+/g, ' ').trim();
-
-  // Throw on comma before ] and ).
-  if (query2.search(/(,\])|(,\))/g) !== -1) {
-    throw TypeError(`generateAliases: illegal trailing comma in "${query}".`);
-  }
-
-  const matches = query2.match(m);
-
-  if (matches !== null) {
-    const options = matches
-      .map(match => {
-        if (match.startsWith('[')) {
-          // Selects an option or leaves blank
-          return [...match.slice(1, -1).split(','), ''].map(x => x.trim());
-        } else if (match.startsWith('(')) {
-          // Must select from one of the options
-          return match
-            .slice(1, -1)
-            .split(',')
-            .map(x => x.trim());
-        } else {
-          return [match.trim()];
-        }
-      })
-      .filter(match => match[0].length > 0);
-    yield* aliasesFromPatternHelper('', options);
   }
 }
 
