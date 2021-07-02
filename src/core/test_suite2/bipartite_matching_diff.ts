@@ -36,15 +36,17 @@ export function bipartiteMatchingDiff<S, T>(
   }
 
   // Project to 2D array of costs
-  const costs: number[][] = ops.map(row => {
-    return row.map(edit => edit.cost);
+  const costs: number[][] = ops.map((row) => {
+    return row.map((edit) => edit.cost);
   });
 
   // Perform Munkres assignment
   const assignments = munkres(costs);
 
   // Map assignments back to list of operations.
-  const edits = assignments.map(a => ops[a[0]][a[1]]).filter(e => e.cost !== 0);
+  const edits = assignments
+    .map((a) => ops[a[0]][a[1]])
+    .filter((e) => e.cost !== 0);
 
   // Total up the costs.
   let cost = 0;

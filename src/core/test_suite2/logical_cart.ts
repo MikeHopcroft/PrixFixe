@@ -9,7 +9,7 @@ export function logicalCartFromCart(
   catalog: ICatalog
 ): LogicalCart {
   return {
-    items: cart.items.map(item => logicalItemFromItemInstance(item, catalog)),
+    items: cart.items.map((item) => logicalItemFromItemInstance(item, catalog)),
   };
 }
 
@@ -23,7 +23,7 @@ export function logicalItemFromItemInstance(
     quantity: item.quantity,
     name: specific.name,
     sku: specific.sku.toString(),
-    children: item.children.map(child =>
+    children: item.children.map((child) =>
       logicalItemFromItemInstance(child, catalog)
     ),
   };
@@ -34,7 +34,7 @@ export function cartFromlogicalCart(
   catalog: ICatalog
 ): Cart {
   return {
-    items: cart.items.map(item => itemInstanceFromLogicalItem(item, catalog)),
+    items: cart.items.map((item) => itemInstanceFromLogicalItem(item, catalog)),
   };
 }
 
@@ -50,7 +50,7 @@ function itemInstanceFromLogicalItem(
     uid: idGenerator.next(),
     quantity: item.quantity,
     key: specific.key,
-    children: item.children.map(child =>
+    children: item.children.map((child) =>
       itemInstanceFromLogicalItem(child, catalog)
     ),
   };

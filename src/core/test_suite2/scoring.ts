@@ -30,7 +30,7 @@ export function scoreSuite(
   const observedCases = [...enumerateTestCases(observed)];
 
   if (observedCases.length !== expectedCases.length) {
-    const message = `test count mismatch`;
+    const message = 'test count mismatch';
     throw new TypeError(message);
   }
 
@@ -51,7 +51,7 @@ function scoreOneCase<TURN>(
   repairFunction: RepairFunction
 ): GenericCase<ScoredStep<TURN>> {
   if (observed.steps.length !== expected.steps.length) {
-    const message = `step count mismatch`;
+    const message = 'step count mismatch';
     throw new TypeError(message);
   }
 

@@ -37,6 +37,7 @@ class NopReplExtension implements IReplExtension {
 }
 
 export const nopReplExtensionFactory: IReplExtensionFactory = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create: (world: World, dataPath: string) => {
     return new NopReplExtension();
   },

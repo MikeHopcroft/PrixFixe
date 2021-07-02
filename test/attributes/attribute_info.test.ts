@@ -83,13 +83,13 @@ describe('AttributeInfo', () => {
 
     // Attempt adding a dimension with the same id.
     const f1 = () => info['addDimension'](softServeDimensions[0]);
-    assert.throws(f1, `found duplicate dimension id 0.`);
+    assert.throws(f1, 'found duplicate dimension id 0.');
 
     // Attempt adding an attribute with a duplicate pid.
     const uniqueId: UID = softServeDimensions[0].did + 1;
     const sizesDimension2 = new Dimension(uniqueId, 'sizes2', sizes.values());
     const f2 = () => info['addDimension'](sizesDimension2);
-    assert.throws(f2, `found duplicate attribute pid 0.`);
+    assert.throws(f2, 'found duplicate attribute pid 0.');
 
     const sizesDimension3 = new Dimension(
       uniqueId + 1,
@@ -97,7 +97,7 @@ describe('AttributeInfo', () => {
       sizes.values()
     );
     const f3 = () => info['addDimension'](sizesDimension3);
-    assert.throws(f3, `found duplicate dimension name "sizes".`);
+    assert.throws(f3, 'found duplicate dimension name "sizes".');
   });
 
   it('addTensor()', () => {

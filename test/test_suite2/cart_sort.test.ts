@@ -4,7 +4,7 @@ import 'mocha';
 import { cartSort } from '../../src/core/test_suite2';
 
 describe('cartSort', () => {
-  it(`sku`, () => {
+  it('sku', () => {
     const cart = {
       items: [
         { quantity: 1, name: '', sku: '3', children: [] },
@@ -25,7 +25,7 @@ describe('cartSort', () => {
     assert.deepEqual(observed, expected);
   });
 
-  it(`quantity`, () => {
+  it('quantity', () => {
     const cart = {
       items: [
         { quantity: 3, name: '', sku: '1', children: [] },
@@ -46,7 +46,7 @@ describe('cartSort', () => {
     assert.deepEqual(observed, expected);
   });
 
-  it(`child count`, () => {
+  it('child count', () => {
     const cart = {
       items: [
         {
@@ -91,7 +91,7 @@ describe('cartSort', () => {
     assert.deepEqual(observed, expected);
   });
 
-  it(`children`, () => {
+  it('children', () => {
     const cart = {
       items: [
         {

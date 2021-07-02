@@ -11,11 +11,13 @@ async function nopProcessor(text: string, state: State): Promise<State> {
 }
 
 // This example processor always throws.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function throwProcessor(text: string, state: State): Promise<State> {
   throw Error('hi');
 }
 
 // This example processor alternates between doing nothing and throwing.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function nopThrowProcessor(text: string, state: State): Promise<State> {
   counter++;
   if (counter % 2 === 0) {
@@ -31,16 +33,19 @@ async function go() {
     {
       name: 'nop',
       description: 'does nothing',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       create: (w: World, d: string) => nopProcessor,
     },
     {
       name: 'throw',
       description: 'always throws',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       create: (w: World, d: string) => throwProcessor,
     },
     {
       name: 'both',
       description: 'alternates between doing nothing and throwing.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       create: (w: World, d: string) => nopThrowProcessor,
     },
   ]);

@@ -49,7 +49,7 @@ export function speechToTextFilter(input: string): string {
 
   const words = b.trim().split(/\s+/);
 
-  const e = words.map(word => {
+  const e = words.map((word) => {
     if (/^\d+$/.test(word)) {
       const x = numberToWords.toWords(Number(word));
 

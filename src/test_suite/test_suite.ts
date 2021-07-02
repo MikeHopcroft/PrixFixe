@@ -187,7 +187,7 @@ export class AggregatedResults {
 
   toString(showPassedCases = false, isomorphic = false) {
     let stringValue = '';
-    if (this.results.find(result => !result.passed)) {
+    if (this.results.find((result) => !result.passed)) {
       if (showPassedCases) {
         stringValue += 'Passing and failing tests:\n';
       } else {
@@ -232,14 +232,14 @@ export class AggregatedResults {
   toJUnitXml(): string {
     const output = { testsuites: [] as XmlNode[] };
 
-    output.testsuites = Object.keys(this.suites).map(suite => ({
+    output.testsuites = Object.keys(this.suites).map((suite) => ({
       name: 'testsuite',
       attrs: {
         name: suite,
       },
       children: this.results
-        .filter(r => r.test.suites.includes(suite))
-        .map(r => r.toJUnitXml(false, this.correctionLevel)),
+        .filter((r) => r.test.suites.includes(suite))
+        .map((r) => r.toJUnitXml(false, this.correctionLevel)),
     }));
 
     return jsontoxml(output, {
@@ -251,11 +251,7 @@ export class AggregatedResults {
 
   printLatencyStatistics() {
     const summary = this.statistics.computeStatistics([
-      0.5,
-      0.9,
-      0.95,
-      0.99,
-      0.999,
+      0.5, 0.9, 0.95, 0.99, 0.999,
     ]);
     if (summary) {
       printStatistics('Latency', 'ms', summary);
@@ -263,7 +259,7 @@ export class AggregatedResults {
   }
 
   rebase(): YamlTestCases {
-    return this.results.map(result => result.rebase());
+    return this.results.map((result) => result.rebase());
   }
 }
 

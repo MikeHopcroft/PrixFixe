@@ -47,7 +47,7 @@ export function convertSuite<
 ): GenericSuite<Step<TURN2>> {
   const s1 = filterSuite(suite, testCasePredicate);
   const s2 = mapSuite(s1, (test: GenericCase<STEP1>) => {
-    const steps = test.steps.map(step => {
+    const steps = test.steps.map((step) => {
       const s = stepConverter(step);
       const turns = s.turns.map(turnConverter).flat();
       return { ...s, turns };
@@ -74,7 +74,7 @@ export async function convertSuiteAsync<
   const s1 = filterSuite(suite, testCasePredicate);
   const s2 = mapSuiteAsync(s1, async (test: GenericCase<STEP1>) => {
     const steps = await Promise.all(
-      test.steps.map(async step => {
+      test.steps.map(async (step) => {
         const s = await stepConverter(step);
         // Might not want to do all of the turns in parallel.
         // This might cause a problem with some external services.
@@ -217,5 +217,5 @@ export function keepAudio(turn: CombinedTurn): CombinedTurn[] {
 export function suitePredicateFilter<STEP extends ValidationStep<TURN>, TURN>(
   p: SuitePredicate
 ): TestCasePredicate<STEP, TURN> {
-  return test => p(test.suites.split(/\s+/));
+  return (test) => p(test.suites.split(/\s+/));
 }

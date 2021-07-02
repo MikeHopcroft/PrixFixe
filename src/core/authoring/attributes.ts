@@ -144,7 +144,7 @@ export function processTensors(
       return {
         ...t,
         tid: tid++,
-        dimensions: [...tensorDimensions.values()].map(x => x.did),
+        dimensions: [...tensorDimensions.values()].map((x) => x.did),
       };
     },
     (t: TensorDescription) => t.tid

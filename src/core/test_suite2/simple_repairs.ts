@@ -66,7 +66,7 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
       const edit = this.insert(child);
       cost += edit.cost;
       for (const step of edit.steps) {
-        steps.push(`  ` + step);
+        steps.push('  ' + step);
       }
     }
 
@@ -116,7 +116,7 @@ export class SimpleRepairs implements IRepairs<string, LogicalItem> {
       cost += result.cost;
       for (const edit of result.edits) {
         for (const step of edit.steps) {
-          steps.push(`  ` + step);
+          steps.push('  ' + step);
         }
       }
     }

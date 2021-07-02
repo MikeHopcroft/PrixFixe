@@ -27,6 +27,6 @@ describe('Dimension', () => {
     const anyDimensionId = 123;
     const f = () => new Dimension(anyDimensionId, 'empty', [].values());
 
-    assert.throws(f, `expect at least one attribute`);
+    assert.throws(f, 'expect at least one attribute');
   });
 });

@@ -86,8 +86,8 @@ export async function testRunnerMain(
 
     testFiles = files
       .sort()
-      .filter(f => f.endsWith('yaml'))
-      .map(f => path.resolve(input, f));
+      .filter((f) => f.endsWith('yaml'))
+      .map((f) => path.resolve(input, f));
   } else {
     // Assume that input is a YAML test file.
     testFiles = [input];
@@ -148,7 +148,8 @@ export async function testRunnerMain(
   }
 
   if (processorFactory.count() === 0) {
-    const message = `ProcessorFactory must contain at least one ProcessorDescription.`;
+    const message =
+      'ProcessorFactory must contain at least one ProcessorDescription.';
     return fail(message);
   }
 
@@ -289,14 +290,15 @@ function showUsage(processorFactory: TestProcessors) {
   const usage: Section[] = [
     {
       header: 'Test Runner',
-      content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
+      content:
+        'This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.',
     },
     {
       header: 'Usage',
       content: [
         `node ${program} <file|directory> [...options]`,
         '',
-        `Where <file> is the name of a single YAML test file and <directory> is a directory of YAML test files.`,
+        'Where <file> is the name of a single YAML test file and <directory> is a directory of YAML test files.',
       ],
     },
     {

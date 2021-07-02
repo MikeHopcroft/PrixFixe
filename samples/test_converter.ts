@@ -53,6 +53,7 @@ function processOneFile(filename: string, outfile: string) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function go(filename: string) {
   processOneFile(filename, 'c:\\temp\\out.yaml');
 }

@@ -394,31 +394,31 @@ describe('CartOps', () => {
   describe('Find operations', () => {
     it('findByKey', () => {
       const items = [...ops.findByKey(sampleCart, soyMilk.key)];
-      const uids = items.map(x => x.uid);
+      const uids = items.map((x) => x.uid);
       assert.deepEqual(uids, [4]);
     });
 
     it('findByPID', () => {
       const items = [...ops.findByPID(sampleCart, genericCoffeePID)];
-      const uids = items.map(x => x.uid);
+      const uids = items.map((x) => x.uid);
       assert.deepEqual(uids, [3, 2]);
     });
 
     it('findByChildKey', () => {
       const items = [...ops.findByChildKey(sampleCart, wholeMilk.key)];
-      const uids = items.map(x => x.uid);
+      const uids = items.map((x) => x.uid);
       assert.deepEqual(uids, [3]);
     });
 
     it('findByChildPID', () => {
       const items = [...ops.findByChildPID(sampleCart, genericMilkPID)];
-      const uids = items.map(x => x.uid);
+      const uids = items.map((x) => x.uid);
       assert.deepEqual(uids, [3, 2]);
     });
 
     it('findByCompatibleParent', () => {
       const items = [...ops.findCompatibleParent(sampleCart, wholeMilk.key)];
-      const uids = items.map(x => x.uid);
+      const uids = items.map((x) => x.uid);
       assert.deepEqual(uids, [3, 2]);
     });
   });

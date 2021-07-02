@@ -7,7 +7,7 @@ export function cartSort(cart: LogicalCart): LogicalCart {
 }
 
 function itemSort(items: LogicalItem[]): LogicalItem[] {
-  const copy = items.map(item => {
+  const copy = items.map((item) => {
     return { ...item, children: itemSort(item.children) };
   });
 

@@ -36,8 +36,8 @@ export function suitePredicate(text: string): SuitePredicate {
   const re = new RegExp('([\\s+|\\&\\|\\!\\(\\)])');
   const tokens = text
     .split(re)
-    .map(x => x.trim())
-    .filter(x => x.length > 0);
+    .map((x) => x.trim())
+    .filter((x) => x.length > 0);
 
   // Create a stream of tokens.
   const input = new PeekableSequence<string>(tokens.values());

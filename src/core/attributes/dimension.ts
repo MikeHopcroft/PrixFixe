@@ -20,7 +20,7 @@ export class Dimension {
     this.name = name;
     this.attributes = [...attributesIterator[Symbol.iterator]()];
     if (this.attributes.length < 1) {
-      const message = `expect at least one attribute`;
+      const message = 'expect at least one attribute';
       throw new TypeError(message);
     }
   }

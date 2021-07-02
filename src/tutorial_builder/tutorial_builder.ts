@@ -49,7 +49,7 @@ function processRepair(
     return left + newSKU + right;
   }
 
-  return blocks.map(block => {
+  return blocks.map((block) => {
     if (block.type === CodeBlockType.REPAIR) {
       const lines = block.lines.map((line, i) => {
         if (i < 2 || i === block.lines.length - 1) {
@@ -68,7 +68,7 @@ function processRepair(
 async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
   // Make a script by extracting shell input from code blocks.
   const replBlocks = blocks.filter(
-    block => block.type === CodeBlockType.REPL
+    (block) => block.type === CodeBlockType.REPL
   ) as ReplBlock[];
   const scriptLines = makeScript(replBlocks);
 
@@ -79,7 +79,7 @@ async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
   const outputSections = makeOutputSections(outputLines);
 
   let i = 0;
-  return blocks.map(block => {
+  return blocks.map((block) => {
     if (block.type === CodeBlockType.REPL) {
       if (
         i === 0 &&
@@ -104,16 +104,16 @@ async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
 }
 
 async function processSpawn(blocks: AnyBlock[]): Promise<AnyBlock[]> {
-  return blocks.map(block => {
+  return blocks.map((block) => {
     if (block.type === CodeBlockType.SPAWN) {
       const program = spawnSync(block.executable, block.args);
       const ostream = program.stdout;
 
       return createBlock('verbatim', [
-        `~~~`,
+        '~~~',
         `$ ${block.executable} ${block.args.join(' ')}`,
         ostream,
-        `~~~`,
+        '~~~',
       ]);
     } else {
       return block;
@@ -122,9 +122,9 @@ async function processSpawn(blocks: AnyBlock[]): Promise<AnyBlock[]> {
 }
 
 function processWarnings(blocks: AnyBlock[]): AnyBlock[] {
-  return blocks.map(block => {
+  return blocks.map((block) => {
     if (block.type === CodeBlockType.WARNING) {
-      console.log(`WARNING: the following block may need manual fixup:`);
+      console.log('WARNING: the following block may need manual fixup:');
       for (const line of block.lines) {
         console.log('  ' + line);
       }

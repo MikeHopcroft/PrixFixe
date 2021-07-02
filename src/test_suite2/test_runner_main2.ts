@@ -186,14 +186,14 @@ async function findTestSuites(
 
     testFiles = files
       .sort()
-      .filter(f => f.endsWith('yaml') || f.endsWith('yml'))
-      .map(f => path.resolve(input, f));
+      .filter((f) => f.endsWith('yaml') || f.endsWith('yml'))
+      .map((f) => path.resolve(input, f));
   } else {
     // Assume that input is a YAML test file.
     testFiles = [input];
   }
 
-  console.log(`Test files:`);
+  console.log('Test files:');
   for (const file of testFiles) {
     console.log(`  ${file}`);
   }
@@ -220,9 +220,8 @@ function loadAndCombineTestSuites(
       };
       for (const testFile of testFiles) {
         console.log(`Reading ${testFile}`);
-        const s: LogicalValidationSuite<TextTurn> = loadLogicalValidationSuite(
-          testFile
-        );
+        const s: LogicalValidationSuite<TextTurn> =
+          loadLogicalValidationSuite(testFile);
         suite.tests.push({
           comment: testFile,
           tests: [s],
@@ -248,7 +247,7 @@ function filterTestSuites(
 ): GenericSuite<ValidationStep<TextTurn>> {
   if (testId !== undefined) {
     console.log(`Running test with id=${testId}.`);
-    suite = filterSuite(suite, test => testId === test.id);
+    suite = filterSuite(suite, (test) => testId === test.id);
   } else if (suiteExpressionText) {
     console.log(
       `Running tests matching suite expression: ${suiteExpressionText}`
@@ -311,7 +310,8 @@ async function runTests(
   // Set up short-order processor.
   //
   if (processorFactory.count() === 0) {
-    const message = `ProcessorFactory must contain at least one ProcessorDescription.`;
+    const message =
+      'ProcessorFactory must contain at least one ProcessorDescription.';
     app.fail(message);
   }
 
@@ -334,7 +334,7 @@ async function runTests(
   //
   // Run each test case.
   //
-  const observed = await mapSuiteAsync(suite, async test => {
+  const observed = await mapSuiteAsync(suite, async (test) => {
     let state: State = { cart: { items: [] } };
     const steps: typeof test.steps = [];
     for (const step of test.steps) {
@@ -442,14 +442,15 @@ class Application {
     const usage: Section[] = [
       {
         header: 'Test Runner',
-        content: `This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.`,
+        content:
+          'This utility allows the user to run text utterances to verify intermediate and final cart states using a YAML test case file.',
       },
       {
         header: 'Usage',
         content: [
           `node ${program} <file|directory> [output file] [...options]`,
           '',
-          `Where <file> is the name of a single YAML test suite file and <directory> is a directory of YAML test suite files.`,
+          'Where <file> is the name of a single YAML test suite file and <directory> is a directory of YAML test suite files.',
         ],
       },
       {
@@ -540,8 +541,7 @@ class Application {
           {
             name: 'speaker',
             typeLabel: '{underline speaker}',
-            description:
-              'If specified, only include turns from this speaker'
+            description: 'If specified, only include turns from this speaker',
           },
           {
             name: 't',

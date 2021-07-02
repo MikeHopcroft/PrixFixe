@@ -104,7 +104,8 @@ function showUsage() {
   const usage: Section[] = [
     {
       header: 'Test suite filter',
-      content: `This utility filters carts, transcriptions, audio, and entire test cases from a supplied test suite.`,
+      content:
+        'This utility filters carts, transcriptions, audio, and entire test cases from a supplied test suite.',
     },
     {
       header: 'Usage',

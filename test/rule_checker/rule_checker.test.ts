@@ -44,7 +44,7 @@ const genericTypedEntityFactory = (
 const genericEntityMapFactory = (gens: GenericTypedEntity[]) => {
   const map = new Map<PID, GenericTypedEntity>();
 
-  gens.forEach(x => {
+  gens.forEach((x) => {
     map.set(x.pid, x);
   });
 

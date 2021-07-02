@@ -15,7 +15,7 @@ export function createWorld3(spec: CatalogSpec): World {
   const dimensions = processDimensions(spec.dimensions);
   const tensors = processTensors(dimensions, spec.tensors);
   const attributes: DimensionAndTensorDescription = {
-    dimensions: [...dimensions.values()].map(d => d.dimension),
+    dimensions: [...dimensions.values()].map((d) => d.dimension),
     tensors: [...tensors.values()],
   };
 

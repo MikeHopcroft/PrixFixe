@@ -65,14 +65,14 @@ class Context {
     }
     this.tensor = t;
     this.dimensions = t.dimensions.map(
-      x => builder.dimensions.getById(x).dimension
+      (x) => builder.dimensions.getById(x).dimension
     );
 
-    const forms = [{ include: this.tensor.dimensions.map(x => '*') }];
+    const forms = [{ include: this.tensor.dimensions.map((x) => '*') }];
     this.forms = new Set<string>();
     this.mergeForms(forms, this.dimensions);
 
-    this.defaultForm = this.dimensions.map(x => '0').join(':');
+    this.defaultForm = this.dimensions.map((x) => '0').join(':');
 
     this.verifyDefaultForm();
   }
@@ -374,7 +374,7 @@ function* generateForms(
   pattern: string[]
 ): IterableIterator<string> {
   if (dimensions.length !== pattern.length) {
-    const message = `dimensions.length !== pattern.length`;
+    const message = 'dimensions.length !== pattern.length';
     throw new InvalidParameterError(message);
   }
 
@@ -396,7 +396,7 @@ function* generateForms(
 
 function keyFromAttributes(d: DimensionDescription[], attributes: string[]) {
   if (d.length !== attributes.length) {
-    const message = `d.length !== attributes.length`;
+    const message = 'd.length !== attributes.length';
     throw new InvalidParameterError(message);
   }
 
@@ -410,7 +410,7 @@ function namePrefixFromForm(
   showHidden: boolean
 ) {
   if (d.length > 0) {
-    const parts = form.split(':').map(x => Number(x));
+    const parts = form.split(':').map((x) => Number(x));
     const names: string[] = [];
     for (const [i, part] of parts.entries()) {
       const a = d[i].attributes[part];

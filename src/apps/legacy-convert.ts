@@ -106,7 +106,8 @@ function showUsage() {
   const usage: Section[] = [
     {
       header: 'Legacy test suite converter',
-      content: `This utility converts legacy format test suite YAML files to the format used by test_suite2.`,
+      content:
+        'This utility converts legacy format test suite YAML files to the format used by test_suite2.',
     },
     {
       header: 'Usage',

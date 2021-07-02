@@ -55,7 +55,7 @@ export class TensorEntityBuilder {
 
   getKey(generateRegexKey: boolean): Key {
     if (this.pid === undefined) {
-      throw TypeError(`no pid set`);
+      throw TypeError('no pid set');
     }
 
     return this.info.getKey(

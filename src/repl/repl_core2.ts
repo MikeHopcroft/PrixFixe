@@ -211,7 +211,7 @@ class ReplCore implements IRepl {
       processor = processors[0].processor;
       // console.log(`Current processor is ${processors[0].description}.`);
     } else {
-      console.log(`No processor registered.`);
+      console.log('No processor registered.');
     }
 
     // Configure YAML recording stack of Session objects.

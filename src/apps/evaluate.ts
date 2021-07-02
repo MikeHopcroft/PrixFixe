@@ -82,7 +82,7 @@ function evaluate(
   if (dataPath) {
     console.log(`Computing repair cost with menu files from ${dataPath}.`);
   } else {
-    console.log(`Using simple repair costs that don't require menu files.`);
+    console.log("Using simple repair costs that don't require menu files.");
   }
   console.log(' ');
 
@@ -96,7 +96,7 @@ function evaluate(
   if (dataPath) {
     // Load the world, which provides the AttributeInfo and ICatalog.
     if (experimental) {
-      console.log(`createWorld2()`);
+      console.log('createWorld2()');
       const world = createWorld2(dataPath);
       repairs = createMenuBasedRepairFunction(
         world.attributeInfo,
@@ -149,7 +149,8 @@ function showUsage() {
   const usage: Section[] = [
     {
       header: 'Suite evaluation tool',
-      content: `This utility computes perfect cart, complete cart, and repair cost metrics.`,
+      content:
+        'This utility computes perfect cart, complete cart, and repair cost metrics.',
     },
     {
       header: 'Usage',
@@ -200,7 +201,7 @@ function showUsage() {
           name: 's',
           alias: 's',
           description:
-            `Use simple repair cost scoring that doesn't require menu files.\n` +
+            "Use simple repair cost scoring that doesn't require menu files.\n" +
             'The -d option and PRIX_FIXE_DATA_PATH are not required when using -x.',
           type: Boolean,
         },

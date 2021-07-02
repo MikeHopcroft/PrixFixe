@@ -100,7 +100,7 @@ const cart3: Cart = {
 };
 
 describe('Menu-based Repairs (Cart)', () => {
-  it(`add default specific`, () => {
+  it('add default specific', () => {
     const observed = cart0;
     const expected: Cart = {
       items: [
@@ -127,7 +127,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`add non-default specific`, () => {
+  it('add non-default specific', () => {
     const observed = cart0;
     const expected: Cart = {
       items: [
@@ -167,7 +167,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`repair non-default specific`, () => {
+  it('repair non-default specific', () => {
     const observed: Cart = {
       items: [
         {
@@ -225,7 +225,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`remove first item`, () => {
+  it('remove first item', () => {
     const observed = cart2;
     const expected: Cart = {
       items: [cart2.items[1]],
@@ -245,7 +245,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`remove second item`, () => {
+  it('remove second item', () => {
     const observed = cart2;
     const expected = cart1;
 
@@ -263,7 +263,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`remove both items`, () => {
+  it('remove both items', () => {
     const observed = cart2;
     const expected = cart0;
 
@@ -286,7 +286,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`identical items`, () => {
+  it('identical items', () => {
     const observed = cart1;
     const expected: Cart = {
       items: [
@@ -303,7 +303,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.equal(result.cost, 0);
   });
 
-  it(`repair quantity`, () => {
+  it('repair quantity', () => {
     const observed = cart1;
     const expected: Cart = {
       items: [
@@ -330,7 +330,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`repair one attribute`, () => {
+  it('repair one attribute', () => {
     const observed = cart1;
     const expected: Cart = {
       items: [
@@ -359,7 +359,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`repair two attributes`, () => {
+  it('repair two attributes', () => {
     const observed = cart1;
     const expected: Cart = {
       items: [
@@ -389,7 +389,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`add option`, () => {
+  it('add option', () => {
     const observed = cart0;
     const expected: Cart = {
       items: [
@@ -426,7 +426,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`remove first option`, () => {
+  it('remove first option', () => {
     const observed = cart3;
     const expected: Cart = {
       items: [
@@ -452,7 +452,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`remove second option`, () => {
+  it('remove second option', () => {
     const observed = cart3;
     const expected: Cart = {
       items: [
@@ -478,7 +478,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`remove both options`, () => {
+  it('remove both options', () => {
     const observed = cart3;
     const expected: Cart = {
       items: [
@@ -510,7 +510,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`repair option attributes`, () => {
+  it('repair option attributes', () => {
     const observed = cart3;
     const expected: Cart = {
       items: [
@@ -560,7 +560,7 @@ describe('Menu-based Repairs (Cart)', () => {
     assert.deepEqual(result.edits, expectedEdits);
   });
 
-  it(`repair option quantity`, () => {
+  it('repair option quantity', () => {
     const observed = cart3;
     const expected: Cart = {
       items: [

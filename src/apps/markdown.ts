@@ -54,7 +54,7 @@ function showUsage() {
   const usage: Section[] = [
     {
       header: 'Format test suite as markdown',
-      content: `This utility formats a test suite as markdown.`,
+      content: 'This utility formats a test suite as markdown.',
     },
     {
       header: 'Usage',

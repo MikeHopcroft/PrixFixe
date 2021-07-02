@@ -146,7 +146,7 @@ function replaceSKUsInText(text: string, skus: number[]) {
 
 function replaceSKUsInLines(lines: string[], skus: number[]) {
   let i = 0;
-  return lines.map(line => {
+  return lines.map((line) => {
     if (line.match(/^(\s*sku: ['"])\d+(['"]\s*)$/)) {
       line = line.replace(/^(\s*sku: ['"])\d+(['"]\s*)$/, `$1${skus[i++]}$2`);
     }
@@ -160,7 +160,8 @@ function showUsage() {
   const usage: Section[] = [
     {
       header: 'Repair suite',
-      content: `This utility uses LogicalItem names to fix bad SKUs in a test suite.`,
+      content:
+        'This utility uses LogicalItem names to fix bad SKUs in a test suite.',
     },
     {
       header: 'Usage',

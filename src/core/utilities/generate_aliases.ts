@@ -39,21 +39,21 @@ export function* aliasesFromPattern(query: string) {
 
   if (matches !== null) {
     const options = matches
-      .map(match => {
+      .map((match) => {
         if (match.startsWith('[')) {
           // Selects an option or leaves blank
-          return [...match.slice(1, -1).split(','), ''].map(x => x.trim());
+          return [...match.slice(1, -1).split(','), ''].map((x) => x.trim());
         } else if (match.startsWith('(')) {
           // Must select from one of the options
           return match
             .slice(1, -1)
             .split(',')
-            .map(x => x.trim());
+            .map((x) => x.trim());
         } else {
           return [match.trim()];
         }
       })
-      .filter(match => match[0].length > 0);
+      .filter((match) => match[0].length > 0);
     yield* aliasesFromPatternHelper('', options);
   }
 }

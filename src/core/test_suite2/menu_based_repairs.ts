@@ -92,7 +92,7 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
       const edit = this.insert(child);
       cost += edit.cost;
       for (const step of edit.steps) {
-        steps.push(`  ` + step);
+        steps.push('  ' + step);
       }
     }
 
@@ -153,7 +153,7 @@ export class MenuBasedRepairs implements IRepairs<string, ItemInstance> {
       cost += result.cost;
       for (const edit of result.edits) {
         for (const step of edit.steps) {
-          steps.push(`  ` + step);
+          steps.push('  ' + step);
         }
       }
     }

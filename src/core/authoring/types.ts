@@ -44,7 +44,7 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 const createEnum = <E>(e: any, name: string): t.Type<E> => {
   // tslint:disable-next-line:no-any
   const keys: any = {};
-  Object.keys(e).forEach(k => {
+  Object.keys(e).forEach((k) => {
     keys[e[k]] = null;
   });
   // tslint:disable-next-line:no-any

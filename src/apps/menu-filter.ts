@@ -69,7 +69,7 @@ function main() {
     if (removed) {
       console.log(`Removed ${removed} tests`);
     } else {
-      console.log(`All test SKUs in menu.`);
+      console.log('All test SKUs in menu.');
     }
 
     console.log(`Writing filtered suite to ${outFile}`);
@@ -88,7 +88,8 @@ function showUsage() {
   const usage: Section[] = [
     {
       header: 'Menu filter',
-      content: `This utility removes test cases that reference SKUs that are not in the menu.`,
+      content:
+        'This utility removes test cases that reference SKUs that are not in the menu.',
     },
     {
       header: 'Usage',
