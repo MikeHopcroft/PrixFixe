@@ -168,6 +168,7 @@ class RuleChecker2 implements IRuleChecker {
     const allExclusionSets = this.exclusion.get(pPID);
 
     if (allExclusionSets === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       return (existing: string) => true;
     }
 
@@ -238,10 +239,12 @@ class RuleChecker2 implements IRuleChecker {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getDefaultQuantity(parent: string, child: string): number {
     throw new Error('Method not implemented.');
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isValidQuantity(parent: string, child: string, qty: number): boolean {
     throw new Error('Method not implemented.');
   }

@@ -260,6 +260,7 @@ export class AttributeInfo {
 function parseBase10Int(text: string): number {
   const n = Number.parseInt(text, 10);
   if (isNaN(n)) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const message = `Invalid number ${text}.`;
   }
   return n;

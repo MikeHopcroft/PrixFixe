@@ -94,7 +94,6 @@ async function processRepl(blocks: AnyBlock[]): Promise<AnyBlock[]> {
           '~~~',
         ]);
       } else {
-        const s = outputSections[i];
         return createBlock('verbatim', ['~~~', ...outputSections[i++], '~~~']);
       }
     } else {

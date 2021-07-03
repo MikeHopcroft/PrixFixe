@@ -1,9 +1,6 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { AttributeInfo } from '../../src/core/attributes';
-import { IdGenerator } from '../../src/core/utilities';
-
 import {
   bipartiteMatchingDiff,
   Edit,
@@ -14,14 +11,10 @@ import {
 
 import {
   mediumChocolateCone,
-  mediumDecafCoffee,
   noWhippedCream,
   smallCoffee,
   smallDecafCoffee,
-  smallWorldAttributes,
-  smallWorldCatalog,
   smallIcedDecafCoffee,
-  soyMilk,
   twoMilk,
   whippedCream,
   wholeMilk,

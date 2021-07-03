@@ -50,6 +50,7 @@ function main() {
     // Load the world, which provides the AttributeInfo and ICatalog.
     // TODO: consider loading only products.yaml and options.yaml here.
     const world = createWorld(dataPath);
+    // eslint-disable-next-line no-inner-declarations
     function predicate(
       test: GenericCase<ValidationStep<CombinedTurn>>
     ): boolean {

@@ -90,9 +90,10 @@ export function createBlock(info: string, lines: string[]): AnyBlock {
       };
       return block;
     }
-    default:
+    default: {
       const message = `Unknown code block annotation "${terms[0]}"`;
       throw new TypeError(message);
+    }
   }
 }
 

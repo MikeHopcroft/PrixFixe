@@ -68,10 +68,12 @@ class Context {
       (x) => builder.dimensions.getById(x).dimension
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const forms = [{ include: this.tensor.dimensions.map((x) => '*') }];
     this.forms = new Set<string>();
     this.mergeForms(forms, this.dimensions);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.defaultForm = this.dimensions.map((x) => '0').join(':');
 
     this.verifyDefaultForm();

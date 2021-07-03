@@ -182,12 +182,14 @@ export function* enumerateTestCases<STEP1>(
 }
 
 export function allCases<STEP extends ValidationStep<TURN>, TURN>(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   test: GenericCase<STEP>
 ) {
   return true;
 }
 
 export function removeCart<TURN>(v: ValidationStep<TURN>): Step<TURN> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ['cart']: _, ...step } = v;
   return step;
 }
@@ -197,6 +199,7 @@ export function keepCart<TURN>(v: ValidationStep<TURN>): Step<TURN> {
 }
 
 export function removeTranscription(turn: CombinedTurn): SpokenTurn[] {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ['transcription']: _, ...filtered } = turn;
   return [filtered];
 }
@@ -206,6 +209,7 @@ export function keepTranscription(turn: CombinedTurn): CombinedTurn[] {
 }
 
 export function removeAudio(turn: CombinedTurn): TextTurn[] {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { ['audio']: _, ...filtered } = turn;
   return [filtered];
 }

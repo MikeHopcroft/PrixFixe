@@ -25,6 +25,7 @@ describe('Alias Generation', () => {
   it('should throw on trailing commas', () => {
     const f = () => {
       const pattern = 'a []d,e,] (b,c,) d';
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const result = [...aliasesFromPattern(pattern)];
     };
     assert.throws(f, TypeError);

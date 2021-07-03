@@ -40,14 +40,14 @@ export type TensorSpec = t.TypeOf<typeof tensorSpecType>;
 ///////////////////////////////////////////////////////////////////////////////
 
 // createEnum() from https://github.com/gcanti/io-ts/issues/67
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createEnum = <E>(e: any, name: string): t.Type<E> => {
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const keys: any = {};
   Object.keys(e).forEach((k) => {
     keys[e[k]] = null;
   });
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return t.keyof(keys, name) as any;
 };
 

@@ -43,6 +43,7 @@ export class Cookbook implements ICookbook {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   findProductRecipe(rid: RID, parent: Key): ProductRecipe {
     // TODO: for now, parent Key is ignored.
     // In the future will implement the ability to have different
@@ -56,6 +57,7 @@ export class Cookbook implements ICookbook {
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   findOptionRecipe(rid: RID, parent: Key): OptionRecipe {
     // TODO: for now, parent Key is ignored.
     // In the future will implement the ability to have different

@@ -568,6 +568,7 @@ class Application {
   }
 
   exit(code: number) {
+    // eslint-disable-next-line no-process-exit
     process.exit(code);
   }
 
@@ -583,6 +584,7 @@ class Application {
     console.log(' ');
     console.log('Aborting');
     console.log(' ');
+    // eslint-disable-next-line no-process-exit
     process.exit(1);
   }
 }

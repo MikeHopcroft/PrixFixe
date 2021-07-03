@@ -41,6 +41,7 @@ export async function testRunnerMain(
   // help message.
   if (args.h || args.help || args['?']) {
     showUsage(processorFactory);
+    // eslint-disable-next-line no-process-exit
     process.exit(0);
   }
 
@@ -439,13 +440,16 @@ function fail(message: string) {
   console.log(' ');
   console.log('Aborting');
   console.log(' ');
+  // eslint-disable-next-line no-process-exit
   process.exit(1);
 }
 
 function succeed(succeeded: boolean) {
   if (succeeded) {
+    // eslint-disable-next-line no-process-exit
     process.exit(0);
   } else {
+    // eslint-disable-next-line no-process-exit
     process.exit(1);
   }
 }

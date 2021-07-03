@@ -17,6 +17,7 @@ import { World } from '../core/world';
 export class PrixFixeReplExtension implements IReplExtension {
   world: World;
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(world: World, dataPath: string) {
     this.world = world;
   }

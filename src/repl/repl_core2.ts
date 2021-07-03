@@ -141,7 +141,6 @@ class TestBuilder {
   }
 
   createValidationSuite(): LogicalValidationSuite<TextTurn> {
-    const tests: Array<GenericCase<ValidationStep<TextTurn>>> = [];
     const steps: Array<ValidationStep<TextTurn>> = [];
     for (const step of this.steps) {
       const cart = logicalCartFromCart(step.state.cart, this.catalog);
@@ -247,11 +246,11 @@ class ReplCore implements IRepl {
 
     // Load REPL history from file.
     if (fs.existsSync(historyFile)) {
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       if ((repl as any).history === undefined) {
         // This check and initialization is needed for running
         // via spawn.
-        // tslint:disable-next-line:no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (repl as any).history = [];
       }
       fs.readFileSync(historyFile)
@@ -260,7 +259,7 @@ class ReplCore implements IRepl {
         .split(/\n|\r|\r\n|\n\r/g)
         .reverse()
         .filter((line: string) => line.trim())
-        // tslint:disable-next-line:no-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         .map((line: string) => (repl as any).history.push(line));
     }
 
@@ -269,18 +268,20 @@ class ReplCore implements IRepl {
     //
 
     repl.on('exit', () => {
-      // tslint:disable:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const historyItems = [...(repl as any).history].reverse();
       const history = historyItems
         .slice(Math.max(historyItems.length - maxHistorySteps, 0))
         .join('\n');
       fs.writeFileSync(historyFile, history);
       console.log('bye');
+      // eslint-disable-next-line no-process-exit
       process.exit();
     });
 
     repl.defineCommand('cart', {
       help: 'Display shopping cart.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         const session = stack[stack.length - 1];
         displayState(catalog, session.state());
@@ -290,6 +291,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('newtest', {
       help: 'Start authoring a new yaml test',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         console.log('Creating new yaml test.');
         console.log('Cart has been reset.');
@@ -351,6 +353,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('list', {
       help: 'Display the steps in the current test',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         console.log(`Suites: ${testCase.getSuites().join(' ')}`);
         console.log(`Comment: ${testCase.getComment()}`);
@@ -365,6 +368,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('yaml', {
       help: 'Print the yaml for the current test',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         const yamlTestCases = testCase.createValidationSuite();
         const yamlText = yaml.safeDump(yamlTestCases, { noRefs: true });
@@ -380,6 +384,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('debug', {
       help: 'Toggle debug mode.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         debugMode = !debugMode;
         console.log(`Debug mode ${debugMode ? 'on' : 'off'}.`);
@@ -389,6 +394,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('processor', {
       help: 'Switch processors',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         const name = text.trim();
         if (name.length === 0) {
@@ -416,6 +422,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('reset', {
       help: 'Clear shopping cart.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         stack[stack.length - 1].reset();
         const session = stack[stack.length - 1];
@@ -428,6 +435,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('push', {
       help: 'Push shopping cart on the stack.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         stack.push(stack[stack.length - 1].copy());
         console.log('Cart has been pushed onto the stack.');
@@ -437,6 +445,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('pop', {
       help: 'Pop shopping cart from the stack.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         console.log(`stack.length = ${stack.length}`);
         if (stack.length > 1) {
@@ -453,6 +462,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('restore', {
       help: 'Restore cart to top of stack without popping.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         if (stack.length > 1) {
           stack.pop();
@@ -469,6 +479,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('undo', {
       help: 'Undo last utterance',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         const session = stack[stack.length - 1];
         if (session.undo()) {
@@ -483,6 +494,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('redo', {
       help: 'Redo utterance after undo',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         const session = stack[stack.length - 1];
         if (session.redo()) {
@@ -510,6 +522,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('expect', {
       help: 'Set the expected cart for use by the .score command.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         expected = stack[stack.length - 1].state().cart;
         console.log('Expected cart set');
@@ -519,6 +532,7 @@ class ReplCore implements IRepl {
 
     repl.defineCommand('score', {
       help: 'Score current cart against expected cart.',
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       action(text: string) {
         const eSuite = suiteFromCart(world.catalog, expected);
 
@@ -558,7 +572,7 @@ class ReplCore implements IRepl {
       line: string,
       context: Context,
       filename: string,
-      // tslint:disable-next-line:no-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       callback: (err: Error | null, result: any) => void
     ) {
       console.log();
@@ -668,5 +682,5 @@ export function runRepl(
   factories: IReplExtensionFactory[],
   useCreateWorld2 = false
 ) {
-  const repl = new ReplCore(dataPath, factories, useCreateWorld2);
+  new ReplCore(dataPath, factories, useCreateWorld2);
 }

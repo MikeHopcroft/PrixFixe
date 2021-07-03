@@ -1,9 +1,10 @@
 // import { IOutputError } from 'better-ajv-errors';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import ajv = require('ajv');
 
 export class YAMLValidationError extends TypeError {
   // TODO: remove ajvErrors parameter after moving to io-ts.
-  // tslint:disable-next-line:no-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   constructor(message: string, ajvErrors: any[]) {
     // constructor(message: string, ajvErrors: IOutputError[]) {
     super(message);

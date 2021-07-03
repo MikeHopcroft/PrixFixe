@@ -5,10 +5,8 @@ import { Catalog, GenericTypedEntity, SpecificTypedEntity } from '../../src';
 
 import {
   genericConePID,
-  genericCoffeePID,
   genericCone,
   genericCoffee,
-  genericMilk,
   mediumCoffee,
   smallChocolateCone,
   smallVanillaCone,

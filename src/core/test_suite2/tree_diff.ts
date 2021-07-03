@@ -41,7 +41,7 @@ export interface Edit<STEP> {
   steps: STEP[];
 }
 
-// tslint:disable-next-line:no-any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const nop: Edit<any> = {
   op: EditOp.NONE,
   cost: 0,
@@ -199,10 +199,11 @@ class TreeDiff<S, T> {
           ai--;
           bi--;
           break;
-        default:
+        default: {
           // Should never get here.
           const message = 'Internal error';
           throw new TypeError(message);
+        }
       }
 
       current = this.matrix[bi][ai];

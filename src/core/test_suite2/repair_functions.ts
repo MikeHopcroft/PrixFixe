@@ -41,7 +41,9 @@ export function createSimpleRepairFunction(): RepairFunction {
 
 export function createNaNRepairFunction(): RepairFunction {
   return (
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     observed: LogicalCart,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     expected: LogicalCart
   ): DiffResults<string> => {
     return {

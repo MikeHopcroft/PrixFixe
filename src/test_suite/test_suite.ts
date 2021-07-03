@@ -327,7 +327,7 @@ export class TestCase {
     let state: State = { cart: { items: [] } };
 
     // TODO: figure out how to remove the type assertion to any.
-    // tslint:disable-next-line:no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const start = (process.hrtime as any).bigint();
 
     try {
@@ -363,7 +363,7 @@ export class TestCase {
     }
 
     // TODO: figure out how to remove the type assertion to any.
-    // tslint:disable-next-line:no-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const end = (process.hrtime as any).bigint();
 
     return new Result(
@@ -455,8 +455,8 @@ export function ordersAreEqualCanonical(
   for (let i = 0; i < o.length; ++i) {
     const ovalue = i < o.length ? o[i] : 'BLANK';
     const evalue = i < e.length ? e[i] : 'BLANK';
-    const equality = ovalue === evalue ? '===' : '!==';
-    const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
+    // const equality = ovalue === evalue ? '===' : '!==';
+    // const ok = ovalue === evalue ? 'OK' : '<=== ERROR';
     allok = allok && ovalue === evalue;
   }
 

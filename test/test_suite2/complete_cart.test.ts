@@ -26,8 +26,6 @@ describe('Complete Cart', () => {
   });
 
   it('identical carts', () => {
-    const cart2 = cart1;
-
     const complete = cartIsComplete(cart1, cart1);
     assert.isTrue(complete);
   });

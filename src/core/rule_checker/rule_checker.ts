@@ -281,11 +281,13 @@ export class RuleChecker implements IRuleChecker {
     return false;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getExclusionGroups(pid: PID): Array<Set<PID>> {
     // NOTE: this feature is not implemented for RuleChecker.
     return [];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getUnits(pid: PID): string {
     throw new Error('Method not implemented.');
   }

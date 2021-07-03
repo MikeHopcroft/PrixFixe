@@ -25,7 +25,7 @@ function* aliasesFromPatternHelper(
 }
 
 export function* aliasesFromPattern(query: string) {
-  const m = /(\[[^\]]*\])|(\([^\)]*\))|([^\[^\()]*)/g;
+  const m = /(\[[^\]]*\])|(\([^)]*\))|([^[()]*)/g;
 
   // Remove leading, trailing, and consecutive spaces.
   const query2 = query.replace(/\s+/g, ' ').trim();

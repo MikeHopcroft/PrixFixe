@@ -16,6 +16,7 @@ export function scriptHandshake(
   prompt: string,
   script: string[]
 ): Promise<string[]> {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return new Promise<string[]>((resolve, reject) => {
     const program = spawn(executable, args);
 
@@ -70,6 +71,7 @@ export function scriptHandshake(
       }
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     program.on('close', (code: number) => {
       const lines = fragments.join('').split(/\r?\n/g);
       const linesWithPrompts: string[] = [];

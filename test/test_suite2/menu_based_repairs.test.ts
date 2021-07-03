@@ -14,7 +14,6 @@ import {
 
 import {
   mediumChocolateCone,
-  mediumCoffee,
   mediumDecafCoffee,
   noWhippedCream,
   smallCoffee,
@@ -22,7 +21,6 @@ import {
   smallWorldAttributes,
   smallWorldCatalog,
   smallIcedDecafCoffee,
-  soyMilk,
   twoMilk,
   whippedCream,
   wholeMilk,

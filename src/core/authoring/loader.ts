@@ -48,6 +48,7 @@ export class ObjectLoader implements ILoader {
       throw new TypeError(message);
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return new Promise<object>((resolve, reject) => {
       resolve(obj);
     });

@@ -3,6 +3,7 @@ import { PeekableSequence } from './peekable_sequence';
 export type SuitePredicate = (suites: string[]) => boolean;
 
 // A suite predicate that matches all suites.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const allSuites: SuitePredicate = (suites: string[]) => true;
 
 // Constructs a SuitePredicate from a a textual boolean expression

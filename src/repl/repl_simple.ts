@@ -105,10 +105,12 @@ class SimpleReplExtension implements IReplExtension {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   registerCommands(repl: IRepl): void {}
 }
 
 export const simpleReplExtensionFactory: IReplExtensionFactory = {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create: (world: World, dataPath: string) => {
     return new SimpleReplExtension(world);
   },

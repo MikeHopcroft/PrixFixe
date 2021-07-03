@@ -1,4 +1,10 @@
 
+* Newer
+  * Use prepress instead of TutorialBuilder
+  * Remove old test suite
+  * Review uses of process.exit()
+  * Move away from `import *` syntax
+  * Take recursive aliases PR.
 * New
   * . Repair algorithm should repair to complete, not perfect
     * Attempted implemention in commit 3cfc4ab3

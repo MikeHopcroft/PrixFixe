@@ -74,6 +74,7 @@ export class TensorEntityBuilder {
   *getUnusedAttributes(): IterableIterator<AID> {
     // If a PID is undefined, we want to return every attribute.
     if (this.pid === undefined) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       for (const [did, aid] of this.dimensionIdToAttribute.entries()) {
         yield aid;
       }

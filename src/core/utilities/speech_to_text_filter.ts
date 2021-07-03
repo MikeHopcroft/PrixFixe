@@ -23,7 +23,7 @@ const patterns: Array<[RegExp, string]> = [
   // replacements to ensure that newly broken words can be updated by the
   // whole-word patterns, below.
   // TODO: BUGBUG: Don't want to split numbers when removing commas.
-  [/[,\.\?\!"\-\(\)]/g, ' '],
+  [/[,.?!"\-()]/g, ' '],
 
   // // Whole-word replacements.
   [/\bokay\b/g, 'ok'],

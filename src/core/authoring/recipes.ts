@@ -73,9 +73,10 @@ export function processRecipes(
       throw new TypeError(message);
     }
 
-    if (t.children !== []) {
-      const message = `Option template "${t.name}" should not have children.`;
-    }
+    // TODO: REVIEW: should this code be completed?
+    // if (t.children !== []) {
+    //   const message = `Option template "${t.name}" should not have children.`;
+    // }
 
     return {
       quantity: t.quantity,
