@@ -1,10 +1,22 @@
 
 * Newer
   * Use prepress instead of TutorialBuilder
+  * Test runner should set exit code
+  * Remove
+    * toJUnitXml()
+    * snacks.yaml
+  * Remove obsolete apps
+    test_converters.ts
+    repair-suite.ts
+  * What are the two files ending in .ts.save?
   * Remove old test suite
   * Review uses of process.exit()
   * Move away from `import *` syntax
   * Take recursive aliases PR.
+  * Remove old rules engine.
+  * Set up code coverage
+  * Move CI from Travis to GitHub actions
+  * What is the difference between samples folder and src/apps folder?
 * New
   * . Repair algorithm should repair to complete, not perfect
     * Attempted implemention in commit 3cfc4ab3
