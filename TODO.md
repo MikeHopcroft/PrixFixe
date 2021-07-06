@@ -1,6 +1,13 @@
 
 * Newer
+  * replCore2, useCreateWorld2
   * Use prepress instead of TutorialBuilder
+  * Default for: Use -d flag or PRIX_FIXE_DATA environment
+  * Console spew
+    * createWorld2()
+    * CreateWorld2
+    * Reading samples\menu\coffee.yaml
+    * Loading 
   * Test runner should set exit code
   * Remove
     * toJUnitXml()

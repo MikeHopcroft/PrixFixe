@@ -25,7 +25,8 @@
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "test": "mocha",
-    "docs": "node build/src/apps/tutorial_builder.js documentation/src documentation"
+    "xdocs": "node build/src/apps/tutorial_builder.js documentation/src documentation",
+    "docs": "prepress documentation/src documentation"
   },
   "nyc": {
     "exclude": [

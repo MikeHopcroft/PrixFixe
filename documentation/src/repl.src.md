@@ -32,28 +32,28 @@ Use the `node` command to start up the menu explorer. The sample menu will be lo
 Note that we're in the process of transitioning to a new menu format. We use '-x' flag to enable support for this format, which is used by the [sample menu](sample_menu).
 
 
-[//]: # (repl)
+[//]: # (interactive one > node build/samples/repl.js -x -h)
 ~~~
-$ node build/samples/repl.js -x
-
-Loaded prix-fixe extension.
-Loaded short-order extension.
-  Registering so processor: short-order
-Current processor is short-order.
-
-Welcome to the ShortOrder REPL.
-Type your order below.
-A blank line exits.
-
-Type .help for information on commands.
-
-% #
+// $ node build/samples/repl.js -x
+// 
+// Loaded prix-fixe extension.
+// Loaded short-order extension.
+//   Registering so processor: short-order
+// Current processor is short-order.
+// 
+// Welcome to the ShortOrder REPL.
+// Type your order below.
+// A blank line exits.
+// 
+// Type .help for information on commands.
+// 
+// % #
 ~~~
 
 We're now in the Read-Eval-Print-Loop (REPL) and can type commands after the prompt. 
 Let's take a look at the menu. We'll use the `.products` command to display the list of products in the menu:
 
-[//]: # (repl)
+[//]: # (interactive one > node build/samples/repl.js -x -h)
 ~~~
 % .products
 % #

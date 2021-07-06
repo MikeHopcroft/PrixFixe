@@ -31,7 +31,7 @@ The following diagram shows the testing workflow.
 ## Filter Suite Tool
 
 
-[//]: # (spawn build/src/apps/filter-suite.js -h)
+[//]: # (spawn node build/src/apps/filter-suite.js -h)
 ~~~
 $ node build/src/apps/filter-suite.js -h
 
@@ -55,7 +55,7 @@ Options
   -h, --help            Print help message
 ~~~
 
-[//]: # (spawn build/src/apps/filter-suite.js samples\tests\expected.yaml c:\temp\test.yaml -c)
+[//]: # (spawn node build/src/apps/filter-suite.js samples/test/expected.yaml temp/test.yaml -c)
 ~~~
 $ node build/src/apps/filter-suite.js samples\tests\expected.yaml c:\temp\test.yaml -c
 Reading suite from samples\tests\expected.yaml
@@ -67,7 +67,7 @@ Filtering complete
 
 ## Evaluate Tool
 
-[//]: # (spawn build/src/apps/evaluate.js samples/tests/expected.yaml samples/tests/observed.yaml -x -v)
+[//]: # (spawn node build/src/apps/evaluate.js samples/tests/expected.yaml samples/tests/observed.yaml -x -v)
 ~~~
 $ node build/src/apps/evaluate.js samples/tests/expected.yaml samples/tests/observed.yaml -x -v
 Comparing
