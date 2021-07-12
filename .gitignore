@@ -1,6 +1,7 @@
 build/
 node_modules/
 junk*
+temp
 .env
 *.tgz
 .DS_Store

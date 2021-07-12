@@ -20,10 +20,10 @@ In order to use `prix-fixe` you must have
 `prix-fixe` has been tested with Node version [13.7.0](https://nodejs.org/download/release/v13.7.0/).
 
 ~~~
-% git clone git@github.com:MikeHopcroft/PrixFixe.git
-% cd PrixFixe
-% npm install
-% npm run compile
+$ git clone git@github.com:MikeHopcroft/PrixFixe.git
+$ cd PrixFixe
+$ npm install
+$ npm run compile
 ~~~
 
 ## Running the Menu Explorer
@@ -31,9 +31,11 @@ Use the `node` command to start up the menu explorer. The sample menu will be lo
 
 Note that we're in the process of transitioning to a new menu format. We use '-x' flag to enable support for this format, which is used by the [sample menu](sample_menu).
 
-
+[//]: # (interactive one % node build/samples/repl.js -x)
+[//]: # (invocation $ node build/samples/repl.js -x)
 ~~~
 $ node build/samples/repl.js -x
+
 Using experimental createWorld2()
 Loaded prix-fixe extension.
 Loaded simple extension.
@@ -44,12 +46,13 @@ A blank line exits.
 
 Type .help for information on commands.
 
-% 
+%
 ~~~
 
 We're now in the Read-Eval-Print-Loop (REPL) and can type commands after the prompt. 
 Let's take a look at the menu. We'll use the `.products` command to display the list of products in the menu:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .products
 apple bran muffin (2000)
@@ -68,10 +71,10 @@ macchiato (403)
 americano (500)
 dark roast coffee (501)
  
-% 
 ~~~
 Each product name is followed by its product id or `PID`. We drilldown on the specifics of a product by passing its `PID` to the `.products` command. Let's look at the `latte` product whose `PID` is `302`:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .products 302
 latte (302)
@@ -177,7 +180,7 @@ latte (302)
     dry (1104)
     wet (1105)
  
-% 
+%
 ~~~
 
 This command returned a huge amount of information. Let's go through it section-by-section:
@@ -189,6 +192,7 @@ This command returned a huge amount of information. Let's go through it section-
 
 Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `1001`:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .options 1001
 foam (1001)
@@ -229,12 +233,13 @@ foam (1001)
     extra foam (1001:3, 5203)
   Options for foam:
  
-% 
+%
 ~~~
 We can see that the `foam` option is a bit simpler than the `latte` product, but it still has an attribute to specify the quantity of foam.
 
 Note that we can also use the `.aliases`, `.exclusions`, and `.specifics` commands if we only want to see a slice of information about a product or an option:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .aliases 302
 latte (302)
@@ -272,6 +277,8 @@ latte (302)
   Exclusion Set 3
     dry (1104)
     wet (1105)
+ 
+%
 ~~~
 
 ## Forming Orders
@@ -282,6 +289,7 @@ add [one|two|three] <specific product name>
 
 Here are some examples:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % add two iced grande latte
 
@@ -297,6 +305,7 @@ Here are some examples:
   2 iced grande latte (604)                302:1:2
     1 light foam (5201)                     1001:1
   1 apple bran muffin (10000)                 2000
+
 ~~~
 
 The text processor supports the following syntax to remove a product or option:
@@ -306,6 +315,7 @@ remove <specific product name>
 
 Here are some examples:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % remove light foam
 
@@ -319,12 +329,12 @@ Here are some examples:
 % remove apple bran muffin
 
 
-% 
 ~~~
 
 ## Measuring Repair Cost
 The `Menu Explorer` can calculate the repair cost to convert an observed cart into an expected cart. To use this feature, you must first construct an expected cart and then record it with the `.expect` command:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % add two iced tall mocha
 
@@ -347,13 +357,16 @@ Expected cart set
 
 The `.score` command compares the current cart with the expected cart. Right now the carts are the same:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .score
 Carts are identical
+ 
 ~~~
 
 Let's see what happens if we remove the decaf from the cart and then score:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % remove decaf
 
@@ -364,10 +377,12 @@ Let's see what happens if we remove the decaf from the cart and then score:
 Carts are different.
 Total repairs: 1
   0:   id(11): insert default item(decaf)
+ 
 ~~~
 
 Now let's change the quantity of the vanilla syrup:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % remove vanilla syrup
 
@@ -383,10 +398,12 @@ Carts are different.
 Total repairs: 2
   0:   id(13): change item(vanilla syrup) quantity to 3
   1:   id(16): insert default item(decaf)
+ 
 ~~~
 
 Now let's use the `.reset` command to remove everything from the cart and then add a muffin:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .reset
 Cart has been reset.
@@ -406,6 +423,7 @@ Total repairs: 8
   5:   id(19): insert default item(vanilla syrup)
   6:   id(19): make item(vanilla syrup) quantity 3
   7:   id(20): insert default item(decaf)
+ 
 ~~~
 
 ## Authoring Test Cases
@@ -426,24 +444,29 @@ Let's create the test for the following three-step order:
 
 We start the test with the `.newtest` command and then use `.step` to record the text.
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .newtest
 Creating new yaml test.
 Cart has been reset.
  
 % .step hi um i'd like a tall flat white
+ 
 ~~~
 
 Now we have to construct the cart for this step:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % add tall flat white
 
   1 tall flat white (501)                  301:0:1
+
 ~~~
 
 In the second step, we have to do a bit more work to update the cart:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .step actually can you make that iced and decaf
   1 tall flat white (501)                  301:0:1
@@ -459,10 +482,12 @@ Cart has been reset.
 
   1 iced tall flat white (503)             301:1:1
     1 decaf (3000)                             704
+
 ~~~
 
 Here's the third step:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .step and get me a warm bran muffin that's all
   1 iced tall flat white (503)             301:1:1
@@ -480,10 +505,12 @@ Here's the third step:
     1 decaf (3000)                             704
   1 apple bran muffin (10000)                 2000
     1 warmed (200)                             100
+
 ~~~
 
 Now let's add some suite tags and a comment and then generate the YAML:
 
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .suites standard example
 Suites set to "standard example"
@@ -545,6 +572,7 @@ tests:
                   name: warmed
                   sku: '200'
                   children: []
+
 ~~~
 
 Once you have a YAML test suite, you can use it with the `filter_suite` and

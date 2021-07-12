@@ -20,10 +20,10 @@ In order to use `prix-fixe` you must have
 `prix-fixe` has been tested with Node version [13.7.0](https://nodejs.org/download/release/v13.7.0/).
 
 ~~~
-% git clone git@github.com:MikeHopcroft/PrixFixe.git
-% cd PrixFixe
-% npm install
-% npm run compile
+$ git clone git@github.com:MikeHopcroft/PrixFixe.git
+$ cd PrixFixe
+$ npm install
+$ npm run compile
 ~~~
 
 ## Running the Menu Explorer
@@ -31,39 +31,26 @@ Use the `node` command to start up the menu explorer. The sample menu will be lo
 
 Note that we're in the process of transitioning to a new menu format. We use '-x' flag to enable support for this format, which is used by the [sample menu](sample_menu).
 
-
-[//]: # (interactive one > node build/samples/repl.js -x -h)
+[//]: # (interactive one % node build/samples/repl.js -x)
+[//]: # (invocation $ node build/samples/repl.js -x)
 ~~~
-// $ node build/samples/repl.js -x
-// 
-// Loaded prix-fixe extension.
-// Loaded short-order extension.
-//   Registering so processor: short-order
-// Current processor is short-order.
-// 
-// Welcome to the ShortOrder REPL.
-// Type your order below.
-// A blank line exits.
-// 
-// Type .help for information on commands.
-// 
-// % #
+Prologue
+%
 ~~~
 
 We're now in the Read-Eval-Print-Loop (REPL) and can type commands after the prompt. 
 Let's take a look at the menu. We'll use the `.products` command to display the list of products in the menu:
 
-[//]: # (interactive one > node build/samples/repl.js -x -h)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .products
-% #
 ~~~
 Each product name is followed by its product id or `PID`. We drilldown on the specifics of a product by passing its `PID` to the `.products` command. Let's look at the `latte` product whose `PID` is `302`:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .products 302
-% #
+%
 ~~~
 
 This command returned a huge amount of information. Let's go through it section-by-section:
@@ -75,20 +62,21 @@ This command returned a huge amount of information. Let's go through it section-
 
 Now let's use the `.options` command to drill down on the `foam` option. It's `PID` is `1001`:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .options 1001
-% #
+%
 ~~~
 We can see that the `foam` option is a bit simpler than the `latte` product, but it still has an attribute to specify the quantity of foam.
 
 Note that we can also use the `.aliases`, `.exclusions`, and `.specifics` commands if we only want to see a slice of information about a product or an option:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .aliases 302
 % .specifics 1001
 % .exclusions 501
+%
 ~~~
 
 ## Forming Orders
@@ -99,7 +87,7 @@ add [one|two|three] <specific product name>
 
 Here are some examples:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % add two iced grande latte
 % add light foam
@@ -113,18 +101,17 @@ remove <specific product name>
 
 Here are some examples:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % remove light foam
 % remove iced grande latte
 % remove apple bran muffin
-% #
 ~~~
 
 ## Measuring Repair Cost
 The `Menu Explorer` can calculate the repair cost to convert an observed cart into an expected cart. To use this feature, you must first construct an expected cart and then record it with the `.expect` command:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % add two iced tall mocha
 % add decaf
@@ -134,14 +121,14 @@ The `Menu Explorer` can calculate the repair cost to convert an observed cart in
 
 The `.score` command compares the current cart with the expected cart. Right now the carts are the same:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .score
 ~~~
 
 Let's see what happens if we remove the decaf from the cart and then score:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % remove decaf
 % .score
@@ -149,7 +136,7 @@ Let's see what happens if we remove the decaf from the cart and then score:
 
 Now let's change the quantity of the vanilla syrup:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % remove vanilla syrup
 % add two vanilla syrup
@@ -158,7 +145,7 @@ Now let's change the quantity of the vanilla syrup:
 
 Now let's use the `.reset` command to remove everything from the cart and then add a muffin:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .reset
 % add apple bran muffin
@@ -183,7 +170,7 @@ Let's create the test for the following three-step order:
 
 We start the test with the `.newtest` command and then use `.step` to record the text.
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .newtest
 % .step hi um i'd like a tall flat white
@@ -191,14 +178,14 @@ We start the test with the `.newtest` command and then use `.step` to record the
 
 Now we have to construct the cart for this step:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % add tall flat white
 ~~~
 
 In the second step, we have to do a bit more work to update the cart:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .step actually can you make that iced and decaf
 % .reset
@@ -208,7 +195,7 @@ In the second step, we have to do a bit more work to update the cart:
 
 Here's the third step:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .step and get me a warm bran muffin that's all
 % add apple bran muffin
@@ -217,7 +204,7 @@ Here's the third step:
 
 Now let's add some suite tags and a comment and then generate the YAML:
 
-[//]: # (repl)
+[//]: # (interactive one % node build/samples/repl.js -x)
 ~~~
 % .suites standard example
 % .comment a simple, three-step order

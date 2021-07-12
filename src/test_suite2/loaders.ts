@@ -1,4 +1,4 @@
-import * as fs from 'fs';
+import * as fs from 'fs-extra';
 import * as yaml from 'js-yaml';
 
 import {
@@ -50,5 +50,5 @@ export function loadLogicalValidationSuite<TURN extends AnyTurn>(
 ///////////////////////////////////////////////////////////////////////////////
 export function writeYAML<T>(filename: string, root: T) {
   const yamlTextOut = yaml.safeDump(root);
-  fs.writeFileSync(filename, yamlTextOut, 'utf8');
+  fs.outputFileSync(filename, yamlTextOut, 'utf8');
 }

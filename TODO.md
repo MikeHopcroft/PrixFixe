@@ -1,14 +1,17 @@
 
 * Newer
-  * replCore2, useCreateWorld2
   * Use prepress instead of TutorialBuilder
+  * Install script commands for sample apps + update docs
+  * Rename simple extension to add-remove extension
+  * Test runner should set exit code
+  * draw.io diagrams for repair_cost.src.md.
+  * replCore2, useCreateWorld2
   * Default for: Use -d flag or PRIX_FIXE_DATA environment
   * Console spew
     * createWorld2()
     * CreateWorld2
     * Reading samples\menu\coffee.yaml
     * Loading 
-  * Test runner should set exit code
   * Remove
     * toJUnitXml()
     * snacks.yaml

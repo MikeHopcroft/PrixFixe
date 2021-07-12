@@ -55,7 +55,7 @@ Options
   -h, --help            Print help message
 ~~~
 
-[//]: # (spawn node build/src/apps/filter-suite.js samples/test/expected.yaml temp/test.yaml -c)
+[//]: # (spawn node build/src/apps/filter-suite.js samples/tests/expected.yaml temp/test.yaml -c)
 ~~~
 $ node build/src/apps/filter-suite.js samples\tests\expected.yaml c:\temp\test.yaml -c
 Reading suite from samples\tests\expected.yaml

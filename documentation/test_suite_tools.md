@@ -31,6 +31,7 @@ The following diagram shows the testing workflow.
 ## Filter Suite Tool
 
 
+[//]: # (spawn node build/src/apps/filter-suite.js -h)
 ~~~
 $ node build/src/apps/filter-suite.js -h
 
@@ -56,11 +57,12 @@ Options
 
 ~~~
 
+[//]: # (spawn node build/src/apps/filter-suite.js samples/tests/expected.yaml temp/test.yaml -c)
 ~~~
-$ node build/src/apps/filter-suite.js samples\tests\expected.yaml c:\temp\test.yaml -c
-Reading suite from samples\tests\expected.yaml
+$ node build/src/apps/filter-suite.js samples/tests/expected.yaml temp/test.yaml -c
+Reading suite from samples/tests/expected.yaml
 Removing cart field from each Step.
-Writing filtered suite to c:\temp\test.yaml
+Writing filtered suite to temp/test.yaml
 Filtering complete
 
 ~~~
@@ -68,6 +70,7 @@ Filtering complete
 
 ## Evaluate Tool
 
+[//]: # (spawn node build/src/apps/evaluate.js samples/tests/expected.yaml samples/tests/observed.yaml -x -v)
 ~~~
 $ node build/src/apps/evaluate.js samples/tests/expected.yaml samples/tests/observed.yaml -x -v
 Comparing

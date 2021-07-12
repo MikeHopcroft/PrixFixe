@@ -577,7 +577,7 @@ class ReplCore implements IRepl {
     ) {
       console.log();
       if (line === '\n') {
-        repl.close();
+        // repl.close();
       } else {
         if (!line.startsWith('#')) {
           // TODO: BUGBUG: might want to put comment handling into

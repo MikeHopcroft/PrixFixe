@@ -1,9 +1,0 @@
-{
-  "check-postbrace": false,
-  "extends": "gts/tslint.json",
-  "linterOptions": {
-    "exclude": [
-      "**/*.json"
-    ]
-  }
-}
