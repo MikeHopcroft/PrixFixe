@@ -1,6 +1,6 @@
 
 * Newer
-  * Use prepress instead of TutorialBuilder
+  * x Use prepress instead of TutorialBuilder
   * Install script commands for sample apps + update docs
   * Rename simple extension to add-remove extension
   * Test runner should set exit code
