@@ -1,9 +1,9 @@
-import * as commandLineUsage from 'command-line-usage';
+import commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
-import * as dotenv from 'dotenv';
-import * as fs from 'fs';
-import * as minimist from 'minimist';
-import * as path from 'path';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import minimist from 'minimist';
+import path from 'path';
 
 import {
   CombinedTurn,

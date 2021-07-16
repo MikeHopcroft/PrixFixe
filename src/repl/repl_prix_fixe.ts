@@ -1,5 +1,4 @@
-import * as style from 'ansi-styles';
-// import * as replServer from 'repl';
+import style from 'ansi-styles';
 
 import { Key, MENUITEM, PID, OPTION } from '../core/catalog';
 

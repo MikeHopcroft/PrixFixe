@@ -1,5 +1,5 @@
-import * as AJV from 'ajv';
-import * as YAML from 'js-yaml';
+import AJV from 'ajv';
+import YAML from 'js-yaml';
 
 import { RuleConfig } from './interfaces';
 import { YAMLValidationError } from '../utilities';

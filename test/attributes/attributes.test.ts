@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import * as yaml from 'js-yaml';
+import yaml from 'js-yaml';
 
 import {
   DimensionAndTensorDescription,

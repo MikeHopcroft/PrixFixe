@@ -1,8 +1,8 @@
-import * as style from 'ansi-styles';
-import * as Debug from 'debug';
-import * as fs from 'fs';
-import * as yaml from 'js-yaml';
-import * as replServer from 'repl';
+import style from 'ansi-styles';
+import Debug from 'debug';
+import fs from 'fs';
+import yaml from 'js-yaml';
+import replServer from 'repl';
 import { Context } from 'vm';
 
 import { Cart } from '../core/cart';

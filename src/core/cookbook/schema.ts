@@ -1,6 +1,6 @@
-import * as AJV from 'ajv';
-import * as fs from 'fs';
-import * as yaml from 'js-yaml';
+import AJV from 'ajv';
+import fs from 'fs';
+import yaml from 'js-yaml';
 
 import { Cookbook } from './cookbook';
 import { RecipeList } from './interfaces';

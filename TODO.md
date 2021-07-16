@@ -1,7 +1,11 @@
 
 * Newer
-  * x Use prepress instead of TutorialBuilder
-  * Install script commands for sample apps + update docs
+  * x Reinstate nameToSKU functionality from TutorialBuilder
+    * x Removed in commit 1bd3f73753bb97165206d438d134821481969846
+    * x Impacts documentation/src/measures.src.md repair functionality
+    * Px robably need some notion of prepress extensions
+    * x Need to wire in to npm build docs
+  * x Install script commands for sample apps + update docs
   * Rename simple extension to add-remove extension
   * Test runner should set exit code
   * draw.io diagrams for repair_cost.src.md.
@@ -27,6 +31,7 @@
   * Set up code coverage
   * Move CI from Travis to GitHub actions
   * What is the difference between samples folder and src/apps folder?
+  * x Use prepress instead of TutorialBuilder
 * New
   * . Repair algorithm should repair to complete, not perfect
     * Attempted implemention in commit 3cfc4ab3

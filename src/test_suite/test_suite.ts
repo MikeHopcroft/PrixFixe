@@ -1,8 +1,8 @@
-import * as AJV from 'ajv';
-import * as betterAjvErrors from 'better-ajv-errors';
-import * as Debug from 'debug';
-import * as jsontoxml from 'jsontoxml';
-import * as yaml from 'js-yaml';
+import AJV from 'ajv';
+import betterAjvErrors from 'better-ajv-errors';
+import Debug from 'debug';
+import jsontoxml from 'jsontoxml';
+import yaml from 'js-yaml';
 
 import { ICatalog } from '../core/catalog';
 import { Processor, State } from '../core/processors';

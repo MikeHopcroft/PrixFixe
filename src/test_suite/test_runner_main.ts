@@ -1,11 +1,11 @@
-import * as commandLineUsage from 'command-line-usage';
+import commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
-import * as dotenv from 'dotenv';
-import * as fs from 'fs';
+import dotenv from 'dotenv';
+import fs from 'fs';
 import { safeDump } from 'js-yaml';
-import * as minimist from 'minimist';
-import * as path from 'path';
-import * as recursiveReaddir from 'recursive-readdir';
+import minimist from 'minimist';
+import path from 'path';
+import recursiveReaddir from 'recursive-readdir';
 
 import { Processor } from '../core/processors';
 import { World } from '../core/world';

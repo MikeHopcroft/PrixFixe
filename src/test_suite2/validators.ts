@@ -1,5 +1,5 @@
-import * as AJV from 'ajv';
-import * as betterAjvErrors from 'better-ajv-errors';
+import AJV from 'ajv';
+import betterAjvErrors from 'better-ajv-errors';
 
 import { YAMLValidationError } from '../core/utilities';
 

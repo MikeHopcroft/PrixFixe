@@ -13,6 +13,11 @@
   "keywords": [
     "restaurant menu rules"
   ],
+  "bin": {
+    "evaluate": "build/src/apps/evaluate.js",
+    "filter": "build/src/apps/filter-suite.js",
+    "menu": "build/samples/repl.js"
+  },
   "repository": "https://github.com/MikeHopcroft/PrixFixe",
   "scripts": {
     "check": "gts check",
@@ -25,8 +30,7 @@
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "test": "mocha",
-    "xdocs": "node build/src/apps/tutorial_builder.js documentation/src documentation",
-    "docs": "prepress documentation/src documentation"
+    "docs": "node build/src/apps/prepress.js documentation/src documentation"
   },
   "nyc": {
     "exclude": [
@@ -83,7 +87,7 @@
     "mocha": "^6.1.4",
     "mocha-lcov-reporter": "^1.3.0",
     "nyc": "^14.1.1",
-    "prepress": "^0.0.8",
+    "prepress": "^0.0.12",
     "source-map-support": "^0.5.12",
     "ts-node": "^8.2.0",
     "typescript": "~3.7.0"

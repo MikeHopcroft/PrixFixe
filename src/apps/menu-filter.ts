@@ -1,8 +1,8 @@
-import * as commandLineUsage from 'command-line-usage';
+import commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
-import * as dotenv from 'dotenv';
-import * as minimist from 'minimist';
-import * as path from 'path';
+import dotenv from 'dotenv';
+import minimist from 'minimist';
+import path from 'path';
 
 import { ICatalog } from '../core/catalog';
 import { createWorld } from '../processors';

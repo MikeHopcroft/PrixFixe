@@ -1,4 +1,4 @@
-import * as replServer from 'repl';
+import replServer from 'repl';
 
 import { Processor, State } from '../core/processors';
 import { World } from '../core/world';

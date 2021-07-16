@@ -1,4 +1,4 @@
-import * as style from 'ansi-styles';
+import style from 'ansi-styles';
 import { Cart, ItemInstance } from '../core/cart';
 import { ICatalog } from '../core/catalog';
 import { State } from '../core/processors';

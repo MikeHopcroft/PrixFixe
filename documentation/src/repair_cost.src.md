@@ -53,7 +53,7 @@ When the observed and expected products have different generic forms, the cost o
 * the cost of adding the expected product along with its options
 
 Let's look at an example. Suppose the observed cart contains
-[//]: # (repair)
+[//]: # (repair )
 ~~~
 1 apple bran muffin (10000)
     1 warmed (200)
@@ -135,20 +135,20 @@ The [prix-fixe](https://github.com/MikeHopcroft/PrixFixe) library provides an im
 To compute the repair cost, we need access to menu data. The reason is that the SKUs alone don't contain enough information to determine whether two items are completely different or just differ by an attribute.
 
 For example these carts have a repair cost of 2
-[//]: # (warning)
+[//]: # (repair)
 ~~~
 OBSERVED              EXPECTED
-1 product (605)       1 product (601)
-  1 option (5200)       1 option (5200)
-  2 option (2502)       2 option (2502)
+1 Product B (605)       1 Product A (601)
+  1 Option X (5200)       1 Option X (5200)
+  2 Option Y (2502)       2 Option Y (2502)
 ~~~
 
 while these nearly identical carts have a repair cost of 7
-[//]: # (warning)
+[//]: # (repair)
 ~~~
-1 product (801)       1 option (601)
-  1 option (5200)       1 option (5200)
-  2 option (2502)       2 option (2502)
+1 Product C (801)       1 Product A (601)
+  1 Option X (5200)       1 Option X (5200)
+  2 Option Y (2502)       2 Option Y (2502)
 ~~~
 
 To see why, let's look at the three carts with item descriptions:

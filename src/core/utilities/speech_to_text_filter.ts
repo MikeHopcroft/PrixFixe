@@ -1,4 +1,4 @@
-import * as numberToWords from 'number-to-words';
+import numberToWords from 'number-to-words';
 
 // NOTE: These patterns cannot contain punctuation like periods because
 // punctuation is stripped out before word replacement.

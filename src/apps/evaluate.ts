@@ -1,8 +1,10 @@
-import * as commandLineUsage from 'command-line-usage';
+#!/usr/bin/env node
+
+import commandLineUsage from 'command-line-usage';
 import { Section } from 'command-line-usage';
-import * as dotenv from 'dotenv';
-import * as minimist from 'minimist';
-import * as path from 'path';
+import dotenv from 'dotenv';
+import minimist from 'minimist';
+import path from 'path';
 
 import { createWorld, createWorld2 } from '../processors';
 
