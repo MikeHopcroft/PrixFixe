@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { suitePredicate } from '../../src/test_suite';
+import { suitePredicate } from '../../src/test_suite2';
 
 describe('Suite Predicate', () => {
   ///////////////////////////////////////////////////////////////////////////////

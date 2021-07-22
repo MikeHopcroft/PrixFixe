@@ -21,7 +21,8 @@ import {
 import { World } from '../core/world';
 
 import { createWorld, createWorld2 } from '../processors';
-import { suitePredicate, TestProcessors } from '../test_suite';
+import { suitePredicate } from './suite_predicate';
+import { TestProcessors } from './test_processors';
 
 import {
   AnyTurn,

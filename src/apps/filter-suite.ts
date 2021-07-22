@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import minimist from 'minimist';
 import path from 'path';
 
-import { suitePredicate } from '../test_suite/suite_predicate';
+import { suitePredicate } from '../test_suite2/suite_predicate';
 
 import {
   allCases,

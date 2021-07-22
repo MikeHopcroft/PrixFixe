@@ -9,7 +9,7 @@ import path from 'path';
 import { ICatalog } from '../core/catalog';
 import { createWorld } from '../processors';
 
-import { TestLineItem } from '../test_suite';
+import { TestLineItem } from '../test_suite2';
 
 import {
   fail,

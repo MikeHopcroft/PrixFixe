@@ -1,4 +1,4 @@
-import { SuitePredicate } from '../../test_suite/suite_predicate';
+import { SuitePredicate } from '../../test_suite2/suite_predicate';
 
 import {
   CombinedTurn,
