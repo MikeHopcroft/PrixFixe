@@ -14,6 +14,7 @@ import {
   formatScoredSuite,
   FormatScoredSuiteOptions,
   mapSuiteAsync,
+  succeed,
   suitePredicateFilter,
 } from '../core/test_suite2';
 
@@ -161,11 +162,21 @@ export async function testRunnerMain2(
       console.log(`Baseline: "${baselineFile}"`);
       console.log(' ');
       const baseline = loadLogicalScoredSuite(baselineFile);
-      compareScoredSuites(baseline, scored);
+      const delta = compareScoredSuites(baseline, scored);
+
+      if (delta < 0) {
+        // Exit with non-zero return code, if we're comparing with a baseline and the
+        // number of passing tests has decreased.
+        return succeed(false);
+      }
+    } else if (scored.measures.totalRepairs > 0) {
+      // Exit with non-zero return code, if we're not comparing with a baseline and
+      // there is at least one repair.
+      return succeed(false);
     }
 
     // Successful exit.
-    return app.exit(0);
+    return succeed(true);
   }
 }
 
@@ -368,7 +379,7 @@ async function runTests(
 function compareScoredSuites(
   baseline: LogicalScoredSuite<AnyTurn>,
   current: LogicalScoredSuite<AnyTurn>
-) {
+): number {
   let bp = 0;
   let cp = 0;
   let missingTests = 0;
@@ -418,14 +429,18 @@ function compareScoredSuites(
     }
   }
 
+  const delta = cp - bp;
+
   console.log(' ');
   console.log(`Baseline passing tests: ${bp}`);
   console.log(`Current passing tests: ${cp}`);
-  console.log(`Delta: ${cp - bp}`);
+  console.log(`Delta: ${delta}`);
 
   console.log(' ');
   console.log(`Missing tests: ${missingTests}`);
   console.log(`New tests: ${newTests}`);
+
+  return delta;
 }
 
 class Application {

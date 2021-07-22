@@ -1,13 +1,19 @@
 
 * Newer
+  * Make menu and regression suite available to installed prix-fixe
+  * Rework repl to use readline instead of replserver
+  * Empty line in repl should give new prompt
+  * Ability to merge help messages for option in testRunnerMain2
+    * Short-order should be able to provide its own options and help messages.
   * x Reinstate nameToSKU functionality from TutorialBuilder
     * x Removed in commit 1bd3f73753bb97165206d438d134821481969846
     * x Impacts documentation/src/measures.src.md repair functionality
     * Px robably need some notion of prepress extensions
     * x Need to wire in to npm build docs
   * x Install script commands for sample apps + update docs
-  * Rename simple extension to add-remove extension
   * Test runner should set exit code
+  * testRunner2 should replace testRunner
+  * Rename simple extension to add-remove extension
   * draw.io diagrams for repair_cost.src.md.
   * replCore2, useCreateWorld2
   * Default for: Use -d flag or PRIX_FIXE_DATA environment
