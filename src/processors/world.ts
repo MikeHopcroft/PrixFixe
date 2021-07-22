@@ -25,25 +25,6 @@ import {
 
 import { loadCatalogFile } from './file-loader';
 
-export function createWorld(dataPath: string): World {
-  // TODO: should these be path.resolve?
-  const attributesFile = path.join(dataPath, 'attributes.yaml');
-  const cookbookFile = path.join(dataPath, 'cookbook.yaml');
-  const productsFile = path.join(dataPath, 'products.yaml');
-  const optionsFile = path.join(dataPath, 'options.yaml');
-  const rulesFile = path.join(dataPath, 'rules.yaml');
-
-  const world = setup(
-    attributesFile,
-    cookbookFile,
-    productsFile,
-    optionsFile,
-    rulesFile
-  );
-
-  return world;
-}
-
 export function setup(
   attributesFile: string,
   cookbookFile: string,
@@ -90,8 +71,6 @@ export function setup(
 }
 
 export function createWorld2(dataPath: string): World {
-  // console.log('CreateWorld2');
-
   const catalogFile = path.join(dataPath, 'menu.yaml');
   const spec = loadCatalogFile(catalogFile);
 

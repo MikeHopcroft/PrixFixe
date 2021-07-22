@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import minimist from 'minimist';
 import path from 'path';
 
-import { createWorld, createWorld2 } from '../processors';
+import { createWorld2 } from '../processors';
 
 import {
   createMenuBasedRepairFunction,
@@ -55,14 +55,7 @@ function main() {
   }
 
   try {
-    evaluate(
-      expectedFile,
-      observedFile,
-      scoredFile,
-      dataPath,
-      args.v === true,
-      args.x === true
-    );
+    evaluate(expectedFile, observedFile, scoredFile, dataPath, args.v === true);
   } catch (e) {
     handleError(e);
   }
@@ -73,8 +66,7 @@ function evaluate(
   observedFile: string,
   ouputFile: string | undefined,
   dataPath: string | undefined,
-  verbose: boolean,
-  experimental: boolean
+  verbose: boolean
 ) {
   console.log('Comparing');
   console.log(`  expected validation suite: ${expectedFile}`);
@@ -97,22 +89,10 @@ function evaluate(
 
   if (dataPath) {
     // Load the world, which provides the AttributeInfo and ICatalog.
-    if (experimental) {
-      console.log('createWorld2()');
-      const world = createWorld2(dataPath);
-      repairs = createMenuBasedRepairFunction(
-        world.attributeInfo,
-        world.catalog
-      );
-      notes = 'Menu-based repairs, createWorld2';
-    } else {
-      const world = createWorld(dataPath);
-      repairs = createMenuBasedRepairFunction(
-        world.attributeInfo,
-        world.catalog
-      );
-      notes = 'Menu-based repairs';
-    }
+    console.log('createWorld2()');
+    const world = createWorld2(dataPath);
+    repairs = createMenuBasedRepairFunction(world.attributeInfo, world.catalog);
+    notes = 'Menu-based repairs, createWorld2';
   } else {
     repairs = createSimpleRepairFunction();
     notes = 'Simple repairs';
@@ -187,15 +167,7 @@ function showUsage() {
           name: 'datapath',
           alias: 'd',
           description: `Path to prix-fixe data files used for menu-based repairs.\n
-                - attributes.yaml
-                - cookbook.yaml
-                - intents.yaml
-                - options.yaml
-                - products.yaml
-                - quantifiers.yaml
-                - rules.yaml
-                - stopwords.yaml
-                - units.yaml\n
+                - menu.yaml
                 The {bold -d} flag overrides the value specified in the {bold PRIX_FIXE_DATA} environment variable.\n`,
           type: Boolean,
         },
@@ -211,12 +183,6 @@ function showUsage() {
           name: 'verbose',
           alias: 'v',
           description: 'Print out failing test cases',
-          type: Boolean,
-        },
-        {
-          name: 'experimental',
-          alias: 'x',
-          description: 'Use experimental createWorld2()',
           type: Boolean,
         },
         {

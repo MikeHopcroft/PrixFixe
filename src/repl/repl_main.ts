@@ -3,7 +3,7 @@ import minimist from 'minimist';
 import path from 'path';
 
 import { IReplExtensionFactory } from './interfaces';
-import { runRepl } from './repl_core2';
+import { runRepl } from './repl_core';
 
 export function replMain(extensions: IReplExtensionFactory[]) {
   dotenv.config();
@@ -26,13 +26,7 @@ export function replMain(extensions: IReplExtensionFactory[]) {
     return;
   }
 
-  // TODO: remove temporary flags '-x'.
-  const useCreateWorld2 = args.x;
-  if (useCreateWorld2) {
-    console.log('Using experimental createWorld2()');
-  }
-
-  runRepl(dataPath, extensions, useCreateWorld2);
+  runRepl(dataPath, extensions);
 }
 
 // TODO: convert this to command-line-usage
@@ -49,17 +43,9 @@ function showUsage() {
   console.log(`Usage: node ${program} [-d datapath] [-h|help|?]`);
   console.log('');
   console.log('-d datapath     Path to prix-fixe data files.');
-  console.log('                    attributes.yaml');
-  console.log('                    intents.yaml');
-  console.log('                    options.yaml');
-  console.log('                    products.yaml');
-  console.log('                    quantifiers.yaml');
-  console.log('                    rules.yaml');
-  console.log('                    stopwords.yaml');
-  console.log('                    units.yaml');
+  console.log('                    menu.yaml');
   console.log('                The -d flag overrides the value specified');
   console.log('                in the PRIX_FIXE_DATA environment variable.');
-  console.log('-x              Use experimental createWorld2().');
   console.log('-h|help|?       Show this message.');
   console.log(' ');
 }

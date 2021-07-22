@@ -20,7 +20,7 @@ import {
 
 import { World } from '../core/world';
 
-import { createWorld, createWorld2 } from '../processors';
+import { createWorld2 } from '../processors';
 import { suitePredicate } from './suite_predicate';
 import { TestProcessors } from './test_processors';
 
@@ -95,8 +95,6 @@ export async function testRunnerMain(
     }
   }
 
-  const experimental = args.x === true;
-
   const processorName = args.p;
   const recursive = args.r === true;
   const suiteExpressionText = args.s;
@@ -131,7 +129,6 @@ export async function testRunnerMain(
     const scored = await runTests(
       app,
       dataPath,
-      experimental,
       processorFactory,
       processorName,
       suite,
@@ -290,7 +287,6 @@ function displayBriefView(suite: GenericSuite<ValidationStep<TextTurn>>) {
 async function runTests(
   app: Application,
   dataPath: string,
-  experimental: boolean,
   processorFactory: TestProcessors,
   verify: string | undefined,
   suite: GenericSuite<ValidationStep<TextTurn>>,
@@ -305,11 +301,7 @@ async function runTests(
   //
   let world: World;
   try {
-    if (experimental) {
-      world = createWorld2(dataPath);
-    } else {
-      world = createWorld(dataPath);
-    }
+    world = createWorld2(dataPath);
   } catch (err) {
     if (err.code === 'ENOENT' || err.code === 'EISDIR') {
       const message = `Create world failed: cannot open "${err.path}"`;

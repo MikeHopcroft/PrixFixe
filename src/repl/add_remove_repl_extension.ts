@@ -17,10 +17,10 @@ import {
 } from './interfaces';
 
 //
-// Sample ReplExtension that provides a Processor
+// Sample ReplExtension that provides a Processor that can add and remove
+// items with a specific phrasing.
 //
-class SimpleReplExtension implements IReplExtension {
-  // world: World;
+class AddRemoveReplExtension implements IReplExtension {
   private readonly catalog: ICatalog;
   private readonly cartOps: ICartOps;
   private readonly idGenerator = new IdGenerator();
@@ -35,7 +35,6 @@ class SimpleReplExtension implements IReplExtension {
   }
 
   createProcessor(): ReplProcessor | null {
-    // console.log('create processor');
     return {
       name: 'simple',
       description: 'Simple processor that supports add and remove.',
@@ -112,7 +111,7 @@ class SimpleReplExtension implements IReplExtension {
 export const simpleReplExtensionFactory: IReplExtensionFactory = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   create: (world: World, dataPath: string) => {
-    return new SimpleReplExtension(world);
+    return new AddRemoveReplExtension(world);
   },
 };
 

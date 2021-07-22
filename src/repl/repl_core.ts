@@ -8,7 +8,7 @@ import { Context } from 'vm';
 import { Cart } from '../core/cart';
 import { ICatalog } from '../core/catalog';
 import { Processor, State } from '../core/processors';
-import { createWorld, createWorld2 } from '../processors';
+import { createWorld2 } from '../processors';
 
 import {
   AnyTurn,
@@ -173,18 +173,11 @@ class ReplCore implements IRepl {
   repl: replServer.REPLServer;
   stack: Session[];
 
-  constructor(
-    dataPath: string,
-    factories: IReplExtensionFactory[],
-    // TODO: remove temporary parameter.
-    useCreateWorld2 = false
-  ) {
+  constructor(dataPath: string, factories: IReplExtensionFactory[]) {
     let debugMode = false;
     Debug.enable('tf-interactive,tf:*');
 
-    const world = useCreateWorld2
-      ? createWorld2(dataPath)
-      : createWorld(dataPath);
+    const world = createWorld2(dataPath);
     const catalog = world.catalog;
 
     // Incorporate REPL extensions.
@@ -677,10 +670,6 @@ function suiteFromCart(
   };
 }
 
-export function runRepl(
-  dataPath: string,
-  factories: IReplExtensionFactory[],
-  useCreateWorld2 = false
-) {
-  new ReplCore(dataPath, factories, useCreateWorld2);
+export function runRepl(dataPath: string, factories: IReplExtensionFactory[]) {
+  new ReplCore(dataPath, factories);
 }
