@@ -5,7 +5,7 @@ import fs from 'fs';
 import minimist from 'minimist';
 import path from 'path';
 
-import { createWorld2 } from '../processors';
+import { createWorld } from '../processors';
 
 import {
   CombinedTurn,
@@ -48,7 +48,7 @@ function main() {
 
   try {
     // Create a map from ItemInstance name to SKU.
-    const world = createWorld2(dataPath);
+    const world = createWorld(dataPath);
     const nameToSKU = new Map<string, number>();
     for (const s of world.catalog.specificEntities()) {
       if (nameToSKU.has(s.name)) {

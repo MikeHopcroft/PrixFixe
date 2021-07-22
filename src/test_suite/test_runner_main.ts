@@ -20,7 +20,7 @@ import {
 
 import { World } from '../core/world';
 
-import { createWorld2 } from '../processors';
+import { createWorld } from '../processors';
 import { suitePredicate } from './suite_predicate';
 import { TestProcessors } from './test_processors';
 
@@ -301,7 +301,7 @@ async function runTests(
   //
   let world: World;
   try {
-    world = createWorld2(dataPath);
+    world = createWorld(dataPath);
   } catch (err) {
     if (err.code === 'ENOENT' || err.code === 'EISDIR') {
       const message = `Create world failed: cannot open "${err.path}"`;

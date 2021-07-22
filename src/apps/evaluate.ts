@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import minimist from 'minimist';
 import path from 'path';
 
-import { createWorld2 } from '../processors';
+import { createWorld } from '../processors';
 
 import {
   createMenuBasedRepairFunction,
@@ -89,10 +89,9 @@ function evaluate(
 
   if (dataPath) {
     // Load the world, which provides the AttributeInfo and ICatalog.
-    console.log('createWorld2()');
-    const world = createWorld2(dataPath);
+    const world = createWorld(dataPath);
     repairs = createMenuBasedRepairFunction(world.attributeInfo, world.catalog);
-    notes = 'Menu-based repairs, createWorld2';
+    notes = 'Menu-based repairs, createWorld';
   } else {
     repairs = createSimpleRepairFunction();
     notes = 'Simple repairs';

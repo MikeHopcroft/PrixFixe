@@ -70,7 +70,7 @@ export function setup(
   };
 }
 
-export function createWorld2(dataPath: string): World {
+export function createWorld(dataPath: string): World {
   const catalogFile = path.join(dataPath, 'menu.yaml');
   const spec = loadCatalogFile(catalogFile);
 

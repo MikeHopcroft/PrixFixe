@@ -79,7 +79,6 @@ Comparing
  
 Computing repair cost with menu files from samples/menu.
  
-createWorld2()
 ---------------------------------------
 2: Product SKU is wrong because generic product is wrong.
   step 0: NEEDS REPAIRS
@@ -168,7 +167,7 @@ createWorld2()
       id(84): change item(vanilla syrup) quantity to 2
  
 ---------------------------------------
-Repair algorithm: Menu-based repairs, createWorld2
+Repair algorithm: Menu-based repairs, createWorld
 Total test cases: 9
 Total steps: 9
 Perfect carts: 1/9 (11.1%)

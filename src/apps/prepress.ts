@@ -8,13 +8,13 @@ import {
 } from 'prepress';
 
 import { handleError, succeed } from '../core/test_suite2';
-import { createWorld2 } from '../processors';
+import { createWorld } from '../processors';
 
 async function go() {
   try {
     // Create a map from ItemInstance name to SKU.
     const dataPath = 'samples/menu';
-    const world = createWorld2(dataPath);
+    const world = createWorld(dataPath);
     const nameToSKU = new Map<string, number>();
     for (const s of world.catalog.specificEntities()) {
       if (nameToSKU.has(s.name)) {

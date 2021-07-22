@@ -8,7 +8,7 @@ import { Context } from 'vm';
 import { Cart } from '../core/cart';
 import { ICatalog } from '../core/catalog';
 import { Processor, State } from '../core/processors';
-import { createWorld2 } from '../processors';
+import { createWorld } from '../processors';
 
 import {
   AnyTurn,
@@ -177,7 +177,7 @@ class ReplCore implements IRepl {
     let debugMode = false;
     Debug.enable('tf-interactive,tf:*');
 
-    const world = createWorld2(dataPath);
+    const world = createWorld(dataPath);
     const catalog = world.catalog;
 
     // Incorporate REPL extensions.

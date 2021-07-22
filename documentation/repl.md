@@ -36,7 +36,6 @@ Note that we're in the process of transitioning to a new menu format. We use '-x
 ~~~
 $ menu -x
 
-Using experimental createWorld2()
 Loaded prix-fixe extension.
 Loaded simple extension.
 
