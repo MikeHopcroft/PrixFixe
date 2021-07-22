@@ -3,14 +3,20 @@
 Welcome to `prix-fixe`. Please look at [concepts.md](documentation/concepts.md) for a conceptual overview of the project.
 
 ## Table of Contents
-* [Before Starting](#Before-Starting)
-* [Git Methodology](#Git-Methodology)
-* [Building and Testing](#Building-And-Testing)
-* [Code Style](#Code-Style)
-   * [Imports](#Imports)
-   * [Line Length](#Line-Length)
-   * [Naming](#)
-* [VS Code Extensions](#VS-Code-Extensions)
+- [Contributing](#contributing)
+  - [Table of Contents](#table-of-contents)
+  - [Before Starting](#before-starting)
+  - [Git Methodology](#git-methodology)
+  - [Building and Testing](#building-and-testing)
+  - [Code Style](#code-style)
+    - [Imports](#imports)
+    - [Line Length](#line-length)
+    - [Naming](#naming)
+  - [VS Code Extensions](#vs-code-extensions)
+- [OUT OF DATE INFORMATION BELOW](#out-of-date-information-below)
+  - [Git Configuration](#git-configuration)
+  - [Ignored Files](#ignored-files)
+    - [.coveralls.yml](#coverallsyml)
 
 ## Before Starting
 We welcome contributions.
@@ -57,7 +63,7 @@ Invoking `npm run test` or `npm run check` will run the linter and `prettier`.
 Note that you can run `npm run fix` to automatically fix most linting and style problems.
 Here are a couple of notes:
 * We prefer tabs over spaces
-* Our indentation is currently 4 spaces. This may change to 2 in the future.
+* Our indentation is 2 spaces.
 * Interfaces that represent abstract bases classes have names starting with an upper-case `I`, (e.g. `IFoo`).
 Since there is no way to suppress the linter rule on interface names for abstract base classes while keeping it for plain-old-javascript-objects (POJOs), we suppress the linter rule on inline at the interface declaration in the source file. 
 

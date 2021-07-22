@@ -9,7 +9,7 @@ import path from 'path';
 import { ICatalog } from '../core/catalog';
 import { createWorld } from '../processors';
 
-import { TestLineItem } from '../test_suite2';
+import { TestLineItem } from '../test_suite';
 
 import {
   fail,
@@ -23,7 +23,7 @@ import {
   ValidationStep,
 } from '../core/test_suite2';
 
-import { writeYAML } from '../test_suite2';
+import { writeYAML } from '../test_suite';
 
 interface LegacyCase {
   priority: number;

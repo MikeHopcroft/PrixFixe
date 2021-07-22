@@ -45,7 +45,7 @@ import { logicalCartFromCart } from '../core/test_suite2/logical_cart';
 import { createMenuBasedRepairFunction } from '../core/test_suite2/repair_functions';
 import { scoreSuite } from '../core/test_suite2/scoring';
 
-export async function testRunnerMain2(
+export async function testRunnerMain(
   title: string,
   processorFactory: TestProcessors
 ) {

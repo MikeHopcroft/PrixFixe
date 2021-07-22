@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import minimist from 'minimist';
 import path from 'path';
 
-import { suitePredicate } from '../test_suite2/suite_predicate';
+import { suitePredicate } from '../test_suite/suite_predicate';
 
 import {
   allCases,
@@ -23,7 +23,7 @@ import {
   suitePredicateFilter,
 } from '../core/test_suite2';
 
-import { loadLogicalValidationSuite, writeYAML } from '../test_suite2';
+import { loadLogicalValidationSuite, writeYAML } from '../test_suite';
 
 function main() {
   dotenv.config();

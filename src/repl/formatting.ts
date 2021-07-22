@@ -3,7 +3,7 @@ import { Cart, ItemInstance } from '../core/cart';
 import { ICatalog } from '../core/catalog';
 import { State } from '../core/processors';
 import { leftJustify, rightJustify } from '../core/utilities';
-import { TestLineItem, TestOrder } from '../test_suite2';
+import { TestLineItem, TestOrder } from '../test_suite';
 
 export function displayState(catalog: ICatalog, state: State) {
   const order: TestOrder = testOrderFromCart(state.cart, catalog);

@@ -17,7 +17,7 @@ import {
   ValidationStep,
 } from '../core/test_suite2';
 
-import { loadLogicalValidationSuite, writeYAML } from '../test_suite2';
+import { loadLogicalValidationSuite, writeYAML } from '../test_suite';
 
 function main() {
   dotenv.config();

@@ -1,4 +1,4 @@
-import { TestProcessors, testRunnerMain2, State, World } from '../src';
+import { TestProcessors, testRunnerMain, State, World } from '../src';
 
 // This sample application demonstrates how to configure the test runner
 // with a set of Processors.
@@ -50,7 +50,7 @@ async function go() {
     },
   ]);
 
-  testRunnerMain2('Demo', processorFactory);
+  testRunnerMain('Demo', processorFactory);
 }
 
 go();
