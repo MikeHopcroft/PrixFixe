@@ -1,17 +1,18 @@
 
 * Newer
+  * Better unit tests for new rules engine.
   * Move SuitePredicate and PeekableSequence and others into src/core
   * x Migrate from travis to GitHub actions
     * x Update code coverage for GitHub actions
-  * test/test_suite2 => test/core/test_suite
-    * Other folders to core
+  * x test/test_suite2 => test/core/test_suite
+    * x Other folders to core
   * Default for: Use -d flag or PRIX_FIXE_DATA environment
   * Make menu and regression suite available to installed prix-fixe
   * Rework repl to use readline instead of replserver
   * Empty line in repl should give new prompt
   * Ability to merge help messages for option in testRunnerMain2
     * Short-order should be able to provide its own options and help messages.
-  * Remove old rules engine.
+  * x Remove old rules engine.
   * core/testsuite2
   * Update usage message in markdown.ts to use command syntax (i.e. don't use 'node')
     * BTW, markdown.ts might be deprecated. Decide.
@@ -25,8 +26,8 @@
     * x Need to wire in to npm build docs
   * x Install script commands for sample apps + update docs
   * x Test runner should set exit code
-  * testRunner2 should replace testRunner
-  * Rename simple extension to add-remove extension
+  * x testRunner2 should replace testRunner
+  * x Rename simple extension to add-remove extension
   * draw.io diagrams for repair_cost.src.md.
   * x replCore2, useCreateWorld2
   * Console spew

@@ -1,6 +1,6 @@
 import { AttributeInfo } from '../attributes';
 import { Key, PID } from '../catalog';
-import { IRuleChecker, QuantityInformation } from '../rule_checker';
+import { IRuleChecker, QuantityInformation } from '../rules';
 
 import { AnyRule } from './types';
 
@@ -163,16 +163,10 @@ class RuleChecker2 implements IRuleChecker {
     child: string
   ): (existing: string) => boolean {
     const pPID = AttributeInfo.pidFromKey(parent);
+    const cPID = AttributeInfo.pidFromKey(child);
 
     // Exclusion sets associated with the parrent.
-    const allExclusionSets = this.exclusion.get(pPID);
-
-    if (allExclusionSets === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      return (existing: string) => true;
-    }
-
-    const cPID = AttributeInfo.pidFromKey(child);
+    const allExclusionSets = this.exclusion.get(pPID) || [];
 
     return (existing: string) => {
       const ePID = AttributeInfo.pidFromKey(existing);

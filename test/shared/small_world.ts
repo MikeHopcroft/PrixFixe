@@ -1,5 +1,6 @@
 import {
   AID,
+  AnyRule,
   AttributeDescription,
   Catalog,
   CID,
@@ -13,9 +14,8 @@ import {
   MENUITEM,
   OPTION,
   PID,
+  processRules,
   Role,
-  RuleChecker,
-  RuleConfig,
   SpecificTypedEntity,
   TensorDescription,
 } from '../../src/';
@@ -517,25 +517,22 @@ export const smallWorldCatalog = Catalog.fromEntities(
 //  Rules
 //
 ///////////////////////////////////////////////////////////////////////////////
-export const smallWorldRules: RuleConfig = {
-  rules: [
-    {
-      partialKey: '9000', // All coffees
-      validCategoryMap: {
-        '500': {
-          validOptions: [5000],
-          qtyInfo: {
-            '': { defaultQty: 1, minQty: 1, maxQty: 1 },
-          },
-        },
-      },
-      exclusionZones: { 500: [5000] }, // Milk is exclusive
-      specificExceptions: [],
-    },
-  ],
-};
+const tagsToPIDs = new Map<string, number[]>([
+  ['coffees', [9000]],
+  ['cones', [8000]],
+  ['milks', [5000]],
+  ['toppings', [2000]],
+]);
+const pidsToUnits = new Map<number, string>();
+const rules: AnyRule[] = [
+  {
+    parents: ['coffees'],
+    children: ['milks', 'toppings'],
+  },
+];
 
-export const smallWorldRuleChecker = new RuleChecker(
-  smallWorldRules,
-  smallWorldCatalog.getGenericMap()
+export const smallWorldRuleChecker = processRules(
+  tagsToPIDs,
+  pidsToUnits,
+  rules
 );

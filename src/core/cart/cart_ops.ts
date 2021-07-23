@@ -1,7 +1,7 @@
 import { AID, AttributeInfo, TensorEntityBuilder } from '../attributes';
 import { Catalog, Key, PID } from '../catalog';
 import { ProductRecipe, OptionRecipe } from '../cookbook';
-import { IRuleChecker } from '../rule_checker';
+import { IRuleChecker } from '../rules';
 import { IdGenerator } from '../utilities';
 
 import {

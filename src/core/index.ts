@@ -4,7 +4,7 @@ export * from './cart';
 export * from './catalog';
 export * from './cookbook';
 export * from './processors';
-export * from './rule_checker';
+export * from './rules';
 export * from './test_suite';
 export * from './utilities';
 export * from './world';
