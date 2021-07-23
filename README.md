@@ -1,6 +1,6 @@
 # Prix-Fixe [![build](https://github.com/MikeHopcroft/PrixFixe/actions/workflows/ci.yaml/badge.svg)](https://github.com/MikeHopcroft/PrixFixe/actions/workflows/ci.yaml)
 
-[![codecov](https://codecov.io/gh/MikeHopcroft/ShortOrder/branch/main/graph/badge.svg)](https://codecov.io/gh/MikeHopcroft/ShortOrder)
+[![codecov](https://codecov.io/gh/MikeHopcroft/PrixFixe/branch/main/graph/badge.svg)](https://codecov.io/gh/MikeHopcroft/PrixFixe)
 
 
 `prix-fixe` is an experimental package of tools and algorithms for constructing restaurant orders and evaluating natural language systems that generate orders. `prix-fixe` includes
