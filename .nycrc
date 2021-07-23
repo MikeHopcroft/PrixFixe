@@ -1,0 +1,12 @@
+{
+    "temp-dir" : "coverage-temp",
+    "report-dir" : "coverage-report",
+    "reporter" : [
+        "text",
+        "text-summary",
+        "lcov"
+    ],
+    "include": [
+        "src/**/*.ts"
+    ]
+}
