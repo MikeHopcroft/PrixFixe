@@ -24,13 +24,13 @@
     "clean": "gts clean",
     "compile": "tsc -p .",
     "coverage": "nyc mocha -r ts-node/register -r source-map-support/register && nyc report --reporter=text-lcov | coveralls",
+    "docs": "node build/src/apps/prepress.js documentation/src documentation",
     "fix": "gts fix",
     "posttest": "npm run check",
     "postcompile": "copyfiles samples/data/**/*.yaml build && copyfiles samples/data/**/*.txt build",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
-    "test": "mocha",
-    "docs": "node build/src/apps/prepress.js documentation/src documentation"
+    "test": "mocha"
   },
   "nyc": {
     "exclude": [
