@@ -10,6 +10,11 @@
     * Short-order should be able to provide its own options and help messages.
   * Remove old rules engine.
   * core/testsuite2
+  * Update usage message in markdown.ts to use command syntax (i.e. don't use 'node')
+    * BTW, markdown.ts might be deprecated. Decide.
+    * Same for repair_suite.ts
+    * Same for repl_main.ts
+    * Same for test_runner_main.ts
   * x Reinstate nameToSKU functionality from TutorialBuilder
     * x Removed in commit 1bd3f73753bb97165206d438d134821481969846
     * x Impacts documentation/src/measures.src.md repair functionality
