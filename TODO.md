@@ -1,40 +1,42 @@
 
 * Newer
   * Migrate from travis to GitHub actions
+    * Update code coverage for GitHub actions
+  * Default for: Use -d flag or PRIX_FIXE_DATA environment
   * Make menu and regression suite available to installed prix-fixe
   * Rework repl to use readline instead of replserver
   * Empty line in repl should give new prompt
   * Ability to merge help messages for option in testRunnerMain2
     * Short-order should be able to provide its own options and help messages.
+  * Remove old rules engine.
+  * core/testsuite2
   * x Reinstate nameToSKU functionality from TutorialBuilder
     * x Removed in commit 1bd3f73753bb97165206d438d134821481969846
     * x Impacts documentation/src/measures.src.md repair functionality
     * x Probably need some notion of prepress extensions
     * x Need to wire in to npm build docs
   * x Install script commands for sample apps + update docs
-  * Test runner should set exit code
+  * x Test runner should set exit code
   * testRunner2 should replace testRunner
   * Rename simple extension to add-remove extension
   * draw.io diagrams for repair_cost.src.md.
-  * replCore2, useCreateWorld2
-  * Default for: Use -d flag or PRIX_FIXE_DATA environment
+  * x replCore2, useCreateWorld2
   * Console spew
-    * createWorld2()
-    * CreateWorld2
+    * x createWorld2()
+    * x CreateWorld2
     * Reading samples\menu\coffee.yaml
     * Loading 
   * Remove
     * x toJUnitXml()
     * snacks.yaml
   * Remove obsolete apps
-    test_converters.ts
-    repair-suite.ts
+    * x test_converters.ts
+    * repair-suite.ts
   * What are the two files ending in .ts.save?
   * Remove old test suite
   * Review uses of process.exit()
-  * Move away from `import *` syntax
+  * x Move away from `import *` syntax
   * Take recursive aliases PR.
-  * Remove old rules engine.
   * Set up code coverage
   * Move CI from Travis to GitHub actions
   * What is the difference between samples folder and src/apps folder?

@@ -1,4 +1,4 @@
-# Prix-Fixe [![Build Status](https://travis-ci.com/MikeHopcroft/PrixFixe.svg?branch=master)](https://travis-ci.com/MikeHopcroft/PrixFixe) [![Coverage Status](https://coveralls.io/repos/github/MikeHopcroft/PrixFixe/badge.svg?branch=master)](https://coveralls.io/github/MikeHopcroft/PrixFixe?branch=master)
+# Prix-Fixe [![build](https://github.com/MikeHopcroft/PrixFixe/actions/workflows/ci.yaml/badge.svg)](https://github.com/MikeHopcroft/PrixFixe/actions/workflows/ci.yaml) [![Coverage Status](https://coveralls.io/repos/github/MikeHopcroft/PrixFixe/badge.svg?branch=master)](https://coveralls.io/github/MikeHopcroft/PrixFixe?branch=master)
 
 `prix-fixe` is an experimental package of tools and algorithms for constructing restaurant orders and evaluating natural language systems that generate orders. `prix-fixe` includes
 * Tools for authoring menus
