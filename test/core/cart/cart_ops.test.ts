@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { Cart, CartOps, ItemInstance, AttributeInfo } from '../../src';
+import { Cart, CartOps, ItemInstance, AttributeInfo } from '../../../src/core';
 
 import {
   caffeineDecaf,
@@ -23,7 +23,7 @@ import {
   wholeMilk,
   whippedCream,
   noWhippedCream,
-} from '../shared';
+} from '../../shared';
 
 const sampleCart: Cart = {
   items: [

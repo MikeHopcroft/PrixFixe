@@ -1,7 +1,10 @@
 
 * Newer
-  * Migrate from travis to GitHub actions
-    * Update code coverage for GitHub actions
+  * Move SuitePredicate and PeekableSequence and others into src/core
+  * x Migrate from travis to GitHub actions
+    * x Update code coverage for GitHub actions
+  * test/test_suite2 => test/core/test_suite
+    * Other folders to core
   * Default for: Use -d flag or PRIX_FIXE_DATA environment
   * Make menu and regression suite available to installed prix-fixe
   * Rework repl to use readline instead of replserver

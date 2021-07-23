@@ -6,7 +6,7 @@ import yaml from 'js-yaml';
 import {
   DimensionAndTensorDescription,
   attributesFromYamlString,
-} from '../../src/core/attributes';
+} from '../../../src/core/attributes';
 
 const attributes: DimensionAndTensorDescription = {
   dimensions: [

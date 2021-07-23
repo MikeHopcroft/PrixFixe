@@ -9,7 +9,7 @@ import {
   TID,
   AttributeInfo,
   UID,
-} from '../../src/';
+} from '../../../src/core';
 
 import {
   emptyAttributes,
@@ -29,7 +29,7 @@ import {
   smallIcedDecafCoffee,
   temperatureCold,
   caffeineDecaf,
-} from '../shared';
+} from '../../shared';
 
 ///////////////////////////////////////////////////////////////////////////
 //

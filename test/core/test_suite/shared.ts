@@ -1,4 +1,4 @@
-import { LogicalCart, LogicalItem } from '../../src/core/test_suite';
+import { LogicalCart, LogicalItem } from '../../../src/core/test_suite';
 
 export const option1a: LogicalItem = {
   quantity: 1,

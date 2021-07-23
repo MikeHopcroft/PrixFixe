@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { cartSort } from '../../src/core/test_suite';
+import { cartSort } from '../../../src/core/test_suite';
 
 describe('cartSort', () => {
   it('sku', () => {

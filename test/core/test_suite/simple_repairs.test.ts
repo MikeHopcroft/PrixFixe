@@ -7,7 +7,7 @@ import {
   EditOp,
   LogicalCart,
   SimpleRepairs,
-} from '../../src/core/test_suite';
+} from '../../../src/core/test_suite';
 
 import {
   mediumChocolateCone,
@@ -18,7 +18,7 @@ import {
   twoMilk,
   whippedCream,
   wholeMilk,
-} from '../shared';
+} from '../../shared';
 
 const repairs = new SimpleRepairs(bipartiteMatchingDiff);
 

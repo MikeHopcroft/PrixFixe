@@ -1,7 +1,11 @@
 import { assert, expect } from 'chai';
 import 'mocha';
 
-import { Catalog, GenericTypedEntity, SpecificTypedEntity } from '../../src';
+import {
+  Catalog,
+  GenericTypedEntity,
+  SpecificTypedEntity,
+} from '../../../src/core';
 
 import {
   genericConePID,
@@ -13,7 +17,7 @@ import {
   zeroMilk,
   unknownPID,
   unknownKey,
-} from '../shared';
+} from '../../shared';
 
 const genericItems: GenericTypedEntity[] = [genericCone];
 

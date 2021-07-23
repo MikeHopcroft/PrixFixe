@@ -1,9 +1,9 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { DID, Dimension } from '../../src/';
+import { DID, Dimension } from '../../../src/core';
 
-import { caffeines } from '../shared';
+import { caffeines } from '../../shared';
 
 ///////////////////////////////////////////////////////////////////////////
 //

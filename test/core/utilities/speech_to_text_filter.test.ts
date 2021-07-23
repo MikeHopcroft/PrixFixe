@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { speechToTextFilter } from '../../src';
+import { speechToTextFilter } from '../../../src';
 
 describe('REPL', () => {
   ///////////////////////////////////////////////////////////////////////////////

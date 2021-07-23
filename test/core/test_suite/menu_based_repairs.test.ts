@@ -1,16 +1,16 @@
 import { assert } from 'chai';
 import 'mocha';
 
-import { AttributeInfo } from '../../src/core/attributes';
-import { Cart } from '../../src/core/cart';
-import { IdGenerator } from '../../src/core/utilities';
+import { AttributeInfo } from '../../../src/core/attributes';
+import { Cart } from '../../../src/core/cart';
+import { IdGenerator } from '../../../src/core/utilities';
 
 import {
   bipartiteMatchingDiff,
   Edit,
   EditOp,
   MenuBasedRepairs,
-} from '../../src/core/test_suite';
+} from '../../../src/core/test_suite';
 
 import {
   mediumChocolateCone,
@@ -24,7 +24,7 @@ import {
   twoMilk,
   whippedCream,
   wholeMilk,
-} from '../shared';
+} from '../../shared';
 
 const attributeInfo = new AttributeInfo(
   smallWorldCatalog,
