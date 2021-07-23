@@ -6,7 +6,7 @@ import {
   LogicalScoredSuite,
   LogicalTestSuite,
   LogicalValidationSuite,
-} from '../core/test_suite2/interfaces';
+} from '../core/test_suite/interfaces';
 
 import {
   logicalScoredSuite,

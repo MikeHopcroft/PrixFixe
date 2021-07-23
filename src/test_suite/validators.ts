@@ -11,7 +11,7 @@ import {
   LogicalScoredSuite,
   LogicalTestSuite,
   LogicalValidationSuite,
-} from '../core/test_suite2';
+} from '../core/test_suite';
 
 ///////////////////////////////////////////////////////////////////////////////
 //

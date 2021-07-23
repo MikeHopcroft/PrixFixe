@@ -7,7 +7,7 @@ import {
   EditOp,
   LogicalCart,
   SimpleRepairs,
-} from '../../src/core/test_suite2';
+} from '../../src/core/test_suite';
 
 import {
   mediumChocolateCone,

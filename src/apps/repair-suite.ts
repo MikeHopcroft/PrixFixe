@@ -15,7 +15,7 @@ import {
   LogicalCart,
   LogicalItem,
   enumerateTestCases,
-} from '../core/test_suite2';
+} from '../core/test_suite';
 
 import { loadLogicalValidationSuite } from '../test_suite';
 

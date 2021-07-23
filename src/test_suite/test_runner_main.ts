@@ -16,7 +16,7 @@ import {
   mapSuiteAsync,
   succeed,
   suitePredicateFilter,
-} from '../core/test_suite2';
+} from '../core/test_suite';
 
 import { World } from '../core/world';
 
@@ -33,7 +33,7 @@ import {
   TextTurn,
   ValidationStep,
   LogicalScoredSuite,
-} from '../core/test_suite2/interfaces';
+} from '../core/test_suite/interfaces';
 
 import {
   loadLogicalScoredSuite,
@@ -41,9 +41,9 @@ import {
   writeYAML,
 } from './loaders';
 
-import { logicalCartFromCart } from '../core/test_suite2/logical_cart';
-import { createMenuBasedRepairFunction } from '../core/test_suite2/repair_functions';
-import { scoreSuite } from '../core/test_suite2/scoring';
+import { logicalCartFromCart } from '../core/test_suite/logical_cart';
+import { createMenuBasedRepairFunction } from '../core/test_suite/repair_functions';
+import { scoreSuite } from '../core/test_suite/scoring';
 
 export async function testRunnerMain(
   title: string,

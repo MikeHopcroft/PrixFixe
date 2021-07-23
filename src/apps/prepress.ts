@@ -7,7 +7,7 @@ import {
   tutorialBuilderMain,
 } from 'prepress';
 
-import { handleError, succeed } from '../core/test_suite2';
+import { handleError, succeed } from '../core/test_suite';
 import { createWorld } from '../processors';
 
 async function go() {

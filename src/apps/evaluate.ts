@@ -18,7 +18,7 @@ import {
   scoreSuite,
   succeed,
   FormatScoredSuiteOptions,
-} from '../core/test_suite2';
+} from '../core/test_suite';
 
 import { loadLogicalValidationSuite, writeYAML } from '../test_suite';
 
