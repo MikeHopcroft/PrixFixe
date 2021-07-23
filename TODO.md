@@ -1,5 +1,6 @@
 
 * Newer
+  * Migrate from travis to GitHub actions
   * Make menu and regression suite available to installed prix-fixe
   * Rework repl to use readline instead of replserver
   * Empty line in repl should give new prompt
@@ -8,7 +9,7 @@
   * x Reinstate nameToSKU functionality from TutorialBuilder
     * x Removed in commit 1bd3f73753bb97165206d438d134821481969846
     * x Impacts documentation/src/measures.src.md repair functionality
-    * Px robably need some notion of prepress extensions
+    * x Probably need some notion of prepress extensions
     * x Need to wire in to npm build docs
   * x Install script commands for sample apps + update docs
   * Test runner should set exit code
@@ -23,7 +24,7 @@
     * Reading samples\menu\coffee.yaml
     * Loading 
   * Remove
-    * toJUnitXml()
+    * x toJUnitXml()
     * snacks.yaml
   * Remove obsolete apps
     test_converters.ts
@@ -119,7 +120,7 @@
 * TestCounts
   * Place adjacent to its one use
 * Result
-  * Remove toJUnitXml()?
+  * x Remove toJUnitXml()?
   * Rename to TestResult?
 * TestSuite
   * Inversion of control?

@@ -19,13 +19,6 @@ export interface YamlTestCase {
   steps: TestStep[];
 }
 
-export interface XmlNode {
-  name: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  attrs: any;
-  children?: XmlNode[] | string;
-}
-
 // Holds a single line of an TestOrder.
 export interface TestLineItem {
   readonly indent: number;

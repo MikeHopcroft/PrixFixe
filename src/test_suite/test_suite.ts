@@ -1,7 +1,6 @@
 import AJV from 'ajv';
 import betterAjvErrors from 'better-ajv-errors';
 import Debug from 'debug';
-import jsontoxml from 'jsontoxml';
 import yaml from 'js-yaml';
 
 import { ICatalog } from '../core/catalog';
@@ -13,7 +12,6 @@ import {
   TestLineItem,
   TestCounts,
   TestOrder,
-  XmlNode,
   YamlTestCase,
   TestStep,
   CorrectionLevel,
@@ -121,33 +119,6 @@ export class Result {
     }
     return stringValue;
   }
-
-  toJUnitXml(
-    isomorphic = false,
-    correctionLevel: CorrectionLevel = CorrectionLevel.Scoped
-  ): XmlNode {
-    const testCase = this.test.toJUnitXml();
-
-    testCase.attrs.time = (this.latencyMS / 1.0e3).toFixed(3);
-    if (!this.passed) {
-      testCase.children = new Array<XmlNode>();
-      let failureMessage = '';
-      if (this.exception) {
-        failureMessage = this.exception;
-      } else {
-        failureMessage = this.toString(isomorphic, correctionLevel);
-      }
-
-      testCase.children.push({
-        name: 'failure',
-        attrs: {
-          message: 'failure',
-        },
-        children: jsontoxml.escape(failureMessage),
-      });
-    }
-    return testCase;
-  }
 }
 
 export class AggregatedResults {
@@ -227,26 +198,6 @@ export class AggregatedResults {
     console.log(this.toString(showPassedCases, isomorphic));
     console.log();
     this.printLatencyStatistics();
-  }
-
-  toJUnitXml(): string {
-    const output = { testsuites: [] as XmlNode[] };
-
-    output.testsuites = Object.keys(this.suites).map((suite) => ({
-      name: 'testsuite',
-      attrs: {
-        name: suite,
-      },
-      children: this.results
-        .filter((r) => r.test.suites.includes(suite))
-        .map((r) => r.toJUnitXml(false, this.correctionLevel)),
-    }));
-
-    return jsontoxml(output, {
-      indent: ' ',
-      prettyPrint: true,
-      xmlHeader: true,
-    });
   }
 
   printLatencyStatistics() {
@@ -373,16 +324,6 @@ export class TestCase {
       exception,
       Number(end - start) / 1.0e6
     );
-  }
-
-  toJUnitXml() {
-    return {
-      name: 'testcase',
-      attrs: {
-        classname: this.suites,
-        name: this.comment,
-      },
-    } as XmlNode;
   }
 }
 
