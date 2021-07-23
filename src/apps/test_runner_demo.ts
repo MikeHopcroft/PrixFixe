@@ -1,4 +1,4 @@
-import { TestProcessors, testRunnerMain, State, World } from '../src';
+import { TestProcessors, testRunnerMain, State, World } from '..';
 
 // This sample application demonstrates how to configure the test runner
 // with a set of Processors.

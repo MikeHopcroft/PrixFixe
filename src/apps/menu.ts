@@ -10,7 +10,7 @@ import {
   simpleReplExtensionFactory,
   State,
   World,
-} from '../src';
+} from '..';
 
 // Sample ReplExtension that registers one command and provides a Processor
 // that leaves the State unchanged.

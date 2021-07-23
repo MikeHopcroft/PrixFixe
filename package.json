@@ -16,7 +16,7 @@
   "bin": {
     "evaluate": "build/src/apps/evaluate.js",
     "filter": "build/src/apps/filter-suite.js",
-    "menu": "build/samples/repl.js"
+    "menu": "build/src/apps/menu.js"
   },
   "repository": "https://github.com/MikeHopcroft/PrixFixe",
   "scripts": {
