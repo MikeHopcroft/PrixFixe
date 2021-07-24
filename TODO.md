@@ -1,6 +1,9 @@
 
 * Newer
+  * Update docs to use command syntax, install vs build
   * Better unit tests for new rules engine.
+  * Better unit test coverage.
+  * RuleChecker support for valid quantities
   * Move SuitePredicate and PeekableSequence and others into src/core
   * x Migrate from travis to GitHub actions
     * x Update code coverage for GitHub actions
