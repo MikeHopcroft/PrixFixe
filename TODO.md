@@ -1,9 +1,10 @@
 
 * Newer
-  * IS there any way to share test/shared/small_world.ts with short-order?
+  * Implement or deprecate the rest of IRuleChecker
+  * Is there any way to share test/shared/small_world.ts with short-order?
   * Compare against baseline should fail for any regression, not increase in regressions
   * x Rename RuleChecker2
-  * Fix and unit test for getIncrementalMutualExclusionPredicate()
+  * x Fix and unit test for getIncrementalMutualExclusionPredicate()
   * Burger menu
   * Taco menu
   * Ice cream menu

@@ -6,39 +6,6 @@ export interface QuantityInformation {
   minQty: number;
 }
 
-export interface DownstreamQuantity {
-  // Assumes that quantity information is relevant for the rest of the
-  //   hierarchy. Use the empty string to match all downstream attributes.
-  [partialKey: string]: QuantityInformation;
-}
-
-export interface CategoryInfo {
-  validOptions: PID[];
-  qtyInfo: DownstreamQuantity;
-}
-
-export interface CategoryMap {
-  [cid: number]: CategoryInfo;
-}
-
-export interface ExclusionSet {
-  [cid: number]: PID[];
-}
-
-export interface PartialRule {
-  partialKey: Key;
-  validCategoryMap: CategoryMap;
-  exclusionZones: ExclusionSet;
-  specificExceptions: Key[];
-}
-
-/**
- * The shape of the `rule.yaml` file.
- */
-export interface RuleConfig {
-  rules: PartialRule[];
-}
-
 // tslint:disable-next-line:interface-name
 export interface IRuleChecker {
   /**

@@ -36,6 +36,7 @@ export class RuleChecker implements IRuleChecker {
   addQuantityInfo(
     parent: PID,
     child: PID,
+    // TODO: REVIEW: why does this accept undefined?
     info: QuantityInformation | undefined
   ) {
     if (info) {
@@ -140,12 +141,20 @@ export class RuleChecker implements IRuleChecker {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getDefaultQuantity(parent: string, child: string): number {
-    throw new Error('Method not implemented.');
+    const info = this.getQuantityInfo(parent, child);
+    if (info) {
+      return info.defaultQty;
+    }
+    throw new Error(`No quantify info for ${parent}-${child}.`);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isValidQuantity(parent: string, child: string, qty: number): boolean {
-    throw new Error('Method not implemented.');
+    const info = this.getQuantityInfo(parent, child);
+    if (info) {
+      return qty >= info.minQty && qty <= info.maxQty;
+    }
+    throw new Error(`No quantify info for ${parent}-${child}.`);
   }
 
   getQuantityInfo(
