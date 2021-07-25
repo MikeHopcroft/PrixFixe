@@ -160,11 +160,12 @@ export async function testRunnerMain(
       console.log(`Baseline: "${baselineFile}"`);
       console.log(' ');
       const baseline = loadLogicalScoredSuite(baselineFile);
-      const delta = compareScoredSuites(baseline, scored);
+      const { regressions } = compareScoredSuites(baseline, scored);
 
-      if (delta < 0) {
-        // Exit with non-zero return code, if we're comparing with a baseline and the
-        // number of passing tests has decreased.
+      if (regressions > 0) {
+        // Exit with non-zero return code, if we're comparing with a baseline
+        // and found regressions. Previous behavior was to fail if the number
+        // of passing tests has decreased.
         return succeed(false);
       }
     } else if (scored.measures.totalRepairs > 0) {
@@ -372,9 +373,10 @@ async function runTests(
 function compareScoredSuites(
   baseline: LogicalScoredSuite<AnyTurn>,
   current: LogicalScoredSuite<AnyTurn>
-): number {
-  let bp = 0;
-  let cp = 0;
+): { delta: number; regressions: number } {
+  let bp = 0; // Baseline passing cases
+  let cp = 0; // Current passing cases
+  let regressions = 0;
   let missingTests = 0;
   let newTests = 0;
 
@@ -405,6 +407,9 @@ function compareScoredSuites(
 
       if (br !== cr) {
         console.log(`${b.id}: ${bText} => ${cText}`);
+        if (br === 0) {
+          regressions++;
+        }
       }
     } else {
       ++missingTests;
@@ -433,7 +438,7 @@ function compareScoredSuites(
   console.log(`Missing tests: ${missingTests}`);
   console.log(`New tests: ${newTests}`);
 
-  return delta;
+  return { delta, regressions };
 }
 
 class Application {

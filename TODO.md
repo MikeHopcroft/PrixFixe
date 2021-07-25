@@ -1,37 +1,38 @@
 
 * Newer
-  * Implement or deprecate the rest of IRuleChecker
+  * x Compare against baseline should fail for any regression, not increase in regressions
+  * Remove rule_checker.test.ts
+  * Default for: Use -d flag or PRIX_FIXE_DATA environment
+  * Rework repl to use readline instead of replserver
+  * Empty line in repl should give new prompt
+  * Architectural README.md's for folders.
   * Is there any way to share test/shared/small_world.ts with short-order?
-  * Compare against baseline should fail for any regression, not increase in regressions
-  * x Rename RuleChecker2
-  * x Fix and unit test for getIncrementalMutualExclusionPredicate()
   * Burger menu
   * Taco menu
   * Ice cream menu
   * Boba menu
-  * Remove rule_checker.test.ts
   * Update docs to use command syntax, install vs build
-  * Better unit tests for new rules engine.
   * Better unit test coverage.
-  * RuleChecker support for valid quantities
   * Move SuitePredicate and PeekableSequence and others into src/core
-  * x Migrate from travis to GitHub actions
-    * x Update code coverage for GitHub actions
-  * x test/test_suite2 => test/core/test_suite
-    * x Other folders to core
-  * Default for: Use -d flag or PRIX_FIXE_DATA environment
   * Make menu and regression suite available to installed prix-fixe
-  * Rework repl to use readline instead of replserver
-  * Empty line in repl should give new prompt
   * Ability to merge help messages for option in testRunnerMain2
     * Short-order should be able to provide its own options and help messages.
-  * x Remove old rules engine.
   * core/testsuite2
   * Update usage message in markdown.ts to use command syntax (i.e. don't use 'node')
     * BTW, markdown.ts might be deprecated. Decide.
     * Same for repair_suite.ts
     * Same for repl_main.ts
     * Same for test_runner_main.ts
+  * x Implement or deprecate the rest of IRuleChecker
+  * x Rename RuleChecker2
+  * x Fix and unit test for getIncrementalMutualExclusionPredicate()
+  * x Better unit tests for new rules engine.
+  * x RuleChecker support for valid quantities
+  * x Migrate from travis to GitHub actions
+    * x Update code coverage for GitHub actions
+  * x test/test_suite2 => test/core/test_suite
+    * x Other folders to core
+  * x Remove old rules engine.
   * x Reinstate nameToSKU functionality from TutorialBuilder
     * x Removed in commit 1bd3f73753bb97165206d438d134821481969846
     * x Impacts documentation/src/measures.src.md repair functionality
