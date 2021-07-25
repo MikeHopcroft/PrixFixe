@@ -2,7 +2,7 @@
 * Newer
   * IS there any way to share test/shared/small_world.ts with short-order?
   * Compare against baseline should fail for any regression, not increase in regressions
-  * Rename RuleChecker2
+  * x Rename RuleChecker2
   * Fix and unit test for getIncrementalMutualExclusionPredicate()
   * Burger menu
   * Taco menu
