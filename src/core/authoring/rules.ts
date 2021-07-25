@@ -191,16 +191,16 @@ class RuleChecker2 implements IRuleChecker {
     const children = new Set<PID>();
 
     // Exclusion sets associated with the parrent.
-    const allExclusionSets = this.exclusion.get(pPID);
+    const allExclusionSets = this.exclusion.get(pPID) || [];
 
     // Subset of allExclusionSets that contain one of the children.
     const activeExclusionSets = new Set<Set<PID>>();
 
     return (child: Key): boolean => {
-      if (!allExclusionSets) {
-        // This parent has no mutual exclusion rules for its children.
-        return true;
-      }
+      // if (!allExclusionSets) {
+      //   // This parent has no mutual exclusion rules for its children.
+      //   return true;
+      // }
 
       const cPID = AttributeInfo.pidFromKey(child);
       if (children.has(cPID)) {
