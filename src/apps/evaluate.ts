@@ -22,18 +22,18 @@ import {
 
 import { loadLogicalValidationSuite, writeYAML } from '../test_suite';
 
-function main() {
+function main(): never {
   dotenv.config();
 
   const args = minimist(process.argv.slice(2));
 
   if (args.h || args.help) {
     showUsage();
-    return succeed(false);
+    succeed(false);
   }
 
   if (args._.length !== 3 && args._.length !== 2) {
-    return fail('Error: expected two or three command line parameters.');
+    fail('Error: expected two or three command line parameters.');
   }
 
   const expectedFile = args._[0];
@@ -59,6 +59,8 @@ function main() {
   } catch (e) {
     handleError(e);
   }
+
+  succeed(true);
 }
 
 function evaluate(

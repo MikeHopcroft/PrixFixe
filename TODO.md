@@ -1,5 +1,6 @@
 
 * Newer
+  * Uninstall coveralls
   * x Compare against baseline should fail for any regression, not increase in regressions
   * Remove rule_checker.test.ts
   * Default for: Use -d flag or PRIX_FIXE_DATA environment
