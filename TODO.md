@@ -1,5 +1,6 @@
 
 * Newer
+  * Can we remove test_suite.ts. It seems to be used by short-order's fuzzer.
   * Uninstall coveralls
   * x Compare against baseline should fail for any regression, not increase in regressions
   * Remove rule_checker.test.ts

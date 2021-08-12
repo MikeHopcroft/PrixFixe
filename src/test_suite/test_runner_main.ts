@@ -18,6 +18,7 @@ import {
   suitePredicateFilter,
 } from '../core/test_suite';
 
+import { Stopwatch } from '../core/utilities';
 import { World } from '../core/world';
 
 import { createWorld } from '../processors';
@@ -60,6 +61,11 @@ export class NopLogger implements ILogger {
   log(text: string) {
     // Do nothing
   }
+}
+
+interface Results {
+  scored: LogicalScoredSuite<AnyTurn>;
+  timeMS: number;
 }
 
 export async function testRunnerMain(
@@ -126,10 +132,11 @@ export class TestRunnerApplication {
         shutdown(1);
       } else {
         // Run the tests in the suite.
-        const scored = await this.runTests(config, suite);
+        const { scored, timeMS } = await this.runTests(config, suite);
 
         // Display results.
         this.displayResults(config, scored);
+        this.logger.log(`Running time: ${timeMS}ms`);
 
         // Write results to outputFile, if specified.
         this.writeResults(config, scored);
@@ -554,7 +561,7 @@ export class TestRunnerApplication {
   private async runTests(
     config: ApplicatonConfiguration,
     suite: GenericSuite<ValidationStep<TextTurn>>
-  ): Promise<LogicalScoredSuite<AnyTurn>> {
+  ): Promise<Results> {
     const { dataPath, processorName, speaker } = config;
 
     if (speaker !== undefined) {
@@ -603,6 +610,7 @@ export class TestRunnerApplication {
     //
     // Run each test case.
     //
+    const stopwatch = new Stopwatch();
     const observed = await mapSuiteAsync(suite, async (test) => {
       let state: State = { cart: { items: [] } };
       const steps: typeof test.steps = [];
@@ -621,6 +629,7 @@ export class TestRunnerApplication {
       }
       return { ...test, steps };
     });
+    const timeMS = stopwatch.elaspedMS();
 
     //
     // Score the results
@@ -631,7 +640,7 @@ export class TestRunnerApplication {
     );
     const scored = scoreSuite(observed, suite, repairFunction, 'menu-based');
 
-    return scored;
+    return { scored, timeMS };
   }
 
   private compareScoredSuites(
